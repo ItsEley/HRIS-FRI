@@ -10,14 +10,14 @@ class Pages extends CI_Controller
     $this->load->view('news/index'); // navigate to page
   }
 
-  public function page_filename()
+  public function login()
   {
-    $this->load->view('wag_pages/home');
+    $this->load->view('pages/login');
   }
 
-  public function page_one()
+  public function about()
   {
-    $this->load->view('wag_pages/about');
+    $this->load->view('pages/about');
   }
 
 

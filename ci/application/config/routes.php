@@ -9,3 +9,4 @@ $route['translate_uri_dashes'] = FALSE;
 
 // news routing
 $route['pages'] = 'pages/news';
+// $route['login'] = 'pages/login';
