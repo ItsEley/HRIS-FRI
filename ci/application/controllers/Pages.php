@@ -1,36 +1,29 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Pages extends CI_Controller
-{
 
-  
-  public function news()  // call the page {news} -- is the page name
-  {
-    $this->load->view('news/index'); // navigate to page
-  }
+class Pages extends CI_Controller{
 
-  public function login()
-  {
-    $data['title'] = 'Login';
+    public function view(){
 
-    $this->load->view('templates/header', $data);
-    // $data['news'] = $this->news_model->get_news();
-    $this->load->view('pages/login');
-    $this->load->view('templates/footer', $data);
+        $page = "login";
 
-  }
+        if (!file_exists(APPPATH.'views/pages/'.$page.'.php')){
+            show_404();
+        }
 
-  public function about()
-  {
-    $this->load->view('pages/about');
-  }
+        $data['title'] = $page ."--asd";
+   
+        $this->load->view('templates/header');
+        $this->load->view('pages/' . $page, $data);
+        $this->load->view('templates/footer');
+   
+      }
 
-  public function index()
-  {
-    $this->load->view('Pages/index');
-  }
+      public function index(){
 
+        $this->load->view('index');
 
-// kljkljljlkjlk
+      }
+
 }

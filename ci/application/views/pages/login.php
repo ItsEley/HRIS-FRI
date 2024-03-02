@@ -1,11 +1,13 @@
 <div class="main-wrapper">
 			<div class="account-content">
-				<a href="job-list.html" class="btn btn-primary apply-btn">Apply Job</a>
+				<!-- <a href="job-list.html" class="btn btn-primary apply-btn">Apply Job</a> -->
 				<div class="container">
 				
 					<!-- Account Logo -->
 					<div class="account-logo">
-						<a href="admin-dashboard.html"><img src="assets/img/logo2.png" alt="Dreamguy's Technologies"></a>
+						<a href="admin-dashboard.html">
+							<img src="assets/img/famco_logo_clear.png" alt="Dreamguy's Technologies" style="width: 200px;padding: 10px;">
+						</a>
 					</div>
 					<!-- /Account Logo -->
 					
