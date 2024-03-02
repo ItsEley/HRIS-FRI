@@ -2,28 +2,39 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 
-class Pages extends CI_Controller{
+class Pages extends CI_Controller
+{
 
-    public function view(){
+  public function view()
+  {
 
-        $page = "login";
+    $page = "employee_view";
 
-        if (!file_exists(APPPATH.'views/pages/'.$page.'.php')){
-            show_404();
-        }
+    if (!file_exists(APPPATH . 'views/pages/' . $page . '.php')) {
+      show_404();
+    }
 
-        $data['title'] = $page ."--asd";
-   
-        $this->load->view('templates/header');
-        $this->load->view('pages/' . $page, $data);
-        $this->load->view('templates/footer');
-   
-      }
+    $data['title'] = $page . "--asd";
 
-      public function index(){
+    $this->load->view('templates/header');
+    $this->load->view('pages/' . $page, $data);
+    $this->load->view('templates/footer');
+  }
 
-        $this->load->view('index');
+  public function index()
+  {
 
-      }
+    $this->load->view('index');
+  }
+}
 
+
+class Employee extends CI_Controller
+{
+  public function index()
+  {
+    $this->load->model('employee_model');
+    $data['employees'] = $this->employee_model->getEmployees();
+    $this->load->view('employee_view', $data);
+  }
 }
