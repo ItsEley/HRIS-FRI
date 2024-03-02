@@ -6,21 +6,25 @@
 <title>Login - HRMS admin template</title>
 
 <!-- Favicon -->
-<link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+<!-- <link rel="shortcut icon" type="image/x-icon" href="../html/templates/assets/img/favicon.png"> -->
+<link rel="shortcut icon" type="image/x-iconsss" href=<?php echo base_url('application\views\templates\html\assets\img\favicon.png')?>>
+
 
 <!-- Bootstrap CSS -->
-<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="html\assets\css\bootstrap.min.css"> -->
+
+<link rel="stylesheet" href="<?php echo base_url('application\views\templates\html\assets\css\bootstrap.min.css')?>">
 
 <!-- Fontawesome CSS -->
-<link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
-<link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
+<link rel="stylesheet" href="../html/templates/assets/plugins/fontawesome/css/fontawesome.min.css">
+<link rel="stylesheet" href="../html/templates/assets/plugins/fontawesome/css/all.min.css">
 
 <!-- Lineawesome CSS -->
-<link rel="stylesheet" href="assets/css/line-awesome.min.css">
-<link rel="stylesheet" href="assets/css/material.css">
+<link rel="stylesheet" href="../html/templates/assets/css/line-awesome.min.css">
+<link rel="stylesheet" href="../html/templates/assets/css/material.css">
 
 <!-- Lineawesome CSS -->
-<link rel="stylesheet" href="assets/css/line-awesome.min.css">
+<link rel="stylesheet" href="../html/templates/assets/css/line-awesome.min.css">
 
 <!-- Main CSS -->
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="../html/templates/assets/css/style.css">

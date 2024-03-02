@@ -12,7 +12,13 @@ class Pages extends CI_Controller
 
   public function login()
   {
+    $data['title'] = 'Login';
+
+    $this->load->view('templates/header', $data);
+    // $data['news'] = $this->news_model->get_news();
     $this->load->view('pages/login');
+    $this->load->view('templates/footer', $data);
+
   }
 
   public function about()
@@ -20,5 +26,11 @@ class Pages extends CI_Controller
     $this->load->view('pages/about');
   }
 
+  public function index()
+  {
+    $this->load->view('Pages/index');
+  }
 
+
+// kljkljljlkjlk
 }
