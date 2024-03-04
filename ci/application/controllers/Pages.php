@@ -1,55 +1,18 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-
-
-// class Pages extends CI_Controller
-// {
-
-//   public function view()
-//   {
-
-//     $page = "hr_home";
-
-//     if (!file_exists(APPPATH . 'views/pages/' . $page . '.php')) {
-//       show_404();
-//     }
-
-//     $data['title'] = $page;
-
-//     $this->load->model('employee_model');
-//     // $data['employees'] = $this->employee_model->getEmployees();
-
-//     $this->load->view('templates/header');
-//     // $this->load->view('pages/employee_view', $data);
-
-//     $this->load->view('pages/' . $page, $data);
-//     $this->load->view('templates/footer');
-//   }
-
- 
-// }
-
-
-// class Employee extends CI_Controller
-// {
-//   public function index()
-//   {
-//     $this->load->model('employee_model');
-//     $data['employees'] = $this->employee_model->getEmployees();
-//     $this->load->view('employee_view', $data);
-//   }
-// }
-
-
-
-// defined('BASEPATH') OR exit('No direct script access allowed');
-
-
 class Pages extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
         // Load any necessary models, libraries, etc.
+    }
+
+    // public
+    public function index()
+    {
+      $data['title'] = 'Landing Page';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/index');
     }
 
     public function about()
@@ -64,7 +27,40 @@ class Pages extends CI_Controller {
       $data['title'] = 'Login Page';
       $this->load->view('templates/header',$data);
       $this->load->view('pages/login');
+      $this->load->view('templates/footer');
     }
+
+
+
+    // hr
+    public function hr_home()
+    {
+      $data['title'] = 'HR Home';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/hr_home');
+      $this->load->view('templates/footer');
+
+    }
+
+
+
+    // employee
+    public function emp_home()
+    {
+      $data['title'] = 'Employee';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/employee_home');
+      $this->load->view('templates/footer');
+
+    }
+
+
+
+
+
+
+    
+
 
 
     

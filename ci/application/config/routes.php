@@ -8,4 +8,10 @@ $route['translate_uri_dashes'] = FALSE;
 
 
 // $route['(:any)'] = 'pages/view/$1';
-$route['assets/(:any)'] = 'assets/$1';
+$route['hr/dashboard'] = 'pages/hr_home';
+$route['employee/home'] = 'pages/employee_home';
+$route['login'] = 'admin/loginUI';
+$route['about'] = 'pages/about';
+
+
+
