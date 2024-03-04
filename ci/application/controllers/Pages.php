@@ -2,39 +2,72 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 
-class Pages extends CI_Controller
-{
+// class Pages extends CI_Controller
+// {
 
-  public function view()
-  {
+//   public function view()
+//   {
 
-    $page = "employee_view";
+//     $page = "hr_home";
 
-    if (!file_exists(APPPATH . 'views/pages/' . $page . '.php')) {
-      show_404();
+//     if (!file_exists(APPPATH . 'views/pages/' . $page . '.php')) {
+//       show_404();
+//     }
+
+//     $data['title'] = $page;
+
+//     $this->load->model('employee_model');
+//     // $data['employees'] = $this->employee_model->getEmployees();
+
+//     $this->load->view('templates/header');
+//     // $this->load->view('pages/employee_view', $data);
+
+//     $this->load->view('pages/' . $page, $data);
+//     $this->load->view('templates/footer');
+//   }
+
+ 
+// }
+
+
+// class Employee extends CI_Controller
+// {
+//   public function index()
+//   {
+//     $this->load->model('employee_model');
+//     $data['employees'] = $this->employee_model->getEmployees();
+//     $this->load->view('employee_view', $data);
+//   }
+// }
+
+
+
+// defined('BASEPATH') OR exit('No direct script access allowed');
+
+
+class Pages extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        // Load any necessary models, libraries, etc.
     }
 
-    $data['title'] = $page . "--asd";
+    public function about()
+    {
+      $data['title'] = 'About Page';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/about');
+    }
 
-    $this->load->view('templates/header');
-    $this->load->view('pages/' . $page, $data);
-    $this->load->view('templates/footer');
-  }
+    public function login()
+    {
+      $data['title'] = 'Login Page';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/login');
+    }
 
-  public function index()
-  {
 
-    $this->load->view('index');
-  }
+    
+  
 }
 
-
-class Employee extends CI_Controller
-{
-  public function index()
-  {
-    $this->load->model('employee_model');
-    $data['employees'] = $this->employee_model->getEmployees();
-    $this->load->view('employee_view', $data);
-  }
-}

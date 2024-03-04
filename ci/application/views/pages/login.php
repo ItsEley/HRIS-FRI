@@ -20,7 +20,7 @@
 							<form action="https://smarthr.dreamstechnologies.com/html/template/admin-dashboard.html">
 								<div class="input-block mb-4">
 									<label class="col-form-label">Email Address</label>
-									<input class="form-control" type="text" value="admin@dreamguystech.com">
+									<input class="form-control" type="text" value="HR-20-336988">
 								</div>
 								<div class="input-block mb-4">
 									<div class="row align-items-center">
@@ -34,7 +34,7 @@
 										</div>
 									</div>
 									<div class="position-relative">
-										<input class="form-control" type="password" value="123456" id="password">
+										<input class="form-control" type="password" value="password" id="password">
 										<span class="fa-solid fa-eye-slash" id="toggle-password"></span>
 									</div>
 								</div>
