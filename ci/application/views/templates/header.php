@@ -11,24 +11,24 @@
     <title><?= $title ?></title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href='assets\img\famco_logo_clear2.png'>
+    <link rel="shortcut icon" type="image/x-icon" href='../assets/img/famco_logo_clear2.png'>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="assets\css\bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href='assets\css\style.css'>
+    <link rel="stylesheet" href='../assets/css/style.css'>
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
-    <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="../assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="../assets/plugins/fontawesome/css/all.min.css">
 
     <!-- Lineawesome CSS -->
-    <link rel="stylesheet" href="assets/css/line-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/material.css">
+    <link rel="stylesheet" href="../assets/css/line-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/material.css">
 
     <!-- Chart CSS -->
-    <link rel="stylesheet" href="assets/plugins/morris/morris.css">
+    <link rel="stylesheet" href="../assets/plugins/morris/morris.css">
 
 
 </head>
