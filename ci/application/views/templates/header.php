@@ -26,6 +26,9 @@
     <!-- Fontawesome CSS -->
     <link rel="stylesheet" href="<?=base_url('assets/plugins/fontawesome/css/fontawesome.min.css')?>">
     <link rel="stylesheet" href="<?=base_url('assets/plugins/fontawesome/css/all.min.css')?>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://kit.fontawesome.com/062e995cd4.js" crossorigin="anonymous"></script>
+
 
     <!-- Lineawesome CSS -->
     <link rel="stylesheet" href="<?=base_url('assets/css/line-awesome.min.css')?>">
