@@ -203,7 +203,12 @@
 			<!-- Modal outgoing pass -->
 			<div class="modal fade" id="modal_outgoing_pass" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal_outgoing_pass_label" aria-hidden="true">
 				<div class="modal-dialog">
-					<form action="#" method="post">
+					<form id="outgoing_request" method="post">
+
+						<input type="hidden" class="form-control input-field mb-2" value="<?php echo $userid; ?>" name="empid">
+						<input type="hidden" class="form-control input-field mb-2" value="<?php echo $department; ?>" name="department">
+						<input type="hidden" class="form-control input-field mb-2" value="<?php echo $fullName; ?>" name="name">
+						<input type="hidden" class="form-control input-field mb-2" value="<?php echo $status; ?>" name="status">
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" id="staticBackdropLabel">Fill up form</h5>
@@ -235,12 +240,12 @@
 											<!-- <p>I, have to leave the company premises on this day : </p> -->
 											<div class="col-3">
 
-												<label for="outgoing_pass_date" class="form-label mb-2">Date:</label>
+												<label for="outgoing_date" class="form-label mb-2">Date:</label>
 
 											</div>
 											<div class="col-8">
 
-												<input type="date" class="form-control input-field mb-2" name="outgoing_pass_date" id="outgoing_pass_date" />
+												<input type="date" class="form-control input-field mb-2" name="outgoing_date" id="outgoing_date" />
 											</div>
 										</div>
 
@@ -249,12 +254,12 @@
 										<div class="row">
 											<div class="col-3">
 
-												<label for="from_time" class="form-label mb-2">From:</label>
+												<label for="time_from" class="form-label mb-2">From:</label>
 
 											</div>
 											<div class="col-8">
 
-												<input type="time" class="form-control input-field mb-2 " name="from_time" id="from_time" />
+												<input type="time" class="form-control input-field mb-2 " name="time_from" id="time_from" />
 											</div>
 										</div>
 
@@ -262,12 +267,12 @@
 										<div class="row">
 											<div class="col-3">
 
-												<label for="to_time" class="form-label mb-2">To:</label>
+												<label for="time_to" class="form-label mb-2">To:</label>
 
 											</div>
 											<div class="col-8">
 
-												<input type="time" class="form-control input-field mb-2 " name="to_time" id="to_time" />
+												<input type="time" class="form-control input-field mb-2 " name="time_to" id="time_to" />
 											</div>
 										</div>
 
@@ -278,7 +283,7 @@
 										<div class="mb-3 row">
 											<label class="col-form-label col-md-3">Reason</label>
 											<div class="col-md-8">
-												<textarea rows="1" cols="5" class="form-control" placeholder="Enter text here"></textarea>
+												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="Enter text here"></textarea>
 
 											</div>
 										</div>
@@ -286,7 +291,7 @@
 										<div class="mb-3 row">
 											<label class="col-form-label col-md-3">Destination</label>
 											<div class="col-md-8">
-												<input type="text" class="form-control">
+												<input type="text" name="destination" class="form-control">
 											</div>
 										</div>
 
@@ -299,7 +304,7 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary">Submit</button>
+								<button type="submit" class="btn btn-primary">Submit</button>
 							</div>
 						</div>
 					</form>
@@ -441,7 +446,7 @@
 			<!-- Modal undertime-->
 			<div class="modal fade" id="modal_undertime_request" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal_undertime_request_label" aria-hidden="true">
 				<div class="modal-dialog">
-
+				<form method="post" id="undertime_request" class="mb-2">
 					<div class="modal-content">
 						<div class="modal-header">
 							<h5 class="modal-title" id="staticBackdropLabel">Fill up form</h5>
@@ -468,18 +473,24 @@
 
 									<!-- /Form content -->
 
-									<form method="post" action="submit_leave_request.php" class="mb-2">
+								
+
+
+										<input type="hidden" class="form-control input-field mb-2" value="<?php echo $userid; ?>" name="empid">
+										<input type="hidden" class="form-control input-field mb-2" value="<?php echo $department; ?>" name="department">
+										<input type="hidden" class="form-control input-field mb-2" value="<?php echo $fullName; ?>" name="name">
+										<input type="hidden" class="form-control input-field mb-2" value="<?php echo $status; ?>" name="status">
 
 										<div class="row ">
 											<!-- <p>I, have to leave the company premises on this day : </p> -->
 											<div class="col-3">
 
-												<label for="outgoing_pass_date" class="form-label mb-2">Date of Undertime:</label>
+												<label for="undertime_date" class="form-label mb-2">Date of Undertime:</label>
 
 											</div>
 											<div class="col-8">
 
-												<input type="date" class="form-control input-field mb-2" name="outgoing_pass_date" id="outgoing_pass_date" />
+												<input type="date" class="form-control input-field mb-2" name="undertime_date" id="undertime_date" />
 											</div>
 										</div>
 
@@ -488,12 +499,12 @@
 										<div class="row">
 											<div class="col-3">
 
-												<label for="from_time" class="form-label mb-2">Time in:</label>
+												<label for="time_in" class="form-label mb-2">Time in:</label>
 
 											</div>
 											<div class="col-8">
 
-												<input type="time" class="form-control input-field mb-2 " name="from_time" id="from_time" />
+												<input type="time" class="form-control input-field mb-2 " name="time_in" id="time_in" />
 											</div>
 										</div>
 
@@ -501,12 +512,12 @@
 										<div class="row">
 											<div class="col-3">
 
-												<label for="to_time" class="form-label mb-2">Time out:</label>
+												<label for="time_out" class="form-label mb-2">Time out:</label>
 
 											</div>
 											<div class="col-8">
 
-												<input type="time" class="form-control input-field mb-2 " name="to_time" id="to_time" />
+												<input type="time" class="form-control input-field mb-2 " name="time_out" id="time_out" />
 											</div>
 										</div>
 
@@ -515,7 +526,7 @@
 										<div class=" mb-3 row">
 											<label class="col-form-label col-md-3">Reason</label>
 											<div class="col-md-8">
-												<textarea rows="1" cols="5" class="form-control" placeholder="Enter text here"></textarea>
+												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="Enter text here"></textarea>
 
 											</div>
 										</div>
@@ -529,7 +540,7 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary">Submit</button>
+							<button type="submit" class="btn btn-primary">Submit</button>
 						</div>
 					</div>
 					</form>
@@ -539,126 +550,131 @@
 			<!-- Modal ob request -->
 			<div class="modal fade" id="modal_ob_request" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal_ob_request_label" aria-hidden="true">
 				<div class="modal-dialog">
-
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="staticBackdropLabel">Fill up form</h5>
-							<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-
-						</div>
-						<div class="modal-body">
+					<form id="ob_request" method="post">
 
 
+						<input type="hidden" class="form-control input-field mb-2" value="<?php echo $userid; ?>" name="empid">
+						<input type="hidden" class="form-control input-field mb-2" value="<?php echo $department; ?>" name="department">
+						<input type="hidden" class="form-control input-field mb-2" value="<?php echo $fullName; ?>" name="name">
+						<input type="hidden" class="form-control input-field mb-2" value="<?php echo $status; ?>" name="status">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="staticBackdropLabel">Fill up form</h5>
+								<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
 
-							<div class="container"> <!-- Employee Official Business form inputs -->
-								<div style="
-                max-height: auto;">
-									<!-- Header-->
+							</div>
+							<div class="modal-body">
 
-									<div class="row mb-2">
-										<div class="col-2">
-											<div class="account-logo">
-												<img src="<?= base_url('assets/img/famco_logo_clear.png') ?> " alt="Famco Retail Incorporated" style="width: 150px" />
+
+
+								<div class="container"> <!-- Employee Official Business form inputs -->
+									<div style="max-height: auto;">
+										<!-- Header-->
+
+										<div class="row mb-2">
+											<div class="col-2">
+												<div class="account-logo">
+													<img src="<?= base_url('assets/img/famco_logo_clear.png') ?> " alt="Famco Retail Incorporated" style="width: 150px" />
+												</div>
+											</div>
+											<div class="col text-center">
+												<h3>Official Business Form</h3>
+											</div>
+
+										</div>
+
+										<!-- /Form content -->
+
+
+
+										<div class="row ">
+											<!-- <p>I, have to leave the company premises on this day : </p> -->
+											<div class="col-3">
+
+												<label for="outgoing_pass_date" class="form-label mb-2">Date</label>
+
+											</div>
+											<div class="col-8">
+
+												<input type="date" class="form-control input-field mb-2" name="outgoing_pass_date" id="outgoing_pass_date" />
 											</div>
 										</div>
-										<div class="col text-center">
-											<h3>Official Business Form</h3>
+
+
+										<div class="row ">
+											<p class="row text-center">Destination</p>
+											<div class="col-3">
+
+												<label for="destin_from" class="form-label mb-2">From:</label>
+
+											</div>
+											<div class="col-8">
+
+												<input type="text" class="form-control input-field mb-2" name="destin_from" id="destin_from" />
+											</div>
+										</div>
+
+
+
+										<div class="row">
+											<div class="col-3">
+
+												<label for="destin_to" class="form-label mb-2">To:</label>
+
+											</div>
+											<div class="col-8">
+
+												<input type="text" class="form-control input-field mb-2 " name="destin_to" id="destin_to" />
+											</div>
+										</div>
+
+
+										<div class="row ">
+											<p class="row text-center">Time</p>
+											<div class="col-3">
+
+												<label for="time_from" class="form-label mb-2">From:</label>
+
+											</div>
+											<div class="col-8">
+
+												<input type="time" class="form-control input-field mb-2" name="time_from" id="time_from" />
+											</div>
+										</div>
+
+
+
+										<div class="row">
+											<div class="col-3">
+
+												<label for="time_to" class="form-label mb-2">To:</label>
+
+											</div>
+											<div class="col-8">
+
+												<input type="time" class="form-control input-field mb-2 " name="time_to" id="time_to" />
+											</div>
+										</div>
+
+
+
+										<div class=" mb-3 row">
+											<label class="col-form-label col-md-3">Reason</label>
+											<div class="col-md-8">
+												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="Enter text here"></textarea>
+
+											</div>
 										</div>
 
 									</div>
-
-									<!-- /Form content -->
-
-
-
-									<div class="row ">
-										<!-- <p>I, have to leave the company premises on this day : </p> -->
-										<div class="col-3">
-
-											<label for="outgoing_pass_date" class="form-label mb-2">Date</label>
-
-										</div>
-										<div class="col-8">
-
-											<input type="date" class="form-control input-field mb-2" name="outgoing_pass_date" id="outgoing_pass_date" />
-										</div>
-									</div>
-
-
-									<div class="row ">
-										<p class="row text-center">Destination</p>
-										<div class="col-3">
-
-											<label for="outgoing_pass_date" class="form-label mb-2">From:</label>
-
-										</div>
-										<div class="col-8">
-
-											<input type="text" class="form-control input-field mb-2" name="outgoing_pass_date" id="outgoing_pass_date" />
-										</div>
-									</div>
-
-
-
-									<div class="row">
-										<div class="col-3">
-
-											<label for="from_time" class="form-label mb-2">To:</label>
-
-										</div>
-										<div class="col-8">
-
-											<input type="text" class="form-control input-field mb-2 " name="from_time" id="from_time" />
-										</div>
-									</div>
-
-
-									<div class="row ">
-										<p class="row text-center">Time</p>
-										<div class="col-3">
-
-											<label for="outgoing_pass_date" class="form-label mb-2">From:</label>
-
-										</div>
-										<div class="col-8">
-
-											<input type="time" class="form-control input-field mb-2" name="outgoing_pass_date" id="outgoing_pass_date" />
-										</div>
-									</div>
-
-
-
-									<div class="row">
-										<div class="col-3">
-
-											<label for="from_time" class="form-label mb-2">To:</label>
-
-										</div>
-										<div class="col-8">
-
-											<input type="time" class="form-control input-field mb-2 " name="from_time" id="from_time" />
-										</div>
-									</div>
-
-
-
-									<div class=" mb-3 row">
-										<label class="col-form-label col-md-3">Reason</label>
-										<div class="col-md-8">
-											<textarea rows="1" cols="5" class="form-control" placeholder="Enter text here"></textarea>
-
-										</div>
-									</div>
-
 								</div>
-							</div>
 
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+								<button type="submit" class="btn btn-primary">Submit</button>
+							</div>
 						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary">Submit</button>
-						</div>
-					</div>
 					</form>
 				</div>
 			</div>

@@ -25,7 +25,7 @@
    <?php $this->load->view('templates/sidebar') ?>
 			
 			<!-- Page Wrapper -->
-            <div class="page-wrapper">
+            <div class="page-wrapper w-100">
 			
 				<!-- Page Content -->
                 <div class="content container-fluid">
@@ -43,68 +43,107 @@
 						</div>
 					</div>
 					
-					<div class="row">
-						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-						<div class="card dash-widget">
-						<div class="card-body">
-						<span class="dash-widget-icon"><i class="fa-solid fa-cubes"></i></span>
-						<div class="dash-widget-info">
-						<h3>1</h3>
-						<span>Absent this year</span>
-						</div>
-						</div>
-						</div>
-						</div>
-						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-						<div class="card dash-widget">
-						<div class="card-body">
-						<span class="dash-widget-icon"><i class="fa-solid fa-dollar-sign"></i></span>
-						<div class="dash-widget-info">
-						<h3>10</h3>
-						<span>Leaves</span>
-						</div>
-						</div>
-						</div>
-						</div>
-						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-						<div class="card dash-widget">
-						<div class="card-body">
-						<span class="dash-widget-icon"><i class="fa-regular fa-gem"></i></span>
-						<div class="dash-widget-info">
-						<h3>37</h3>
-						<span>Overtime</span>
-						</div>
-						</div>
-						</div>
-						</div>
-						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-						<div class="card dash-widget">
-						<div class="card-body">
-						<span class="dash-widget-icon"><i class="fa-solid fa-user"></i></span>
-						<div class="dash-widget-info">
-						<h3>5</h3>
-						<span>Undertime</span>
-						</div>
-						</div>
-						</div>
-						</div>
-						</div>
+					<div class="row"> <!-- main metrics -->
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+
+               <?php 
+               $data['icon'] = "fa-solid fa-user";
+               $data['count'] = rand(0,200);
+               $data['label'] = "Absent this year";
+               $this->load->view('components/card-dash-widget',$data)
+                ?>
+
+
+            </div>
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+
+               <?php 
+               $data['icon'] = "fa fa-address-book";
+                $data['count'] = rand(0,200);
+                $data['label'] = "Remaining Leaves";
+                $this->load->view('components/card-dash-widget',$data)
+
+                ?>
+
+
+            </div>
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+               <?php 
+               $data['icon'] = "fa fa-check-circle";
+                $data['count'] = rand(0,200);
+                $data['label'] = "Overtime";
+                $this->load->view('components/card-dash-widget',$data)
+
+                ?>
+
+            </div>
+          <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+               <?php
+               $data['icon'] = "fa fa-rocket";
+                $data['count'] = rand(0,200);
+                $data['label'] = "Undertime";
+                $this->load->view('components/card-dash-widget',$data)
+
+               ?>
+
+            </div>
+         </div>
 
 					<div class="row">
-						<div class="col bg-primary">
-							<h2>Announcements</h2>
+						<div class="col">
+						<h3 class="page-title">
+                  <!-- <?php print_r($_SESSION) ?> -->
+                  <a href="../pages/hr_announcement.php">Announcements</a>
+               </h3>
+
+
+               <?php
+
+               $query = $this->db->get('announcement', 6);
+
+               // print_r($this->session->get_userdata('fname'));
+               // echo $_SESSION['fname'];
+
+               foreach ($query->result() as $row) {
+                  $title =  $row->title;
+                  $content = $row->content;
+                  $author = $row->author;
+                  $department = $row->department;
+                  $date = $row->date_created;
+
+                  $data['title'] = $title;
+                  $data['content'] = $content;
+                  $data['author'] = $author;
+                  $data['department'] = $department;
+                  $data['date'] = $date;
+
+                  
+                  $this->load->view('components/card-announcement', $data);
+           
+               }
+
+               ?>
+
+
 
 
 
 
 						</div>
-						<div class="col-4 bg-secondary">
+						<div class="col-4">
 							<h2 class = "text-center">Upcoming Events</h2>
 
 							<div class="row" style ="background-color: white;">
 								<h3>Event</h3>
 								<p>time and date</p>
 								<p>We will gather for something! And that something is I dont know</p>
+							</div>
+							<div class="row" style ="background-color: white;">
+								<h3>Birthday</h3>
+								<p>TODAY</p>
+								<p>We will gather for something! And that something is I dont know</p>
+								<img src="../assets/img/birthday-GIF.gif" alt="User Image" loop="infinite">
+								
 							</div>
 
 							

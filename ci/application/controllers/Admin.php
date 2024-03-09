@@ -42,11 +42,11 @@ class Admin extends CI_Controller
 			$current_add = $data['current_add'];
 			$perm_add = $data['perm_add'];
 			$contact_no = $data['contact_no'];
+			$user_type = $data['user_type'];
 			
 			$sex = $data['sex'];
 			$pfp = $data['pfp'];
 			
-
 			
 			$session_data = array(
 				'id' => $id,
@@ -64,18 +64,28 @@ class Admin extends CI_Controller
 				'perm_add' => $perm_add,	
 				'contact_no' => $contact_no,	
 				'sex' => $sex,	
-				'pfp' => $pfp,								
+				'pfp' => $pfp,	
+				'user_type' => $user_type,								
 				'logged_in' => TRUE
 			);
 
 			$this->session->set_userdata($session_data);
+
+			$response['status']='success';
+			$response['message']='Logged in sucessfully!';
+			$response['user_type']= $user_type;
+
 		}
 		else 
 		{
 			 $response['status']='error';
-       $response['message']='Ops! Invalid username Or password';
+       		 $response['message']='Ops! Invalid username Or password';
 		}
+		$response['hmm'] = 'email : ' . $email . ' -- password '. $password; 
+
+		// print_r($response);
 		echo json_encode($response);
+
 	}
 
 	public function addUser() {
@@ -298,6 +308,152 @@ public function leaverequestzz() {
 	// $perm_add,$dob,$age,$religion,$sex,$civil_status,$pob,$email,$password,$department,$role);
 	// echo json_encode($result);
 }
+
+
+public function ob_requestzz() {
+	$response = array();
+
+	$name = $this->input->post('name');
+	$date_filled = date('Y-m-d H:i:s', time());
+	
+	$department = $this->input->post('department');
+	$outgoing_pass_date = $this->input->post('outgoing_pass_date');
+
+	$destin_from = $this->input->post('destin_from');
+	$destin_to = $this->input->post('destin_to');
+	$time_from = $this->input->post('time_from');
+	$time_to = $this->input->post('time_to');
+	
+	$reason = $this->input->post('reason');
+	$status = $this->input->post('status');
+	$empid = $this->input->post('empid');
+	
+	
+	
+
+	$data = array( 
+	/*column name*/
+	'destin_from' => $destin_from,
+	'destin_to' => $destin_to,
+	'time_from' => $time_from,
+	'time_to' => $time_to,
+	'outgoing_pass_date' => $outgoing_pass_date,
+
+	'reason' => $reason,
+	'status' => $status,
+	
+
+	'emp_id' => $empid,
+	'department' => $department,
+	'name' => $name
+
+	);
+
+	$sql = $this->db->insert('ob_request',$data);
+
+	if($sql){
+		$response['status'] = 1;
+		$response['msg'] = 'Done';
+	}else{
+		$response['status'] = 0;
+		$response['msg'] = 'Error';
+	}
+
+	echo json_encode($response);
+	
+	
+}
+
+
+public function outgoingrequestzz() {
+	$response = array();
+
+	$name = $this->input->post('name');
+	$department = $this->input->post('department');
+	$outgoing_date = $this->input->post('outgoing_date');
+	$time_from = $this->input->post('time_from');
+	$time_to = $this->input->post('time_to');
+	$destination = $this->input->post('destination');
+	
+	$reason = $this->input->post('reason');
+	$status = $this->input->post('status');
+	$empid = $this->input->post('empid');
+
+	$data = array( 
+	/*column name*/
+	'date_filled' => $outgoing_date,
+	'time_from' => $time_from,
+	'time_to' => $time_to,
+	'going_to' => $destination,
+	'reason' => $reason,
+	'status' => $status,
+	'emp_id' => $empid,
+	'department' => $department,
+	'name' => $name
+
+	);
+
+	$sql = $this->db->insert('outgoing_request',$data);
+
+	if($sql){
+		$response['status'] = 1;
+		$response['msg'] = 'Done';
+	}else{
+		$response['status'] = 0;
+		$response['msg'] = 'Error';
+	}
+
+	echo json_encode($response);
+	
+	
+}
+
+
+public function undertimerequestzz() {
+	$response = array();
+
+	$name = $this->input->post('name');
+	$department = $this->input->post('department');
+	$undertime_date = $this->input->post('undertime_date');
+	$time_in = $this->input->post('time_in');
+	$time_out = $this->input->post('time_out');
+	$reason = $this->input->post('reason');
+	$status = $this->input->post('status');
+	$empid = $this->input->post('empid');
+
+	$data = array( 
+	/*column name*/
+	'date_filled' => $undertime_date,
+	'time_in' => $time_in,
+	'time_out' => $time_out,
+	
+	'reason' => $reason,
+	'status' => $status,
+	'emp_id' => $empid,
+	'department' => $department,
+	'name' => $name
+
+	);
+
+	$sql = $this->db->insert('undertime_request',$data);
+
+	if($sql){
+		$response['status'] = 1;
+		$response['msg'] = 'Done';
+	}else{
+		$response['status'] = 0;
+		$response['msg'] = 'Error';
+	}
+
+	echo json_encode($response);
+	
+	
+}
+
+
+
+
+
 
 
 

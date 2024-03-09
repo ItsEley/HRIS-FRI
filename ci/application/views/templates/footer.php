@@ -18,21 +18,21 @@
       <script src= <?=base_url("assets/js/app.js")?>></script>
 		<script src= <?=base_url("assets/js/ajax.js")?>></script>
     <script>
-    function previewFile() {
-        const preview = document.getElementById('previewImage');
-        const file = document.getElementById('uploadInput').files[0];
-        const reader = new FileReader();
+    // function previewFile() {
+    //     const preview = document.getElementById('previewImage');
+    //     const file = document.getElementById('uploadInput').files[0];
+    //     const reader = new FileReader();
 
-        reader.onloadend = function () {
-            preview.src = reader.result;
-        };
+    //     reader.onloadend = function () {
+    //         preview.src = reader.result;
+    //     };
 
-        if (file) {
-            reader.readAsDataURL(file);
-        } else {
-            preview.src = "<?php echo $this->session->userdata('pfp'); ?>";
-        }
-    }
+    //     if (file) {
+    //         reader.readAsDataURL(file);
+    //     } else {
+    //         preview.src = "<?php //echo $this->session->userdata('pfp'); ?>";
+    //     }
+    // }
 </script>
 
 

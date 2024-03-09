@@ -27,6 +27,9 @@ $route['hr/employees'] = 'pages/hr_employees';
 // hr functions
 $route['user_profile'] = 'pages/user_profile';
 $route['leaverequestzz'] = 'admin/leaverequestzz';
+$route['ob_requestzz'] = 'admin/ob_requestzz';
+$route['outgoingrequestzz'] = 'admin/outgoingrequestzz';
+$route['undertimerequestzz'] = 'admin/undertimerequestzz';
 
 
 
@@ -45,6 +48,11 @@ $route['employee/home'] = 'pages/emp_home';
 $route['edituser'] = 'admin/updateuser';
 $route['adduser'] = 'admin/adduser';
 $route['admin/showUserdetails'] = 'admin/showUserdetails';
+
+
+//ADMIN
+
+$route['admin/home'] = 'pages/adm_home';
 
 
 

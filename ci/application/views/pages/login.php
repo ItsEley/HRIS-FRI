@@ -28,8 +28,10 @@
 							<form id="login-form" method="post">
 								<div class="input-block mb-4">
 									<label class="col-form-label">Email Address</label>
-									<input type="email" class="form-control form-control-lg" placeholder="Email" name="email" id="email">
-									
+									<input type="email" class="form-control form-control-lg" 
+									placeholder="Email" name="email" id="email" autocomplete="username"
+									value = "kokey1@gmail.com">
+
 								</div>
 								<div class="input-block mb-4">
 									<div class="row align-items-center">
@@ -43,8 +45,10 @@
 										</div>
 									</div>
 									<div class="position-relative">
+									<input type="password" class="form-control form-control-lg" placeholder="Password"
+									 name="password" id="password" autocomplete="current-password" value ="kokey1">
+
 										
-										<input type="password" class="form-control form-control-lg" placeholder="Password" name="password" id="password">
 										<span class="fa-solid fa-eye-slash" id="toggle-password"></span>
 									</div>
 								</div>

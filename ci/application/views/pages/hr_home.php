@@ -23,7 +23,7 @@
          <div class="page-header">
             <div class="row">
                <div class="col-sm-12">
-                  <h3 class="page-title">Welcome <span><?php echo ucwords(strtolower($_SESSION['fname'])); ?></span>
+                  <h3 class="page-title">Welcome <span><?php echo ucwords(strtolower($_SESSION['fname'])); ?></span><span><?php echo ucwords(strtolower($_SESSION['user_type'])); ?></span>
 !</h3>
                   <ul class="breadcrumb">
                      <li class="breadcrumb-item active">HR Dashboard</li>

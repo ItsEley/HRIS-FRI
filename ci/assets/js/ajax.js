@@ -1,46 +1,64 @@
 /*Admin login*/
-$("#login-form").submit(function(e){
-	e.preventDefault();
-	var loginform = $(this).serialize();
-	if (email !="" & password !="") {
-		$.ajax({
-			url: base_url + 'admin/auth_form',
-			type: 'post',
-			data: loginform,
-			dataType: 'json',
-			beforeSend: function() {
-				$("#login-form").attr('disabled', true).html("Logging in ....<span class='fa fa-spinner fa-1x fa-spin'></span>");
-			},
-			success: function(res) {
-				if (res.status === 'error') {						
-					$("#alert").html('<div class="alert alert-danger">'+res.message+'</div>');
-					$("#login-form").attr("disabled", false).html("Login");
-				}else{	
-					
-					window.location = base_url + 'hr/dashboard';
+$("#login-form").submit(function(e) {
+    e.preventDefault();
+    var email = $("#email").val(); 
+    var password = $("#password").val(); 
+    
+    var loginform = $(this).serialize();
+    if (email !== "" && password !== "") {
+        $.ajax({
+            url: base_url + 'admin/auth_form',
+            type: 'post',
+            data: loginform,
+            dataType: 'json',
+            beforeSend: function() {
+                $("#login-form").attr('disabled', true).html("Logging in ....<span class='fa fa-spinner fa-1x fa-spin'></span>");
+            },
+            success: function(response) {
+		
 
+				console.log(response);
 
-					if(res.role === 'HR'){
-						window.location = base_url + 'hr/dashboard';
-					}else{
-						window.location = base_url + 'hr/dashboard';
+                if (response.status == 'error') {
+                    $("#alert").html('<div class="alert alert-danger">' + response.message + '</div>');
+                    $("#login-form").attr("disabled", false).html("Login");
+				console.log("error");
+
+                } else {
+
+                    // Check if response.user_type exists before calling toLowerCase()
+					var userTypeLower = '';
+					if (response.user_type !== null && response.user_type !== undefined) {
+						userTypeLower = response.user_type.toLowerCase();
 					}
-
-
 					
-				}
-			}
-		})
-	}	else {			
-		swal(
-		{
-			title: 'All Field are REQUIRED !',	                    
-			type: 'warning',	                    
-			confirmButtonClass: 'btn btn-success',	                    
-		}
-	);
-	}	
-})
+					if (userTypeLower == '3') {
+						window.location = base_url + 'employee/home';
+					} else if (userTypeLower == '2') {
+						window.location = base_url + 'hr/dashboard';
+					} else if (userTypeLower == '1') {
+						window.location = base_url + 'admin/home';
+					} else {
+						// Handle default case if necessary
+					}
+					 
+				console.log("success : ",userTypeLower);
+
+
+                   
+                }
+            }
+        })
+    } else {
+        swal({
+            title: 'All Field are REQUIRED !',
+            type: 'warning',
+            confirmButtonClass: 'btn btn-success',
+        });
+    }
+});
+
+
 /*Admin login*/
 
 $("#adduser").submit(function(e){
@@ -193,3 +211,61 @@ $("#leave_request").submit(function(e){
 		}
 	})
 })
+
+
+$("#ob_request").submit(function(e){
+	e.preventDefault();
+	var obRequest = $(this).serialize();
+	$.ajax({
+		url: base_url + 'ob_requestzz',
+		type: 'post',
+		data: obRequest,
+		dataType: 'json',
+		success: function(response){
+			if(response.status === 1){
+				alert(response.msg);
+			}else{
+				alert(response.msg);
+			}
+		}
+	})
+})
+
+
+
+$("#outgoing_request").submit(function(e){
+	e.preventDefault();
+	var outgoingRequest = $(this).serialize();
+	$.ajax({
+		url: base_url + 'outgoingrequestzz',
+		type: 'post',
+		data: outgoingRequest,
+		dataType: 'json',
+		success: function(response){
+			if(response.status === 1){
+				alert(response.msg);
+			}else{
+				alert(response.msg);
+			}
+		}
+	})
+})
+
+$("#undertime_request").submit(function(e){
+	e.preventDefault();
+	var udtRequest = $(this).serialize();
+	$.ajax({
+		url: base_url + 'undertimerequestzz',
+		type: 'post',
+		data: udtRequest,
+		dataType: 'json',
+		success: function(response){
+			if(response.status === 1){
+				alert(response.msg);
+			}else{
+				alert(response.msg);
+			}
+		}
+	})
+})
+

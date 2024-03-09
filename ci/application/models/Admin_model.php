@@ -11,9 +11,10 @@ class Admin_model extends CI_Model
 		// $this->date 	= date('Y-m-d', time());
 	}
 
+
 	public function authentication($email, $password) {		
-    $this->db->where('password', $password);
     $this->db->where('email', $email);
+    $this->db->where('password', $password);
     $query = $this->db->get('personal_info');    
     return $query;
 	}
@@ -62,6 +63,8 @@ class Admin_model extends CI_Model
 			return "error";
 		}
 	}
+
+
 	public function getEmployeeDetails($emp_id) {
         // Fetch employee details from the database based on emp_id
         $query = $this->db->get_where('personal_info', array('id' => $emp_id));

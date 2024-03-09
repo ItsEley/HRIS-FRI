@@ -247,6 +247,7 @@
 
 
             <li><a href="<?= base_url('hr/dashboard')?>"><i class="la la-dashboard"></i> <span>Dashboard</span></a></li>
+            <li><a href="<?= base_url('employee/home')?>"><i class="la la-dashboard"></i> <span>Dashboard (Employee)</span></a></li>
             <li><a href="<?= base_url('hr/announcement')?>"><i class="la la-bullhorn"></i> <span>Announcements</span></a></li>
 
 
