@@ -15,6 +15,8 @@ class Pages extends CI_Controller {
       $this->load->view('pages/index');
     }
 
+
+
     public function about()
     {
       $data['title'] = 'About Page';
@@ -30,6 +32,14 @@ class Pages extends CI_Controller {
       $this->load->view('templates/footer');
     }
 
+    public function forms()
+    {
+      $data['title'] = 'Resources | Forms';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/forms');
+      $this->load->view('templates/footer');
+    }
+
 
 
     // hr
@@ -42,12 +52,44 @@ class Pages extends CI_Controller {
 
     }
 
+    public function hr_announcement()
+    {
+      $data['title'] = 'HR Announcement';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/hr_announcement');
+      $this->load->view('templates/footer');
+
+    }
+
+
+    public function hr_employees()
+    {
+      $data['title'] = 'HR Employees';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/hr_employees');
+      $this->load->view('templates/footer');
+
+    }
+    public function hr_profile()
+    {
+      $data['title'] = 'Profile Page';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/hr_profile');
+      $this->load->view('templates/footer');
+    }
+    public function user_profile()
+    {
+      $data['title'] = 'User Profile';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/user_profile');
+      $this->load->view('templates/footer');
+    }
 
 
     // employee
     public function emp_home()
     {
-      $data['title'] = 'Employee';
+      $data['title'] = 'Home | Employee';
       $this->load->view('templates/header',$data);
       $this->load->view('pages/employee_home');
       $this->load->view('templates/footer');

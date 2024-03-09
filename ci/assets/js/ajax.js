@@ -20,11 +20,11 @@ $("#login-form").submit(function(e){
 					window.location = base_url + 'hr/dashboard';
 
 
-					// if(res.role === 'HR'){
-					// 	window.location = base_url + 'hr/dashboard';
-					// }else{
-					// 	window.location = base_url + 'hr/dashboardss';
-					// }
+					if(res.role === 'HR'){
+						window.location = base_url + 'hr/dashboard';
+					}else{
+						window.location = base_url + 'hr/dashboard';
+					}
 
 
 					
@@ -42,3 +42,154 @@ $("#login-form").submit(function(e){
 	}	
 })
 /*Admin login*/
+
+$("#adduser").submit(function(e){
+	e.preventDefault();
+	var adduser = $(this).serialize();
+	$.ajax({
+		url: base_url + 'admin/addUser',
+		type: 'post',
+		data: adduser,
+		dataType: 'json',
+		success: function(res){
+			if(res.status === 1){
+				alert(res.msg);
+			}else{
+				alert(res.msg);
+			}
+		}
+	})
+})
+
+$("#edituser").submit(function(e){
+	e.preventDefault();
+	var edituser = $(this).serialize();
+	$.ajax({
+		url: base_url + 'admin/updateUser',
+		type: 'post',
+		data: edituser,
+		dataType: 'json',
+		success: function(res){
+			if(res.status === 1){
+				alert(res.msg);
+			}else{
+				alert(res.msg);
+			}
+		}
+	})
+})
+$(".dropdown-item.edit-employee").click(function(e) {
+    var emp_id = $(this).data("emp-id");
+
+    // AJAX request to fetch employee details
+    $.ajax({
+        url: base_url + 'admin/showUserdetails',
+        type: 'GET',
+        dataType: 'json',
+        data: { emp_id: emp_id },
+        success: function(employee) {
+            // Populate modal fields with employee data
+            $('#edit_employee input[name="fname"]').val(employee.fname);
+            $('#edit_employee input[name="mname"]').val(employee.mname);
+            $('#edit_employee input[name="lname"]').val(employee.lname);
+            $('#edit_employee input[name="nickn"]').val(employee.nickn);
+            $('#edit_employee input[name="current_add"]').val(employee.current_add);
+            $('#edit_employee input[name="perm_add"]').val(employee.perm_add);
+            $('#edit_employee input[name="age"]').val(employee.age);
+            $('#edit_employee input[name="religion"]').val(employee.religion);
+            $('#edit_employee select[name="sex"]').val(employee.sex);
+            $('#edit_employee select[name="civil_status"]').val(employee.civil_status);
+            $('#edit_employee input[name="pob"]').val(employee.pob);
+			$('#edit_employee input[name="dob"]').val(employee.dob);
+            $('#edit_employee select[name="department"]').val(employee.department);
+            $('#edit_employee input[name="role"]').val(employee.role);
+            $('#edit_employee input[name="pfp"]').val(employee.pfp);
+            $('#edit_employee input[name="email"]').val(employee.email);
+            $('#edit_employee input[name="password"]').val(employee.password);
+
+            // Show the modal
+            $('#edit_employee').modal('show');
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+            // Handle error if necessary
+        }
+    });
+});
+
+$(".avatar.profile_view").click(function(e) {
+    var emp_id = $(this).data("emp-id");
+
+    // Declare a variable to store employee data
+    var employeeData;
+
+    // AJAX request to fetch employee details
+    $.ajax({
+        url: base_url + 'admin/showUserdetails',
+        type: 'GET',
+        dataType: 'json',
+        data: { emp_id: emp_id },
+        success: function(employee) {
+            // Assign employee data to the variable
+            employeeData = employee;
+
+            // Populate profile view with employee data
+            populateProfileView(employeeData);
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+            // Handle error if necessary
+        }
+    });
+
+    // Function to populate profile view with employee data
+    function populateProfileView(employee) {
+        $('.profile-img img').attr('src', employee.pfp);
+        $('.user-name').text(employee.fullname);
+        $('.text-muted.department').text(employee.department);
+        $('.text-muted.role').text(employee.role);
+        $('.staff-id').text('Employee ID: ' + employee.id);
+        $('.personal-info .phone .text a').text(employee.contact_no);
+        $('.personal-info .email .text a').text(employee.email);
+        $('.personal-info .birthday .text').text(employee.dob);
+        $('.personal-info .address .text').text(employee.current_add);
+        $('.personal-info .sex .text').text(employee.sex);
+    }
+});
+
+
+$("#add_announcement").submit(function(e){
+	e.preventDefault();
+	var addAnnounce = $(this).serialize();
+	$.ajax({
+		url: base_url + 'admin/add_announce',
+		type: 'post',
+		data: addAnnounce,
+		dataType: 'json',
+		success: function(res){
+			if(res.status === 1){
+				alert(res.msg);
+			}else{
+				alert(res.msg);
+			}
+		}
+	})
+})
+
+$("#leave_request").submit(function(e){
+	e.preventDefault();
+	var leaveRequest = $(this).serialize();
+	$.ajax({
+		url: base_url + 'leaverequestzz',
+		type: 'post',
+		data: leaveRequest,
+		dataType: 'json',
+		success: function(response){
+			if(response.status === 1){
+				alert(response.msg);
+			}else{
+				alert(response.msg);
+			}
+		}
+	})
+})

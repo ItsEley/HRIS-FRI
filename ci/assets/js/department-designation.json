@@ -1,0 +1,115 @@
+{
+    "departments": [
+      {
+        "name": "Human Resources",
+        "positions": [
+          { "title": "HR Manager" },
+          { "title": "HR Coordinator" },
+          { "title": "Recruitment Specialist" },
+          { "title": "Training and Development Manager" },
+          { "title": "Compensation and Benefits Specialist" },
+          { "title": "Employee Relations Manager" }
+        ]
+      },
+      {
+        "name": "Marketing",
+        "positions": [
+          { "title": "Marketing Director" },
+          { "title": "Marketing Manager" },
+          { "title": "Marketing Coordinator" },
+          { "title": "Social Media Specialist" },
+          { "title": "Brand Manager" },
+          { "title": "Content Writer" }
+        ]
+      },
+      {
+        "name": "Finance",
+        "positions": [
+          { "title": "Chief Financial Officer (CFO)" },
+          { "title": "Finance Manager" },
+          { "title": "Accountant" },
+          { "title": "Financial Analyst" },
+          { "title": "Tax Specialist" },
+          { "title": "Budget Analyst" }
+        ]
+      },
+      {
+        "name": "Information Technology",
+        "positions": [
+          { "title": "Chief Technology Officer (CTO)" },
+          { "title": "IT Manager" },
+          { "title": "Systems Administrator" },
+          { "title": "Software Engineer" },
+          { "title": "Database Administrator" },
+          { "title": "Network Engineer" }
+        ]
+      },
+      {
+        "name": "Sales",
+        "positions": [
+          { "title": "Sales Director" },
+          { "title": "Sales Manager" },
+          { "title": "Sales Representative" },
+          { "title": "Account Manager" },
+          { "title": "Business Development Executive" },
+          { "title": "Customer Success Manager" }
+        ]
+      },
+      {
+        "name": "Customer Support",
+        "positions": [
+          { "title": "Customer Support Manager" },
+          { "title": "Technical Support Specialist" },
+          { "title": "Customer Service Representative" },
+          { "title": "Help Desk Analyst" },
+          { "title": "Client Success Manager" },
+          { "title": "Escalation Specialist" }
+        ]
+      },
+      {
+        "name": "Operations",
+        "positions": [
+          { "title": "Operations Manager" },
+          { "title": "Logistics Coordinator" },
+          { "title": "Supply Chain Analyst" },
+          { "title": "Quality Assurance Specialist" },
+          { "title": "Facilities Manager" },
+          { "title": "Inventory Control Clerk" }
+        ]
+      },
+      {
+        "name": "Research and Development",
+        "positions": [
+          { "title": "Research and Development Director" },
+          { "title": "Research Scientist" },
+          { "title": "Product Development Manager" },
+          { "title": "Prototype Engineer" },
+          { "title": "Lab Technician" },
+          { "title": "Technical Writer" }
+        ]
+      },
+      {
+        "name": "Legal",
+        "positions": [
+          { "title": "General Counsel" },
+          { "title": "Legal Assistant" },
+          { "title": "Contracts Manager" },
+          { "title": "Intellectual Property Attorney" },
+          { "title": "Compliance Officer" },
+          { "title": "Paralegal" }
+        ]
+      },
+      {
+        "name": "Public Relations",
+        "positions": [
+          { "title": "Public Relations Director" },
+          { "title": "PR Manager" },
+          { "title": "PR Specialist" },
+          { "title": "Event Coordinator" },
+          { "title": "Media Relations Manager" },
+          { "title": "Press Release Writer" }
+        ]
+      }
+    ]
+  }
+  

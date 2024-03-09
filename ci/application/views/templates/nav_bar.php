@@ -25,7 +25,7 @@
             <!-- Header Menu -->
             <ul class="nav user-menu">
                <!-- Search -->
-               <li class="nav-item">
+               <!-- <li class="nav-item">
                   <div class="top-nav-search">
                      <a href="javascript:void(0);" class="responsive-search">
                      <i class="fa-solid fa-magnifying-glass"></i>
@@ -35,7 +35,7 @@
                         <button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                      </form>
                   </div>
-               </li>
+               </li> -->
                <!-- /Search -->
                <!-- Flag -->
                <!-- <li class="nav-item dropdown has-arrow flag-nav">
@@ -252,12 +252,14 @@
                   <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                   <span class="user-img"><img src="../assets/img/profiles/avatar-21.jpg" alt="User Image">
                   <span class="status online"></span></span>
-                  <span>Admin</span>
+                  <span><?php //echo ucwords(strtolower($_SESSION['fname'])); ?></span>
+
+
                   </a>
                   <div class="dropdown-menu">
-                     <a class="dropdown-item" href="profile.html">My Profile</a>
+                     <a class="dropdown-item" href="<?= base_url('hr_profile')?>">My Profile</a>
                      <a class="dropdown-item" href="settings.html">Settings</a>
-                     <a class="dropdown-item" href="index.html">Logout</a>
+                     <a class="dropdown-item" href="<?= base_url('logout')?>">Logout</a>
                   </div>
                </li>
             </ul>

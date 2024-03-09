@@ -246,8 +246,8 @@
             </li>
 
 
-            <li><a href="hr_dashboard.html"><i class="la la-dashboard"></i> <span>Dashboard</span></a></li>
-            <li><a href="hr_memo.html"><i class="la la-bullhorn"></i> <span>Announcements</span></a></li>
+            <li><a href="<?= base_url('hr/dashboard')?>"><i class="la la-dashboard"></i> <span>Dashboard</span></a></li>
+            <li><a href="<?= base_url('hr/announcement')?>"><i class="la la-bullhorn"></i> <span>Announcements</span></a></li>
 
 
             <li class="submenu">
@@ -262,10 +262,10 @@
 
 
             <li class="submenu">
-               <a href="#" class="noti-dot"><i class="la la-user"></i><span>Employees</span> <span class="menu-arrow"></span></a>
+               <a href="#"><i class="la la-user"></i><span>Employees</span> <span class="menu-arrow"></span></a>
                <ul>
-                  <li><a href="hr_emp_overview.html">Overview</a></li>
-                  <li><a href="hr_emp_manage.html">Manage</a></li>
+                  <li><a href="<?= base_url('hr/employees')?>">Manage</a></li>
+                  <!-- <li><a href="hr_emp_manage.html">Manage</a></li> -->
                   <li><a href="hr_emp_designations.html">Designations</a></li>
                   <li><a href="hr_emp_shifts.html">Shifts & Schedules</a></li>
                </ul>
@@ -283,17 +283,13 @@
             </li>
 
 
+            <li><a href="<?= base_url('resources/forms')?>"><i class="la la-object-group"></i> <span>Forms</span></a></li>
+
+
+
 
          </ul>
       </div>
    </div>
 </div>
 
-
-<script>
-   document.addEventListener('DOMContentLoaded', function() {
-      $("li > a[href='hr_dashboard.html']").parent().addClass("active");
-   })
-
-
-</script>
