@@ -40,6 +40,8 @@ class Pages extends CI_Controller {
       $this->load->view('templates/footer');
     }
 
+    
+
 
 
     // hr
@@ -84,6 +86,24 @@ class Pages extends CI_Controller {
       $this->load->view('pages/user_profile');
       $this->load->view('templates/footer');
     }
+
+    public function forms_pending()
+    {
+      $data['title'] = 'Forms | Pending';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/forms_pending');
+      $this->load->view('templates/footer');
+    }
+    
+    public function leave_pending()
+    {
+      $data['title'] = 'Requests | Pending';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/request_pending');
+      $this->load->view('templates/footer');
+    }
+
+
 
 
     // employee

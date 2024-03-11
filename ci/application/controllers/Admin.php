@@ -451,6 +451,98 @@ public function undertimerequestzz() {
 }
 
 
+public function overtimerequestzz() {
+	$response = array();
+	$date_filled = date('Y-m-d H:i:s', time());
+	$name = $this->input->post('name');
+	$department = $this->input->post('department');
+	$ot_date = $this->input->post('ot_date');
+	$time_in = $this->input->post('from_time');
+	$time_out = $this->input->post('to_time');
+	$reason = $this->input->post('reason');
+	$status = $this->input->post('status');
+	$empid = $this->input->post('empid');
+
+	$data = array( 
+	/*column name*/
+	
+	'date_filled' => $date_filled,
+	'date_ot' => $ot_date,
+	'time_in' => $time_in,
+	'time_out' => $time_out,
+	
+	'reason' => $reason,
+	'status' => $status,
+	'emp_id' => $empid,
+	'department' => $department,
+	'name' => $name
+
+	);
+
+	$sql = $this->db->insert('ot_request',$data);
+
+	if($sql){
+		$response['status'] = 1;
+		$response['msg'] = 'Done';
+	}else{
+		$response['status'] = 0;
+		$response['msg'] = 'Error';
+	}
+
+	echo json_encode($response);
+	
+	
+}
+
+public function workschedadjustzz() {
+	$response = array();
+	$date_filled = date('Y-m-d H:i:s', time());
+	$name = $this->input->post('name');
+	$department = $this->input->post('department');
+	$change_day_from = $this->input->post('date_from');
+	$change_day_to = $this->input->post('date_to');
+	$change_time_from = $this->input->post('time_from');
+	$change_time_to = $this->input->post('time_to');
+	$reason = $this->input->post('reason');
+	$status = $this->input->post('status');
+	$empid = $this->input->post('empid');
+
+	$data = array( 
+	/*column name*/
+	
+	'date_filled' => $date_filled,
+	'change_day_from' => $change_day_from,
+	'change_day_to' => $change_day_to,
+	'change_time_from' => $change_time_from,
+	'change_time_to' => $change_time_to,
+	
+	'reason' => $reason,
+	'status' => $status,
+	'emp_id' => $empid,
+	'department' => $department,
+	'name' => $name
+
+	);
+
+	$sql = $this->db->insert('work_schedule_adjustment_table',$data);
+
+	if($sql){
+		$response['status'] = 1;
+		$response['msg'] = 'Done';
+	}else{
+		$response['status'] = 0;
+		$response['msg'] = 'Error';
+	}
+
+	echo json_encode($response);
+	
+	
+}
+
+
+
+
+
 
 
 

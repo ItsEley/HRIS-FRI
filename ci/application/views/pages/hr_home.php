@@ -6,10 +6,12 @@
    <?php
    // $_SESSION[]
 
-   $this->load->view('templates/nav_bar'); ?>
-   <!-- /Header -->
-   <!-- Sidebar -->
-   <?php $this->load->view('templates/sidebar') ?>
+   // navbar
+   $this->load->view('templates/nav_bar'); 
+   // sidebar
+  $this->load->view('templates/sidebar');
+  
+  ?>
    <!-- /Sidebar -->
    <!-- Two Col Sidebar -->
 

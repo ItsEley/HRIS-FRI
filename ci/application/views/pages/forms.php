@@ -315,7 +315,12 @@
 			<!-- Modal schedule adjustment-->
 			<div class="modal fade" id="modal_schedule_adjustment" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal_schedule_adjustment_label" aria-hidden="true">
 				<div class="modal-dialog">
-					<form action="#" method="post">
+					<form id="ws_adjustment" method="post">
+
+						<input type="hidden" class="form-control input-field mb-2" value="<?php echo $userid; ?>" name="empid">
+						<input type="hidden" class="form-control input-field mb-2" value="<?php echo $department; ?>" name="department">
+						<input type="hidden" class="form-control input-field mb-2" value="<?php echo $fullName; ?>" name="name">
+						<input type="hidden" class="form-control input-field mb-2" value="<?php echo $status; ?>" name="status">
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" id="staticBackdropLabel">Fill up form</h5>
@@ -360,12 +365,12 @@
 												<p class="row text-center">Change Time Schedule</p>
 												<div class="col-3">
 
-													<label for="outgoing_pass_date" class="form-label mb-2">From:</label>
+													<label for="time_from" class="form-label mb-2">From:</label>
 
 												</div>
 												<div class="col-8">
 
-													<input type="time" class="form-control input-field mb-2" name="outgoing_pass_date" id="outgoing_pass_date" />
+													<input type="time" class="form-control input-field mb-2" name="time_from" id="time_from" />
 												</div>
 											</div>
 
@@ -374,12 +379,12 @@
 											<div class="row">
 												<div class="col-3">
 
-													<label for="from_time" class="form-label mb-2">To:</label>
+													<label for="time_to" class="form-label mb-2">To:</label>
 
 												</div>
 												<div class="col-8">
 
-													<input type="time" class="form-control input-field mb-2 " name="from_time" id="from_time" />
+													<input type="time" class="form-control input-field mb-2 " name="time_to" id="time_to" />
 												</div>
 											</div>
 
@@ -392,12 +397,12 @@
 												<p class="row text-center">Change Day Off</p>
 												<div class="col-3">
 
-													<label for="outgoing_pass_date" class="form-label mb-2">From:</label>
+													<label for="date_from" class="form-label mb-2">From:</label>
 
 												</div>
 												<div class="col-8">
 
-													<input type="date" class="form-control input-field mb-2" name="outgoing_pass_date" id="outgoing_pass_date" />
+													<input type="date" class="form-control input-field mb-2" name="date_from" id="date_from" />
 												</div>
 											</div>
 
@@ -406,12 +411,12 @@
 											<div class="row">
 												<div class="col-3">
 
-													<label for="from_time" class="form-label mb-2">To:</label>
+													<label for="date_to" class="form-label mb-2">To:</label>
 
 												</div>
 												<div class="col-8">
 
-													<input type="date" class="form-control input-field mb-2 " name="from_time" id="from_time" />
+													<input type="date" class="form-control input-field mb-2 " name="date_to" id="date_to" />
 												</div>
 											</div>
 
@@ -423,7 +428,7 @@
 										<div class=" mb-3 row">
 											<label class="col-form-label col-md-3">Reason</label>
 											<div class="col-md-8">
-												<textarea rows="1" cols="5" class="form-control" placeholder="Enter text here"></textarea>
+												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="Enter text here"></textarea>
 
 											</div>
 										</div>
@@ -435,7 +440,7 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary">Submit</button>
+								<button type="submit" class="btn btn-primary">Submit</button>
 							</div>
 						</div>
 					</form>
@@ -446,34 +451,34 @@
 			<!-- Modal undertime-->
 			<div class="modal fade" id="modal_undertime_request" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal_undertime_request_label" aria-hidden="true">
 				<div class="modal-dialog">
-				<form method="post" id="undertime_request" class="mb-2">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="staticBackdropLabel">Fill up form</h5>
-							<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+					<form method="post" id="undertime_request" class="mb-2">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="staticBackdropLabel">Fill up form</h5>
+								<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
 
-						</div>
-						<div class="modal-body">
+							</div>
+							<div class="modal-body">
 
-							<div class="container"> <!-- Employee Undertime form inputs -->
-								<div style="max-height: auto; ">
-									<!-- Header-->
+								<div class="container"> <!-- Employee Undertime form inputs -->
+									<div style="max-height: auto; ">
+										<!-- Header-->
 
-									<div class="row mb-2">
-										<div class="col-2">
-											<div class="account-logo">
-												<img src="<?= base_url('assets/img/famco_logo_clear.png') ?> " alt="Famco Retail Incorporated" style="width: 150px" />
+										<div class="row mb-2">
+											<div class="col-2">
+												<div class="account-logo">
+													<img src="<?= base_url('assets/img/famco_logo_clear.png') ?> " alt="Famco Retail Incorporated" style="width: 150px" />
+												</div>
 											</div>
+											<div class="col text-center">
+												<h3>Undertime Form</h3>
+											</div>
+
 										</div>
-										<div class="col text-center">
-											<h3>Undertime Form</h3>
-										</div>
 
-									</div>
+										<!-- /Form content -->
 
-									<!-- /Form content -->
 
-								
 
 
 										<input type="hidden" class="form-control input-field mb-2" value="<?php echo $userid; ?>" name="empid">
@@ -533,16 +538,16 @@
 
 
 
+									</div>
 								</div>
+
+
 							</div>
-
-
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+								<button type="submit" class="btn btn-primary">Submit</button>
+							</div>
 						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-							<button type="submit" class="btn btn-primary">Submit</button>
-						</div>
-					</div>
 					</form>
 				</div>
 			</div>
@@ -710,18 +715,21 @@
 
 									<!-- /Form content -->
 
-									<form method="post" action="submit_leave_request.php" class="mb-2">
-
+									<form method="post" id="ot_request" class="mb-2">
+										<input type="hidden" class="form-control input-field mb-2" value="<?php echo $userid; ?>" name="empid">
+										<input type="hidden" class="form-control input-field mb-2" value="<?php echo $department; ?>" name="department">
+										<input type="hidden" class="form-control input-field mb-2" value="<?php echo $fullName; ?>" name="name">
+										<input type="hidden" class="form-control input-field mb-2" value="<?php echo $status; ?>" name="status">
 										<div class="row ">
 											<!-- <p>I, have to leave the company premises on this day : </p> -->
 											<div class="col-3">
 
-												<label for="outgoing_pass_date" class="form-label mb-2">Date of Overtime:</label>
+												<label for="ot_date" class="form-label mb-2">Date of Overtime:</label>
 
 											</div>
 											<div class="col-8">
 
-												<input type="date" class="form-control input-field mb-2" name="outgoing_pass_date" id="outgoing_pass_date" />
+												<input type="date" class="form-control input-field mb-2" name="ot_date" id="ot_date" />
 											</div>
 										</div>
 
@@ -730,7 +738,7 @@
 										<div class="row">
 											<div class="col-3">
 
-												<label for="from_time" class="form-label mb-2">Time in:</label>
+												<label for="from_time" class="form-label mb-2">Time from:</label>
 
 											</div>
 											<div class="col-8">
@@ -743,7 +751,7 @@
 										<div class="row">
 											<div class="col-3">
 
-												<label for="to_time" class="form-label mb-2">Time out:</label>
+												<label for="to_time" class="form-label mb-2">Time to:</label>
 
 											</div>
 											<div class="col-8">
@@ -757,7 +765,7 @@
 										<div class=" mb-3 row">
 											<label class="col-form-label col-md-3">Reason</label>
 											<div class="col-md-8">
-												<textarea rows="1" cols="5" class="form-control" placeholder="Enter text here"></textarea>
+												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="Enter text here"></textarea>
 
 											</div>
 										</div>
@@ -771,7 +779,7 @@
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary">Submit</button>
+							<button type="submit" class="btn btn-primary">Submit</button>
 						</div>
 					</div>
 					</form>
@@ -781,7 +789,7 @@
 
 
 
-
+<button id = "my_btn">asdasd</button>
 
 
 
@@ -796,9 +804,18 @@
 
 
 <script>
-	document.addEventListener('DOMContentLoaded', function() {
+	$(document).ready(function() {
+
 		$("li > a[href='<?= base_url('resources/forms') ?>']").parent().addClass("active");
 
 
-	})
+		$( "#my_btn" ).on( "click", function() {
+		toastr.info("wtf?")
+
+//   alert( "Handler for `click` called." );
+} );
+
+
+
+	});
 </script>

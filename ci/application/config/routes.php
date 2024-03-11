@@ -14,15 +14,18 @@ $route['translate_uri_dashes'] = FALSE;
 $route['login'] = 'admin/loginUI';
 $route['about'] = 'pages/about';
 $route['logout'] = 'admin/logout';
-$route['resources/forms'] = 'pages/forms';
+$route['forms'] = 'pages/forms';
 
 
 // hr 
 $route['hr/dashboard'] = 'pages/hr_home';
 $route['hr/announcement'] = 'pages/hr_announcement';
 $route['hr_profile'] = 'pages/hr_profile';
-
 $route['hr/employees'] = 'pages/hr_employees';
+
+$route['forms/pending'] = 'pages/forms_pending';
+$route['leave_pending'] = 'pages/leave_pending';
+
 
 // hr functions
 $route['user_profile'] = 'pages/user_profile';
@@ -30,8 +33,8 @@ $route['leaverequestzz'] = 'admin/leaverequestzz';
 $route['ob_requestzz'] = 'admin/ob_requestzz';
 $route['outgoingrequestzz'] = 'admin/outgoingrequestzz';
 $route['undertimerequestzz'] = 'admin/undertimerequestzz';
-
-
+$route['overtimerequestzz'] = 'admin/overtimerequestzz';
+$route['workschedadjustzz'] = 'admin/workschedadjustzz';
 
 
 

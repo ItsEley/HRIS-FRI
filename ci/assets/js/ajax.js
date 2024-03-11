@@ -96,6 +96,7 @@ $("#edituser").submit(function(e){
 		}
 	})
 })
+
 $(".dropdown-item.edit-employee").click(function(e) {
     var emp_id = $(this).data("emp-id");
 
@@ -205,6 +206,7 @@ $("#leave_request").submit(function(e){
 		success: function(response){
 			if(response.status === 1){
 				alert(response.msg);
+				
 			}else{
 				alert(response.msg);
 			}
@@ -268,4 +270,43 @@ $("#undertime_request").submit(function(e){
 		}
 	})
 })
+
+
+$("#ot_request").submit(function(e){
+	e.preventDefault();
+	var overtimeRequest = $(this).serialize();
+	$.ajax({
+		url: base_url + 'overtimerequestzz',
+		type: 'post',
+		data: overtimeRequest,
+		dataType: 'json',
+		success: function(response){
+			if(response.status === 1){
+				alert(response.msg);
+			}else{
+				alert(response.msg);
+			}
+		}
+	})
+})
+
+
+$("#ws_adjustment").submit(function(e){
+	e.preventDefault();
+	var worksched = $(this).serialize();
+	$.ajax({
+		url: base_url + 'workschedadjustzz',
+		type: 'post',
+		data: worksched,
+		dataType: 'json',
+		success: function(response){
+			if(response.status === 1){
+				alert(response.msg);
+			}else{
+				alert(response.msg);
+			}
+		}
+	})
+})
+
 

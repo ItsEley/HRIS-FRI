@@ -36,6 +36,7 @@
 
     <!-- Chart CSS -->
     <link rel="stylesheet" href="<?=base_url('assets/plugins/morris/morris.css')?>">
+    <script src=<?= base_url("assets/js/jquery-3.7.1.min.js") ?>></script>
 
 
 </head>

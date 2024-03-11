@@ -230,7 +230,7 @@
                      <li><a href="blank-page.html"> Blank Page </a></li>
                   </ul>
                </li>
-            
+
             </ul>
          </nav>
 
@@ -246,12 +246,12 @@
             </li>
 
 
-            <li><a href="<?= base_url('hr/dashboard')?>"><i class="la la-dashboard"></i> <span>Dashboard</span></a></li>
-            <li><a href="<?= base_url('employee/home')?>"><i class="la la-dashboard"></i> <span>Dashboard (Employee)</span></a></li>
-            <li><a href="<?= base_url('hr/announcement')?>"><i class="la la-bullhorn"></i> <span>Announcements</span></a></li>
+            <li><a href="<?= base_url('hr/dashboard') ?>"><i class="la la-dashboard"></i> <span>Dashboard</span></a></li>
+            <li><a href="<?= base_url('employee/home') ?>"><i class="la la-dashboard"></i> <span>Dashboard (Employee)</span></a></li>
+            <li><a href="<?= base_url('hr/announcement') ?>"><i class="la la-bullhorn"></i> <span>Announcements</span></a></li>
 
 
-            <li class="submenu">
+            <li class="submenu reports">
                <a href="#" class=""><i class="la la-file-text"></i></i><span>Reports</span><span class="menu-arrow"></span></a>
                <ul>
                   <li><a href="hr_timesheet.html">Timesheet</a></li>
@@ -262,10 +262,10 @@
             </li>
 
 
-            <li class="submenu">
+            <li class="submenu employees">
                <a href="#"><i class="la la-user"></i><span>Employees</span> <span class="menu-arrow"></span></a>
                <ul>
-                  <li><a href="<?= base_url('hr/employees')?>">Manage</a></li>
+                  <li><a href="<?= base_url('hr/employees') ?>">Manage</a></li>
                   <!-- <li><a href="hr_emp_manage.html">Manage</a></li> -->
                   <li><a href="hr_emp_designations.html">Designations</a></li>
                   <li><a href="hr_emp_shifts.html">Shifts & Schedules</a></li>
@@ -273,19 +273,28 @@
             </li>
 
 
-            <li class="submenu">
+            <li class="submenu payroll">
                <a href="#" class=""><i class="la la-money"></i><span>Payroll</span> <span class="menu-arrow"></span></a>
                <ul>
                   <li><a href="hr_emp_overview.html">Salary Report</a></li>
                   <li><a href="hr_emp_manage.html">Bonuses & Commissions</a></li>
                   <li><a href="hr_emp_designations.html">Deductions</a></li>
-                  <li><a href="hr_emp_shifts.html">Shifts & Schedules</a></li>
+   
                </ul>
             </li>
 
 
-            <li><a href="<?= base_url('resources/forms')?>"><i class="la la-object-group"></i> <span>Forms</span></a></li>
 
+
+            <li class="submenu forms">
+               <a href="#" class=""><i class="la la-object-group"></i></i><span>Forms</span><span class="menu-arrow"></span></a>
+               <ul>
+                  <li><a href="<?= base_url('forms')?>">Apply</a></li>
+
+                  <li><a href="<?= base_url('leave_pending')?>">Pending</a></li>
+                  <li><a href="#">History</a></li>
+               </ul>
+            </li>
 
 
 
@@ -294,3 +303,57 @@
    </div>
 </div>
 
+<script>
+
+
+      $(document).ready(function() {
+
+            // console.log('<?php //print_r($_SESSION)?>')
+
+            let user_type = <?php echo $_SESSION['user_type']?>
+
+            // console.log(user_type);
+
+
+            // hide side menu content
+            $(".sidebar-vertical > li").hide();
+            $(".sidebar-vertical > li.menu-title").show();
+
+
+            if(user_type == 1){ //admin
+               // console.log("admin")
+               
+            }else if(user_type == 2){ // hr/heads
+               // console.log("hr")
+
+               $('.sidebar-vertical > li > a[href="<?= base_url('hr/dashboard') ?>"]').parent().show();
+               $('.sidebar-vertical > li > a[href="<?= base_url('hr/announcement') ?>"]').parent().show();
+               $(".sidebar-vertical > li.submenu.forms ").show()
+                $(".sidebar-vertical > li.submenu.payroll ").show()
+                $(".sidebar-vertical > li.submenu.employees ").show()
+                $(".sidebar-vertical > li.submenu.reports ").show()
+
+
+
+
+
+            }else if(user_type == 3){// employee
+               //  console.log("employee")
+
+                $('.sidebar-vertical > li > a[href="<?= base_url('employee/home') ?>"]').parent().show();
+                $(".sidebar-vertical > li.submenu.forms ").show()
+
+
+
+
+
+            }else{ //none?
+               // console.log('hmm');
+            }
+
+
+        
+      });
+
+   
+</script>
