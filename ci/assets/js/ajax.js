@@ -64,18 +64,25 @@ $("#login-form").submit(function(e) {
 $("#adduser").submit(function(e){
 	e.preventDefault();
 	var adduser = $(this).serialize();
+	console.log("errrp", adduser);
+
 	$.ajax({
-		url: base_url + 'admin/addUser',
+		url: base_url + 'adduser',
 		type: 'post',
 		data: adduser,
 		dataType: 'json',
 		success: function(res){
 			if(res.status === 1){
 				alert(res.msg);
+			console.log("success ",adduser);
+
 			}else{
 				alert(res.msg);
+			console.log("errrp", adduser);
+
 			}
 		}
+		
 	})
 })
 
@@ -120,8 +127,8 @@ $(".dropdown-item.edit-employee").click(function(e) {
             $('#edit_employee select[name="civil_status"]').val(employee.civil_status);
             $('#edit_employee input[name="pob"]').val(employee.pob);
 			$('#edit_employee input[name="dob"]').val(employee.dob);
-            $('#edit_employee select[name="department"]').val(employee.department);
-            $('#edit_employee input[name="role"]').val(employee.role);
+            // $('#edit_employee select[name="department"]').val(employee.department);
+            // $('#edit_employee input[name="role"]').val(employee.role);
             $('#edit_employee input[name="pfp"]').val(employee.pfp);
             $('#edit_employee input[name="email"]').val(employee.email);
             $('#edit_employee input[name="password"]').val(employee.password);
@@ -165,8 +172,8 @@ $(".avatar.profile_view").click(function(e) {
     function populateProfileView(employee) {
         $('.profile-img img').attr('src', employee.pfp);
         $('.user-name').text(employee.fullname);
-        $('.text-muted.department').text(employee.department);
-        $('.text-muted.role').text(employee.role);
+        // $('.text-muted.department').text(employee.department);
+        // $('.text-muted.role').text(employee.role);
         $('.staff-id').text('Employee ID: ' + employee.id);
         $('.personal-info .phone .text a').text(employee.contact_no);
         $('.personal-info .email .text a').text(employee.email);
@@ -308,5 +315,66 @@ $("#ws_adjustment").submit(function(e){
 		}
 	})
 })
+
+
+
+$("#adddepartment").submit(function(e){
+	e.preventDefault();
+	var addDept = $(this).serialize();
+	$.ajax({
+		url: base_url + 'admin/add_dept',
+		type: 'post',
+		data: addDept,
+		dataType: 'json',
+		success: function(res){
+			if(res.status === 1){
+				alert(res.msg);
+			}else{
+				alert(res.msg);
+			}
+		}
+	})
+})
+
+$("#addassets").submit(function(e){
+	e.preventDefault();
+	var addAssets = $(this).serialize();
+	$.ajax({
+		url: base_url + 'add_assets',
+		type: 'post',
+		data: addAssets,
+		dataType: 'json',
+		success: function(res){
+			if(res.status === 1){
+				alert(res.msg);
+			}else{
+				alert(res.msg);
+			}
+		}
+	})
+})
+$(document).ready(function() {
+    // Submit form via AJAX
+    $('#search-form').submit(function(e) {
+        e.preventDefault(); // Prevent default form submission
+
+        // Serialize form data
+        var formData = $(this).serialize();
+
+        // AJAX request
+        $.ajax({
+            type: 'GET',
+            url: '<?php echo base_url("search"); ?>', // Corrected syntax here
+            data: formData,
+            dataType: 'html', // Change data type based on your response format
+            success: function(response) {
+                $('#search-results').html(response); // Display search results in specified div
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText); // Log any errors to the console
+            }
+        });
+    });
+});
 
 

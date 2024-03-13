@@ -7,11 +7,11 @@
    // $_SESSION[]
 
    // navbar
-   $this->load->view('templates/nav_bar'); 
+   $this->load->view('templates/nav_bar');
    // sidebar
-  $this->load->view('templates/sidebar');
-  
-  ?>
+   $this->load->view('templates/sidebar');
+
+   ?>
    <!-- /Sidebar -->
    <!-- Two Col Sidebar -->
 
@@ -25,10 +25,9 @@
          <div class="page-header">
             <div class="row">
                <div class="col-sm-12">
-                  <h3 class="page-title">Welcome <span><?php echo ucwords(strtolower($_SESSION['fname'])); ?></span><span><?php echo ucwords(strtolower($_SESSION['user_type'])); ?></span>
-!</h3>
+                  <h3 class="page-title">Welcome <span><?php echo ucwords(strtolower($_SESSION['fname']));?> !</span></h3>
                   <ul class="breadcrumb">
-                     <li class="breadcrumb-item active">HR Dashboard</li>
+                     <li class="breadcrumb-item active">HR Dashboard / <?php echo date("l, jS F Y")?></li>
 
                   </ul>
                </div>
@@ -39,43 +38,43 @@
          <div class="row"> <!-- main metrics -->
             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
 
-               <?php 
+               <?php
                $data['icon'] = "fa-solid fa-user";
-               $data['count'] = rand(0,200);
+               $data['count'] = rand(0, 200);
                $data['label'] = "Employees";
-               $this->load->view('components/card-dash-widget',$data)
-                ?>
+               $this->load->view('components/card-dash-widget', $data)
+               ?>
 
 
             </div>
             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
 
-               <?php 
+               <?php
                $data['icon'] = "fa fa-address-book";
-                $data['count'] = rand(0,200);
-                $data['label'] = "Applicant";
-                $this->load->view('components/card-dash-widget',$data)
+               $data['count'] = rand(0, 200);
+               $data['label'] = "Applicant";
+               $this->load->view('components/card-dash-widget', $data)
 
-                ?>
+               ?>
 
 
             </div>
             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-               <?php 
+               <?php
                $data['icon'] = "fa fa-check-circle";
-                $data['count'] = rand(0,200);
-                $data['label'] = "Overtime";
-                $this->load->view('components/card-dash-widget',$data)
+               $data['count'] = rand(0, 200);
+               $data['label'] = "Overtime";
+               $this->load->view('components/card-dash-widget', $data)
 
-                ?>
+               ?>
 
             </div>
-          <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                <?php
                $data['icon'] = "fa fa-rocket";
-                $data['count'] = rand(0,200);
-                $data['label'] = "Leaves";
-                $this->load->view('components/card-dash-widget',$data)
+               $data['count'] = rand(0, 200);
+               $data['label'] = "Leaves";
+               $this->load->view('components/card-dash-widget', $data)
 
                ?>
 
@@ -112,12 +111,18 @@
                   $data['department'] = $department;
                   $data['date'] = $date;
 
-                  
+
                   $this->load->view('components/card-announcement', $data);
-           
                }
 
+       
+
                ?>
+
+
+
+
+
 
 
             </div>

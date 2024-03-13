@@ -36,7 +36,11 @@
 								<div class="profile-img-wrap">
 									<div class="profile-img">
 										<a href="#">
-											<img src="<?php echo $this->session->userdata('pfp'); ?>" alt="User Image">
+										<?php
+									echo "<img src='data:image/jpeg;base64," . base64_encode($this->session->userdata('pfp')) . "' alt='' 
+									srcset='' style = 'object-fit:cover;aspect-ratio:1;height:auto;'>";
+							 ?>
+
 										</a>
 									</div>
 
@@ -52,9 +56,9 @@
 												$fullname = $fname . " " . $lname;
 
 
-												$role = $_SESSION['role'];
+												// $role = $_SESSION['role'];
 												$contact_no = $_SESSION['contact_no'];
-												$department = $_SESSION['department'];
+												// $department = $_SESSION['department'];
 												$id = $_SESSION['id'];
 												// $phone = $_SESSION['phone'];
 
@@ -64,9 +68,9 @@
 												$perm_add = $_SESSION['perm_add'];
 												$password = $_SESSION['password'];
 												$sex = $_SESSION['sex'];; ?>
-												<h3 class="user-name m-t-0 mb-0"><?php echo $fullname; ?></h3>
-												<h6 class="text-muted"><?php echo $department; ?></h6>
-												<small class="text-muted"><?php echo $role; ?></small>
+												<h3 class=" m-t-0 mb-0"><?php echo $fullname; ?></h3>
+												<h6 class="text-muted"><?php //echo $department; ?></h6>
+												<small class="text-muted"><?php //echo $role; ?></small>
 												<div class="staff-id">Employee ID : <?php echo $id; ?></div>
 
 												<div class="staff-msg"><a class="btn btn-custom" href="chat.html">Send Message</a></div>
@@ -127,7 +131,11 @@
 						<div class="col-md-6 d-flex">
 							<div class="card profile-box flex-fill">
 								<div class="card-body">
-									<h3 class="card-title">Personal Informations <a href="#" class="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal"><i class="fa-solid fa-pencil"></i></a></h3>
+									<h3 class="card-title">Personal Informations 
+										<a href="#" class="edit-icon" data-bs-toggle="modal" data-bs-target="#personal_info_modal">
+											<i class="fa-solid fa-pencil"></i>
+										</a>
+									</h3>
 									<ul class="personal-info">
 										<li>
 											<div class="title">Passport No.</div>
@@ -1022,8 +1030,8 @@
 							<div class="row">
 								<div class="col-md-12">
 									<div class="profile-img-wrap edit-img">
-
-										<img id="previewImage" src="<?php echo $this->session->userdata('pfp'); ?>" alt="User Image">
+		
+										
 										<div class="fileupload btn">
 											<span class="btn-text">Edit</span>
 											<input id="uploadInput" class="upload" name="pfp" type="file" accept="image/*" onchange="previewFile()">
@@ -1093,7 +1101,7 @@
 								<div class="col-md-6">
 									<div class="input-block mb-3">
 										<label class="col-form-label">Role</label>
-										<input type="text" class="form-control" name="role" value="<?php echo $role ?>">
+										<input type="text" class="form-control" name="role" value="<?php //echo $role ?>">
 									</div>
 								</div>
 								<div class="col-md-6">

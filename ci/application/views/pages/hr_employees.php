@@ -47,26 +47,28 @@
                 </div>
                 <div class="col-sm-6 col-md-3">
                     <div class="input-block mb-3 form-focus select-focus">
-                    <select class="form-control" name="department">
-                                                    <?php
-                                                    $query = $this->db->get('department');
+                        <select class="form-select form-control" >
+                            <option value="">All</option>
 
-                                                    // Check if query executed successfully
-                                                    if ($query->num_rows() > 0) {
-                                                        foreach ($query->result() as $row) {
-                                                            $depID = $row->id;
-                                                            $department1 = $row->department;
-                                                            $acro = $row->acro_dept;
-                                                            $data['department'] = $department1;
-                                                            // Output each department as an option
-                                                            echo '<option value="' . $depID . '">' .  $data['department'] . '</option>';
-                                                        }
-                                                    } else {
-                                                        // Handle no results from the database
-                                                        echo '<option value="">No departments found</option>';
-                                                    }
-                                                    ?>
-                                                </select>
+                            <?php
+                            $query = $this->db->get('department');
+
+                            // Check if query executed successfully
+                            if ($query->num_rows() > 0) {
+                                foreach ($query->result() as $row) {
+                                    $depID = $row->id;
+                                    $department1 = $row->department;
+                                    $acro = $row->acro_dept;
+                                    $data['department'] = $department1;
+                                    // Output each department as an option
+                                    echo '<option value="' . $depID . '">' .  $data['department'] . '</option>';
+                                }
+                            } else {
+                                // Handle no results from the database
+                                echo '<option value="">No departments found</option>';
+                            }
+                            ?>
+                        </select>
 
                         <label class="focus-label">Department</label>
                     </div>
@@ -75,7 +77,8 @@
                 <div class="col-sm-6 col-md-3">
                     <div class="input-block mb-3 form-focus select-focus">
                         <select class="select floating form-select form-control">
-                            <option>Select Designation</option>
+
+                            <option>All</option>
                             <option>Web Developer</option>
                             <option>Web Designer</option>
                             <option>Android Developer</option>
@@ -108,11 +111,14 @@
                     $lname = ucwords(strtolower($row->lname));
                     $mname = $row->mname;
                     $fullname = $fname . " " . $lname;
-                    $role = $row->role;
+                    $sex = $row->sex;
+
 
                     $data['emp_name'] = $fullname;
-                    $data['emp_role'] = $role;
                     $data['emp_id'] = $emp_id;
+                    $data['pfp'] = $row->pfp;
+
+
                     $this->load->view('components/card-employee-basic', $data);
                 }
 
@@ -130,7 +136,7 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
 
-                               
+
                             </div>
                             <div class="modal-body">
                                 <form method="post" action="<?= base_url('edituser') ?>">
@@ -179,7 +185,7 @@
                                         <div class="col-sm-6">
                                             <div class="input-block mb-3">
                                                 <label class="col-form-label">Date Of Birth <span class="text-danger">*</span></label>
-                                                <div class="cal-icon"><input class="form-control" name="dob"type="date"></div>
+                                                <div class="cal-icon"><input class="form-control" name="dob" type="date"></div>
 
                                             </div>
                                         </div>
@@ -199,9 +205,9 @@
                                             <div class="input-block mb-3">
                                                 <label class="col-form-label">Sex</label>
                                                 <select class="select form-control" name="sex">
-													<option value="M" <?php if ($sex === "M") echo "selected"; ?>>Male</option>
-													<option value="F" <?php if ($sex === "F") echo "selected"; ?>>Female</option>
-												</select>
+                                                    <option value="M" <?php if ($sex === "M") echo "selected"; ?>>Male</option>
+                                                    <option value="F" <?php if ($sex === "F") echo "selected"; ?>>Female</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -227,7 +233,7 @@
                                             <div class="input-block mb-3">
                                                 <label class="col-form-label">Department <span class="text-danger">*</span></label>
 
-                                                <select class="form-control" name="department">
+                                                <select class="form-control" name="">
                                                     <?php
                                                     $query = $this->db->get('department');
 
@@ -248,7 +254,7 @@
                                                     ?>
                                                 </select>
 
-                                                
+
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -257,7 +263,7 @@
                                                 <input class="form-control" type="text" name="role">
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-sm-6">
                                             <div class="input-block mb-3">
                                                 <label class="col-form-label">Email <span class="text-danger">*</span></label>
@@ -397,7 +403,7 @@
                                 <div class="col-sm-6">
                                     <div class="input-block mb-3">
                                         <label class="col-form-label">Department <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="department">
+                                        <input class="form-control" type="text" >
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -476,45 +482,43 @@
         $("li > a[href='<?= base_url('hr/employees') ?>']").parent().parent().css("display", "block")
 
 
-        
 
-    $(".dropdown-item.edit-employee").click(function(e) {
 
-console.log($(this).data("emp-id")); 
+        $(".dropdown-item.edit-employee").click(function(e) {
 
-        var emp_id = $(this).data("emp-id");
+            console.log($(this).data("emp-id"));
 
- // $.ajax({
- // 	url: base_url + 'upload/do_upload',
- // 	type:"post",
- // 	data:new FormData(this),
- // 	processData:false,
- // 	contentType:false,
- // 	cache:false,
- // 	async:false,
- // 	beforeSend: function() {
- // 		$("#update_img").html("Updating... <span class='fa fa-spinner fa-1x fa-spin'></span>");
- // 	},
- // 	success: function(data) {
- // 		swal(
- //     {
- //         title: 'Successfuly Update!',	                    
- //         type: 'success',	                    
- //         confirmButtonClass: 'btn btn-success',	                    
- //     }
- // );
- // 		$("#update_img").attr("disabled", false).html("Update Image");
- // 		$("#carousel").modal('hide');
- // 		$("#imgfrm")[0].reset();
- // 		show_car_con();
- // 	}
- // })
-});
+            var emp_id = $(this).data("emp-id");
+
+            // $.ajax({
+            // 	url: base_url + 'upload/do_upload',
+            // 	type:"post",
+            // 	data:new FormData(this),
+            // 	processData:false,
+            // 	contentType:false,
+            // 	cache:false,
+            // 	async:false,
+            // 	beforeSend: function() {
+            // 		$("#update_img").html("Updating... <span class='fa fa-spinner fa-1x fa-spin'></span>");
+            // 	},
+            // 	success: function(data) {
+            // 		swal(
+            //     {
+            //         title: 'Successfuly Update!',	                    
+            //         type: 'success',	                    
+            //         confirmButtonClass: 'btn btn-success',	                    
+            //     }
+            // );
+            // 		$("#update_img").attr("disabled", false).html("Update Image");
+            // 		$("#carousel").modal('hide');
+            // 		$("#imgfrm")[0].reset();
+            // 		show_car_con();
+            // 	}
+            // })
+        });
 
 
 
 
     })
-
-
 </script>

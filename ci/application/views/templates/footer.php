@@ -20,7 +20,24 @@
     <script src="<?= base_url("assets/plugins/toastr/toastr.min.js");?>"></script>
     <script src="<?= base_url("assets/plugins/toastr/toastr.js");?>"></script>
 
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#search-table').DataTable({
+            "paging": true, // Enable paging
+            "ordering": true, // Enable sorting
+            "info": true // Enable table information display
+            // You can add more options as needed
+        });
+    });
+</script>
 
+<script src="<?=base_url('assets/js/jquery.dataTables.min.js')?>"></script>
+		<script src="<?=base_url('assets/js/dataTables.bootstrap4.min.js')?>"></script>
+		
+		 <!-- Theme Settings JS -->
+
+		<script src="<?=base_url('assets/js/greedynav.js')?>"></script>
     <script>
       $(document).ready(function() {
 

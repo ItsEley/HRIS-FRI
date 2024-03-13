@@ -33,11 +33,11 @@
 						<div class="col-md-12">
 							<div class="welcome-box">
 								<div class="welcome-img">
-									<img src="assets/img/profiles/avatar-02.jpg" alt="User Image">
+									
 								</div>
 								<div class="welcome-det">
-									<h3>Welcome, John Doe</h3>
-									<p>Monday, 20 May 2019</p>
+									<h3>Welcome, <?php echo ucwords($_SESSION['fname'])?>! </h3>
+									<p><?php echo date("l, jS F Y")?></p>
 								</div>
 							</div>
 						</div>

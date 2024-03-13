@@ -6,9 +6,12 @@ class Admin extends CI_Controller
 	public function __construct() 
 	{
 		parent::__construct();		
+		
+     
 		$this->load->model('Admin_model', 'hr');
 		$this->zone = date_default_timezone_set('Asia/Manila');							
 	}
+    
 
 	public function loginUI()
 	{
@@ -34,8 +37,6 @@ class Admin extends CI_Controller
 			$lname = $data['lname'];
 			$email = $data['email'];
 			$password = $data['password'];
-			$department = $data['department'];
-			$role = $data['role'];
 			$dob = $data['dob'];
 			$religion = $data['religion'];
 			$civil_status = $data['civil_status'];
@@ -43,7 +44,6 @@ class Admin extends CI_Controller
 			$perm_add = $data['perm_add'];
 			$contact_no = $data['contact_no'];
 			$user_type = $data['user_type'];
-			
 			$sex = $data['sex'];
 			$pfp = $data['pfp'];
 			
@@ -55,8 +55,6 @@ class Admin extends CI_Controller
 				'lname' => $lname,
 				'email' => $email,
 				'password' => $password,
-				'department' => $department,
-				'role' => $role,
 				'dob' => $dob,
 				'religion' => $religion,
 				'civil_status' => $civil_status,
@@ -70,10 +68,10 @@ class Admin extends CI_Controller
 			);
 
 			$this->session->set_userdata($session_data);
-
+			// redirect('hr_profile');
 			$response['status']='success';
-			$response['message']='Logged in sucessfully!';
-			$response['user_type']= $user_type;
+			$response['message']='Login success!';
+			$response['user_type']=$user_type;
 
 		}
 		else 
@@ -81,21 +79,21 @@ class Admin extends CI_Controller
 			 $response['status']='error';
        		 $response['message']='Ops! Invalid username Or password';
 		}
-		$response['hmm'] = 'email : ' . $email . ' -- password '. $password; 
-
+		
 		// print_r($response);
 		echo json_encode($response);
 
 	}
 
-	public function addUser() {
-		$datetime = date('Y-m-d H:i:s', time());
+	public function adduser() {
 		$response = array();
-
+	
+		// Extract data from POST request
 		$fname = $this->input->post('fname');
 		$mname = $this->input->post('mname');
 		$lname = $this->input->post('lname');
-		$nickn = $this->input->post('nickn');
+		$nickn = $this->input->post('nickn'); // Assuming nickn is a field in the form
+		$contact_no = $this->input->post('contact_no');
 		$current_add = $this->input->post('current_add');
 		$perm_add = $this->input->post('perm_add');
 		$dob = $this->input->post('dob');
@@ -105,52 +103,51 @@ class Admin extends CI_Controller
 		$civil_status = $this->input->post('civil_status');
 		$pob = $this->input->post('pob');
 		$email = $this->input->post('email');
+		$ins_id = $this->input->post('ins_id');
 		$password = $this->input->post('password');
+		$pfp = $this->input->post('pfp');
+		$user_type = $this->input->post('user_type');
 		$department = $this->input->post('department');
-		$role = $this->input->post('role');
-		$contact_no = $this->input->post('contact_no');
-		
-		// $pfp = $this->input->post('pfp');
-
-		$data = array( 
-		/*column name*/'fname' => $fname,
-		'mname' => $mname,
-		'lname' => $lname,
-		'nickn' => $nickn,
-		'current_add' => $current_add,
-		'perm_add' => $perm_add,
-		'dob' => $dob,
-		'age' => $age,
-		'religion' => $religion,
-		'sex' => $sex,
-		'civil_status' => $civil_status,
-		'pob' => $pob,
-		'email' => $email,
-		'password' => $password,
-		'role' => $role,
-		'department' => $department,
-		
-		'contact_no' => $contact_no
-		 /*variable name*/,
+	
+		// Create data array for insertion
+		$data = array(
+			'fname' => $fname,
+			'mname' => $mname,
+			'lname' => $lname,
+			'nickn' => $nickn,
+			'contact_no' => $contact_no,
+			'current_add' => $current_add,
+			'perm_add' => $perm_add,
+			'dob' => $dob,
+			'age' => $age,
+			'religion' => $religion,
+			'sex' => $sex,
+			'civil_status' => $civil_status,
+			'pob' => $pob,
+			'email' => $email,
+			'ins_id' => $ins_id,
+			'password' => $password,
+			'pfp' => $pfp,
+			'user_type' => $user_type,
+			'department' => $department
 		);
-
-		$sql = $this->db->insert('personal_info',$data);
-
-		if($sql){
+	
+		// Insert data into the database
+		$sql = $this->db->insert('personal_info', $data);
+	
+		// Check if insertion was successful
+		if ($sql) {
 			$response['status'] = 1;
-			$response['msg'] = 'Done';
-		}else{
+			$response['msg'] = 'User added successfully';
+		} else {
 			$response['status'] = 0;
-			$response['msg'] = 'Error';
+			$response['msg'] = 'Failed to add user';
 		}
-
+	
+		// Return response as JSON
 		echo json_encode($response);
-		
-		// $result = $this->hr->addUser($fname,$mname,$lname,$nickn,$current_add,
-		// $perm_add,$dob,$age,$religion,$sex,$civil_status,$pob,$email,$password,$department,$role);
-		// echo json_encode($result);
 	}
-
+	
 
 	public function showUserdetails() {
 		// Retrieve emp_id from the query parameter
@@ -272,28 +269,21 @@ public function leaverequestzz() {
 	$reason = $this->input->post('reason');
 	$status = $this->input->post('status');
 	$empid = $this->input->post('empid');
-	
-	
-	
 
 	$data = array( 
 	/*column name*/
 	'date_from' => $from_date,
 	'date_to' => $to_date,
 	'type_of_leave' => $leaveType,
-
 	'reason' => $reason,
 	'status' => $status,
 	'date_filled' => $date_filled,
-
 	'emp_id' => $empid,
 	'department' => $department,
 	'name' => $name
-
 	);
 
 	$sql = $this->db->insert('leaves',$data);
-
 	if($sql){
 		$response['status'] = 1;
 		$response['msg'] = 'Done';
@@ -303,33 +293,22 @@ public function leaverequestzz() {
 	}
 
 	echo json_encode($response);
-	
-	// $result = $this->hr->addUser($fname,$mname,$lname,$nickn,$current_add,
-	// $perm_add,$dob,$age,$religion,$sex,$civil_status,$pob,$email,$password,$department,$role);
-	// echo json_encode($result);
 }
 
 
 public function ob_requestzz() {
 	$response = array();
-
 	$name = $this->input->post('name');
 	$date_filled = date('Y-m-d H:i:s', time());
-	
-	$department = $this->input->post('department');
+	// $department = $this->input->post('department');
 	$outgoing_pass_date = $this->input->post('outgoing_pass_date');
-
 	$destin_from = $this->input->post('destin_from');
 	$destin_to = $this->input->post('destin_to');
 	$time_from = $this->input->post('time_from');
 	$time_to = $this->input->post('time_to');
-	
 	$reason = $this->input->post('reason');
 	$status = $this->input->post('status');
 	$empid = $this->input->post('empid');
-	
-	
-	
 
 	$data = array( 
 	/*column name*/
@@ -338,15 +317,11 @@ public function ob_requestzz() {
 	'time_from' => $time_from,
 	'time_to' => $time_to,
 	'outgoing_pass_date' => $outgoing_pass_date,
-
 	'reason' => $reason,
 	'status' => $status,
-	
-
 	'emp_id' => $empid,
-	'department' => $department,
+	// 'department' => $department,
 	'name' => $name
-
 	);
 
 	$sql = $this->db->insert('ob_request',$data);
@@ -358,10 +333,7 @@ public function ob_requestzz() {
 		$response['status'] = 0;
 		$response['msg'] = 'Error';
 	}
-
 	echo json_encode($response);
-	
-	
 }
 
 
@@ -373,8 +345,7 @@ public function outgoingrequestzz() {
 	$outgoing_date = $this->input->post('outgoing_date');
 	$time_from = $this->input->post('time_from');
 	$time_to = $this->input->post('time_to');
-	$destination = $this->input->post('destination');
-	
+	$destination = $this->input->post('destination');	
 	$reason = $this->input->post('reason');
 	$status = $this->input->post('status');
 	$empid = $this->input->post('empid');
@@ -390,7 +361,6 @@ public function outgoingrequestzz() {
 	'emp_id' => $empid,
 	'department' => $department,
 	'name' => $name
-
 	);
 
 	$sql = $this->db->insert('outgoing_request',$data);
@@ -402,10 +372,7 @@ public function outgoingrequestzz() {
 		$response['status'] = 0;
 		$response['msg'] = 'Error';
 	}
-
 	echo json_encode($response);
-	
-	
 }
 
 
@@ -426,7 +393,6 @@ public function undertimerequestzz() {
 	'date_filled' => $undertime_date,
 	'time_in' => $time_in,
 	'time_out' => $time_out,
-	
 	'reason' => $reason,
 	'status' => $status,
 	'emp_id' => $empid,
@@ -436,7 +402,6 @@ public function undertimerequestzz() {
 	);
 
 	$sql = $this->db->insert('undertime_request',$data);
-
 	if($sql){
 		$response['status'] = 1;
 		$response['msg'] = 'Done';
@@ -444,10 +409,7 @@ public function undertimerequestzz() {
 		$response['status'] = 0;
 		$response['msg'] = 'Error';
 	}
-
 	echo json_encode($response);
-	
-	
 }
 
 
@@ -470,17 +432,14 @@ public function overtimerequestzz() {
 	'date_ot' => $ot_date,
 	'time_in' => $time_in,
 	'time_out' => $time_out,
-	
 	'reason' => $reason,
 	'status' => $status,
 	'emp_id' => $empid,
 	'department' => $department,
 	'name' => $name
-
 	);
 
 	$sql = $this->db->insert('ot_request',$data);
-
 	if($sql){
 		$response['status'] = 1;
 		$response['msg'] = 'Done';
@@ -488,7 +447,6 @@ public function overtimerequestzz() {
 		$response['status'] = 0;
 		$response['msg'] = 'Error';
 	}
-
 	echo json_encode($response);
 	
 	
@@ -509,23 +467,86 @@ public function workschedadjustzz() {
 
 	$data = array( 
 	/*column name*/
-	
 	'date_filled' => $date_filled,
 	'change_day_from' => $change_day_from,
 	'change_day_to' => $change_day_to,
 	'change_time_from' => $change_time_from,
 	'change_time_to' => $change_time_to,
-	
 	'reason' => $reason,
 	'status' => $status,
 	'emp_id' => $empid,
 	'department' => $department,
 	'name' => $name
-
 	);
 
 	$sql = $this->db->insert('work_schedule_adjustment_table',$data);
+	if($sql){
+		$response['status'] = 1;
+		$response['msg'] = 'Done';
+	}else{
+		$response['status'] = 0;
+		$response['msg'] = 'Error';
+	}
 
+	echo json_encode($response);
+}
+
+
+public function add_dept() {
+	$response = array();
+	$department = $this->input->post('dept_name');
+	$data = array( 
+	/*column name*/
+	'department' => $department
+	);
+
+	$sql = $this->db->insert('department',$data);
+	if($sql){
+		$response['status'] = 1;
+		$response['msg'] = 'Done';
+	}else{
+		$response['status'] = 0;
+		$response['msg'] = 'Error';
+	}
+
+	echo json_encode($response);
+}
+
+public function add_assets() {
+	$response = array();
+
+	$asset_user = $this->input->post('asset_user');
+	$department = $this->input->post('department');
+	$asset_name = $this->input->post('asset_name');
+	$purchase_date = $this->input->post('purchase_date');
+	$warranty_start = $this->input->post('warranty_start');
+	$warranty_end = $this->input->post('warranty_end');
+	$amount = $this->input->post('amount');
+	$status = $this->input->post('status');
+	$assetcondition = $this->input->post('assetcondition');
+	$manufacturer = $this->input->post('manufacturer');
+	$model = $this->input->post('model');
+	$serial_number = $this->input->post('serial_number');
+	$description = $this->input->post('description');
+
+	$data = array( 
+	/*column name*/
+	'asset_user' => $asset_user,
+	'department' => $department,
+	'asset_name' => $asset_name,
+	'purchase_date' => $purchase_date,
+	'warranty_start' => $warranty_start,
+	'warranty_end' => $warranty_end,
+	'amount' => $amount,
+	'status' => $status,
+	'assetCondition' => $assetcondition,
+	'manufacturer' => $manufacturer,
+	'model' => $model,
+	'serial_number' => $serial_number,
+	'description' => $description,
+	);
+
+	$sql = $this->db->insert('assets',$data);
 	if($sql){
 		$response['status'] = 1;
 		$response['msg'] = 'Done';
@@ -536,24 +557,37 @@ public function workschedadjustzz() {
 
 	echo json_encode($response);
 	
-	
 }
 
 
+public function search_name() {
+    $search_query = $this->input->get('employee_name'); // Retrieve search query from GET parameter
 
+    // Perform search query on both 'leave' and 'ot_request' tables
+    $this->db->select('*');
+    $this->db->from('leave');
+    $this->db->where("CONCAT(fname, ' ', mname, ' ', lname) LIKE '%$search_query%'");
+    $leave_results = $this->db->get()->result_array();
 
+    $this->db->select('*');
+    $this->db->from('ot_request');
+    $this->db->where("CONCAT(fname, ' ', mname, ' ', lname) LIKE '%$search_query%'");
+    $ot_results = $this->db->get()->result_array();
 
+    // Combine and return search results
+    $search_results = array_merge($leave_results, $ot_results);
 
+    // Convert search results to HTML table rows
+    $output = '';
+    foreach ($search_results as $row) {
+        $output .= "<tr>";
+        $output .= "<td>" . $row['fname'] . " " . $row['mname'] . " " . $row['lname'] . "</td>";
+        // Add more columns as needed
+        $output .= "</tr>";
+    }
 
-
-
-
-
-
-
-
-
-
+    echo $output;
+}
 
 
 

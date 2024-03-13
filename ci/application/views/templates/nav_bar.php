@@ -250,14 +250,49 @@
                <!-- /Message Notifications -->
                <li class="nav-item dropdown has-arrow main-drop">
                   <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-                  <span class="user-img"><img src="../assets/img/profiles/avatar-21.jpg" alt="User Image">
+                  <span class="user-img">
+                  <?php
+                          $id = $_SESSION['id'];
+
+                          // Select * from your_table where id = 1
+                          $query = $this->db->get_where('personal_info', array('id' => $id));
+           
+                          // print_r($this->session->get_userdata('fname'));
+                          // echo $_SESSION['fname'];
+           
+                          foreach ($query->result() as $row) {
+                             // print_r($row);
+                             // echo $row->pfp;
+                             // src="data:image/jpeg;base64,'.base64_encode( $result['image'] ).'"
+                             echo "<img src='data:image/jpeg;base64," . base64_encode($row->pfp) . "' alt='' srcset='' 
+                             style = 'object-fit:cover;aspect-ratio:1;height:auto;'>";
+                          }
+                  
+                  ?>   
+                  
+                  <!-- <img src="../assets/img/profiles/avatar-21.jpg" alt="User Image"> -->
                   <span class="status online"></span></span>
                   <span><?php //echo ucwords(strtolower($_SESSION['fname'])); ?></span>
 
 
                   </a>
                   <div class="dropdown-menu">
-                     <a class="dropdown-item" href="<?= base_url('hr_profile')?>">My Profile</a>
+
+                  <?php
+                     if($_SESSION['user_type'] == '1'){ //admin
+                        echo '
+                     <a class="dropdown-item" href="'. base_url('emp_profile').'">My Profile</a>  
+                        ';
+                     }else if($_SESSION['user_type'] == '2'){ //hr
+                        echo '
+                        <a class="dropdown-item" href="'. base_url('hr_profile').'">My Profile</a>  
+                           ';
+                     }else if($_SESSION['user_type'] == '3'){ //emp
+                        echo '
+                        <a class="dropdown-item" href="'. base_url('emp_profile').'">My Profile</a>  
+                           ';
+                     }
+                  ?>
                      <a class="dropdown-item" href="settings.html">Settings</a>
                      <a class="dropdown-item" href="<?= base_url('logout')?>">Logout</a>
                   </div>

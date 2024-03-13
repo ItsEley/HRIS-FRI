@@ -267,7 +267,7 @@
                <ul>
                   <li><a href="<?= base_url('hr/employees') ?>">Manage</a></li>
                   <!-- <li><a href="hr_emp_manage.html">Manage</a></li> -->
-                  <li><a href="hr_emp_designations.html">Designations</a></li>
+                  <li><a href="<?= base_url('hr/departments') ?>">Designations</a></li>
                   <li><a href="hr_emp_shifts.html">Shifts & Schedules</a></li>
                </ul>
             </li>
@@ -292,7 +292,7 @@
                   <li><a href="<?= base_url('forms')?>">Apply</a></li>
 
                   <li><a href="<?= base_url('leave_pending')?>">Pending</a></li>
-                  <li><a href="#">History</a></li>
+                  <li><a href="<?= base_url('forms/history')?>">History</a></li>
                </ul>
             </li>
 

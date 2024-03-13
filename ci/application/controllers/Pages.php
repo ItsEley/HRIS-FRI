@@ -41,6 +41,16 @@ class Pages extends CI_Controller {
     }
 
     
+    public function forms_history()
+    {
+      $data['title'] = 'Forms | History';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/form_request_history');
+      $this->load->view('templates/footer');
+    }
+
+
+    
 
 
 
@@ -100,6 +110,15 @@ class Pages extends CI_Controller {
       $data['title'] = 'Requests | Pending';
       $this->load->view('templates/header',$data);
       $this->load->view('pages/request_pending');
+      $this->load->view('templates/footer');
+    }
+
+
+    public function departments()
+    {
+      $data['title'] = 'Departments';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/hr_departments');
       $this->load->view('templates/footer');
     }
 

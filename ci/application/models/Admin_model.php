@@ -9,8 +9,9 @@ class Admin_model extends CI_Model
 		// $this->zone 	= date_default_timezone_set('Asia/Manila');
 		// $this->datetime = date('Y-m-d H:i:s', time());
 		// $this->date 	= date('Y-m-d', time());
-	}
 
+		
+	}
 
 	public function authentication($email, $password) {		
     $this->db->where('email', $email);
@@ -26,7 +27,7 @@ class Admin_model extends CI_Model
 			'lname' => $data['lname'],
 			'sex' => $data['sex'],
 			'current_add' => $data['current_add'],
-			'department' => $data['department'],
+			
 			'email' => $data['email'],
 			'password' => $data['password'],
 			'role' => $data['role'],
@@ -79,18 +80,18 @@ class Admin_model extends CI_Model
 	
 
 	
-	public function addUser($fname,$mname,$lname,$nickn,$current_add,$perm_add,$dob,$age,$religion,$sex,$civil_status,$pob,$email,$password,$department,$role) {
+	public function addUser($fname,$mname,$lname,$nickn,$current_add,$perm_add,$dob,$age,$religion,$sex,$civil_status,$pob,$email,$password,$role) {
 		
 		
 
 
 $addUserQuery = "INSERT INTO `personal_info`(`fname`, `mname`, `lname`,`nickn`, 
 		`current_add`, `perm_add`, `dob`, `age`, `religion`,`sex`,`civil_status`,`pob`,
-		`email`,`password`,`department`,`role`) 
+		`email`,`password`,`role`) 
 
 					       VALUES ('$fname','$mname','$lname','$nickn',
 						   '$current_add','$perm_add','$dob','$age','$religion','$sex','$civil_status','$pob',
-						   '$email','$password','$department','$role')";
+						   '$email','$password','$role')";
 		
 		$this->db->query($addUserQuery);
 			echo `<script>

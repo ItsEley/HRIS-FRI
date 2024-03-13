@@ -21,13 +21,21 @@
 
             <div class="row">
                 <div class="col">
-                    <h1>Announcements</h1>
+                    <h1>Announcements <span>
+                   
+                    <button type="button" class="btn btn-primary waves-effect waves-light mt-1" 
+                    data-bs-toggle="modal" data-bs-target="#con-close-modal"> <span class = "fa-solid fa-plus"></span></button>
 
+
+
+                    </span></h1>
+                   
                 </div>
                 <div class="col"></div>
-                <div class="col">
-
-                    <button type="button" class="btn btn-success waves-effect waves-light mt-1" data-bs-toggle="modal" data-bs-target="#con-close-modal">Create annoucement</button>
+                <div class="col text-end">
+<!-- 
+                    <button type="button" class="btn btn-success waves-effect waves-light mt-1" 
+                    data-bs-toggle="modal" data-bs-target="#con-close-modal"> <span class = "fa-solid fa-plus"></span></button> -->
 
                 </div>
             </div>
@@ -82,9 +90,12 @@
                     <div class="input-block mb-3 row">
                         <label class="col-form-label col-md-2">Department</label>
                         <div class="col-md-10">
-                            <select class="form-control" name="department">
+                            <select class="form-control form-select" name="department">
+                            <option value="All">All</option>
                                 <?php
-                                $query = $this->db->get('department');
+                  $this->db->order_by('department', 'ASC');
+                  $query = $this->db->get('department');
+                  
 
                                 // Check if query executed successfully
                                 if ($query->num_rows() > 0) {
@@ -125,8 +136,6 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         $("li > a[href='<?= base_url('hr/announcement') ?>']").parent().addClass("active");
-
-
 
         new FroalaEditor('textarea#froala-editor')
     })
