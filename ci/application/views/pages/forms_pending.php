@@ -52,7 +52,8 @@
 
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
-		$("li > a[href='<?= base_url('resources/forms') ?>']").parent().addClass("active");
+	
+   
 
 
 	})

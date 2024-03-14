@@ -23,10 +23,12 @@ $route['hr/dashboard'] = 'pages/hr_home';
 $route['hr/announcement'] = 'pages/hr_announcement';
 $route['hr_profile'] = 'pages/hr_profile';
 $route['hr/employees'] = 'pages/hr_employees';
+$route['hr/attendance'] = 'pages/hr_attendance';
+
+
 $route['forms/pending'] = 'pages/forms_pending';
 $route['leave_pending'] = 'pages/leave_pending';
 $route['hr/departments'] = 'pages/departments';
-
 
 // hr functions
 $route['user_profile'] = 'pages/user_profile';

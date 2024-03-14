@@ -21,10 +21,10 @@
 				<div class="page-header">
 					<div class="row align-items-center">
 						<div class="col">
-							<h3 class="page-title">Leaves</h3>
+							<h3 class="page-title">Pending Requests</h3>
 							<ul class="breadcrumb">
 								<li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
-								<li class="breadcrumb-item active">Leaves</li>
+								<li class="breadcrumb-item active">Pending Requests</li>
 							</ul>
 						</div>
 						<div class="col-auto float-end ms-auto">
@@ -73,7 +73,7 @@
 					</div>
 					<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
 						<div class="input-block mb-3 form-focus select-focus">
-							<select class="select floating">
+							<select class="select form-control floating">
 								<option> -- Select -- </option>
 								<option>Casual Leave</option>
 								<option>Medical Leave</option>
@@ -84,7 +84,7 @@
 					</div>
 					<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
 						<div class="input-block mb-3 form-focus select-focus">
-							<select class="select floating">
+							<select class="select form-control floating">
 								<option> -- Select -- </option>
 								<option> Pending </option>
 								<option> Approved </option>
@@ -475,6 +475,9 @@
 <script>
 
 $(document).ready(function(){
+
+	$("li > a[href='<?= base_url('leave_pending') ?>']").parent().parent().css("display", "block") //get sidebar item with link
+        $("li > a[href='<?= base_url('leave_pending') ?>']").addClass("active"); // for items inside the sidebar
 
 
 	$("a .dropdown-item.update-req").click(function(e) {

@@ -37,7 +37,7 @@
     <!-- Chart CSS -->
     <link rel="stylesheet" href="<?=base_url('assets/plugins/morris/morris.css')?>">
     <script src=<?= base_url("assets/js/jquery-3.7.1.min.js") ?>></script>
-    <link rel="stylesheet" type="text/css" href="<?=base_url('https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css')?>">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <link rel="stylesheet" href="<?=base_url('assets/css/dataTables.bootstrap4.min.css')?>">
 
 </head>

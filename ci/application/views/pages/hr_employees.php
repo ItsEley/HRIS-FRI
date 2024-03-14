@@ -47,7 +47,7 @@
                 </div>
                 <div class="col-sm-6 col-md-3">
                     <div class="input-block mb-3 form-focus select-focus">
-                        <select class="form-select form-control" >
+                        <select class="form-select form-control">
                             <option value="">All</option>
 
                             <?php
@@ -99,7 +99,7 @@
 
                 <?php
 
-                $query = $this->db->get('personal_info');
+                $query = $this->db->get('employees');
 
                 // print_r($this->session->get_userdata('fname'));
                 // echo $_SESSION['fname'];
@@ -135,7 +135,6 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
-
 
                             </div>
                             <div class="modal-body">
@@ -279,7 +278,7 @@
                                     </div>
 
                                     <div class="submit-section">
-                                        <button class="btn btn-primary submit-btn">Save</button>
+                                        <button type="sbmit" class="btn btn-primary submit-btn">Save</button>
                                     </div>
                                 </form>
                             </div>
@@ -363,7 +362,7 @@
                                 <div class="col-sm-6">
                                     <div class="input-block mb-3">
                                         <label class="col-form-label">Age <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="int" name="age">
+                                        <input class="form-control" type="number" name="age">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -375,7 +374,7 @@
                                 <div class="col-sm-6">
                                     <div class="input-block mb-3">
                                         <label class="col-form-label">Sex</label>
-                                        <select class="select" type="text" name="sex">
+                                        <select class="form-select form-control" name="sex">
                                             <option value="1">Male</option>
                                             <option value="2">Female</option>
                                         </select>
@@ -384,7 +383,8 @@
                                 <div class="col-md-6">
                                     <div class="input-block mb-3">
                                         <label class="col-form-label">Civil Status </label>
-                                        <select class="select" type="text" name="civil_status">
+                                        <select class="form-select form-control" name="civil_status">
+
                                             <option value="1">Single</option>
                                             <option value="2">Married</option>
                                             <option value="3">Live In</option>
@@ -403,7 +403,28 @@
                                 <div class="col-sm-6">
                                     <div class="input-block mb-3">
                                         <label class="col-form-label">Department <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" >
+                                        <select class="form-select form-control">
+                                            <option value="">All</option>
+
+                                            <?php
+                                            $query = $this->db->get('department');
+
+                                            // Check if query executed successfully
+                                            if ($query->num_rows() > 0) {
+                                                foreach ($query->result() as $row) {
+                                                    $depID = $row->id;
+                                                    $department1 = $row->department;
+                                                    $acro = $row->acro_dept;
+                                                    $data['department'] = $department1;
+                                                    // Output each department as an option
+                                                    echo '<option value="' . $depID . '">' .  $data['department'] . '</option>';
+                                                }
+                                            } else {
+                                                // Handle no results from the database
+                                                echo '<option value="">No departments found</option>';
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">

@@ -89,6 +89,17 @@ class Pages extends CI_Controller {
       $this->load->view('pages/hr_profile');
       $this->load->view('templates/footer');
     }
+
+
+    public function hr_attendance()
+    {
+      $data['title'] = 'Attendance';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/hr_attendance');
+      $this->load->view('templates/footer');
+    }
+
+
     public function user_profile()
     {
       $data['title'] = 'User Profile';

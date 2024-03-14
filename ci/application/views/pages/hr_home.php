@@ -40,7 +40,7 @@
 
                <?php
                $data['icon'] = "fa-solid fa-user";
-               $data['count'] = rand(0, 200);
+             
                $data['label'] = "Employees";
                $this->load->view('components/card-dash-widget', $data)
                ?>

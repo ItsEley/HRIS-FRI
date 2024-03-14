@@ -1,3 +1,7 @@
+<style>
+    
+</style>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 <link href="..\assets\text-editor\node_modules\froala-editor\css\froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="..\assets\text-editor\node_modules\froala-editor\js\froala_editor.pkgd.min.js"></script>
 
@@ -22,47 +26,57 @@
             <div class="row">
                 <div class="col">
                     <h1>Announcements <span>
-                   
-                    <button type="button" class="btn btn-primary waves-effect waves-light mt-1" 
-                    data-bs-toggle="modal" data-bs-target="#con-close-modal"> <span class = "fa-solid fa-plus"></span></button>
 
-
-
-                    </span></h1>
-                   
+                            <button type="button" class="btn btn-primary waves-effect waves-light mt-1" data-bs-toggle="modal" data-bs-target="#con-close-modal"> <span class="fa-solid fa-plus"></span></button>
+                        </span></h1>
                 </div>
-                <div class="col"></div>
-                <div class="col text-end">
-<!-- 
-                    <button type="button" class="btn btn-success waves-effect waves-light mt-1" 
-                    data-bs-toggle="modal" data-bs-target="#con-close-modal"> <span class = "fa-solid fa-plus"></span></button> -->
-
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table id="" class="datatable table-striped custom-table mb-0 datatable">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Content</th>
+                                    <th>Author</th>
+                                    <th>Department</th>
+                                    <th>Date Created</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $query = $this->db->order_by('date_created', 'DESC')->get('announcement');
+                                foreach ($query->result() as $row) {
+                                    $title = $row->title;
+                                    $content = $row->content;
+                                    $author = $row->author;
+                                    $department = $row->department;
+                                    $date = $row->date_created;
+                                ?>
+                                    <tr class="hoverable-row">
+                                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                            <?php echo $title; ?>
+                                        </td>
+                                        <td style="max-width: 200px; max-height: 100px; overflow: hidden;">
+                                            <div class="ellipsis" style="max-height: 1.2em; overflow: hidden;">
+                                                <?php echo $content; ?>
+                                            </div>
+                                        </td>
+                                        <td><?php echo $author; ?></td>
+                                        <td><?php echo $department; ?></td>
+                                        <td><?php echo date('M j, Y', strtotime($date)); ?></td>
+                                    </tr>
+                                <?php
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
 
-            <?php
-            $query = $this->db->order_by('date_created', 'DESC')->get('announcement');
-
-            foreach ($query->result() as $row) {
-                $title =  $row->title;
-                $content = $row->content;
-                $author = $row->author;
-                $department = $row->department;
-                $date = $row->date_created;
-
-                $data['title'] = $title;
-                $data['content'] = $content;
-                $data['author'] = $author;
-                $data['department'] = $department;
-                $data['date'] = $date;
-
-                $this->load->view('components/card-announcement', $data);
-            }
-
-
-
-            ?>
 
         </div>
         <!-- /Page Content -->
@@ -91,11 +105,11 @@
                         <label class="col-form-label col-md-2">Department</label>
                         <div class="col-md-10">
                             <select class="form-control form-select" name="department">
-                            <option value="All">All</option>
+                                <option value="All">All</option>
                                 <?php
-                  $this->db->order_by('department', 'ASC');
-                  $query = $this->db->get('department');
-                  
+                                $this->db->order_by('department', 'ASC');
+                                $query = $this->db->get('department');
+
 
                                 // Check if query executed successfully
                                 if ($query->num_rows() > 0) {

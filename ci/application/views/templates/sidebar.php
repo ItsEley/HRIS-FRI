@@ -255,8 +255,8 @@
                <a href="#" class=""><i class="la la-file-text"></i></i><span>Reports</span><span class="menu-arrow"></span></a>
                <ul>
                   <li><a href="hr_timesheet.html">Timesheet</a></li>
-                  <li><a href="hr_memo.html">Attendance</a></li>
-                  <li><a href="hr_leaves.html">Leaves</a></li>
+                  <li><a href="<?= base_url('hr/attendance') ?>">Attendance</a></li>
+                  <li><a href="<?= base_url('hr/leaves') ?>">Leaves</a></li>
                   <li><a href="hr_emp_performance.html">Employee Performance</a></li>
                </ul>
             </li>

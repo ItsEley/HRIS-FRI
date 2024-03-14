@@ -3,16 +3,16 @@
         <div class="profile-img">
 
             <?php
-            echo "<img src='data:image/jpeg;base64," . base64_encode($pfp) . "' alt='' srcset='' 
-                class = 'img img-fluid rounded-circle'
-                    style = 'object-fit:cover;aspect-ratio:1;height:auto;'>";
+            echo "<img src='data:image/jpeg;base64," . base64_encode($pfp) . "' alt='' class='img img-fluid rounded-circle' style='object-fit: cover; aspect-ratio: 1; height: auto;'>";
+
             ?>
 
         </div>
         <div class="dropdown profile-action">
             <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?= $emp_id; ?>"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
+            <a id="edit_employee_link" class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?= $emp_id; ?>"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
+
 
                 <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_employee"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
             </div>

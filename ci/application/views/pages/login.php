@@ -26,7 +26,7 @@
 					<form id="login-form" method="post">
 						<div class="input-block mb-4">
 							<label class="col-form-label">Email Address</label>
-							<input type="email" class="form-control form-control-lg" placeholder="Email" name="email" id="email" autocomplete="username">
+							<input type="text" class="form-control form-control-lg" placeholder="Email" name="email" id="email" autocomplete="username">
 						</div>
 						<div class="input-block mb-4">
 							<div class="row align-items-center">

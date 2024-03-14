@@ -806,14 +806,11 @@
 <script>
 	$(document).ready(function() {
 
-		$("li > a[href='<?= base_url('resources/forms') ?>']").parent().addClass("active");
+
+        $("li > a[href='<?= base_url('forms') ?>']").parent().parent().css("display", "block") //get sidebar item with link
+        $("li > a[href='<?= base_url('forms') ?>']").addClass("active"); // for items inside the sidebar
 
 
-		$( "#my_btn" ).on( "click", function() {
-		toastr.info("wtf?")
-
-//   alert( "Handler for `click` called." );
-} );
 
 
 

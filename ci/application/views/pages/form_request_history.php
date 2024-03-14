@@ -276,8 +276,8 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        $("li > a[href='<?= base_url('hr/employees') ?>']").addClass("active");
-        $("li > a[href='<?= base_url('hr/employees') ?>']").parent().parent().css("display", "block")
+        $("li > a[href='<?= base_url('forms/history') ?>']").parent().parent().css("display", "block") //get sidebar item with link
+        $("li > a[href='<?= base_url('forms/history') ?>']").addClass("active"); // for items inside the sidebar
 
 
 

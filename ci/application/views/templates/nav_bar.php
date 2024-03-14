@@ -25,39 +25,7 @@
             <!-- Header Menu -->
             <ul class="nav user-menu">
                <!-- Search -->
-               <!-- <li class="nav-item">
-                  <div class="top-nav-search">
-                     <a href="javascript:void(0);" class="responsive-search">
-                     <i class="fa-solid fa-magnifying-glass"></i>
-                     </a>
-                     <form action="https://smarthr.dreamstechnologies.com/html/template/search.html">
-                        <input class="form-control" type="text" placeholder="Search here">
-                        <button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-                     </form>
-                  </div>
-               </li> -->
-               <!-- /Search -->
-               <!-- Flag -->
-               <!-- <li class="nav-item dropdown has-arrow flag-nav">
-                  <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">
-                  <img src="../assets/img/flags/us.png" alt="Flag" height="20"> <span>English</span>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-right">
-                     <a href="javascript:void(0);" class="dropdown-item">
-                     <img src="../assets/img/flags/us.png" alt="Flag" height="16"> English
-                     </a>
-                     <a href="javascript:void(0);" class="dropdown-item">
-                     <img src="../assets/img/flags/fr.png" alt="Flag" height="16"> French
-                     </a>
-                     <a href="javascript:void(0);" class="dropdown-item">
-                     <img src="../assets/img/flags/es.png" alt="Flag" height="16"> Spanish
-                     </a>
-                     <a href="javascript:void(0);" class="dropdown-item">
-                     <img src="../assets/img/flags/de.png" alt="Flag" height="16"> German
-                     </a>
-                  </div>
-               </li> -->
-               <!-- /Flag -->
+         
                <!-- Notifications -->
                <li class="nav-item dropdown">
                   <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
@@ -252,27 +220,22 @@
                   <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                   <span class="user-img">
                   <?php
-                          $id = $_SESSION['id'];
-
-                          // Select * from your_table where id = 1
-                          $query = $this->db->get_where('personal_info', array('id' => $id));
-           
-                          // print_r($this->session->get_userdata('fname'));
-                          // echo $_SESSION['fname'];
-           
+                          $ins_id = $_SESSION['id'];  // Retrieve personal info based on ins_id
+                          $query = $this->db->get_where('employees', array('id' => $ins_id));
+                          
+                          // Loop through the results
                           foreach ($query->result() as $row) {
-                             // print_r($row);
-                             // echo $row->pfp;
-                             // src="data:image/jpeg;base64,'.base64_encode( $result['image'] ).'"
-                             echo "<img src='data:image/jpeg;base64," . base64_encode($row->pfp) . "' alt='' srcset='' 
-                             style = 'object-fit:cover;aspect-ratio:1;height:auto;'>";
+                              // Print personal info
+                              print_r($row);
+                          
+                              // Print and display the profile picture (assuming 'pfp' is the column name for the image)
+                              echo '<img src="data:image/jpeg;base64,' . base64_encode($row->pfp) . '" alt="" style="object-fit: cover; aspect-ratio: 1; height: auto;">';
                           }
-                  
-                  ?>   
+                          ?>
                   
                   <!-- <img src="../assets/img/profiles/avatar-21.jpg" alt="User Image"> -->
                   <span class="status online"></span></span>
-                  <span><?php //echo ucwords(strtolower($_SESSION['fname'])); ?></span>
+                  <span><?php echo ucwords(strtolower($_SESSION['fname'])); ?></span>
 
 
                   </a>

@@ -17,7 +17,7 @@ $("#login-form").submit(function(e) {
             success: function(response) {
 		
 
-				console.log(response);
+				console.log("success : ",response);
 
                 if (response.status == 'error') {
                     $("#alert").html('<div class="alert alert-danger">' + response.message + '</div>');
@@ -26,19 +26,23 @@ $("#login-form").submit(function(e) {
 
                 } else {
 
+					
+
                     // Check if response.user_type exists before calling toLowerCase()
 					var userTypeLower = '';
 					if (response.user_type !== null && response.user_type !== undefined) {
 						userTypeLower = response.user_type.toLowerCase();
 					}
 					
-					if (userTypeLower == '3') {
-						window.location = base_url + 'employee/home';
-					} else if (userTypeLower == '2') {
-						window.location = base_url + 'hr/dashboard';
-					} else if (userTypeLower == '1') {
+					if(userTypeLower == '0') {
 						window.location = base_url + 'admin/home';
-					} else {
+
+					}else if (userTypeLower == '1') {
+						window.location = base_url + 'hr/dashboard';
+
+					}else {
+						window.location = base_url + 'employee/home';
+
 						// Handle default case if necessary
 					}
 					 
@@ -47,7 +51,12 @@ $("#login-form").submit(function(e) {
 
                    
                 }
-            }
+            },
+			failed: function(response) {
+				console.log("failed : ");
+
+				console.log("failed", response)
+			}
         })
     } else {
         swal({
@@ -60,7 +69,6 @@ $("#login-form").submit(function(e) {
 
 
 /*Admin login*/
-
 $("#adduser").submit(function(e){
 	e.preventDefault();
 	var adduser = $(this).serialize();
@@ -85,7 +93,7 @@ $("#adduser").submit(function(e){
 		
 	})
 })
-
+/*Edit user*/
 $("#edituser").submit(function(e){
 	e.preventDefault();
 	var edituser = $(this).serialize();
@@ -103,8 +111,11 @@ $("#edituser").submit(function(e){
 		}
 	})
 })
-
 $(".dropdown-item.edit-employee").click(function(e) {
+    // Prevent default behavior of the link
+    e.preventDefault();
+
+    // Get emp_id from the clicked link
     var emp_id = $(this).data("emp-id");
 
     // AJAX request to fetch employee details
@@ -126,9 +137,7 @@ $(".dropdown-item.edit-employee").click(function(e) {
             $('#edit_employee select[name="sex"]').val(employee.sex);
             $('#edit_employee select[name="civil_status"]').val(employee.civil_status);
             $('#edit_employee input[name="pob"]').val(employee.pob);
-			$('#edit_employee input[name="dob"]').val(employee.dob);
-            // $('#edit_employee select[name="department"]').val(employee.department);
-            // $('#edit_employee input[name="role"]').val(employee.role);
+            $('#edit_employee input[name="dob"]').val(employee.dob);
             $('#edit_employee input[name="pfp"]').val(employee.pfp);
             $('#edit_employee input[name="email"]').val(employee.email);
             $('#edit_employee input[name="password"]').val(employee.password);
@@ -353,28 +362,4 @@ $("#addassets").submit(function(e){
 		}
 	})
 })
-$(document).ready(function() {
-    // Submit form via AJAX
-    $('#search-form').submit(function(e) {
-        e.preventDefault(); // Prevent default form submission
-
-        // Serialize form data
-        var formData = $(this).serialize();
-
-        // AJAX request
-        $.ajax({
-            type: 'GET',
-            url: '<?php echo base_url("search"); ?>', // Corrected syntax here
-            data: formData,
-            dataType: 'html', // Change data type based on your response format
-            success: function(response) {
-                $('#search-results').html(response); // Display search results in specified div
-            },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText); // Log any errors to the console
-            }
-        });
-    });
-});
-
 
