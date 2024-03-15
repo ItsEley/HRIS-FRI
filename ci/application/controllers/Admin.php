@@ -32,7 +32,7 @@ class Admin extends CI_Controller
 	
 		// print_r($validate->id);
 
-		$this->db->select('emp_id,full_name,department');
+		$this->db->select('emp_id,full_name,acro_dept');
 		$this->db->from('vw_emp_designation');
 		$this->db->where('emp_id',$validate->id);
 
@@ -61,7 +61,7 @@ class Admin extends CI_Controller
 			$data = $query->row_array();
 			$id = $data['emp_id'];
 			$name = $data['full_name'];
-			$department = $data['department'];
+			$department = $data['acro_dept'];
 
 
 			$session_data = array(
@@ -73,9 +73,15 @@ class Admin extends CI_Controller
 			);
 
 			$this->session->set_userdata($session_data);
-			// redirect('hr_profile');
+			
 			$response['status']='success';
 			$response['message']='Login success!';
+			$response['user_id']= $id;
+			$response['user_name']= $name;
+			$response['department']= $department;
+
+			
+
 		
 		}
 		else 
@@ -84,9 +90,9 @@ class Admin extends CI_Controller
 			 $response['message']='Ops! Invalid username Or password';
 		}
 
-		print_r($response);
+		print_r(json_encode($response));
 
-		return json_encode($response);
+		// return json_encode($response);
 
 		// print_r($session_data);
 		
@@ -157,26 +163,26 @@ class Admin extends CI_Controller
 		echo json_encode($response);
 	}
 
-
 	public function showUserdetails()
-	{
-		// Retrieve emp_id from the query parameter
-		$emp_id = $this->input->get('emp_id');
+{
+    // Retrieve emp_id from the query parameter using CodeIgniter's input library
+    $emp_id = $this->input->get('emp_id');
+    
+    // Log emp_id to ensure it's correctly retrieved
+    log_message('debug', 'Employee ID: ' . $emp_id);
 
-		// Fetch employee details based on emp_id using the loaded model
-		$employee = $this->hr->getEmployeeDetails($emp_id);
+    // Fetch employee details based on emp_id using the loaded model
+    $employee = $this->db->get_where('employee', array('id' => $emp_id));
 
-		// Return JSON response
-		header('Content-Type: application/json');
-		echo json_encode($employee);
-	}
+    // Return JSON response
+    header('Content-Type: application/json');
+    echo json_encode($employee);
+}
 
 	public function updateUser()
 	{
 		$response = array();
-
-		$id = $_SESSION['id'];
-
+		// $id = $_SESSION['id'];
 		$data = array(
 			'fname' => $this->input->post('fname'),
 			'mname' => $this->input->post('mname'),

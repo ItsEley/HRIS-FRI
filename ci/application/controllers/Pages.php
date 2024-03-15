@@ -49,22 +49,17 @@ class Pages extends CI_Controller {
       $this->load->view('templates/footer');
     }
 
-
-    
-
-
-
     // hr
-    public function hr_home()
+    public function C_hr_home()
     {
       $data['title'] = 'HR Home';
       $this->load->view('templates/header',$data);
-      $this->load->view('pages/hr_home');
+      $this->load->view('pages/hr/hr_home');
       $this->load->view('templates/footer');
 
     }
 
-    public function hr_announcement()
+    public function C_hr_announcement()
     {
       $data['title'] = 'HR Announcement';
       $this->load->view('templates/header',$data);
@@ -82,7 +77,7 @@ class Pages extends CI_Controller {
       $this->load->view('templates/footer');
 
     }
-    public function hr_profile()
+    public function C_hr_profile()
     {
       $data['title'] = 'Profile Page';
       $this->load->view('templates/header',$data);

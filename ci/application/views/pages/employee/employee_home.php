@@ -36,7 +36,7 @@
 									
 								</div>
 								<div class="welcome-det">
-									<h3>Welcome, <?php echo ucwords($_SESSION['fname'])?>! </h3>
+									<h3>Welcome, <span><?php echo ucwords(strtolower($_SESSION['name']));?> !</span> </h3>
 									<p><?php echo date("l, jS F Y")?></p>
 								</div>
 							</div>
@@ -108,7 +108,7 @@
                   $title =  $row->title;
                   $content = $row->content;
                   $author = $row->author;
-                  $department = $row->department;
+                  $department = $row->to_all;
                   $date = $row->date_created;
 
                   $data['title'] = $title;

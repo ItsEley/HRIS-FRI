@@ -57,7 +57,80 @@
 					<div class="col-md-3 d-flex">
 						<div class="stats-info w-100">
 							<h6>Pending Requests</h6>
-							<h4>12</h4>
+							<h4>
+
+
+							<?php
+// Initialize an empty array to store the rows
+$row_arr = array();
+
+// Construct the UNION query to fetch data from all tables
+$query = $this->db->query('
+    SELECT
+        id,
+        name,
+        date_filled,
+        department,
+        status,
+        "LEAVE REQUEST" AS request_type
+    FROM f_leaves
+    UNION ALL
+    SELECT
+        id,
+        name,
+        date_filled,
+        department,
+        status,
+        "UNDERTIME REQUEST" AS request_type
+    FROM f_undertime
+    UNION ALL
+    SELECT
+        id,
+        name,
+        date_filled,
+        department,
+        status,
+        "OUTGOING PASS REQUEST" AS request_type
+    FROM f_outgoing
+    UNION ALL
+    SELECT
+        id,
+        name,
+        outgoing_pass_date AS date_filled,
+        department,
+        status,
+        "OFFICIAL BUSINESS REQUEST" AS request_type
+    FROM f_off_bussiness
+    UNION ALL
+    SELECT
+        id,
+        name,
+        date_ot AS date_filled,
+        department,
+        status,
+        "OVERTIME REQUEST" AS request_type
+    FROM f_overtime
+');
+
+// Iterate through the result set and populate the row array
+foreach ($query->result() as $row) {
+    $row_arr[] = array(
+        'id' => $row->id,
+        'name' => ucwords(strtolower($row->name)),
+        'date_filled' => $row->date_filled,
+        'department' => $row->department,
+        'status' => $row->status,
+        'request_type' => $row->request_type
+    );
+}
+
+// Count the total number of rows
+$total_rows = count($row_arr);
+echo $total_rows;
+?>
+
+								
+							</h4>
 						</div>
 					</div>
 				</div>
@@ -139,7 +212,7 @@
 
 									$row_arr = array();
 
-									$query = $this->db->get('leaves');
+									$query = $this->db->get('f_leaves');
 									foreach ($query->result() as $row) {
 										$leave_id =  $row->id;
 										$name = ucwords(strtolower($row->name));
@@ -159,7 +232,7 @@
 										);
 									}
 
-									$query2 = $this->db->get('undertime_request');
+									$query2 = $this->db->get('f_undertime');
 									foreach ($query2->result() as $row2) {
 										$undertime_leave_id =  $row2->id;
 										$undertime_name = ucwords(strtolower($row2->name));
@@ -177,7 +250,7 @@
 											'request_type' => $request_type
 										);
 									}
-									$query3 = $this->db->get('outgoing_request');
+									$query3 = $this->db->get('f_outgoing');
 									foreach ($query3->result() as $row3) {
 										$outgoing_id =  $row3->id;
 										$outgoing_name = ucwords(strtolower($row3->name));
@@ -196,7 +269,7 @@
 										);
 									}
 
-									$query4 = $this->db->get('ob_request');
+									$query4 = $this->db->get('f_off_bussiness');
 									foreach ($query4->result() as $row4) {
 										$ob_id =  $row4->id;
 										$ob_name = ucwords(strtolower($row4->name));
@@ -214,7 +287,7 @@
 											'request_type' => $request_type
 										);
 									}
-									$query5 = $this->db->get('ot_request');
+									$query5 = $this->db->get('f_overtime');
 									foreach ($query5->result() as $row5) {
 										$ot_id =  $row5->id;
 										$ot_name = ucwords(strtolower($row5->name));
@@ -232,26 +305,26 @@
 											'request_type' => $request_type
 										);
 									}
-									$query6 = $this->db->get('work_schedule_adjustment_table');
-									foreach ($query6->result() as $row6) {
-										$ws_id =  $row6->id;
-										$ws_name = ucwords(strtolower($row6->name));
-										$ws_date = $row6->date_filled;
-										$ws_department = $row6->department;
-										$ws_status = $row6->status;
-										$request_type = "WORK SCHEDULE ADJUSTMENT REQUEST";
-										$row_arr[] = array(
-											'id' => $ws_id,
+									// $query6 = $this->db->get('work_schedule_adjustment_table');
+									// foreach ($query6->result() as $row6) {
+									// 	$ws_id =  $row6->id;
+									// 	$ws_name = ucwords(strtolower($row6->name));
+									// 	$ws_date = $row6->date_filled;
+									// 	$ws_department = $row6->department;
+									// 	$ws_status = $row6->status;
+									// 	$request_type = "WORK SCHEDULE ADJUSTMENT REQUEST";
+									// 	$row_arr[] = array(
+									// 		'id' => $ws_id,
 
-											'name' => $ws_name,
-											'date_filled' => $ws_date,
-											'department' => $ws_department,
-											'status' => $ws_status,
-											'request_type' => $request_type
-										);
-									}
+									// 		'name' => $ws_name,
+									// 		'date_filled' => $ws_date,
+									// 		'department' => $ws_department,
+									// 		'status' => $ws_status,
+									// 		'request_type' => $request_type
+									// 	);
+									// }
 
-
+									$total_rows = count($row_arr);
 
 									foreach ($row_arr as $row) {
 									?>

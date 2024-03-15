@@ -17,7 +17,8 @@ $("#login-form").submit(function(e) {
             success: function(response) {
 		
 
-				console.log("success : ",response);
+				console.log("success : ",JSON.stringify(response));
+
 
                 if (response.status == 'error') {
                     $("#alert").html('<div class="alert alert-danger">' + response.message + '</div>');
@@ -25,31 +26,23 @@ $("#login-form").submit(function(e) {
 				console.log("error");
 
                 } else {
-
-					
-
                     // Check if response.user_type exists before calling toLowerCase()
-					var userTypeLower = '';
-					if (response.user_type !== null && response.user_type !== undefined) {
-						userTypeLower = response.user_type.toLowerCase();
-					}
-					
-					if(userTypeLower == '0') {
-						window.location = base_url + 'admin/home';
 
-					}else if (userTypeLower == '1') {
+					let department =  response.department.toLowerCase();
+
+					if(department == "hr"){
+
 						window.location = base_url + 'hr/dashboard';
 
-					}else {
+					}else if(department == "sys-at"){
+						window.location = base_url + 'admin/home';
+
+
+					}else{
 						window.location = base_url + 'employee/home';
-
-						// Handle default case if necessary
+						
 					}
-					 
-				console.log("success : ",userTypeLower);
 
-
-                   
                 }
             },
 			failed: function(response) {
@@ -68,31 +61,72 @@ $("#login-form").submit(function(e) {
 });
 
 
-/*Admin login*/
-$("#adduser").submit(function(e){
-	e.preventDefault();
-	var adduser = $(this).serialize();
-	console.log("errrp", adduser);
+// /*Admin login*/
+// $("#adduser").submit(function(e){
+// 	e.preventDefault();
+// 	var adduser = $(this).serialize();
+// 	console.log("errrp", adduser);
 
-	$.ajax({
-		url: base_url + 'adduser',
-		type: 'post',
-		data: adduser,
-		dataType: 'json',
-		success: function(res){
-			if(res.status === 1){
-				alert(res.msg);
-			console.log("success ",adduser);
+// 	$.ajax({
+// 		url: base_url + 'adduser',
+// 		type: 'post',
+// 		data: adduser,
+// 		dataType: 'json',
+// 		success: function(res){
+// 			if(res.status === 1){
+// 				alert(res.msg);
+// 			console.log("success ",adduser);
 
-			}else{
-				alert(res.msg);
-			console.log("errrp", adduser);
+// 			}else{
+// 				alert(res.msg);
+// 			console.log("errrp", adduser);
 
-			}
-		}
+// 			}
+// 		}
 		
-	})
-})
+// 	})
+// })
+
+$(document).ready(function() {
+    $('#openSecondModalBtn').click(function() {
+        // Get form data from the first modal
+        var formData = $('#adduser').serializeArray();
+
+        // Populate the fields of the second modal with the form data
+        $.each(formData, function(index, field) {
+            $('#exampleModalToggle2').find('[name="' + field.name + '"]').val(field.value);
+        });
+
+        // Close the first modal when the second modal is opened
+        $('#add_employee').modal('hide');
+        $('#exampleModalToggle2').modal('show');
+    });
+
+    $('#submitSecondModalBtn').click(function() {
+        // Perform form submission only when the second modal is submitted
+        $('#secondModalForm').submit();
+    });
+
+    $('#adduser').on('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission behavior
+
+        // Perform AJAX submission if needed
+        $.ajax({
+            url: base_url + 'adduser',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(response) {
+                // Handle success if needed
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+                // Handle errors if needed
+            }
+        });
+    });
+});
+
+
 /*Edit user*/
 $("#edituser").submit(function(e){
 	e.preventDefault();
@@ -111,21 +145,41 @@ $("#edituser").submit(function(e){
 		}
 	})
 })
-$(".dropdown-item.edit-employee").click(function(e) {
-    // Prevent default behavior of the link
-    e.preventDefault();
 
-    // Get emp_id from the clicked link
-    var emp_id = $(this).data("emp-id");
+$(document).ready(function() {
+    $(".dropdown-item.edit-employee").click(function(e) {
+        e.preventDefault();
 
-    // AJAX request to fetch employee details
-    $.ajax({
-        url: base_url + 'admin/showUserdetails',
-        type: 'GET',
-        dataType: 'json',
-        data: { emp_id: emp_id },
-        success: function(employee) {
-            // Populate modal fields with employee data
+        var emp_id = $(this).attr("data-emp-id");
+        
+        // Log emp_id to ensure it's correctly retrieved
+        console.log('Employee ID:', emp_id);
+
+        $.ajax({
+            url: base_url + 'admin/showUserdetails',
+            type: 'GET',
+            dataType: 'json',
+            data: { emp_id: emp_id },
+            success: function(employee) {
+                console.log('Response:', employee);
+                if (response) {
+                    populateModal(employee);
+                } else {
+                    console.error('No employee data received');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX error:', error);
+                // Handle error if necessary
+            }
+        });
+    });
+
+    function populateModal(employee) {
+        console.log('Populating modal with employee data:', employee);
+
+        // Check if employee data is not null
+        if (employee) {
             $('#edit_employee input[name="fname"]').val(employee.fname);
             $('#edit_employee input[name="mname"]').val(employee.mname);
             $('#edit_employee input[name="lname"]').val(employee.lname);
@@ -142,15 +196,14 @@ $(".dropdown-item.edit-employee").click(function(e) {
             $('#edit_employee input[name="email"]').val(employee.email);
             $('#edit_employee input[name="password"]').val(employee.password);
 
-            // Show the modal
             $('#edit_employee').modal('show');
-        },
-        error: function(xhr, status, error) {
-            console.error(error);
-            // Handle error if necessary
+        } else {
+            console.error('Employee details not found.');
+            // Handle case where employee details are not found
         }
-    });
+    }
 });
+
 
 $(".avatar.profile_view").click(function(e) {
     var emp_id = $(this).data("emp-id");

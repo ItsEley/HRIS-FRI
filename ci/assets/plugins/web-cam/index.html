@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Employee</title>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+    #video {
+        width: 100%;
+        max-width: 600px;
+    }
+</style>
+</head>
+<body>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addEmployeeModal">
+  Add Employee
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="addEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addEmployeeModalLabel">Add Employee</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Employee Basic Info Form -->
+        <form id="employeeForm">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" required>
+          </div>
+          <div class="form-group">
+            <label for="designation">Designation</label>
+            <input type="text" class="form-control" id="designation" required>
+          </div>
+          <button type="submit" class="btn btn-primary" id="submitBasicInfo">Next</button>
+        </form>
+        
+        <!-- Camera Capture -->
+        <div id="cameraSection" style="display: none;">
+          <h5>Employee Picture</h5>
+          <video id="video" autoplay></video><br>
+          <button class="btn btn-secondary" id="captureButton">Capture</button>
+          <button class="btn btn-danger" id="retakeButton" style="display: none;">Retake</button><br>
+          <canvas style="display: none;" id="canvas"></canvas>
+        </div>
+
+        <!-- Captured Image Container -->
+        <div id="capturedImageContainer" style="display: none;">
+          <h5>Employee Picture</h5>
+          <img id="capturedImage" style="max-width: 100%;" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('captureButton');
+    const retakeButton = document.getElementById('retakeButton');
+    const employeeForm = document.getElementById('employeeForm');
+    const cameraSection = document.getElementById('cameraSection');
+    const capturedImageContainer = document.getElementById('capturedImageContainer');
+    const capturedImage = document.getElementById('capturedImage');
+    let mediaStream; // Variable to store the media stream
+
+    // Access the device camera and stream to video element
+    async function initCamera() {
+        try {
+            mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = mediaStream;
+        } catch (err) {
+            console.error('Error accessing camera:', err);
+        }
+    }
+
+    // Stop the camera stream
+    function stopCamera() {
+        if (mediaStream) {
+            const tracks = mediaStream.getTracks();
+            tracks.forEach(track => {
+                track.stop();
+            });
+        }
+    }
+
+    // Show camera section
+    function showCameraSection() {
+        cameraSection.style.display = 'block';
+    }
+
+    // Hide camera section
+    function hideCameraSection() {
+        cameraSection.style.display = 'none';
+        stopCamera(); // Stop the camera when hiding the section
+    }
+
+    // Capture and display the photo
+    captureButton.addEventListener('click', function() {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imgUrl = canvas.toDataURL('image/png'); // Convert to data URL
+        capturedImage.src = imgUrl;
+        video.style.display = 'none'; // Hide video element
+        capturedImageContainer.style.display = 'block'; // Show captured image container
+        retakeButton.style.display = 'inline-block';
+        captureButton.style.display = 'none';
+        stopCamera(); // Stop the camera when hiding the section
+
+    });
+
+    // Retake photo
+    retakeButton.addEventListener('click', function() {
+        retakeButton.style.display = 'none';
+        captureButton.style.display = 'inline-block';
+        capturedImageContainer.style.display = 'none';
+        video.style.display = 'block';
+    });
+
+    // Submit basic info form
+    employeeForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        showCameraSection();
+    });
+
+    // Initialize the camera when the modal is shown
+    $('#addEmployeeModal').on('shown.bs.modal', function () {
+        initCamera();
+    });
+
+    // Reset camera when the modal is closed
+    $('#addEmployeeModal').on('hidden.bs.modal', function () {
+        hideCameraSection();
+    });
+</script>
+
+</body>
+</html>

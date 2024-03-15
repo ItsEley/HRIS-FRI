@@ -234,6 +234,9 @@
             </ul>
          </nav>
 
+<!--//! change this to print if session department type is appropriate
+   //! instead of hiding -->
+
          <ul class="sidebar-vertical"> <!-- desktop size -->
             <?php
             if ($this->session->userdata('role') === 'HR') {
@@ -266,6 +269,10 @@
                <a href="#"><i class="la la-user"></i><span>Employees</span> <span class="menu-arrow"></span></a>
                <ul>
                   <li><a href="<?= base_url('hr/employees') ?>">Manage</a></li>
+                  <!-- SINGLE DAY ATTENDANCE -->
+                  <li><a href="<?= base_url('hr/attendance') ?>">Attendance</a></li> 
+
+
                   <!-- <li><a href="hr_emp_manage.html">Manage</a></li> -->
                   <li><a href="<?= base_url('hr/departments') ?>">Designations</a></li>
                   <li><a href="hr_emp_shifts.html">Shifts & Schedules</a></li>
@@ -279,81 +286,65 @@
                   <li><a href="hr_emp_overview.html">Salary Report</a></li>
                   <li><a href="hr_emp_manage.html">Bonuses & Commissions</a></li>
                   <li><a href="hr_emp_designations.html">Deductions</a></li>
-   
+
                </ul>
             </li>
-
 
 
 
             <li class="submenu forms">
                <a href="#" class=""><i class="la la-object-group"></i></i><span>Forms</span><span class="menu-arrow"></span></a>
                <ul>
-                  <li><a href="<?= base_url('forms')?>">Apply</a></li>
-
-                  <li><a href="<?= base_url('leave_pending')?>">Pending</a></li>
-                  <li><a href="<?= base_url('forms/history')?>">History</a></li>
+                  <li><a href="<?= base_url('forms') ?>">Apply</a></li>
+                  <li><a href="<?= base_url('leave_pending') ?>">Pending</a></li>
+                  <li><a href="<?= base_url('forms/history') ?>">History</a></li>
                </ul>
             </li>
-
-
-
          </ul>
       </div>
    </div>
 </div>
 
 <script>
+   $(document).ready(function() {
+
+      console.log(<?php echo json_encode($_SESSION); ?>);
+      let user_type = <?php echo $_SESSION['department'] ?>;
+      user_type = user_type.toLowerCase();
+
+      console.log(user_type);
+
+      // hide side menu content
+      $(".sidebar-vertical > li").hide();
+      $(".sidebar-vertical > li.menu-title").show();
 
 
-      $(document).ready(function() {
+      if (user_type == "sys-at") { //admin
+         // console.log("admin")
 
-            // console.log('<?php //print_r($_SESSION)?>')
+      } else if (user_type == "hr") { // hr/heads
+         // console.log("hr")
 
-            let user_type = <?php echo $_SESSION['user_type']?>
-
-            // console.log(user_type);
-
-
-            // hide side menu content
-            $(".sidebar-vertical > li").hide();
-            $(".sidebar-vertical > li.menu-title").show();
-
-
-            if(user_type == 1){ //admin
-               // console.log("admin")
-               
-            }else if(user_type == 2){ // hr/heads
-               // console.log("hr")
-
-               $('.sidebar-vertical > li > a[href="<?= base_url('hr/dashboard') ?>"]').parent().show();
-               $('.sidebar-vertical > li > a[href="<?= base_url('hr/announcement') ?>"]').parent().show();
-               $(".sidebar-vertical > li.submenu.forms ").show()
-                $(".sidebar-vertical > li.submenu.payroll ").show()
-                $(".sidebar-vertical > li.submenu.employees ").show()
-                $(".sidebar-vertical > li.submenu.reports ").show()
+         $('.sidebar-vertical > li > a[href="<?= base_url('hr/dashboard') ?>"]').parent().show();
+         $('.sidebar-vertical > li > a[href="<?= base_url('hr/announcement') ?>"]').parent().show();
+         $(".sidebar-vertical > li.submenu.forms ").show()
+         $(".sidebar-vertical > li.submenu.payroll ").show()
+         $(".sidebar-vertical > li.submenu.employees ").show()
+         $(".sidebar-vertical > li.submenu.reports ").show()
 
 
+      } else if (user_type == 3) { // employee
+         //  console.log("employee")
+
+         $('.sidebar-vertical > li > a[href="<?= base_url('employee/home') ?>"]').parent().show();
+         $(".sidebar-vertical > li.submenu.forms ").show()
 
 
-
-            }else if(user_type == 3){// employee
-               //  console.log("employee")
-
-                $('.sidebar-vertical > li > a[href="<?= base_url('employee/home') ?>"]').parent().show();
-                $(".sidebar-vertical > li.submenu.forms ").show()
-
-
+      } else { //none?
+         // console.log('hmm');
+      }
 
 
 
-            }else{ //none?
-               // console.log('hmm');
-            }
-
-
-        
-      });
-
-   
+   });
 </script>

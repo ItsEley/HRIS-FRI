@@ -38,7 +38,7 @@
 
             <!-- Search Filter -->
             <div class="row filter-row">
-
+              
                 <div class="col-sm-6 col-md-3">
                     <div class="input-block mb-3 form-focus">
                         <input type="text" class="form-control floating">
@@ -99,23 +99,24 @@
 
                 <?php
 
-                $query = $this->db->get('employees');
-
+                $query = $this->db->query('
+SELECT vw_emp_designation.*, employee.pfp 
+FROM vw_emp_designation
+JOIN employee 
+ON vw_emp_designation.emp_id = employee.id
+ORDER BY vw_emp_designation.dept_id ASC, vw_emp_designation.full_name
+');
                 // print_r($this->session->get_userdata('fname'));
                 // echo $_SESSION['fname'];
 
                 foreach ($query->result() as $row) {
-                    $emp_id =  $row->id;
-
-                    $fname = ucwords(strtolower($row->fname));
-                    $lname = ucwords(strtolower($row->lname));
-                    $mname = $row->mname;
-                    $fullname = $fname . " " . $lname;
-                    $sex = $row->sex;
 
 
-                    $data['emp_name'] = $fullname;
-                    $data['emp_id'] = $emp_id;
+
+                    $data['emp_name'] = $row->full_name;
+                    $data['emp_id'] = $row->emp_id;
+                    $data['department'] = $row->department;
+                    $data['role'] = $row->roles;
                     $data['pfp'] = $row->pfp;
 
 
@@ -138,7 +139,7 @@
 
                             </div>
                             <div class="modal-body">
-                                <form method="post" action="<?= base_url('edituser') ?>">
+                                <form id="edit_employee" method="post">
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="input-block mb-3">
@@ -232,19 +233,18 @@
                                             <div class="input-block mb-3">
                                                 <label class="col-form-label">Department <span class="text-danger">*</span></label>
 
-                                                <select class="form-control" name="">
+                                                <select class="form-control" name="department">
                                                     <?php
                                                     $query = $this->db->get('department');
 
                                                     // Check if query executed successfully
                                                     if ($query->num_rows() > 0) {
                                                         foreach ($query->result() as $row) {
-                                                            $depID = $row->id;
-                                                            $department1 = $row->department;
-                                                            $acro = $row->acro_dept;
-                                                            $data['department'] = $department1;
+
                                                             // Output each department as an option
-                                                            echo '<option value="' . $depID . '">' .  $data['department'] . '</option>';
+
+
+                                                            echo '<option value="' . $row->id . '">' .  $row->department . '</option>';
                                                         }
                                                     } else {
                                                         // Handle no results from the database
@@ -278,7 +278,7 @@
                                     </div>
 
                                     <div class="submit-section">
-                                        <button type="sbmit" class="btn btn-primary submit-btn">Save</button>
+                                        <button type="submit" class="btn btn-primary submit-btn">Save</button>
                                     </div>
                                 </form>
                             </div>
@@ -299,7 +299,7 @@
         <!-- MODALS -->
 
         <!-- Add Employee Modal -->
-        <div id="add_employee" class="modal custom-modal fade" role="dialog">
+        <div id="add_employee" class="modal custom-modal fade" role="dialog" data-bs-backdrop="static">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -400,45 +400,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Department <span class="text-danger">*</span></label>
-                                        <select class="form-select form-control">
-                                            <option value="">All</option>
-
-                                            <?php
-                                            $query = $this->db->get('department');
-
-                                            // Check if query executed successfully
-                                            if ($query->num_rows() > 0) {
-                                                foreach ($query->result() as $row) {
-                                                    $depID = $row->id;
-                                                    $department1 = $row->department;
-                                                    $acro = $row->acro_dept;
-                                                    $data['department'] = $department1;
-                                                    // Output each department as an option
-                                                    echo '<option value="' . $depID . '">' .  $data['department'] . '</option>';
-                                                }
-                                            } else {
-                                                // Handle no results from the database
-                                                echo '<option value="">No departments found</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Role <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="role">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Profile Image <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="pfp">
-                                    </div>
-                                </div>
+                             
                                 <div class="col-sm-6">
                                     <div class="input-block mb-3">
                                         <label class="col-form-label">Email <span class="text-danger">*</span></label>
@@ -454,8 +416,8 @@
                             </div>
 
                             <div class="submit-section">
-                                <button type="submit" class="btn btn-primary submit-btn">Submit</button>
-                            </div>
+                        <button type="button" class="btn btn-primary submit-btn" id="openSecondModalBtn">Image Capturing</button>
+                    </div>
                         </form>
                     </div>
                 </div>
@@ -489,10 +451,56 @@
         <!-- /Delete Employee Modal -->
 
 
+        <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalToggleLabel2">Image Capturing</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+            <div id="cameraSection" style="display: none;">
+          <h5>Employee Picture</h5>
+          <video id="video" autoplay></video><br>
+          <button class="btn btn-secondary" id="captureButton">Capture</button>
+          <button class="btn btn-danger" id="retakeButton" style="display: none;">Retake</button><br>
+          <canvas style="display: none;" id="canvas"></canvas>
+        </div>
+
+        <!-- Captured Image Container -->
+        <div id="capturedImageContainer" style="display: none;">
+          <h5>Employee Picture</h5>
+          <img id="capturedImage" style="max-width: 100%;" />
+        </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="submitSecondModalBtn">Submit</button>
+                <button class="btn btn-secondary" data-bs-target="#add_employee" data-bs-toggle="modal" data-bs-dismiss="modal">Back to first</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // When the "Submit & Open Modal" button is clicked
+    $('#submitAndOpenModalBtn').click(function() {
+        // Submit the form
+        $('#myForm').submit();
+        
+        // Show the modal
+        $('#exampleModalToggle2').modal('show');
+    });
+});
+</script>>
+
 
     </div>
     <!-- /Page Wrapper -->
 </div>
+
 <!-- /Main Wrapper -->
 
 
@@ -511,33 +519,89 @@
 
             var emp_id = $(this).data("emp-id");
 
-            // $.ajax({
-            // 	url: base_url + 'upload/do_upload',
-            // 	type:"post",
-            // 	data:new FormData(this),
-            // 	processData:false,
-            // 	contentType:false,
-            // 	cache:false,
-            // 	async:false,
-            // 	beforeSend: function() {
-            // 		$("#update_img").html("Updating... <span class='fa fa-spinner fa-1x fa-spin'></span>");
-            // 	},
-            // 	success: function(data) {
-            // 		swal(
-            //     {
-            //         title: 'Successfuly Update!',	                    
-            //         type: 'success',	                    
-            //         confirmButtonClass: 'btn btn-success',	                    
-            //     }
-            // );
-            // 		$("#update_img").attr("disabled", false).html("Update Image");
-            // 		$("#carousel").modal('hide');
-            // 		$("#imgfrm")[0].reset();
-            // 		show_car_con();
-            // 	}
-            // })
+    
         });
 
+
+        const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('captureButton');
+    const retakeButton = document.getElementById('retakeButton');
+    const employeeForm = document.getElementById('employeeForm');
+    const cameraSection = document.getElementById('cameraSection');
+    const capturedImageContainer = document.getElementById('capturedImageContainer');
+    const capturedImage = document.getElementById('capturedImage');
+    let mediaStream; // Variable to store the media stream
+
+    // Access the device camera and stream to video element
+    async function initCamera() {
+        try {
+            mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = mediaStream;
+        } catch (err) {
+            console.error('Error accessing camera:', err);
+        }
+    }
+
+    // Stop the camera stream
+    function stopCamera() {
+        if (mediaStream) {
+            const tracks = mediaStream.getTracks();
+            tracks.forEach(track => {
+                track.stop();
+            });
+        }
+    }
+
+    // Show camera section
+    function showCameraSection() {
+        cameraSection.style.display = 'block';
+    }
+
+    // Hide camera section
+    function hideCameraSection() {
+        cameraSection.style.display = 'none';
+        stopCamera(); // Stop the camera when hiding the section
+    }
+
+    // Capture and display the photo
+    captureButton.addEventListener('click', function() {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imgUrl = canvas.toDataURL('image/png'); // Convert to data URL
+        capturedImage.src = imgUrl;
+        video.style.display = 'none'; // Hide video element
+        capturedImageContainer.style.display = 'block'; // Show captured image container
+        retakeButton.style.display = 'inline-block';
+        captureButton.style.display = 'none';
+        stopCamera(); // Stop the camera when hiding the section
+
+    });
+
+    // Retake photo
+    retakeButton.addEventListener('click', function() {
+        retakeButton.style.display = 'none';
+        captureButton.style.display = 'inline-block';
+        capturedImageContainer.style.display = 'none';
+        video.style.display = 'block';
+    });
+
+    // Submit basic info form
+    employeeForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        showCameraSection();
+    });
+
+    // Initialize the camera when the modal is shown
+    $('#exampleModalToggle2').on('shown.bs.modal', function () {
+        initCamera();
+    });
+
+    // Reset camera when the modal is closed
+    $('#exampleModalToggle2').on('hidden.bs.modal', function () {
+        hideCameraSection();
+    });
 
 
 

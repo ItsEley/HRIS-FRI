@@ -49,21 +49,22 @@
                                 <tr>
                                     <th>Employee</th>
                                     <th>Request Type</th>
-
                                     <th>Date Filled</th>
-
                                     <th class="text-center">Status</th>
                                     <th class="text-end">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $pfp = $_SESSION['pfp'];
+                                if ($this->session->userdata('pfp')) {
+                                    $pfp = $this->session->userdata('pfp');
+                                }
+                              
                                 $row_arr = array();
 
                                 $emp_id = $this->session->userdata('id');
                                 $this->db->where('emp_id', $emp_id);
-                                $query = $this->db->get('leaves');
+                                $query = $this->db->get('f_leaves');
                                 foreach ($query->result() as $row) {
                                     $leave_id =  $row->id;
                                     $name = ucwords(strtolower($row->name));
@@ -85,7 +86,7 @@
                                 $emp_id = $this->session->userdata('id');
 
                                 $this->db->where('emp_id', $emp_id);
-                                $query2 = $this->db->get('undertime_request');
+                                $query2 = $this->db->get('f_undertime');
                                 foreach ($query2->result() as $row2) {
                                     $undertime_leave_id =  $row2->id;
                                     $undertime_name = ucwords(strtolower($row2->name));
@@ -106,7 +107,7 @@
                                 $emp_id = $this->session->userdata('id');
 
                                 $this->db->where('emp_id', $emp_id);
-                                $query3 = $this->db->get('outgoing_request');
+                                $query3 = $this->db->get('f_outgoing');
                                 foreach ($query3->result() as $row3) {
                                     $outgoing_id =  $row3->id;
                                     $outgoing_name = ucwords(strtolower($row3->name));
@@ -127,7 +128,7 @@
                                 $emp_id = $this->session->userdata('id');
 
                                 $this->db->where('emp_id', $emp_id);
-                                $query4 = $this->db->get('ob_request');
+                                $query4 = $this->db->get('f_off_bussiness');
                                 foreach ($query4->result() as $row4) {
                                     $ob_id =  $row4->id;
                                     $ob_name = ucwords(strtolower($row4->name));
@@ -148,7 +149,7 @@
                                 $emp_id = $this->session->userdata('id');
 
                                 $this->db->where('emp_id', $emp_id);
-                                $query5 = $this->db->get('ot_request');
+                                $query5 = $this->db->get('f_overtime');
                                 foreach ($query5->result() as $row5) {
                                     $ot_id =  $row5->id;
                                     $ot_name = ucwords(strtolower($row5->name));
@@ -166,27 +167,27 @@
                                         'request_type' => $request_type
                                     );
                                 }
-                                $emp_id = $this->session->userdata('id');
+                                // $emp_id = $this->session->userdata('id');
 
-                                $this->db->where('emp_id', $emp_id);
-                                $query6 = $this->db->get('work_schedule_adjustment_table');
-                                foreach ($query6->result() as $row6) {
-                                    $ws_id =  $row6->id;
-                                    $ws_name = ucwords(strtolower($row6->name));
-                                    $ws_date = $row6->date_filled;
-                                    $ws_department = $row6->department;
-                                    $ws_status = $row6->status;
-                                    $request_type = "WORK SCHEDULE ADJUSTMENT REQUEST";
-                                    $row_arr[] = array(
-                                        'id' => $ws_id,
+                                // $this->db->where('emp_id', $emp_id);
+                                // $query6 = $this->db->get('work_schedule_adjustment_table');
+                                // foreach ($query6->result() as $row6) {
+                                //     $ws_id =  $row6->id;
+                                //     $ws_name = ucwords(strtolower($row6->name));
+                                //     $ws_date = $row6->date_filled;
+                                //     $ws_department = $row6->department;
+                                //     $ws_status = $row6->status;
+                                //     $request_type = "WORK SCHEDULE ADJUSTMENT REQUEST";
+                                //     $row_arr[] = array(
+                                //         'id' => $ws_id,
 
-                                        'name' => $ws_name,
-                                        'date_filled' => $ws_date,
-                                        'department' => $ws_department,
-                                        'status' => $ws_status,
-                                        'request_type' => $request_type
-                                    );
-                                }
+                                //         'name' => $ws_name,
+                                //         'date_filled' => $ws_date,
+                                //         'department' => $ws_department,
+                                //         'status' => $ws_status,
+                                //         'request_type' => $request_type
+                                //     );
+                                // }
 
 
 
@@ -200,7 +201,9 @@
                                                 <a href="profile.html" class="avatar">
                                                     <img src="<?php
                                                                 // Retrieve base64-encoded image data from session
-                                                                $pfp = $this->session->userdata('pfp');
+                                                                if ($this->session->userdata('pfp')) {
+                                                                    $pfp = $this->session->userdata('pfp');
+                                                                }
 
                                                                 // Check if $pfp is set and not empty
                                                                 if (!empty($pfp)) {

@@ -25,7 +25,7 @@
          <div class="page-header">
             <div class="row">
                <div class="col-sm-12">
-                  <h3 class="page-title">Welcome <span><?php echo ucwords(strtolower($_SESSION['fname']));?> !</span></h3>
+                  <h3 class="page-title">Welcome <span><?php echo ucwords(strtolower($_SESSION['name']));?> !</span></h3>
                   <ul class="breadcrumb">
                      <li class="breadcrumb-item active">HR Dashboard / <?php echo date("l, jS F Y")?></li>
 
@@ -40,6 +40,7 @@
 
                <?php
                $data['icon'] = "fa-solid fa-user";
+               $data['count'] = rand(0, 200);
              
                $data['label'] = "Employees";
                $this->load->view('components/card-dash-widget', $data)
@@ -86,7 +87,7 @@
             <div class="col-lg-8 col-md-8">
 
                <h3 class="page-title">
-                  <!-- <?php print_r($_SESSION) ?> -->
+                  <?php print_r($_SESSION) ?>
                   <a href="../pages/hr_announcement.php">Announcements</a>
                </h3>
 
@@ -102,13 +103,13 @@
                   $title =  $row->title;
                   $content = $row->content;
                   $author = $row->author;
-                  $department = $row->department;
+                  // $department = $row->department;
                   $date = $row->date_created;
 
                   $data['title'] = $title;
                   $data['content'] = $content;
                   $data['author'] = $author;
-                  $data['department'] = $department;
+                  // $data['department'] = $department;
                   $data['date'] = $date;
 
 

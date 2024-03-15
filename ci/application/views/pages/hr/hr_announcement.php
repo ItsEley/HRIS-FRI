@@ -51,7 +51,7 @@
                                     $title = $row->title;
                                     $content = $row->content;
                                     $author = $row->author;
-                                    $department = $row->department;
+                                    // $department = $row->department;
                                     $date = $row->date_created;
                                 ?>
                                     <tr class="hoverable-row">
@@ -63,8 +63,9 @@
                                                 <?php echo $content; ?>
                                             </div>
                                         </td>
+                                       
                                         <td><?php echo $author; ?></td>
-                                        <td><?php echo $department; ?></td>
+                                        <td><?php //echo $department; ?> {not implemented yet}</td>
                                         <td><?php echo date('M j, Y', strtotime($date)); ?></td>
                                     </tr>
                                 <?php

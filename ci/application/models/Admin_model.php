@@ -157,7 +157,7 @@ class Admin_model extends CI_Model
 		}
 
 		$this->db->where('id', $id);
-		$this->db->update('personal_info', $updateData);
+		$this->db->update('employee', $updateData);
 
 		// Check if update was successful
 		if ($this->db->affected_rows() > 0) {
@@ -170,15 +170,31 @@ class Admin_model extends CI_Model
 
 	public function getEmployeeDetails($emp_id)
 	{
-		// Fetch employee details from the database based on emp_id
-		$query = $this->db->get_where('personal_info', array('id' => $emp_id));
+		log_message('debug', 'getEmployeeDetails function called for emp_id: ' . $emp_id);
 
+		// Escape the emp_id parameter to prevent SQL injection
+		$emp_id = $this->db->escape_str($emp_id);
+	
+		// Fetch employee details from the database based on emp_id
+		$query = $this->db->get_where('employee', array('id' => $emp_id));
+	
+		// Log the generated SQL query
+		log_message('debug', 'SQL Query: ' . $this->db->last_query());
+	
 		if ($query->num_rows() > 0) {
+			// Log the fetched employee details
+			log_message('debug', 'Employee details: ' . print_r($query->row_array(), true));
+			
 			return $query->row_array(); // Return the fetched employee details as an associative array
 		} else {
+			// Log that employee details were not found
+			log_message('debug', 'Employee details not found for emp_id: ' . $emp_id);
+			
 			return null; // Return null if employee not found
 		}
 	}
+	
+
 
 
 
@@ -189,7 +205,7 @@ class Admin_model extends CI_Model
 
 
 
-		$addUserQuery = "INSERT INTO `personal_info`(`fname`, `mname`, `lname`,`nickn`, 
+		$addUserQuery = "INSERT INTO `employee`(`fname`, `mname`, `lname`,`nickn`, 
 		`current_add`, `perm_add`, `dob`, `age`, `religion`,`sex`,`civil_status`,`pob`,
 		`email`,`password`,`role`) 
 

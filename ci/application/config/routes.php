@@ -18,20 +18,22 @@ $route['forms/history'] = 'pages/forms_history';
 
 
 
+//route['xx'] === link in browser
+// pages ==== pages(controller)
+//pages/xxxx === xxx(pages(controller)/function)
+// ** EDIT ROUTE 
 // hr 
-$route['hr/dashboard'] = 'pages/hr_home';
-$route['hr/announcement'] = 'pages/hr_announcement';
-$route['hr_profile'] = 'pages/hr_profile';
-$route['hr/employees'] = 'pages/hr_employees';
-$route['hr/attendance'] = 'pages/hr_attendance';
-
-
-$route['forms/pending'] = 'pages/forms_pending';
-$route['leave_pending'] = 'pages/leave_pending';
-$route['hr/departments'] = 'pages/departments';
+$route['dashboard'] = 'pages/C_hr_home';
+$route['announcements'] = 'pages/C_hr_announcement';
+$route['profile'] = 'pages/hr_profile';
+$route['view_employees'] = 'pages/hr_employees';
+$route['viewAttendance'] = 'pages/hr_attendance';
+$route['viewpending'] = 'pages/forms_pending';
+$route['viewrequests'] = 'pages/leave_pending';
+$route['viewdepartments'] = 'pages/departments';
 
 // hr functions
-$route['user_profile'] = 'pages/user_profile';
+$route['user'] = 'pages/user_profile';
 $route['leaverequestzz'] = 'admin/leaverequestzz';
 $route['ob_requestzz'] = 'admin/ob_requestzz';
 $route['outgoingrequestzz'] = 'admin/outgoingrequestzz';

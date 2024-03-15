@@ -45,15 +45,13 @@
                     foreach ($query_departments->result() as $row_department) {
                 ?>
                         <div class="col">
-                        <div class="card bg-info bg-opacity-25">
+                            <div class="card dep-card-cont">
 
-                            <div class="card-header ">
+                                <div class="card-header bg-info bg-opacity-25">
 
                                     <div class="row">
-                                        <div class="col">
-                                        <h4 class="card-title mb-0"><?= $row_department->department ?></h4>
-
-
+                                        <div class="col overflow-ellipsis">
+                                            <h4 class="card-title mb-0 overflow-ellipsis"><?= $row_department->department ?></h4>
                                         </div>
                                         <div class="col text-end">
                                             <div class="btn btn-square btn-success"><i class="fa-solid fa-plus"></i> Add roles</div>
@@ -63,7 +61,7 @@
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="table-responsive">
-                                        <table class="table mb-0">
+                                        <table class="table ">
                                             <thead>
                                                 <tr>
                                                     <th>Employee ID</th>
@@ -73,22 +71,25 @@
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody class="p-4">
                                                 <?php
-                                                $query_roles = $this->db->get_where('vw_role_designation', array('department' => $row_department->department));
+                                                $query_roles = $this->db->get_where('vw_emp_designation', array('department' => $row_department->department));
 
                                                 // Check if query executed successfully
                                                 if ($query_roles->num_rows() > 0) {
                                                     foreach ($query_roles->result() as $row_role) {
-                                                        echo "<tr>";
-                                                        echo "<td>$row_role->ins_id</td>";
-                                                        echo "<td>$row_role->fullname</td>";
+                                                        echo "<tr class= ''>";
+                                                        echo "<td>$row_role->emp_id</td>";
+                                                        echo "<td>$row_role->full_name</td>";
                                                         echo "<td>$row_role->roles</td>";
-                                                        echo "<td>$row_role->salary</td>";
+                                                        echo "<td>$row_role->salary" . "/" . $row_role->salary_type . " </td>";
+                                                        echo "<td>...</td>";
+
+
                                                         echo "</tr>";
                                                     }
                                                 } else {
-                                                    echo "<tr><td colspan='4'>No roles specified</td></tr>";
+                                                    echo "<tr><td colspan='5' class ='text-center'>No roles specified</td></tr>";
                                                 }
                                                 ?>
                                             </tbody>
@@ -126,7 +127,7 @@
                                     <tbody>
                                         <?php
                                         // Querying employees with null roles
-                                        $query_null_roles = $this->db->where("roles = '' OR roles IS NULL")->get('vw_role_designation');
+                                        $query_null_roles = $this->db->where("roles = '' OR roles IS NULL")->get('vw_emp_designation');
 
 
                                         // Check if query executed successfully
@@ -137,11 +138,11 @@
                                                 echo "<td>$row_role->fullname</td>";
                                                 echo "<td>$row_role->department</td>";
                                                 echo "<td>Assign</td>";
-                                              
+
                                                 echo "</tr>";
                                             }
                                         } else {
-                                            echo "<tr><td colspan='3'>No employees with null roles found</td></tr>";
+                                            echo "<tr><td colspan='4' class= 'text-center'>No employees with null roles found</td></tr>";
                                         }
                                         ?>
                                     </tbody>
@@ -354,7 +355,7 @@
                                 <input class="form-control" type="text" name="dept_name">
                             </div>
                         </div>
-                       
+
                     </div>
 
                     <div class="submit-section">

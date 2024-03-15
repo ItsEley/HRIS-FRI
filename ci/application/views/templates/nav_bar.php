@@ -221,36 +221,36 @@
                   <span class="user-img">
                   <?php
                           $ins_id = $_SESSION['id'];  // Retrieve personal info based on ins_id
-                          $query = $this->db->get_where('employees', array('id' => $ins_id));
+                          $query = $this->db->get_where('employee', array('id' => $ins_id));
                           
                           // Loop through the results
                           foreach ($query->result() as $row) {
                               // Print personal info
-                              print_r($row);
+                              // print_r($row);
                           
                               // Print and display the profile picture (assuming 'pfp' is the column name for the image)
-                              echo '<img src="data:image/jpeg;base64,' . base64_encode($row->pfp) . '" alt="" style="object-fit: cover; aspect-ratio: 1; height: auto;">';
+                              //echo '<img src="data:image/jpeg;base64,' . base64_encode($row->pfp) . '" alt="" style="object-fit: cover; aspect-ratio: 1; height: auto;">';
                           }
                           ?>
                   
                   <!-- <img src="../assets/img/profiles/avatar-21.jpg" alt="User Image"> -->
                   <span class="status online"></span></span>
-                  <span><?php echo ucwords(strtolower($_SESSION['fname'])); ?></span>
+                  <span><?php echo ucwords(strtolower($_SESSION['name'])); ?></span>
 
 
                   </a>
                   <div class="dropdown-menu">
 
                   <?php
-                     if($_SESSION['user_type'] == '1'){ //admin
+                     if(strtolower($_SESSION['department']) == 'sys-at'){ //admin
                         echo '
                      <a class="dropdown-item" href="'. base_url('emp_profile').'">My Profile</a>  
                         ';
-                     }else if($_SESSION['user_type'] == '2'){ //hr
+                     }else if(strtolower($_SESSION['department']) == 'hr'){ //hr
                         echo '
                         <a class="dropdown-item" href="'. base_url('hr_profile').'">My Profile</a>  
                            ';
-                     }else if($_SESSION['user_type'] == '3'){ //emp
+                     }else{ //emp
                         echo '
                         <a class="dropdown-item" href="'. base_url('emp_profile').'">My Profile</a>  
                            ';
