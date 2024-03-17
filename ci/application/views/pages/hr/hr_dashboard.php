@@ -58,7 +58,6 @@
 
                ?>
 
-
             </div>
             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                <?php
@@ -78,7 +77,6 @@
                $this->load->view('components/card-dash-widget', $data)
 
                ?>
-
             </div>
          </div>
 
@@ -115,17 +113,7 @@
 
                   $this->load->view('components/card-announcement', $data);
                }
-
-       
-
                ?>
-
-
-
-
-
-
-
             </div>
 
             <div class="col-lg-4 col-md-4">

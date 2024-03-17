@@ -248,15 +248,19 @@
                         ';
                      }else if(strtolower($_SESSION['department']) == 'hr'){ //hr
                         echo '
-                        <a class="dropdown-item" href="'. base_url('hr_profile').'">My Profile</a>  
+                        <a class="dropdown-item" href="'. base_url('hr/profile').'">My Profile</a>  
+                        <a class="dropdown-item" href="'. base_url('hr/settings').'">Settings</a>  
+
                            ';
                      }else{ //emp
                         echo '
-                        <a class="dropdown-item" href="'. base_url('emp_profile').'">My Profile</a>  
+                        <a class="dropdown-item" href="'. base_url('emp_profile').'">My Profile</a> 
+                        <a class="dropdown-item" href="'. base_url('emp/profile').'">Settings</a>  
+                         
                            ';
                      }
                   ?>
-                     <a class="dropdown-item" href="settings.html">Settings</a>
+                     <!-- <a class="dropdown-item" href="settings.html">Settings</a> -->
                      <a class="dropdown-item" href="<?= base_url('logout')?>">Logout</a>
                   </div>
                </li>

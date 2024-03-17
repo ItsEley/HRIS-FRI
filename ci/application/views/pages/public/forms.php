@@ -83,13 +83,13 @@
 
 			<?php
 			$userid = $_SESSION['id'];
-			$fname = $_SESSION['fname'];
-			$lname = $_SESSION['lname'];
+			// $fname = $_SESSION['fname'];
+			// $lname = $_SESSION['lname'];
 			$department = $_SESSION['department'];
 
 			$status = 'Pending';
 
-			$fullName = $fname . ' ' . $lname;
+			// $fullName = $fname . ' ' . $lname;
 
 			?>
 
@@ -787,11 +787,6 @@
 					</form>
 				</div>
 			</div>
-
-
-
-
-<button id = "my_btn">asdasd</button>
 
 
 

@@ -7,7 +7,7 @@ $("#login-form").submit(function(e) {
     var loginform = $(this).serialize();
     if (email !== "" && password !== "") {
         $.ajax({
-            url: base_url + 'admin/auth_form',
+            url: base_url + 'welcome/auth_form',
             type: 'post',
             data: loginform,
             dataType: 'json',
@@ -31,15 +31,19 @@ $("#login-form").submit(function(e) {
 					let department =  response.department.toLowerCase();
 
 					if(department == "hr"){
-
+						console.log('hr/dashboard')
 						window.location = base_url + 'hr/dashboard';
 
 					}else if(department == "sys-at"){
+						console.log('admin/dashboard')
+
 						window.location = base_url + 'admin/home';
 
 
 					}else{
-						window.location = base_url + 'employee/home';
+						console.log('employee/dashboard')
+
+						window.location = base_url + 'employee/dashboard';
 						
 					}
 

@@ -10,13 +10,14 @@
 			<!-- Account Logo -->
 			<div class="account-logo">
 				<a href="admin-dashboard.html">
-					<img src="../assets/img/famco_logo_clear.png" alt="" style="width: 200px;padding: 10px;">
+					<img src="<?php echo base_url('assets/img/famco_logo_clear.png')?>" alt="" style="width: 200px;padding: 10px;">
 				</a>
 			</div>
 			<!-- /Account Logo -->
 
 			<div class="account-box">
 				<div class="account-wrapper">
+				
 					<h3 class="account-title">Login</h3>
 					<p class="account-subtitle"></p>
 

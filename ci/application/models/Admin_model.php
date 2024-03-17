@@ -20,6 +20,8 @@ class Admin_model extends CI_Model
 		$code = '';
 		$message = '';
 
+		// echo 'eee'. $email.'pass'.$password;
+
 		//check if provided $email is an 'email' or 'emp_id'
 
 		$this->db->where('email', $email);
@@ -43,7 +45,7 @@ class Admin_model extends CI_Model
 
 				$status = 'failed';
 				$code = 'E-0';
-				$message = 'Login failed. Please check your credentials and try again.';
+				$message = 'Login failed. Please check your credentials and try again.e:'.$email.';p:'.$password;
 		
 
 				array_push($response,$status,$code,$message);
@@ -112,110 +114,110 @@ class Admin_model extends CI_Model
 
 
 
-	public function getUserCount()
-	{
-		// Execute SQL query to count rows in the users table
-		$query = $this->db->count_all('users');
+	// public function getUserCount()
+	// {
+	// 	// Execute SQL query to count rows in the users table
+	// 	$query = $this->db->count_all('users');
 
-		// Return the count
-		return $query;
-	}
+	// 	// Return the count
+	// 	return $query;
+	// }
 
-	public function updateUser($data, $id)
-	{
-		$updateData = array(
-			'fname' => $data['fname'],
-			'mname' => $data['mname'],
-			'lname' => $data['lname'],
-			'sex' => $data['sex'],
-			'current_add' => $data['current_add'],
+	// public function updateUser($data, $id)
+	// {
+	// 	$updateData = array(
+	// 		'fname' => $data['fname'],
+	// 		'mname' => $data['mname'],
+	// 		'lname' => $data['lname'],
+	// 		'sex' => $data['sex'],
+	// 		'current_add' => $data['current_add'],
 
-			'email' => $data['email'],
-			'password' => $data['password'],
-			'role' => $data['role'],
-			'perm_add' => $data['perm_add'],
-			'contact_no' => $data['contact_no'],
-			'dob' => $data['dob']
-		);
+	// 		'email' => $data['email'],
+	// 		'password' => $data['password'],
+	// 		'role' => $data['role'],
+	// 		'perm_add' => $data['perm_add'],
+	// 		'contact_no' => $data['contact_no'],
+	// 		'dob' => $data['dob']
+	// 	);
 
-		if (!empty($_FILES['pfp']['name'])) {
-			// Handle file upload
-			$config['upload_path'] = 'path/to/upload/directory/';
-			$config['allowed_types'] = 'gif|jpg|png'; // Adjust allowed image types as needed
-			$config['max_size'] = 1024; // Maximum file size in kilobytes
-			// Load CodeIgniter's upload library
-			$this->load->library('upload', $config);
+	// 	if (!empty($_FILES['pfp']['name'])) {
+	// 		// Handle file upload
+	// 		$config['upload_path'] = 'path/to/upload/directory/';
+	// 		$config['allowed_types'] = 'gif|jpg|png'; // Adjust allowed image types as needed
+	// 		$config['max_size'] = 1024; // Maximum file size in kilobytes
+	// 		// Load CodeIgniter's upload library
+	// 		$this->load->library('upload', $config);
 
-			if ($this->upload->do_upload('pfp')) {
-				$uploadData = $this->upload->data();
-				$updateData['pfp'] = $uploadData['file_name'];
-			} else {
-				// Handle file upload error
-				$error = $this->upload->display_errors();
-				return "error: $error";
-			}
-		}
+	// 		if ($this->upload->do_upload('pfp')) {
+	// 			$uploadData = $this->upload->data();
+	// 			$updateData['pfp'] = $uploadData['file_name'];
+	// 		} else {
+	// 			// Handle file upload error
+	// 			$error = $this->upload->display_errors();
+	// 			return "error: $error";
+	// 		}
+	// 	}
 
-		$this->db->where('id', $id);
-		$this->db->update('employee', $updateData);
+	// 	$this->db->where('id', $id);
+	// 	$this->db->update('employee', $updateData);
 
-		// Check if update was successful
-		if ($this->db->affected_rows() > 0) {
-			return "success";
-		} else {
-			return "error";
-		}
-	}
+	// 	// Check if update was successful
+	// 	if ($this->db->affected_rows() > 0) {
+	// 		return "success";
+	// 	} else {
+	// 		return "error";
+	// 	}
+	// }
 
 
-	public function getEmployeeDetails($emp_id)
-	{
-		log_message('debug', 'getEmployeeDetails function called for emp_id: ' . $emp_id);
+	// public function getEmployeeDetails($emp_id)
+	// {
+	// 	log_message('debug', 'getEmployeeDetails function called for emp_id: ' . $emp_id);
 
-		// Escape the emp_id parameter to prevent SQL injection
-		$emp_id = $this->db->escape_str($emp_id);
+	// 	// Escape the emp_id parameter to prevent SQL injection
+	// 	$emp_id = $this->db->escape_str($emp_id);
 	
-		// Fetch employee details from the database based on emp_id
-		$query = $this->db->get_where('employee', array('id' => $emp_id));
+	// 	// Fetch employee details from the database based on emp_id
+	// 	$query = $this->db->get_where('employee', array('id' => $emp_id));
 	
-		// Log the generated SQL query
-		log_message('debug', 'SQL Query: ' . $this->db->last_query());
+	// 	// Log the generated SQL query
+	// 	log_message('debug', 'SQL Query: ' . $this->db->last_query());
 	
-		if ($query->num_rows() > 0) {
-			// Log the fetched employee details
-			log_message('debug', 'Employee details: ' . print_r($query->row_array(), true));
+	// 	if ($query->num_rows() > 0) {
+	// 		// Log the fetched employee details
+	// 		log_message('debug', 'Employee details: ' . print_r($query->row_array(), true));
 			
-			return $query->row_array(); // Return the fetched employee details as an associative array
-		} else {
-			// Log that employee details were not found
-			log_message('debug', 'Employee details not found for emp_id: ' . $emp_id);
+	// 		return $query->row_array(); // Return the fetched employee details as an associative array
+	// 	} else {
+	// 		// Log that employee details were not found
+	// 		log_message('debug', 'Employee details not found for emp_id: ' . $emp_id);
 			
-			return null; // Return null if employee not found
-		}
-	}
+	// 		return null; // Return null if employee not found
+	// 	}
+	// }
 	
 
 
 
 
 
-	public function addUser($fname, $mname, $lname, $nickn, $current_add, $perm_add, $dob, $age, $religion, $sex, $civil_status, $pob, $email, $password, $role)
-	{
+	// public function addUser($fname, $mname, $lname, $nickn, $current_add, $perm_add, $dob, $age, $religion, $sex, $civil_status, $pob, $email, $password, $role)
+	// {
 
 
 
 
-		$addUserQuery = "INSERT INTO `employee`(`fname`, `mname`, `lname`,`nickn`, 
-		`current_add`, `perm_add`, `dob`, `age`, `religion`,`sex`,`civil_status`,`pob`,
-		`email`,`password`,`role`) 
+	// 	$addUserQuery = "INSERT INTO `employee`(`fname`, `mname`, `lname`,`nickn`, 
+	// 	`current_add`, `perm_add`, `dob`, `age`, `religion`,`sex`,`civil_status`,`pob`,
+	// 	`email`,`password`,`role`) 
 
-					       VALUES ('$fname','$mname','$lname','$nickn',
-						   '$current_add','$perm_add','$dob','$age','$religion','$sex','$civil_status','$pob',
-						   '$email','$password','$role')";
+	// 				       VALUES ('$fname','$mname','$lname','$nickn',
+	// 					   '$current_add','$perm_add','$dob','$age','$religion','$sex','$civil_status','$pob',
+	// 					   '$email','$password','$role')";
 
-		$this->db->query($addUserQuery);
-		echo `<script>
-			alert('success!');
-			</script>`;
-	}
+	// 	$this->db->query($addUserQuery);
+	// 	echo `<script>
+	// 		alert('success!');
+	// 		</script>`;
+	// }
 };

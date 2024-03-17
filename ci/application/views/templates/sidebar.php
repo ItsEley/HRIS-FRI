@@ -234,61 +234,69 @@
             </ul>
          </nav>
 
-<!--//! change this to print if session department type is appropriate
+         <!--//! change this to print if session department type is appropriate
    //! instead of hiding -->
 
          <ul class="sidebar-vertical"> <!-- desktop size -->
-            <?php
-            if ($this->session->userdata('role') === 'HR') {
-            ?>
-            <?php
-            }
-            ?>
+
             <li class="menu-title">
                <span>Main</span>
             </li>
 
+            <?php
 
-            <li><a href="<?= base_url('hr/dashboard') ?>"><i class="la la-dashboard"></i> <span>Dashboard</span></a></li>
-            <li><a href="<?= base_url('employee/home') ?>"><i class="la la-dashboard"></i> <span>Dashboard (Employee)</span></a></li>
-            <li><a href="<?= base_url('hr/announcement') ?>"><i class="la la-bullhorn"></i> <span>Announcements</span></a></li>
+            if (strtolower($_SESSION['department']) == 'hr') {
 
-
-            <li class="submenu reports">
-               <a href="#" class=""><i class="la la-file-text"></i></i><span>Reports</span><span class="menu-arrow"></span></a>
-               <ul>
-                  <li><a href="hr_timesheet.html">Timesheet</a></li>
-                  <li><a href="<?= base_url('hr/attendance') ?>">Attendance</a></li>
-                  <li><a href="<?= base_url('hr/leaves') ?>">Leaves</a></li>
-                  <li><a href="hr_emp_performance.html">Employee Performance</a></li>
-               </ul>
-            </li>
+               echo "
+                  <li><a href='" . base_url('hr/dashboard') . "'><i class='la la-dashboard'></i><span>Dashboard</span></a></li>
+                  <li><a href='" . base_url('hr/announcement') . "'><i class='la la-bullhorn'></i><span>Announcements</span></a></li>
+                  <li><a href='" . base_url('hr/assets') . "'><i class='la la-folder'></i><span>Assets</span></a></li>
 
 
-            <li class="submenu employees">
-               <a href="#"><i class="la la-user"></i><span>Employees</span> <span class="menu-arrow"></span></a>
-               <ul>
-                  <li><a href="<?= base_url('hr/employees') ?>">Manage</a></li>
-                  <!-- SINGLE DAY ATTENDANCE -->
-                  <li><a href="<?= base_url('hr/attendance') ?>">Attendance</a></li> 
+                  <li class='submenu reports'>
+                     <a href='#' class=''><i class='la la-file-text'></i></i><span>Reports</span><span class='menu-arrow'></span></a>
+                     <ul>
+                        <li><a href='hr_timesheet.html'>Timesheet</a></li>
+                        <li><a href='" . base_url('hr/employees/attendance') . "'>Attendance</a></li>
+                        <li><a href='" . base_url('hr/leaves') . "'>Leaves</a></li>
+                        <li><a href='hr_emp_performance.html'>Employee Performance</a></li>
+                     </ul>
+                  </li>
 
 
-                  <!-- <li><a href="hr_emp_manage.html">Manage</a></li> -->
-                  <li><a href="<?= base_url('hr/departments') ?>">Designations</a></li>
-                  <li><a href="hr_emp_shifts.html">Shifts & Schedules</a></li>
-               </ul>
-            </li>
+                  <li class='submenu employees'>
+                     <a href='#'><i class='la la-user'></i><span>Employees</span> <span class='menu-arrow'></span></a>
+                     <ul>
+                        <li><a href='" . base_url('hr/employees') . "'>Manage</a></li>
+                        <!-- SINGLE DAY ATTENDANCE -->
+                        <li><a href='" . base_url('hr/employees/attendance') . "'>Attendance</a></li> 
+                        <li><a href='" . base_url('hr/departments') . "'>Designations</a></li>
+                        <li><a href='" . base_url('hr/employees/shifts') . "'>Shifts & Schedules</a></li>
+                     </ul>
+                  </li>
 
 
-            <li class="submenu payroll">
-               <a href="#" class=""><i class="la la-money"></i><span>Payroll</span> <span class="menu-arrow"></span></a>
-               <ul>
-                  <li><a href="hr_emp_overview.html">Salary Report</a></li>
-                  <li><a href="hr_emp_manage.html">Bonuses & Commissions</a></li>
-                  <li><a href="hr_emp_designations.html">Deductions</a></li>
+                  <li class='submenu payroll'>
+                     <a href='#' class=''><i class='la la-money'></i><span>Payroll</span> <span class='menu-arrow'></span></a>
+                     <ul>
+                        <li><a href='hr_emp_overview.html'>Salary Report</a></li>
+                        <li><a href='hr_emp_manage.html'>Bonuses & Commissions</a></li>
+                        <li><a href='hr_emp_designations.html'>Deductions</a></li>
+                     </ul>
+                  </li>
 
-               </ul>
-            </li>
+                  ";
+            } else if (strtolower($_SESSION['department']) == 'sys-at') {
+            } else {
+
+               echo "
+                  <li><a href='" . base_url('employee/dashboard') . "'><i class='la la-dashboard'></i><span>Dashboard (Employee)</span></a></li>
+                  ";
+            }
+
+            ?>
+
+
 
 
 
@@ -296,7 +304,7 @@
                <a href="#" class=""><i class="la la-object-group"></i></i><span>Forms</span><span class="menu-arrow"></span></a>
                <ul>
                   <li><a href="<?= base_url('forms') ?>">Apply</a></li>
-                  <li><a href="<?= base_url('leave_pending') ?>">Pending</a></li>
+                  <li><a href="<?= base_url('hr/pendingrequests') ?>">Pending</a></li>
                   <li><a href="<?= base_url('forms/history') ?>">History</a></li>
                </ul>
             </li>
@@ -308,41 +316,6 @@
 <script>
    $(document).ready(function() {
 
-      console.log(<?php echo json_encode($_SESSION); ?>);
-      let user_type = <?php echo $_SESSION['department'] ?>;
-      user_type = user_type.toLowerCase();
-
-      console.log(user_type);
-
-      // hide side menu content
-      $(".sidebar-vertical > li").hide();
-      $(".sidebar-vertical > li.menu-title").show();
-
-
-      if (user_type == "sys-at") { //admin
-         // console.log("admin")
-
-      } else if (user_type == "hr") { // hr/heads
-         // console.log("hr")
-
-         $('.sidebar-vertical > li > a[href="<?= base_url('hr/dashboard') ?>"]').parent().show();
-         $('.sidebar-vertical > li > a[href="<?= base_url('hr/announcement') ?>"]').parent().show();
-         $(".sidebar-vertical > li.submenu.forms ").show()
-         $(".sidebar-vertical > li.submenu.payroll ").show()
-         $(".sidebar-vertical > li.submenu.employees ").show()
-         $(".sidebar-vertical > li.submenu.reports ").show()
-
-
-      } else if (user_type == 3) { // employee
-         //  console.log("employee")
-
-         $('.sidebar-vertical > li > a[href="<?= base_url('employee/home') ?>"]').parent().show();
-         $(".sidebar-vertical > li.submenu.forms ").show()
-
-
-      } else { //none?
-         // console.log('hmm');
-      }
 
 
 
