@@ -43,7 +43,7 @@
 				</div>
 				<div class="col-sm-6 col-md-3">
 					<div class="input-block mb-3 form-focus select-focus">
-						<select class="select floating">
+						<select class="form-select form-control">
 							<option value=""> -- Select -- </option>
 							<option value="0"> Pending </option>
 							<option value="1"> Approved </option>
@@ -771,6 +771,6 @@
 
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
-		$("li > a[href='<?= base_url('hr/dashboard') ?>']").parent().addClass("active");
+		$("li > a[href='<?= base_url('hr/assets') ?>']").parent().addClass("active");
 	})
 </script>

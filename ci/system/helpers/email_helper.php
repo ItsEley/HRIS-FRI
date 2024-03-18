@@ -82,3 +82,4 @@ if ( ! function_exists('send_email'))
 		return mail($recipient, $subject, $message);
 	}
 }
+

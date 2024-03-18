@@ -145,6 +145,11 @@
 								<img src="../assets/img/birthday-GIF.gif" alt="User Image" loop="infinite">
 								
 							</div>
+                            <div class="row" style ="background-color: white;">
+								<h3>Note</h3>
+								<p>add memo</p>
+								<p>We will gather for something! And that something is I dont know</p>
+							</div>
 
 							
 						</div>

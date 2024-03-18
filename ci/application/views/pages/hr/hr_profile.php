@@ -27,6 +27,23 @@
 				</div>
 			</div>
 			<!-- /Page Header -->
+			<?php
+			$query = $this->db->query("SELECT * FROM employee WHERE id = '" . $_SESSION['id'] . "'");
+			foreach ($query->result() as $row) {
+
+				$fname = $row->fname;
+				$mname = $row->mname;
+				$lname = $row->lname;
+
+				$fullname = $row->fname . ' ' . $row->mname . ' ' . $row->lname;
+				$pfp = $row->pfp;
+				$emp_id = $row->id;
+				$dob = $row->dob;
+				$email = $row->email;
+				$current_add = $row->current_add;
+				$sex = $row->sex;
+			}
+			?>
 
 			<div class="card mb-0">
 				<div class="card-body">
@@ -36,54 +53,47 @@
 								<div class="profile-img-wrap">
 									<div class="profile-img">
 										<a href="#">
-											<?php
-											echo "<img src='data:image/jpeg;base64," . base64_encode($this->session->userdata('pfp')) . "' alt='' 
-									srcset='' style = 'object-fit:cover;aspect-ratio:1;height:auto;'>";
-											?>
+										<img src="data:image/jpeg;base64,<?= base64_encode($pfp) ?>" alt="" style="object-fit: cover; aspect-ratio: 1; height: auto;">
+
 
 										</a>
 									</div>
 
 								</div>
+								<?php
+			$query = $this->db->query("SELECT * FROM vw_emp_designation WHERE emp_id = '" . $_SESSION['id'] . "'");
+			foreach ($query->result() as $row) {
+
+				$department = $row->department;
+				$role = $row->roles;
+		
+
+
+			}
+			?>
 								<div class="profile-basic">
 									<div class="row">
 										<div class="col-md-5">
 											<div class="profile-info-left">
-												<?php
-												$fname = ucwords(strtolower($_SESSION['fname']));
-												$mname = ucwords(strtolower($_SESSION['mname']));
-												$lname = ucwords(strtolower($_SESSION['lname']));
-												$fullname = $fname . " " . $lname;
 
-
-												// $role = $_SESSION['role'];
-												$contact_no = $_SESSION['contact_no'];
-												// $department = $_SESSION['department'];
-												$id = $_SESSION['id'];
-												// $phone = $_SESSION['phone'];
-
-												$email = $_SESSION['email'];
-												$dob = $_SESSION['dob'];
-												$current_add = $_SESSION['current_add'];
-												$perm_add = $_SESSION['perm_add'];
-												$password = $_SESSION['password'];
-												$sex = $_SESSION['sex']; ?>
-												<h3 class=" m-t-0 mb-0"><?php echo $fullname; ?></h3>
+												<h3 class=" m-t-0 mb-0" style = "padding:8px;"><?php echo $fullname; ?></h3>
 
 
 												<ul class="personal-info" style="margin-left:20px; margin-top:5px;">
 
 													<li>
 														<div class="title">Employee ID : </div>
-														<div class="text"><?php echo $id; ?></div>
+														<div class="text"><?php echo $emp_id; ?></div>
 													</li>
+
+			
 													<li>
 														<div class="title">Department : </div>
-														<div class="text"><?php echo $dob; ?></div>
+														<div class="text"><?php echo $department; ?></div>
 													</li>
 													<li>
 														<div class="title">Role(s) : </div>
-														<div class="text"><?php echo $dob; ?></div>
+														<div class="text"><?php echo $role; ?></div>
 													</li>
 												</ul>
 
@@ -91,10 +101,10 @@
 											</div>
 										</div>
 										<div class="col-md-7">
-											<ul class="personal-info">
+											<ul class="personal-info" style="margin-top:5px;">
 												<li>
 													<div class="title">Phone:</div>
-													<div class="text"><a href="#"><?php echo $contact_no; ?></a></div>
+													<div class="text"><a href="#"></a></div>
 												</li>
 												<li>
 													<div class="title">Email:</div>
@@ -162,22 +172,12 @@
 										</a>
 									</h3>
 									<ul class="personal-info">
-										<li>
-											<div class="title">Passport No.</div>
-											<div class="text">9876543210</div>
-										</li>
-										<li>
-											<div class="title">Passport Exp Date.</div>
-											<div class="text">9876543210</div>
-										</li>
-										<li>
-											<div class="title">Tel</div>
-											<div class="text"><a href="#">9876543210</a></div>
-										</li>
+								
 										<li>
 											<div class="title">Nationality</div>
 											<div class="text">Indian</div>
 										</li>
+										
 										<li>
 											<div class="title">Religion</div>
 											<div class="text">Christian</div>
@@ -641,25 +641,13 @@
 									<div class="input-block mb-3">
 										<label class="col-form-label">Department</label>
 										<select class="form-control" name="department">
-											<?php
-											$query = $this->db->get('department');
-
-											// Check if query executed successfully
-											if ($query->num_rows() > 0) {
-												foreach ($query->result() as $row) {
-													$depID = $row->id;
-													$department1 = $row->department;
-													$acro = $row->acro_dept;
-													$selected = ($depID == $selected_depID) ? "selected" : ""; // Check if this option is selected
-													// Output each department as an option
-													echo '<option value="' . $depID . '" ' . $selected . '>' .  $department1 . '</option>';
-												}
-											} else {
-												// Handle no results from the database
-												echo '<option value="">No departments found</option>';
-											}
-											?>
-
+										<?php
+                            //get select-options
+                            $this->db->order_by('department', 'ASC');
+                            $query =  $this->db->get('department');
+                            $data['query'] = $query;
+                            $this->load->view('components/select-options', $data);
+                            ?>
 										</select>
 
 									</div>

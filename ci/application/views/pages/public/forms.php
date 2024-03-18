@@ -75,23 +75,31 @@
 				</button>
 			</div>
 
-
-
-
-
-
-
 			<?php
-			$userid = $_SESSION['id'];
-			// $fname = $_SESSION['fname'];
-			// $lname = $_SESSION['lname'];
-			$department = $_SESSION['department'];
+    // Check if session data is available
+    if ($this->session->has_userdata('id')) {
+        // Retrieve session data
+        $userid = $this->session->userdata('id');
+        $fname = $this->session->userdata('fname');
+        $lname = $this->session->userdata('lname');
+        $department = $this->session->userdata('department');
+        
+        // Concatenate first name and last name to get full name
+        $fullName = $fname . ' ' . $lname;
+        
+        // Set status to 'Pending'
+        $status = 'Pending';
+    } else {
+        // Session data not available, handle accordingly
+        $userid = null;
+        $fname = null;
+        $lname = null;
+        $department = null;
+        $fullName = null;
+        $status = null;
+    }
+?>
 
-			$status = 'Pending';
-
-			// $fullName = $fname . ' ' . $lname;
-
-			?>
 
 
 			<!-- modals -->

@@ -38,7 +38,7 @@
 
             <!-- Search Filter -->
             <div class="row filter-row">
-              
+
                 <div class="col-sm-6 col-md-3">
                     <div class="input-block mb-3 form-focus">
                         <input type="text" class="form-control floating">
@@ -49,24 +49,11 @@
                     <div class="input-block mb-3 form-focus select-focus">
                         <select class="form-select form-control">
                             <option value="">All</option>
-
                             <?php
-                            $query = $this->db->get('department');
-
-                            // Check if query executed successfully
-                            if ($query->num_rows() > 0) {
-                                foreach ($query->result() as $row) {
-                                    $depID = $row->id;
-                                    $department1 = $row->department;
-                                    $acro = $row->acro_dept;
-                                    $data['department'] = $department1;
-                                    // Output each department as an option
-                                    echo '<option value="' . $depID . '">' .  $data['department'] . '</option>';
-                                }
-                            } else {
-                                // Handle no results from the database
-                                echo '<option value="">No departments found</option>';
-                            }
+                            //get select-options
+                            $query =  $this->db->get('department');
+                            $data['query'] = $query;
+                            $this->load->view('components/select-options', $data);
                             ?>
                         </select>
 
@@ -78,11 +65,7 @@
                     <div class="input-block mb-3 form-focus select-focus">
                         <select class="select floating form-select form-control">
 
-                            <option>All</option>
-                            <option>Web Developer</option>
-                            <option>Web Designer</option>
-                            <option>Android Developer</option>
-                            <option>Ios Developer</option>
+
                         </select>
                         <label class="focus-label">Role</label>
                     </div>
@@ -98,27 +81,22 @@
             <div class="row staff-grid-row">
 
                 <?php
-
+                //display employee cards
                 $query = $this->db->query('
-SELECT vw_emp_designation.*, employee.pfp 
-FROM vw_emp_designation
-JOIN employee 
-ON vw_emp_designation.emp_id = employee.id
-ORDER BY vw_emp_designation.dept_id ASC, vw_emp_designation.full_name
-');
-                // print_r($this->session->get_userdata('fname'));
-                // echo $_SESSION['fname'];
+                    SELECT vw_emp_designation.*, employee.pfp 
+                    FROM vw_emp_designation
+                    JOIN employee 
+                    ON vw_emp_designation.emp_id = employee.id
+                    ORDER BY vw_emp_designation.dept_id ASC, vw_emp_designation.full_name
+                    ');
 
                 foreach ($query->result() as $row) {
-
-
 
                     $data['emp_name'] = $row->full_name;
                     $data['emp_id'] = $row->emp_id;
                     $data['department'] = $row->department;
                     $data['role'] = $row->roles;
                     $data['pfp'] = $row->pfp;
-
 
                     $this->load->view('components/card-employee-basic', $data);
                 }
@@ -139,7 +117,8 @@ ORDER BY vw_emp_designation.dept_id ASC, vw_emp_designation.full_name
 
                             </div>
                             <div class="modal-body">
-                                <form id="edit_employee" method="post">
+                                <form id="edit_employee" enctype="multipart/form-data" method="post">
+                                <input class="form-control" type="hidden" name="emp_id">
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="input-block mb-3">
@@ -189,12 +168,7 @@ ORDER BY vw_emp_designation.dept_id ASC, vw_emp_designation.full_name
 
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Age <span class="text-danger">*</span></label>
-                                                <input class="form-control" type="int" name="age">
-                                            </div>
-                                        </div>
+
                                         <div class="col-sm-6">
                                             <div class="input-block mb-3">
                                                 <label class="col-form-label">Religion </label>
@@ -205,8 +179,10 @@ ORDER BY vw_emp_designation.dept_id ASC, vw_emp_designation.full_name
                                             <div class="input-block mb-3">
                                                 <label class="col-form-label">Sex</label>
                                                 <select class="select form-control" name="sex">
-                                                    <option value="M" <?php if ($sex === "M") echo "selected"; ?>>Male</option>
-                                                    <option value="F" <?php if ($sex === "F") echo "selected"; ?>>Female</option>
+                                                    <option value="M">Male</option>
+                                                    <option value="F">Female</option>
+                                                    <option value="B">Bakla</option>
+
                                                 </select>
                                             </div>
                                         </div>
@@ -214,11 +190,12 @@ ORDER BY vw_emp_designation.dept_id ASC, vw_emp_designation.full_name
                                             <div class="input-block mb-3">
                                                 <label class="col-form-label">Civil Status </label>
                                                 <select class="select form-control" name="civil_status">
-                                                    <option value="1">Single</option>
-                                                    <option value="2">Married</option>
-                                                    <option value="3">Live In</option>
-                                                    <option value="4">Widowed</option>
-                                                    <option value="5">Jowa</option>
+                                                    <option value="N/A">N/A</option>
+                                                    <option value="Single">Single</option>
+                                                    <option value="Married">Married</option>
+                                                    <option value="Live In">Live In</option>
+                                                    <option value="Widowed">Widowed</option>
+                                                  
                                                 </select>
                                             </div>
                                         </div>
@@ -229,39 +206,7 @@ ORDER BY vw_emp_designation.dept_id ASC, vw_emp_designation.full_name
                                             </div>
                                         </div>
 
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Department <span class="text-danger">*</span></label>
 
-                                                <select class="form-control" name="department">
-                                                    <?php
-                                                    $query = $this->db->get('department');
-
-                                                    // Check if query executed successfully
-                                                    if ($query->num_rows() > 0) {
-                                                        foreach ($query->result() as $row) {
-
-                                                            // Output each department as an option
-
-
-                                                            echo '<option value="' . $row->id . '">' .  $row->department . '</option>';
-                                                        }
-                                                    } else {
-                                                        // Handle no results from the database
-                                                        echo '<option value="">No departments found</option>';
-                                                    }
-                                                    ?>
-                                                </select>
-
-
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Role <span class="text-danger">*</span></label>
-                                                <input class="form-control" type="text" name="role">
-                                            </div>
-                                        </div>
 
                                         <div class="col-sm-6">
                                             <div class="input-block mb-3">
@@ -269,12 +214,7 @@ ORDER BY vw_emp_designation.dept_id ASC, vw_emp_designation.full_name
                                                 <input class="form-control" type="email" name="email">
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Password <span class="text-danger">*</span></label>
-                                                <input class="form-control" type="password" name="password">
-                                            </div>
-                                        </div>
+
                                     </div>
 
                                     <div class="submit-section">
@@ -309,7 +249,7 @@ ORDER BY vw_emp_designation.dept_id ASC, vw_emp_designation.full_name
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form method="post" id="adduser">
+                        <form method="post" id="adduser" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="input-block mb-3">
@@ -333,7 +273,7 @@ ORDER BY vw_emp_designation.dept_id ASC, vw_emp_designation.full_name
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="input-block mb-3">
-                                        <label class="col-form-label">Nickname <span class="text-danger">*</span></label>
+                                        <label class="col-form-label">Nickname </label>
                                         <input class="form-control" type="text" name="nickn">
 
                                     </div>
@@ -354,43 +294,9 @@ ORDER BY vw_emp_designation.dept_id ASC, vw_emp_designation.full_name
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="input-block mb-3">
-                                        <label class="col-form-label">Date Of Birth <span class="text-danger">*</span></label>
+                                        <label class="col-form-label">Date of Birth <span class="text-danger">*</span></label>
                                         <div class="cal-icon"><input class="form-control" type="date"></div>
 
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Age <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="number" name="age">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Religion </label>
-                                        <input class="form-control" type="text" name="religion">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Sex</label>
-                                        <select class="form-select form-control" name="sex">
-                                            <option value="1">Male</option>
-                                            <option value="2">Female</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Civil Status </label>
-                                        <select class="form-select form-control" name="civil_status">
-
-                                            <option value="1">Single</option>
-                                            <option value="2">Married</option>
-                                            <option value="3">Live In</option>
-                                            <option value="4">Widowed</option>
-                                            <option value="5">Jowa</option>
-                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -400,30 +306,143 @@ ORDER BY vw_emp_designation.dept_id ASC, vw_emp_designation.full_name
                                     </div>
                                 </div>
 
-                             
+                                <div class="col-sm-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Religion </label>
+                                        <input class="form-control" type="text" name="religion">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Sex <span class="text-danger">*</span></label>
+                                        <select class="form-select form-control" name="sex">
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Civil Status <span class="text-danger">*</span></label>
+                                        <select class="form-select form-control" name="civil_status">
+
+                                            <option value="Single">Single</option>
+                                            <option value="Married">Married</option>
+                                            <option value="Live In">Live In</option>
+                                            <option value="Widowed">Widowed</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Contact No <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="number" name="contact">
+                                    </div>
+                                </div>
+
+
+
                                 <div class="col-sm-6">
                                     <div class="input-block mb-3">
                                         <label class="col-form-label">Email <span class="text-danger">*</span></label>
                                         <input class="form-control" type="email" name="email">
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+
+                                <div class="col-md-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Department <span class="text-danger">*</span></label>
+                                        <select class="form-select form-control" name="department">
+
+                                            <?php
+                                            //get select-options
+                                            $this->db->order_by('department', 'ASC');
+                                            $query =  $this->db->get('department');
+                                            $data['query'] = $query;
+                                            $this->load->view('components/select-options', $data);
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Role <span class="text-danger">*</span></label>
+                                        <select class="form-select form-control" name="role">
+
+                                        </select>
+                                    </div>
+                                </div>
+
+
+
+
+                                <!-- <div class="col-sm-6">
                                     <div class="input-block mb-3">
                                         <label class="col-form-label">Password <span class="text-danger">*</span></label>
                                         <input class="form-control" type="password" name="password">
                                     </div>
+                                </div> -->
+                                <div class="col-sm-6">
+                                    <div class="input-block mb-3">
+                                        <input type="file" name="capturedImage" id="capturedImageInput" style="display: none;">
+
+                                    </div>
                                 </div>
+
                             </div>
 
                             <div class="submit-section">
-                        <button type="button" class="btn btn-primary submit-btn" id="openSecondModalBtn">Image Capturing</button>
-                    </div>
-                        </form>
+                                <button type="button" class="btn btn-primary submit-btn" id="openSecondModalBtn">Next</button>
+                            </div>
+
                     </div>
                 </div>
             </div>
         </div>
         <!-- /Add Employee Modal -->
+
+        <!-- modal img capture -->
+        <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="exampleModalToggleLabel2">Image Capturing</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div id="cameraSection" style="display: none;">
+                            <h5>Employee Picture</h5>
+                            <video id="video" autoplay width="400" height="400"></video><br>
+                            <!-- Captured Image Container -->
+                            <div id="capturedImageContainer" style="display: none;">
+                                <h5>Employee Picture</h5>
+                                <img id="capturedImage" name="image" width="400" height="400" />
+                            </div>
+                            <!--/// Captured Image Container -->
+
+                            <input type="file" id="capt_img_file" name="capt_img_file">
+
+                            <button class="btn btn-primary w-100" id="captureButton">Capture</button>
+                            <button class="btn btn-danger w-100" id="retakeButton" style="display: none;">Retake</button><br>
+                            <canvas style="display: none;" id="canvas"></canvas>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-target="#add_employee" data-bs-toggle="modal" data-bs-dismiss="modal">Return</button>
+
+                        <button type="button" class="btn btn-primary" id="add_employee_submit">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
 
         <!-- Delete Employee Modal -->
         <div class="modal custom-modal fade" id="delete_employee" role="dialog">
@@ -437,68 +456,24 @@ ORDER BY vw_emp_designation.dept_id ASC, vw_emp_designation.full_name
                         <div class="modal-btn delete-action">
                             <div class="row">
                                 <div class="col-6">
-                                    <a href="javascript:void(0);" class="btn btn-primary continue-btn">Delete</a>
+                                    <!-- <a type='submit' class="btn btn-primary continue-btn">Delete</a> -->
+                                    <a href="javascript:void(0);" class="btn btn-primary continue-btn" id="confirmDeleteBtn">Delete</a>
                                 </div>
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
-                                </div>
+                            </div>
+                            <div class="col-6">
+                                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- /Delete Employee Modal -->
-
-
-        <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="exampleModalToggleLabel2">Image Capturing</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-            <div id="cameraSection" style="display: none;">
-          <h5>Employee Picture</h5>
-          <video id="video" autoplay></video><br>
-          <button class="btn btn-secondary" id="captureButton">Capture</button>
-          <button class="btn btn-danger" id="retakeButton" style="display: none;">Retake</button><br>
-          <canvas style="display: none;" id="canvas"></canvas>
-        </div>
-
-        <!-- Captured Image Container -->
-        <div id="capturedImageContainer" style="display: none;">
-          <h5>Employee Picture</h5>
-          <img id="capturedImage" style="max-width: 100%;" />
-        </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="submitSecondModalBtn">Submit</button>
-                <button class="btn btn-secondary" data-bs-target="#add_employee" data-bs-toggle="modal" data-bs-dismiss="modal">Back to first</button>
-            </div>
-        </div>
     </div>
+    <!-- /Delete Employee Modal -->
+
+
 </div>
-
-<script>
-$(document).ready(function() {
-    // When the "Submit & Open Modal" button is clicked
-    $('#submitAndOpenModalBtn').click(function() {
-        // Submit the form
-        $('#myForm').submit();
-        
-        // Show the modal
-        $('#exampleModalToggle2').modal('show');
-    });
-});
-</script>>
-
-
-    </div>
-    <!-- /Page Wrapper -->
+<!-- /Page Wrapper -->
 </div>
 
 <!-- /Main Wrapper -->
@@ -513,97 +488,129 @@ $(document).ready(function() {
 
 
 
-        $(".dropdown-item.edit-employee").click(function(e) {
 
-            console.log($(this).data("emp-id"));
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureButton = document.getElementById('captureButton');
+        const retakeButton = document.getElementById('retakeButton');
+        const employeeForm = document.getElementById('add_employee');
+        const cameraSection = document.getElementById('cameraSection');
+        const capturedImageContainer = document.getElementById('capturedImageContainer');
+        const capturedImage = document.getElementById('capturedImage');
+        let mediaStream; // Variable to store the media stream
 
-            var emp_id = $(this).data("emp-id");
+        // Access the device camera and stream to video element
+        async function initCamera() {
+            try {
+                mediaStream = await navigator.mediaDevices.getUserMedia({
+                    video: true
+                });
+                video.srcObject = mediaStream;
+                video.addEventListener('loadedmetadata', () => {
+                    const aspectRatio = 1; // Desired aspect ratio (1x1)
+                    // const videoWidth = video.videoWidth;
+                    // const videoHeight = video.videoHeight;
+                    const videoWidth = 400;
+                    const videoHeight = 400;
+                    let newWidth, newHeight;
 
-    
+                    if (videoWidth / videoHeight > aspectRatio) {
+                        newWidth = videoHeight * aspectRatio;
+                        newHeight = videoHeight;
+                    } else {
+                        newWidth = videoWidth;
+                        newHeight = videoWidth / aspectRatio;
+                    }
+
+                    // Set video element dimensions to maintain 1x1 aspect ratio
+                    video.width = newWidth;
+                    video.height = newHeight;
+                });
+            } catch (err) {
+                console.error('Error accessing camera:', err);
+            }
+        }
+        // Stop the camera stream
+        function stopCamera() {
+            if (mediaStream) {
+                const tracks = mediaStream.getTracks();
+                tracks.forEach(track => {
+                    track.stop();
+                });
+            }
+        }
+
+        // Show camera section
+        function showCameraSection() {
+            cameraSection.style.display = 'block';
+        }
+
+        // Hide camera section
+        function hideCameraSection() {
+            cameraSection.style.display = 'none';
+            stopCamera(); // Stop the camera when hiding the section
+        }
+
+        // Capture and display the photo
+        captureButton.addEventListener('click', function() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imgUrl = canvas.toDataURL('image/png'); // Convert to data URL
+
+            // Crop the image to 1x1 with focus on the center
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            img.onload = function() {
+                const aspectRatio = 1; // Aspect ratio for square image
+                const size = Math.min(img.width, img.height);
+                const x = (img.width - size) / 2;
+                const y = (img.height - size) / 2;
+                canvas.width = size;
+                canvas.height = size;
+                ctx.drawImage(img, x, y, size, size, 0, 0, size, size);
+
+                // Display cropped image
+                capturedImage.src = canvas.toDataURL('image/png');
+                video.style.display = 'none'; // Hide video element
+                capturedImageContainer.style.display = 'block'; // Show captured image container
+                retakeButton.style.display = 'inline-block';
+                captureButton.style.display = 'none';
+                stopCamera(); // Stop the camera when hiding the section
+            };
+            img.src = imgUrl;
+
+        });
+
+        // Retake photo
+        retakeButton.addEventListener('click', function() {
+            retakeButton.style.display = 'none';
+            captureButton.style.display = 'inline-block';
+            capturedImageContainer.style.display = 'none';
+            video.style.display = 'block';
+            initCamera();
+        });
+
+        // Submit basic info form
+        employeeForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            showCameraSection();
+        });
+
+        // Initialize the camera when the modal is shown
+        $('#exampleModalToggle2').on('shown.bs.modal', function() {
+            initCamera();
+            showCameraSection();
+        });
+
+        // Reset camera when the modal is closed
+        $('#exampleModalToggle2').on('hidden.bs.modal', function() {
+            hideCameraSection();
         });
 
 
-        const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const captureButton = document.getElementById('captureButton');
-    const retakeButton = document.getElementById('retakeButton');
-    const employeeForm = document.getElementById('employeeForm');
-    const cameraSection = document.getElementById('cameraSection');
-    const capturedImageContainer = document.getElementById('capturedImageContainer');
-    const capturedImage = document.getElementById('capturedImage');
-    let mediaStream; // Variable to store the media stream
 
-    // Access the device camera and stream to video element
-    async function initCamera() {
-        try {
-            mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
-            video.srcObject = mediaStream;
-        } catch (err) {
-            console.error('Error accessing camera:', err);
-        }
-    }
-
-    // Stop the camera stream
-    function stopCamera() {
-        if (mediaStream) {
-            const tracks = mediaStream.getTracks();
-            tracks.forEach(track => {
-                track.stop();
-            });
-        }
-    }
-
-    // Show camera section
-    function showCameraSection() {
-        cameraSection.style.display = 'block';
-    }
-
-    // Hide camera section
-    function hideCameraSection() {
-        cameraSection.style.display = 'none';
-        stopCamera(); // Stop the camera when hiding the section
-    }
-
-    // Capture and display the photo
-    captureButton.addEventListener('click', function() {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imgUrl = canvas.toDataURL('image/png'); // Convert to data URL
-        capturedImage.src = imgUrl;
-        video.style.display = 'none'; // Hide video element
-        capturedImageContainer.style.display = 'block'; // Show captured image container
-        retakeButton.style.display = 'inline-block';
-        captureButton.style.display = 'none';
-        stopCamera(); // Stop the camera when hiding the section
-
-    });
-
-    // Retake photo
-    retakeButton.addEventListener('click', function() {
-        retakeButton.style.display = 'none';
-        captureButton.style.display = 'inline-block';
-        capturedImageContainer.style.display = 'none';
-        video.style.display = 'block';
-    });
-
-    // Submit basic info form
-    employeeForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        showCameraSection();
-    });
-
-    // Initialize the camera when the modal is shown
-    $('#exampleModalToggle2').on('shown.bs.modal', function () {
-        initCamera();
-    });
-
-    // Reset camera when the modal is closed
-    $('#exampleModalToggle2').on('hidden.bs.modal', function () {
-        hideCameraSection();
-    });
-
-
-
-    })
+    }) //DOMContentLoaded end 
 </script>
+
+<!-- https://chat.openai.com/share/3467c08d-8370-415c-9607-deabb9eb7dfb -->

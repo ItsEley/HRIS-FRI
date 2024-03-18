@@ -57,11 +57,9 @@ $route['employee/dashboard'] = 'employee/emphome';
 $route['forms/history'] = 'humanr/C_formshistory';
 
 
-
-
 // functions
 // $route['edituser'] = 'admin/updateuser';
-// $route['adduser'] = 'admin/adduser';
+$route['adduser'] = 'humanr/adduser';
 // $route['admin/showUserdetails'] = 'admin/showUserdetails';
 
 
@@ -70,14 +68,10 @@ $route['forms/history'] = 'humanr/C_formshistory';
 $route['admin/dashboard'] = 'pages/admin_home';
 
 
-
-
-
-
 // hr functions
-$route['leaverequestzz'] = 'admin/leaverequestzz';
-$route['ob_requestzz'] = 'admin/ob_requestzz';
-$route['outgoingrequestzz'] = 'admin/outgoingrequestzz';
-$route['undertimerequestzz'] = 'admin/undertimerequestzz';
-$route['overtimerequestzz'] = 'admin/overtimerequestzz';
-$route['workschedadjustzz'] = 'admin/workschedadjustzz';
+$route['leaverequestzz'] = 'humanr/leaverequestzz';
+$route['ob_requestzz'] = 'humanr/ob_requestzz';
+$route['outgoingrequestzz'] = 'human/outgoingrequestzz';
+$route['undertimerequestzz'] = 'humanr/undertimerequestzz';
+$route['overtimerequestzz'] = 'humanr/overtimerequestzz';
+$route['workschedadjustzz'] = 'humanr/workschedadjustzz';

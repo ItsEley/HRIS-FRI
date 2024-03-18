@@ -45,11 +45,11 @@
 								<span class="fa-solid fa-eye-slash" id="toggle-password"></span>
 							</div>
 						</div>
-						<div class="input-block mb-4 text-center">
-							<button type="submit" class="btn btn-primary">Login</button>
+						<div class="input-block text-center">
+							<button type="submit" class="btn btn-primary w-100">Login</button>
 						</div>
 						<div class="account-footer">
-							<p>Don't have an account yet? <a href="register.html">Register</a></p>
+							<!-- <p>Don't have an account yet? <a href="register.html">Register</a></p> -->
 						</div>
 					</form>
 					<div id="alert"></div>
