@@ -46,7 +46,7 @@
 
 			<!-- buttons -->
 
-
+			
 			<div class="button-grid">
 				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_leave_request">
 					Apply for a leave request
@@ -55,8 +55,6 @@
 				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_ob_request">
 					Apply for Official Business Request
 				</button>
-
-
 
 				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_outgoing_pass">
 					Apply for Outgoing pass
@@ -74,9 +72,6 @@
 					Apply for Overtime Request
 				</button>
 			</div>
-
-
-
 			<!-- modals -->
 
 			<!-- Modal leave request-->
@@ -89,13 +84,9 @@
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" id="staticBackdropLabel">Fill up form</h5>
-								<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-
-
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
 							<div class="modal-body">
-
-
 								<div class="container"> <!-- Employee leave form inputs -->
 									<div style="background-color: white;
 												max-width: 540px;max-height: auto;">
@@ -149,9 +140,9 @@
 													<option>-- Select an Option--</option>
 													<?php
 													//get select-options
-												
-													$query = $this->db->order_by('leave_type', 'ASC')->get('f_leave_type');
-											
+
+													$query = $this->db->order_by('id', 'ASC')->get('f_leave_type');
+
 													// Check if query executed successfully
 													if ($query->num_rows() > 0) {
 														foreach ($query->result() as $row) {
@@ -162,8 +153,6 @@
 														// Handle no results from the database
 														// echo '<option value="">No departments found</option>';
 													}
-
-
 													?>
 												</select>
 											</div>
@@ -172,15 +161,10 @@
 										<div class="mb-3 row">
 											<label class="col-3">Reason</label>
 											<div class="col-md-8">
-												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="Enter text here"></textarea>
+												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="State your reason here"></textarea>
 
 											</div>
 										</div>
-
-
-
-
-
 									</div>
 								</div>
 
@@ -198,20 +182,15 @@
 			<div class="modal fade" id="modal_outgoing_pass" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal_outgoing_pass_label" aria-hidden="true">
 				<div class="modal-dialog">
 					<form id="outgoing_request" method="post">
-
-
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" id="staticBackdropLabel">Fill up form</h5>
 								<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-
 							</div>
 							<div class="modal-body">
-
 								<div class="container"> <!-- Employee Outgoing Pass form inputs -->
 									<div style="max-height: auto;">
 										<!-- Header-->
-
 										<div class="row mb-2">
 											<div class="col-2">
 												<div class="account-logo">
@@ -221,77 +200,51 @@
 											<div class="col ">
 												<h3>Outgoing Pass</h3>
 											</div>
-
 										</div>
-
 										<!-- /Form content -->
-
-
 										<div class="row ">
+											<input type="text" name="emp_id" value="<?php echo $_SESSION['emp_id'] ?>">
+								
 											<!-- <p>I, have to leave the company premises on this day : </p> -->
 											<div class="col-3">
-
 												<label for="outgoing_date" class="form-label mb-2">Date:</label>
-
 											</div>
 											<div class="col-8">
-
 												<input type="date" class="form-control input-field mb-2" name="outgoing_date" id="outgoing_date" />
 											</div>
 										</div>
-
-
-
 										<div class="row">
 											<div class="col-3">
-
 												<label for="time_from" class="form-label mb-2">From:</label>
-
 											</div>
 											<div class="col-8">
-
 												<input type="time" class="form-control input-field mb-2 " name="time_from" id="time_from" />
 											</div>
 										</div>
-
-
 										<div class="row">
 											<div class="col-3">
-
 												<label for="time_to" class="form-label mb-2">To:</label>
-
 											</div>
 											<div class="col-8">
 
 												<input type="time" class="form-control input-field mb-2 " name="time_to" id="time_to" />
 											</div>
 										</div>
-
-
-
-
-
 										<div class="mb-3 row">
 											<label class="col-form-label col-md-3">Reason</label>
 											<div class="col-md-8">
-												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="Enter text here"></textarea>
+												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="State your reason here"></textarea>
 
 											</div>
 										</div>
-
 										<div class="mb-3 row">
 											<label class="col-form-label col-md-3">Destination</label>
 											<div class="col-md-8">
 												<input type="text" name="destination" class="form-control">
 											</div>
 										</div>
-
-
-
 									</div>
 								</div>
-
-
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -312,14 +265,11 @@
 							<div class="modal-header">
 								<h5 class="modal-title" id="staticBackdropLabel">Fill up form</h5>
 								<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-
 							</div>
 							<div class="modal-body">
-
 								<div class="container"> <!-- Employee Work Schedule Adjustment form inputs -->
 									<div style="max-height: auto;">
 										<!-- Header-->
-
 										<div class="row mb-2">
 											<div class="col-2">
 												<div class="account-logo">
@@ -329,101 +279,69 @@
 											<div class="col text-center">
 												<h3>Work Schedule Adjustment Form</h3>
 											</div>
-
 										</div>
-
 										<!-- /Form content -->
-
+										
 										<div class=" mb-3 row">
 											<label class="col-form-label col-md-3">To Change</label>
 											<div class="col-md-8">
-												<select class="form-control form-select">
-													<option>-- Select an Option--</option>
-													<option>Time Schedule</option>
-													<option>Day off</option>
-													<option>Both</option>
+												<select class="form-control form-select" id = "work_sched_select">
+													<option value="">-- Select an Option--</option>
+													<option value="change_time">Time Schedule</option>
+													<option value="change_off">Day off</option>
+													<option value="change_both">Both</option>
 												</select>
 											</div>
 										</div>
-
+										<input type="text" name="emp_id" value="<?php echo $_SESSION['emp_id'] ?>">
+									
 										<div id="time_sched_div">
-
 											<div class="row ">
 												<p class="row text-center">Change Time Schedule</p>
 												<div class="col-3">
-
 													<label for="time_from" class="form-label mb-2">From:</label>
-
 												</div>
 												<div class="col-8">
-
 													<input type="time" class="form-control input-field mb-2" name="time_from" id="time_from" />
 												</div>
 											</div>
-
-
-
 											<div class="row">
 												<div class="col-3">
-
 													<label for="time_to" class="form-label mb-2">To:</label>
-
 												</div>
 												<div class="col-8">
-
 													<input type="time" class="form-control input-field mb-2 " name="time_to" id="time_to" />
 												</div>
 											</div>
-
 										</div>
-
-
 										<div id="time_dayoff_div">
-
 											<div class="row ">
 												<p class="row text-center">Change Day Off</p>
 												<div class="col-3">
-
 													<label for="date_from" class="form-label mb-2">From:</label>
-
 												</div>
 												<div class="col-8">
-
 													<input type="date" class="form-control input-field mb-2" name="date_from" id="date_from" />
 												</div>
 											</div>
-
-
-
 											<div class="row">
 												<div class="col-3">
-
 													<label for="date_to" class="form-label mb-2">To:</label>
-
 												</div>
 												<div class="col-8">
-
 													<input type="date" class="form-control input-field mb-2 " name="date_to" id="date_to" />
 												</div>
 											</div>
-
 										</div>
-
-
-
-
 										<div class=" mb-3 row">
 											<label class="col-form-label col-md-3">Reason</label>
 											<div class="col-md-8">
-												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="Enter text here"></textarea>
-
+												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="State your reason here"></textarea>
 											</div>
 										</div>
 
 									</div>
 								</div>
-
-
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -439,18 +357,16 @@
 			<div class="modal fade" id="modal_undertime_request" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal_undertime_request_label" aria-hidden="true">
 				<div class="modal-dialog">
 					<form method="post" id="undertime_request" class="mb-2">
+						<input type="text" name="emp_id" value="<?php echo $_SESSION['emp_id'] ?>">
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" id="staticBackdropLabel">Fill up form</h5>
 								<!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-
 							</div>
 							<div class="modal-body">
-
 								<div class="container"> <!-- Employee Undertime form inputs -->
 									<div style="max-height: auto; ">
 										<!-- Header-->
-
 										<div class="row mb-2">
 											<div class="col-2">
 												<div class="account-logo">
@@ -460,70 +376,41 @@
 											<div class="col text-center">
 												<h3>Undertime Form</h3>
 											</div>
-
 										</div>
-
 										<!-- /Form content -->
-
-
-
-
 										<div class="row ">
 											<!-- <p>I, have to leave the company premises on this day : </p> -->
 											<div class="col-3">
-
 												<label for="undertime_date" class="form-label mb-2">Date of Undertime:</label>
-
 											</div>
 											<div class="col-8">
-
 												<input type="date" class="form-control input-field mb-2" name="undertime_date" id="undertime_date" />
 											</div>
 										</div>
-
-
-
 										<div class="row">
 											<div class="col-3">
-
 												<label for="time_in" class="form-label mb-2">Time in:</label>
-
 											</div>
 											<div class="col-8">
-
 												<input type="time" class="form-control input-field mb-2 " name="time_in" id="time_in" />
 											</div>
 										</div>
-
-
 										<div class="row">
 											<div class="col-3">
-
 												<label for="time_out" class="form-label mb-2">Time out:</label>
-
 											</div>
 											<div class="col-8">
-
 												<input type="time" class="form-control input-field mb-2 " name="time_out" id="time_out" />
 											</div>
 										</div>
-
-
-
 										<div class=" mb-3 row">
 											<label class="col-form-label col-md-3">Reason</label>
 											<div class="col-md-8">
-												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="Enter text here"></textarea>
-
+												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="State your reason here"></textarea>
 											</div>
 										</div>
-
-
-
 									</div>
 								</div>
-
-
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -539,7 +426,6 @@
 				<div class="modal-dialog">
 					<form id="ob_request" method="post">
 
-
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" id="staticBackdropLabel">Fill up form</h5>
@@ -547,9 +433,6 @@
 
 							</div>
 							<div class="modal-body">
-
-
-
 								<div class="container"> <!-- Employee Official Business form inputs -->
 									<div style="max-height: auto;">
 										<!-- Header-->
@@ -565,12 +448,10 @@
 											</div>
 
 										</div>
-
 										<!-- /Form content -->
-
-
-
 										<div class="row ">
+											<input type="text" name="emp_id" value="<?php echo $_SESSION['emp_id'] ?>">
+										
 											<!-- <p>I, have to leave the company premises on this day : </p> -->
 											<div class="col-3">
 
@@ -644,7 +525,7 @@
 										<div class=" mb-3 row">
 											<label class="col-form-label col-md-3">Reason</label>
 											<div class="col-md-8">
-												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="Enter text here"></textarea>
+												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="State your reason here"></textarea>
 
 											</div>
 										</div>
@@ -740,7 +621,7 @@
 										<div class=" mb-3 row">
 											<label class="col-form-label col-md-3">Reason</label>
 											<div class="col-md-8">
-												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="Enter text here"></textarea>
+												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="State your reason here"></textarea>
 
 											</div>
 										</div>
@@ -781,6 +662,17 @@
 		$("li > a[href='<?= base_url('forms') ?>']").addClass("active"); // for items inside the sidebar
 
 
+		$("#work_sched_select").on('change',function(){
+			let val = $(this).val;
+
+
+			if(val == "change_time"){
+
+			}else if(val == "change_off"){
+
+			}else if()
+
+		})
 
 
 

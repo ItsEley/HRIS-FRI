@@ -30,16 +30,15 @@
 			<?php
 			$query = $this->db->query("SELECT * FROM employee WHERE id = '" . $_SESSION['emp_id'] . "'");
 			foreach ($query->result() as $row) {
-
+				$emp_id = $row->id;
 				$fname = $row->fname;
 				$mname = $row->mname;
 				$lname = $row->lname;
-
 				$fullname = $row->fname . ' ' . $row->mname . ' ' . $row->lname;
 				$pfp = $row->pfp;
-				$emp_id = $row->id;
 				$dob = $row->dob;
 				$email = $row->email;
+				$contact_no = $row->contact_no;
 				$current_add = $row->current_add;
 				$sex = $row->sex;
 			}
@@ -104,7 +103,7 @@
 											<ul class="personal-info" style="margin-top:5px;">
 												<li>
 													<div class="title">Phone:</div>
-													<div class="text"><a href="#"></a></div>
+													<div class="text"><?php echo $contact_no?></div>
 												</li>
 												<li>
 													<div class="title">Email:</div>

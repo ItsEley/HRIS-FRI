@@ -207,46 +207,6 @@ $(document).on("click", ".dropdown-item.edit-employee", function(e) {
 
 
 
-// $(".avatar.profile_view").click(function(e) {
-//     var emp_id = $(this).data("emp-id");
-
-//     // Declare a variable to store employee data
-//     var employeeData;
-
-//     // AJAX request to fetch employee details
-//     $.ajax({
-//         url: base_url + 'humanr/showUserdetails',
-//         type: 'GET',
-//         dataType: 'json',
-//         data: { emp_id: emp_id },
-//         success: function(employee) {
-//             // Assign employee data to the variable
-//             employeeData = employee;
-
-//             // Populate profile view with employee data
-//             populateProfileView(employeeData);
-//         },
-//         error: function(xhr, status, error) {
-//             console.error(error);
-//             // Handle error if necessary
-//         }
-//     });
-
-//     // Function to populate profile view with employee data
-//     function populateProfileView(employee) {
-//         $('.profile-img img').attr('src', employee.pfp);
-//         $('.user-name').text(employee.fullname);
-//         // $('.text-muted.department').text(employee.department);
-//         // $('.text-muted.role').text(employee.role);
-//         $('.staff-id').text('Employee ID: ' + employee.id);
-//         $('.personal-info .phone .text a').text(employee.contact_no);
-//         $('.personal-info .email .text a').text(employee.email);
-//         $('.personal-info .birthday .text').text(employee.dob);
-//         $('.personal-info .address .text').text(employee.current_add);
-//         $('.personal-info .sex .text').text(employee.sex);
-//     }
-// });
-
 // add announcement 
 $("#add_announcement").submit(function(e){
 	e.preventDefault();
@@ -443,31 +403,6 @@ $("#addassets").submit(function(e){
 })
 
 
-// $(document).ready(function() {
-//     $('.delete-employee-btn').on('click', function() {
-//         var empId = $(this).data('emp-id');
-//         $('#confirmDeleteBtn').attr('data-emp-id', empId);
-//     });
-
-//     $('#confirmDeleteBtn').on('click', function() {
-//         var empId = $(this).data('emp-id');
-//         // Make an AJAX call to delete employee with the empId
-//         $.ajax({
-//             url: base_url+'humanr/deleteEmployee', // Replace with your delete employee endpoint
-//             type: 'POST',
-//             data: {emp_id: empId},
-//             success: function(response) {
-//                 // Handle success response
-//                 // For example, hide modal, refresh employee list, etc.
-//                 $('#delete_employee').modal('hide');
-//                 location.reload(); // Reload the page
-//             },
-//             error: function(xhr, status, error) {
-//                 // Handle error
-//             }
-//         });
-//     });
-// });
 
 $(document).ready(function() {
     // Handle click on initial delete confirmation button
@@ -497,67 +432,30 @@ $(document).ready(function() {
     });
 });
 
-// $(document).ready(function() {
-//     // Function to save the captured image
-//     function saveCapturedImage() {
-//         // Get the source of the captured image
-//         var imageSource = $("#capturedImage")[0].src;
+$(document).ready(function () {
+    $('.update-req').click(function (e) {
+        e.preventDefault();
 
-//         // Create a dummy anchor element to trigger download
-//         var link = document.createElement('a');
-//         link.href = imageSource;
-//         link.download = 'captured_image.png'; // Set the download filename
+        // Extract request type and ID from the clicked link
+        var requestType = $(this).data('request-type');
+        var id = $(this).data('target-id');
 
-//         // Trigger the download
-//         link.click();
-//     }
-
-//     // Event listener for the capture button
-//     $('#captureButton').on('click', function() {
-//         // Check if the captured image is available
-//         if ($("#capturedImage").attr('src')) {
-//             // Save the captured image
-//             saveCapturedImage();
-//         } else {
-//             console.error('No captured image available.');
-//             // Handle case where no image is captured
-//         }
-//     });
-
-//     // Event listener for the submit button
-//     $('#add_employee_submit').on('click', function() {
-//         // Check if the captured image is available
-//         if ($("#capturedImage").attr('src')) {
-//             // Save the captured image
-//             saveCapturedImage();
-//         } else {
-//             console.error('No captured image available.');
-//             // Handle case where no image is captured
-//         }
-//     });
-// });
-
-$(document).ready(function() {
-	$('.hoverable-row').dblclick(function() {
-		// Get the data from the clicked row
-		var name = $(this).find('td:eq(0)').text();
-		var dateFilled = $(this).find('td:eq(1)').text();
-		var leaveType = $(this).find('td:eq(2)').text();
-		var from = $(this).find('td:eq(3)').text();
-		var to = $(this).find('td:eq(4)').text();
-		var reason = $(this).find('td:eq(5)').text();
-		var status = $(this).find('td:eq(6)').text();
-
-		// Populate the modal fields with the retrieved data
-		$('#modalName').text(name);
-		$('#modalDateFilled').text(dateFilled);
-		$('#modalLeaveType').text(leaveType);
-		$('#modalFrom').text(from);
-		$('#modalTo').text(to);
-		$('#modalReason').text(reason);
-		$('#modalStatus').text(status);
-
-		// Open the modal
-		$('#view_request').modal('show');
-	});
+        // Make AJAX request to fetch data
+        $.ajax({
+            url: base_url+"humanr/fetch_data",
+            method: 'POST',
+            data: {
+                requestType: requestType,
+                id: id
+            },
+            success: function (response) {
+                // Populate modal with fetched data
+                $('.modal-body').html(response);
+            },
+            error: function (xhr, status, error) {
+                // Handle errors
+                console.error(error);
+            }
+        });
+    });
 });

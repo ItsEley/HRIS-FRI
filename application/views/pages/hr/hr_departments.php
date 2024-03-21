@@ -59,7 +59,7 @@
                     foreach ($query_departments->result() as $row_department) {
                 ?>
                         <div class="col mb-2">
-                            <div class="card dep-card-cont h-100">
+                            <div class="card dep-card-cont h-100 mb-0">
                                 <div class="card-header bg-info bg-opacity-25 p-2">
                                     <div class="row align-center">
                                         <div class="col text-ellipsis" style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ">

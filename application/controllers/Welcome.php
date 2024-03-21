@@ -25,16 +25,16 @@ class Welcome extends CI_Controller
 	// }
 	public function index()
 	{
-		if ($this->session->userdata('logged_in')) {
-			// If the user is already logged in, redirect them to a different page
-			redirect('dashboard'); // Change 'dashboard' to the appropriate page
-		} else {
+		// if ($this->session->userdata('logged_in')) {
+		// 	// If the user is already logged in, redirect them to a different page
+		// 	redirect(''); // Change 'dashboard' to the appropriate page
+		// } else {
 			// If the user is not logged in, load the login page
 			$data['title'] = 'Login';
 			$this->load->view('templates/header', $data);
 			$this->load->view('pages/login');
 			$this->load->view('templates/footer');
-		}
+		// }
 	}
 
 	public function logout()

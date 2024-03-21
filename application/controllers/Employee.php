@@ -77,15 +77,17 @@ class Employee extends CI_Controller
 		$response = array();
 		$name = $this->input->post('name');
 		$date_filled = date('Y-m-d H:i:s', time());
-		$department = $this->input->post('department');
+		// $department = $this->input->post('department');
+
 		$outgoing_pass_date = $this->input->post('outgoing_pass_date');
 		$destin_from = $this->input->post('destin_from');
 		$destin_to = $this->input->post('destin_to');
 		$time_from = $this->input->post('time_from');
 		$time_to = $this->input->post('time_to');
 		$reason = $this->input->post('reason');
+		$empid = $this->input->post('emp_id');
 		$status = $this->input->post('status');
-		$empid = $this->input->post('empid');
+		
 
 		$data = array(
 			/*column name*/
@@ -93,15 +95,14 @@ class Employee extends CI_Controller
 			'destin_to' => $destin_to,
 			'time_from' => $time_from,
 			'time_to' => $time_to,
-			'outgoing_pass_date' => $outgoing_pass_date,
+
+			'date_filled' => $date_filled,
 			'reason' => $reason,
 			'status' => $status,
 			'emp_id' => $empid,
-			'department' => $department,
-			'name' => $name
 		);
 
-		$sql = $this->db->insert('f_off_business', $data);
+		$sql = $this->db->insert('f_off_bussiness', $data);
 
 		if ($sql) {
 			$response['status'] = 1;
@@ -117,20 +118,18 @@ class Employee extends CI_Controller
 	public function C_outgoing()
 	{
 		$response = array();
-		$type = $this->input->post('type');
-		$name = $this->input->post('name');
-		$department = $this->input->post('department');
+		
 		$outgoing_date = $this->input->post('outgoing_date');
 		$time_from = $this->input->post('time_from');
 		$time_to = $this->input->post('time_to');
 		$destination = $this->input->post('destination');
 		$reason = $this->input->post('reason');
 		$status = $this->input->post('status');
-		$empid = $this->input->post('empid');
+		$empid = $this->input->post('emp_id');
 
 		$data = array(
 			/*column name*/
-			'type' => $type,
+			
 			'date_filled' => $outgoing_date,
 			'time_from' => $time_from,
 			'time_to' => $time_to,
@@ -138,8 +137,6 @@ class Employee extends CI_Controller
 			'reason' => $reason,
 			'status' => $status,
 			'emp_id' => $empid,
-			'department' => $department,
-			'name' => $name
 		);
 
 		$sql = $this->db->insert('f_outgoing', $data);
@@ -236,15 +233,13 @@ class Employee extends CI_Controller
 	{
 		$response = array();
 		$date_filled = date('Y-m-d H:i:s', time());
-		$name = $this->input->post('name');
-		$department = $this->input->post('department');
 		$change_day_from = $this->input->post('date_from');
 		$change_day_to = $this->input->post('date_to');
 		$change_time_from = $this->input->post('time_from');
 		$change_time_to = $this->input->post('time_to');
 		$reason = $this->input->post('reason');
 		$status = $this->input->post('status');
-		$empid = $this->input->post('empid');
+		$empid = $this->input->post('emp_id');
 
 		$data = array(
 			/*column name*/
@@ -255,12 +250,11 @@ class Employee extends CI_Controller
 			'change_time_to' => $change_time_to,
 			'reason' => $reason,
 			'status' => $status,
-			'emp_id' => $empid,
-			'department' => $department,
-			'name' => $name
+			'emp_id' => $empid
+			
 		);
 
-		$sql = $this->db->insert('work_schedule_adjustment_table', $data);
+		$sql = $this->db->insert('f_worksched_adj', $data);
 		if ($sql) {
 			$response['status'] = 1;
 			$response['msg'] = 'Done';

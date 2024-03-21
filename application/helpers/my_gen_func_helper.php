@@ -92,4 +92,29 @@ function generateEmployeeID($prefix,$name) {
 
 
 
+
+
+
+function generateEmployeeCode($name)
+{
+	// Split the name into parts
+	$nameParts = explode(' ', $name);
+
+	// Extract the first letter of the first name, middle name, and last name
+	$fnameInitial = strtoupper(substr($nameParts[0], 0, 1));
+	$mnameInitial = isset($nameParts[1]) ? strtoupper(substr($nameParts[1], 0, 1)) : '';
+	$lnameInitial = strtoupper(substr(end($nameParts), 0, 1));
+
+	// Generate a random 5-digit number
+	$randomDigits = str_pad(mt_rand(0, 99999), 5, '0', STR_PAD_LEFT);
+
+	// Construct the employee code
+	$employeeCode = "FC{$fnameInitial}{$mnameInitial}{$lnameInitial}-{$randomDigits}";
+
+	return $employeeCode;
+}
+
+
+
+
 ?>

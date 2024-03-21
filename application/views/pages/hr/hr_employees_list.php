@@ -80,8 +80,9 @@
                                             </div>
                                         </td>
 
-                                        <td><?php echo $row->contact_no; ?></td>
                                         <td><?php echo $row->current_add;?></td>
+
+                                        <td><?php echo $row->contact_no; ?></td>
                                         <td><?php echo $row->roles; ?></td>
                                         <td>
                                             <div class="dropdown">

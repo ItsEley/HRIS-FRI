@@ -181,6 +181,9 @@ class Humanr extends CI_Controller
 		}
 	}
 
+	
+
+
 
 	public function C_formshistory()
 	{
@@ -552,25 +555,107 @@ class Humanr extends CI_Controller
 		$this->load->view('pages/hr/request_pending');
 		$this->load->view('templates/footer');
 	}
+
+	public function history_req()
+	{
+		$data['title'] = 'HR | History';
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/hr/hr_req_history');
+		$this->load->view('templates/footer');
+	}
+	public function modal1()
+	{
+		
+		$this->load->view('templates/header');
+		$this->load->view('modal_view');
+		$this->load->view('templates/footer');
+	}
+
+
+
+
+
+	public function update_leave_status()
+	{
+		// Retrieve emp_id from POST data
+		$leave_id = $this->input->post('vq_leave_id');
+	
+		// Define data to be updated
+		$data = array(
+			// 'id' => ucwords($this->input->post('vq_leave_id')),
+			'status' => ucwords($this->input->post('vq_leave_status'))
+			
+		);
+	
+		// Update the employee record
+		$this->db->where('id', $leave_id);
+		$sql = $this->db->update('f_leaves', $data);
+	
+		// Prepare response
+		$response = array();
+		if ($sql) {
+
+			$response['status'] = 1;
+			$response['msg'] = 'Leave data updated successfully';
+		} else {
+			$response['status'] = 0;
+			$response['msg'] = 'Failed to update Leave data';
+		}
+	
+		// Echo JSON response
+		echo json_encode($response);
+	}
+
+	public function fetch_data() {
+        // Handle AJAX request to fetch data
+        $requestType = $this->input->post('requestType');
+        $id = $this->input->post('id');
+
+        // Perform query based on request type
+        if ($requestType === 'LEAVE REQUEST') {
+            $query = $this->db->get_where('f_leaves', array('id' => $id));
+        } elseif ($requestType === 'offbusiness') {
+            $query = $this->db->get_where('offbusiness_table', array('id' => $id));
+        } else {
+            // Handle invalid request type
+            echo "Invalid request type humanr";
+            return;
+        }
+
+        // Check if query was successful
+        if ($query->num_rows() > 0) {
+            $data['row'] = $query->row_array();
+            $data['requestType'] = $requestType; // Pass request type to the view
+            // Load the view and pass fetched data
+            $this->load->view('modal_view', $data);
+        } else {
+            echo "No data found";
+        }
+    }
+
+
+
 }
 
 
-function generateEmployeeCode($name)
-{
-	// Split the name into parts
-	$nameParts = explode(' ', $name);
 
-	// Extract the first letter of the first name, middle name, and last name
-	$fnameInitial = strtoupper(substr($nameParts[0], 0, 1));
-	$mnameInitial = isset($nameParts[1]) ? strtoupper(substr($nameParts[1], 0, 1)) : '';
-	$lnameInitial = strtoupper(substr(end($nameParts), 0, 1));
 
-	// Generate a random 5-digit number
-	$randomDigits = str_pad(mt_rand(0, 99999), 5, '0', STR_PAD_LEFT);
 
-	// Construct the employee code
-	$employeeCode = "FC{$fnameInitial}{$mnameInitial}{$lnameInitial}-{$randomDigits}";
 
-	return $employeeCode;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

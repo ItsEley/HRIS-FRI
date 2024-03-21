@@ -1,6 +1,6 @@
 <!-- Main Wrapper -->
 <div class="main-wrapper">
-
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <?php
     // $_SESSION[]
 
@@ -26,7 +26,7 @@
                             <li class="breadcrumb-item active">Pending Requests</li>
                         </ul>
                     </div>
-                   
+
                 </div>
             </div>
             <!-- /Page Header -->
@@ -35,138 +35,101 @@
             <div class="row">
                 <div class="col-md-3 d-flex">
                     <div class="stats-info w-100">
-                        <h6>Today Presents</h6>
-                        <h4>12 / 60</h4>
+                        <h6>Paid Leaves Left</h6>
+                        <?php
+                        // Retrieve the user ID from the session
+                        $user_id = $this->session->userdata('emp_id');
+
+                        // Get the current year
+                        $current_year = date('Y');
+
+                        // Set the start and end dates for the current year
+                        $start_date = $current_year . '-01-01';
+                        $end_date = $current_year . '-12-31';
+
+                        // Count pending leaves within the current year where the employee ID matches the session ID
+                        $this->db->where('emp_id', $user_id);
+
+                        $this->db->where('YEAR(date_filled)', $current_year); // Filter by the current year
+                        $pending_leave = $this->db->count_all_results('f_leaves');
+
+                        // Calculate remaining leaves
+                        $total_leaves = 5; // Assuming the total number of leaves available is 5
+                        $remaining_leaves = $total_leaves - $pending_leave;
+                        ?>
+
+
+
+                        <h4><?php echo $remaining_leaves; ?><span> Day/s</span></h4>
+                    </div>
+
+                </div>
+                <div class="col-md-3 d-flex">
+                    <div class="stats-info w-100">
+                        <h6>Sick Leaves Left</h6>
+                        <h4>8 <span>Day/s</span></h4>
                     </div>
                 </div>
                 <div class="col-md-3 d-flex">
                     <div class="stats-info w-100">
-                        <h6>Planned Leaves</h6>
-                        <h4>8 <span>Today</span></h4>
+                        <h6>Annual Leaves Left</h6>
+                        <h4>10 <span>Day/s</span></h4>
                     </div>
                 </div>
-                <div class="col-md-3 d-flex">
-                    <div class="stats-info w-100">
-                        <h6>Unplanned Leaves</h6>
-                        <h4>0 <span>Today</span></h4>
-                    </div>
-                </div>
+
                 <div class="col-md-3 d-flex">
                     <div class="stats-info w-100">
                         <h6>Pending Requests</h6>
                         <h4>
+                            <?php
+                            // Get the session user ID
+                            $user_id = $this->session->userdata('emp_id');
 
+                            // Count pending leaves where the employee ID matches the session ID
+                            $this->db->where('id', $user_id);
+                            $pending_leave = $this->db->count_all_results('f_leaves');
 
-                        <?php
-// Get the session user ID
-$user_id = $this->session->userdata('id');
+                            // Count pending official business requests where the employee ID matches the session ID
+                            $this->db->where('id', $user_id);
+                            $pending_ob = $this->db->count_all_results('f_off_bussiness');
 
-// Count pending leaves where the employee ID matches the session ID
-$this->db->where('id', $user_id);
-$pending_leave = $this->db->count_all_results('f_leaves');
+                            // Count pending outgoing requests where the employee ID matches the session ID
+                            $this->db->where('id', $user_id);
+                            $pending_og = $this->db->count_all_results('f_outgoing');
 
-// Count pending official business requests where the employee ID matches the session ID
-$this->db->where('id', $user_id);
-$pending_ob = $this->db->count_all_results('f_off_bussiness');
+                            // Count pending overtime requests where the employee ID matches the session ID
+                            $this->db->where('id', $user_id);
+                            $pending_ot = $this->db->count_all_results('f_overtime');
 
-// Count pending outgoing requests where the employee ID matches the session ID
-$this->db->where('id', $user_id);
-$pending_og = $this->db->count_all_results('f_outgoing');
+                            // Count pending undertime requests where the employee ID matches the session ID
+                            $this->db->where('id', $user_id);
+                            $pending_ut = $this->db->count_all_results('f_undertime');
 
-// Count pending overtime requests where the employee ID matches the session ID
-$this->db->where('id', $user_id);
-$pending_ot = $this->db->count_all_results('f_overtime');
+                            // Count pending work schedule adjustment requests where the employee ID matches the session ID
+                            $this->db->where('id', $user_id);
+                            $pending_wsa = $this->db->count_all_results('f_worksched_adj');
 
-// Count pending undertime requests where the employee ID matches the session ID
-$this->db->where('id', $user_id);
-$pending_ut = $this->db->count_all_results('f_undertime');
+                            // Calculate total pending requests
+                            $total_pending = $pending_leave + $pending_ob + $pending_og + $pending_ot + $pending_ut + $pending_wsa;
 
-// Count pending work schedule adjustment requests where the employee ID matches the session ID
-$this->db->where('id', $user_id);
-$pending_wsa = $this->db->count_all_results('f_worksched_adj');
-
-// Calculate total pending requests
-$total_pending = $pending_leave + $pending_ob + $pending_og + $pending_ot + $pending_ut + $pending_wsa;
-
-// Output the total pending requests
-echo $total_pending;
-?>
-
-
-
+                            // Output the total pending requests
+                            echo $total_pending;
+                            ?>
                         </h4>
                     </div>
                 </div>
             </div>
-            <!-- /Leave Statistics -->
-
-            <!-- Search Filter -->
-            <div class="row filter-row">
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-                    <div class="input-block mb-3 form-focus">
-                        <input type="text" class="form-control floating">
-                        <label class="focus-label">Employee Name</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-                    <div class="input-block mb-3 form-focus select-focus">
-                        <select class="select form-control floating">
-                            <option> -- Select -- </option>
-                            <option>Casual Leave</option>
-                            <option>Medical Leave</option>
-                            <option>Loss of Pay</option>
-                        </select>
-                        <label class="focus-label">Leave Type</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-                    <div class="input-block mb-3 form-focus select-focus">
-                        <select class="select form-control floating">
-                            <option> -- Select -- </option>
-                            <option> Pending </option>
-                            <option> Approved </option>
-                            <option> Rejected </option>
-                        </select>
-                        <label class="focus-label">Leave Status</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-                    <div class="input-block mb-3 form-focus">
-                        <div class="cal-icon">
-                            <input class="form-control floating datetimepicker" type="text">
-                        </div>
-                        <label class="focus-label">From</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-                    <div class="input-block mb-3 form-focus">
-                        <div class="cal-icon">
-                            <input class="form-control floating datetimepicker" type="text">
-                        </div>
-                        <label class="focus-label">To</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-                    <a href="#" class="btn btn-success w-100"> Search </a>
-                </div>
-            </div>
-            <!-- /Search Filter -->
-
-
-
-
 
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
-                        <table class="table table-striped custom-table mb-0 datatable">
+
+                        <table id="users_pendings" class="datatable table-striped custom-table mb-0 datatable">
                             <thead>
                                 <tr>
                                     <th>Employee</th>
                                     <th>Request Type</th>
-
                                     <th>Date Filled</th>
-                                    <th>Department</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-end">Actions</th>
                                 </tr>
@@ -174,172 +137,129 @@ echo $total_pending;
                             <tbody>
                                 <?php
 
+
                                 $row_arr = array();
 
-                                $user_id = $this->session->userdata('id'); // Assuming 'user_id' is the session variable you want to match
+                                $emp_id = $this->session->userdata('emp_id');
 
-                                $this->db->where('id', $user_id); // Add WHERE condition
-                                $query = $this->db->get('f_leaves');
+                                // Query employee data to get the profile picture (pfp) and name
+                                $query_employee = $this->db->query("SELECT * FROM employee WHERE id = '$emp_id'");
+                                if ($query_employee->num_rows() > 0) {
+                                    $row_employee = $query_employee->row();
+                                    $pfp = $row_employee->pfp;
+                                }
 
-                                foreach ($query->result() as $row) {
+                                // Query leave data
+                                $name = ($_SESSION['name']);
+                                $query_leaves = $this->db->where('emp_id', $emp_id)->where('status', 'pending')->get('f_leaves');
+
+                                foreach ($query_leaves->result() as $row) {
                                     $leave_id =  $row->id;
-                                    $name = ucwords(strtolower($row->name));
                                     $date_filled = $row->date_filled;
                                     $leave_type = $row->type_of_leave;
-                                    $department = $row->department;
                                     $status = $row->status;
-                                    $request_type = "LEAVE REQUEST";
+                                    $request_type = "LEAVE REQUEST"; // Define request type
+
+                                    // Construct row data including pfp and name
                                     $row_arr[] = array(
+                                        'pfp' => $pfp,
                                         'id' => $leave_id,
                                         'name' => $name,
-                                        'leave_type' => $leave_type,
+                                        'request_type' => $request_type,
                                         'date_filled' => $date_filled,
-                                        'department' => $department,
-                                        'status' => $status,
-                                        'request_type' => $request_type
+                                        'status' => $status
                                     );
                                 }
-                                $user_id = $this->session->userdata('id'); // Assuming 'user_id' is the session variable you want to match
-
-                                $this->db->where('id', $user_id);
-
-                                $query2 = $this->db->get('f_undertime');
-                                foreach ($query2->result() as $row2) {
-                                    $undertime_leave_id =  $row2->id;
-                                    $undertime_name = ucwords(strtolower($row2->name));
-                                    $undertime_date_filled = $row2->date_filled;
-                                    $undertime_department = $row2->department;
-                                    $undertime_status = $row2->status;
-                                    $request_type = "UNDERTIME REQUEST";
-                                    $row_arr[] = array(
-                                        'id' => $undertime_leave_id,
-
-                                        'name' => $undertime_name,
-                                        'date_filled' => $undertime_date_filled,
-                                        'department' => $undertime_department,
-                                        'status' => $undertime_status,
-                                        'request_type' => $request_type
-                                    );
-                                }
-                                $user_id = $this->session->userdata('id'); // Assuming 'user_id' is the session variable you want to match
-
-                                $this->db->where('id', $user_id);
-                                $query3 = $this->db->get('f_outgoing');
-                                foreach ($query3->result() as $row3) {
-                                    $outgoing_id =  $row3->id;
-                                    $outgoing_name = ucwords(strtolower($row3->name));
-                                    $outgoing_date_filled = $row3->date_filled;
-                                    $outgoing_department = $row3->department;
-                                    $outgoing_status = $row3->status;
-                                    $request_type = "OUTGOING PASS REQUEST";
-                                    $row_arr[] = array(
-                                        'id' => $outgoing_id,
-
-                                        'name' => $outgoing_name,
-                                        'date_filled' => $outgoing_date_filled,
-                                        'department' => $outgoing_department,
-                                        'status' => $outgoing_status,
-                                        'request_type' => $request_type
-                                    );
-                                }
-                                $user_id = $this->session->userdata('id'); // Assuming 'user_id' is the session variable you want to match
-
-                                $this->db->where('id', $user_id);
-                                $query4 = $this->db->get('f_off_bussiness');
-                                foreach ($query4->result() as $row4) {
-                                    $ob_id =  $row4->id;
-                                    $ob_name = ucwords(strtolower($row4->name));
-                                    $ob_date_filled = $row4->outgoing_pass_date;
-                                    $ob_department = $row4->department;
-                                    $ob_status = $row4->status;
-                                    $request_type = "OFFICIAL BUSINESS REQUEST";
-                                    $row_arr[] = array(
-                                        'id' => $ob_id,
-
-                                        'name' => $ob_name,
-                                        'date_filled' => $ob_date_filled,
-                                        'department' => $ob_department,
-                                        'status' => $ob_status,
-                                        'request_type' => $request_type
-                                    );
-                                }
-                                $user_id = $this->session->userdata('id'); // Assuming 'user_id' is the session variable you want to match
-
-                                $this->db->where('id', $user_id);
-                                $query5 = $this->db->get('f_overtime');
-                                foreach ($query5->result() as $row5) {
-                                    $ot_id =  $row5->id;
-                                    $ot_name = ucwords(strtolower($row5->name));
-                                    $date_ot = $row5->date_ot;
-                                    $ot_department = $row5->department;
-                                    $ot_status = $row5->status;
-                                    $request_type = "OVERTIME REQUEST";
-                                    $row_arr[] = array(
-                                        'id' => $ot_id,
-
-                                        'name' => $ob_name,
-                                        'date_filled' => $date_ot,
-                                        'department' => $ob_department,
-                                        'status' => $ob_status,
-                                        'request_type' => $request_type
-                                    );
-                                }
-                                // $query6 = $this->db->get('work_schedule_adjustment_table');
-                                // foreach ($query6->result() as $row6) {
-                                // 	$ws_id =  $row6->id;
-                                // 	$ws_name = ucwords(strtolower($row6->name));
-                                // 	$ws_date = $row6->date_filled;
-                                // 	$ws_department = $row6->department;
-                                // 	$ws_status = $row6->status;
-                                // 	$request_type = "WORK SCHEDULE ADJUSTMENT REQUEST";
-                                // 	$row_arr[] = array(
-                                // 		'id' => $ws_id,
-
-                                // 		'name' => $ws_name,
-                                // 		'date_filled' => $ws_date,
-                                // 		'department' => $ws_department,
-                                // 		'status' => $ws_status,
-                                // 		'request_type' => $request_type
-                                // 	);
-                                // }
-
-                                $total_rows = count($row_arr);
 
                                 foreach ($row_arr as $row) {
-                                ?>
+                                    // Output or process each row as needed
 
+                                ?>
                                     <tr>
                                         <td>
                                             <h2 class="table-avatar">
-                                                <a href="profile.html" class="avatar"><img src="assets/img/profiles/avatar-09.jpg" alt="User Image"></a>
-                                                <a href="#"><?php echo $row['name']; ?><span></span></a>
+                                                <a href="profile.html" class="avatar">
+                                                    <img src="<?php
+                                                                // Retrieve base64-encoded image data from session
+                                                                if ($this->session->userdata('pfp')) {
+                                                                    $pfp = $this->session->userdata('pfp');
+                                                                }
+
+                                                                // Check if $pfp is set and not empty
+                                                                if (!empty($pfp)) {
+                                                                    // Embed the base64-encoded image data in the 'src' attribute of the <img> tag
+                                                                    echo "data:image/jpeg;base64," . base64_encode($pfp);
+                                                                } else {
+                                                                    // If $pfp is empty or not set, display a placeholder image or handle it as per your requirement
+                                                                    echo base_url('path/to/placeholder_image.jpg');
+                                                                }
+                                                                ?>" alt="User Image">
+                                                </a>
+                                                <a href="<?= base_url('hr_profile') ?>" style="font-size: 0.6em;"><?php echo $row['name']; ?></a>
                                             </h2>
                                         </td>
+
                                         <td><?php echo $row['request_type']; ?></td>
                                         <td><?php echo $row['date_filled']; ?></td>
-                                        <td><?php echo $row['department']; ?></td>
+
                                         <td class="text-center">
-                                            <div class="dropdown action-label">
-                                                <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fa-regular fa-circle-dot text-purple"></i> <?php echo $row['status']; ?>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-purple"></i> New</a>
-                                                    <a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-info"></i> Pending</a>
-                                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#approve_leave"><i class="fa-regular fa-circle-dot text-success"></i> Approved</a>
-                                                    <a class="dropdown-item" href="#"><i class="fa-regular fa-circle-dot text-danger"></i> Declined</a>
-                                                </div>
-                                            </div>
+                                            <?php
+                                            // Set the color of the dot icon, the text color, and the border color based on the status
+                                            switch ($row['status']) {
+                                                case 'new':
+                                                    $dot_color = 'text-purple';
+                                                    $text_color = 'text-purple'; // Text color for 'New' status
+                                                    $border_color = 'border-purple'; // Border color for 'New' status
+                                                    $status_text = 'New';
+                                                    break;
+                                                case 'pending':
+                                                    $dot_color = 'text-info';
+                                                    $text_color = 'text-info'; // Text color for 'Pending' status
+                                                    $border_color = 'border-info'; // Border color for 'Pending' status
+                                                    $status_text = 'Pending';
+                                                    break;
+                                                case 'approved':
+                                                    $dot_color = 'text-success';
+                                                    $text_color = 'text-success'; // Text color for 'Approved' status
+                                                    $border_color = 'border-success'; // Border color for 'Approved' status
+                                                    $status_text = 'Approved';
+                                                    break;
+                                                case 'declined':
+                                                    $dot_color = 'text-danger';
+                                                    $text_color = 'text-danger'; // Text color for 'Declined' status
+                                                    $border_color = 'border-danger'; // Border color for 'Declined' status
+                                                    $status_text = 'Declined';
+                                                    break;
+                                                default:
+                                                    $dot_color = 'text-purple'; // Default dot color
+                                                    $text_color = 'text-dark'; // Default text color
+                                                    $border_color = 'border-dark'; // Default border color
+                                                    $status_text = 'Unknown'; // Default status text
+                                            }
+                                            ?>
+                                            <span class="badge rounded-pill <?php echo $text_color; ?> <?php echo $border_color; ?>">
+                                                <i class="fa-regular fa-circle-dot <?php echo $dot_color; ?>"></i> <?php echo $status_text; ?>
+                                            </span>
                                         </td>
-                                        <td class="text-end">
+
+
+                                        <td class="text-center">
                                             <div class="dropdown dropdown-action">
-                                                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item update-req" href="#" data-bs-toggle="modal" id="" data-bs-target="#edit_leave" data-target-id="<?php echo $row['id']; ?>"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
-                                                    <a class="dropdown-item delete-req" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve" data-target-id="<?php echo $row['id']; ?>"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
+                                                <button class="btn btn-sm btn-rounded dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="material-icons">more_vert</i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                                    <a class="dropdown-item update-req" href="#" data-bs-toggle="modal" data-bs-target="#edit_leave" data-target-id="<?php echo $row['id']; ?>">
+                                                        <i class="fa-solid fa-pencil-alt"></i> Edit
+                                                    </a>
+                                                    <a class="dropdown-item delete-req" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve" data-target-id="<?php echo $row['id']; ?>">
+                                                        <i class="fa-regular fa-trash-alt"></i> Delete
+                                                    </a>
                                                 </div>
                                             </div>
+
                                         </td>
+
                                     </tr>
 
                                 <?php
@@ -352,173 +272,66 @@ echo $total_pending;
                     </div>
                 </div>
             </div>
+
+
+
+
+
+
         </div>
         <!-- /Page Content -->
-
-        <!-- Add Leave Modal -->
-        <div id="add_leave" class="modal custom-modal fade" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add Leave</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Leave Type <span class="text-danger">*</span></label>
-                                <select class="form-control" name="department">
-                                    <?php
-                                    $query = $this->db->get('department');
-
-                                    // Check if query executed successfully
-                                    if ($query->num_rows() > 0) {
-                                        foreach ($query->result() as $row) {
-                                            $depID = $row->id;
-                                            $department1 = $row->department;
-                                            $acro = $row->acro_dept;
-                                            $data['department'] = $department1;
-                                            // Output each department as an option
-                                            echo '<option value="' . $depID . '">' .  $data['department'] . '</option>';
-                                        }
-                                    } else {
-                                        // Handle no results from the database
-                                        echo '<option value="">No departments found</option>';
-                                    }
-                                    ?>
-                                </select>
-
-                            </div>
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">From <span class="text-danger">*</span></label>
-                                <div class="cal-icon">
-                                    <input class="form-control datetimepicker" type="text">
-                                </div>
-                            </div>
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">To <span class="text-danger">*</span></label>
-                                <div class="cal-icon">
-                                    <input class="form-control datetimepicker" type="text">
-                                </div>
-                            </div>
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Number of days <span class="text-danger">*</span></label>
-                                <input class="form-control" readonly type="text">
-                            </div>
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Remaining Leaves <span class="text-danger">*</span></label>
-                                <input class="form-control" readonly value="12" type="text">
-                            </div>
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Leave Reason <span class="text-danger">*</span></label>
-                                <textarea rows="4" class="form-control"></textarea>
-                            </div>
-                            <div class="submit-section">
-                                <button class="btn btn-primary submit-btn">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /Add Leave Modal -->
-
-        <!-- Edit Leave Modal -->
-        <div id="edit_leave" class="modal custom-modal fade" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Leave</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="edit_leave_form">
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">Leave Type <span class="text-danger">*</span></label>
-                                <select id="leave_type" class="select">
-                                    <option>Select Leave Type</option>
-                                    <option>Casual Leave 12 Days</option>
-                                </select>
-                            </div>
-                            <div class="input-block mb-3">
-                                <label class="col-form-label">From <span class="text-danger">*</span></label>
-                                <div class="cal-icon">
-                                    <input id="employee_name" class="form-control" value="" type="employee_name">
-                                </div>
-                            </div>
-                            <!-- Other form fields -->
-                            <div class="submit-section">
-                                <button id="save_edit_leave" class="btn btn-primary submit-btn">Save</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-
-        <!-- /Edit Leave Modal -->
-
-        <!-- Approve Leave Modal -->
-        <div class="modal custom-modal fade" id="approve_leave" role="dialog">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="form-header">
-                            <h3>Leave Approve</h3>
-                            <p>Are you sure want to approve for this leave?</p>
-                        </div>
-                        <div class="modal-btn delete-action">
-                            <div class="row">
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" class="btn btn-primary continue-btn">Approve</a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Decline</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /Approve Leave Modal -->
-
-        <!-- Delete Leave Modal -->
-        <div class="modal custom-modal fade" id="delete_approve" role="dialog">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="form-header">
-                            <h3>Delete Leave</h3>
-                            <p>Are you sure want to delete this leave?</p>
-                        </div>
-                        <div class="modal-btn delete-action">
-                            <div class="row">
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" class="btn btn-primary continue-btn">Delete</a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /Delete Leave Modal -->
-
-
     </div>
-    <!-- /Page Wrapper -->
+    <!-- Approve Leave Modal -->
+    <div class="modal custom-modal fade" id="approve_leave" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-header">
+                        <h3>Leave Approve</h3>
+                        <p>Are you sure want to approve for this leave?</p>
+                    </div>
+                    <div class="modal-btn delete-action">
+                        <div class="row">
+                            <div class="col-6">
+                                <a href="javascript:void(0);" class="btn btn-primary continue-btn">Approve</a>
+                            </div>
+                            <div class="col-6">
+                                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Decline</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Approve Leave Modal -->
 
+    <!-- Delete Leave Modal -->
+    <div class="modal custom-modal fade" id="delete_approve" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="form-header">
+                        <h3>Delete Leave</h3>
+                        <p>Are you sure want to delete this leave?</p>
+                    </div>
+                    <div class="modal-btn delete-action">
+                        <div class="row">
+                            <div class="col-6">
+                                <a href="javascript:void(0);" class="btn btn-primary continue-btn">Delete</a>
+                            </div>
+                            <div class="col-6">
+                                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Delete Leave Modal -->
+</div>
+<!-- /Page Wrapper -->
 </div>
 <!-- /Main Wrapper -->
 

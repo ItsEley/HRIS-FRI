@@ -20,10 +20,10 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Forms</h3>
+                        <h3 class="page-title">Requests History</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="admin-dashboard.html">Forms</a></li>
-                            <li class="breadcrumb-item active">History</li>
+                            <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Request History</li>
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
@@ -58,45 +58,48 @@
                                 <?php
                                 $row_arr = array();
 
-                                $emp_id = $this->session->userdata('emp_id');
-                                
-                                // Query employee data to get the profile picture (pfp) and name
-                                $query_employee = $this->db->query("SELECT * FROM employee WHERE id = '$emp_id'");
-                                if ($query_employee->num_rows() > 0) {
-                                    $row_employee = $query_employee->row();
-                                    $pfp = $row_employee->pfp;
-                                }
-                                
-                                // Query leave data
-                                $name = ($_SESSION['name']);
-                                $this->db->where('emp_id', $emp_id);
+                                // Query leave data where status is either "approved" or "declined"
+                                $this->db->where_in('status', array('approved', 'declined'));
                                 $query_leaves = $this->db->get('f_leaves');
+
                                 foreach ($query_leaves->result() as $row) {
                                     $leave_id =  $row->id;
                                     $date_filled = $row->date_filled;
                                     $leave_type = $row->type_of_leave;
                                     $status = $row->status;
                                     $request_type = "LEAVE REQUEST"; // Define request type
-                                
-                                    // Only include rows where status is "approved" or "declined"
-                                    if ($status == 'approved' || $status == 'declined') {
-                                        // Construct row data including pfp and name
-                                        $row_arr[] = array(
-                                            'pfp' => $pfp,
-                                            'id' => $leave_id,
-                                            'name' => $name,
-                                            'request_type' => $request_type,
-                                            'date_filled' => $date_filled,
-                                            'status' => $status
-                                        );
+
+                                    // Query employee data to get pfp, fname, and lname based on emp_id
+                                    $emp_id = $row->emp_id;
+                                    $query_employee = $this->db->query("SELECT pfp, fname, lname FROM employee WHERE id = '$emp_id'");
+                                    if ($query_employee->num_rows() > 0) {
+                                        $employee_data = $query_employee->row();
+                                        $pfp = $employee_data->pfp;
+                                        $fname = $employee_data->fname;
+                                        $lname = $employee_data->lname;
+                                    } else {
+                                        // Handle if employee data not found
+                                        $pfp = "path/to/default_pfp.jpg"; // Provide default pfp path or handle it as needed
+                                        $fname = "Unknown";
+                                        $lname = "Unknown";
                                     }
+
+                                    // Construct row data including pfp, name, fname, and lname
+                                    $row_arr[] = array(
+                                        'pfp' => $pfp,
+                                        'id' => $leave_id,
+                                        'name' => $fname . " " . $lname, // Concatenate fname and lname
+                                        'request_type' => $request_type,
+                                        'date_filled' => $date_filled,
+                                        'status' => $status
+                                    );
                                 }
-                                
+
                                 foreach ($row_arr as $row) {
-                                    // Process or output each filtered row as needed
-                                
-                                
+                                    // Process or output each row as needed
+
                                 ?>
+
 
                                     <tr>
                                         <td>
@@ -105,9 +108,10 @@
                                                 <a href="profile.html" class="avatar">
                                                     <img src="<?php
                                                                 // Retrieve base64-encoded image data from session
-                                                                if ($this->session->userdata('pfp')) {
-                                                                    $pfp = $this->session->userdata('pfp');
+                                                                if (!empty($row['pfp'])) {
+                                                                    $pfp = $row['pfp'];
                                                                 }
+
 
                                                                 // Check if $pfp is set and not empty
                                                                 if (!empty($pfp)) {
@@ -125,7 +129,8 @@
                                             </h2>
                                         </td>
                                         <td><?php echo $row['request_type']; ?></td>
-                                        <td><?php echo $row['date_filled']; ?></td>
+                                        <td><?php echo date('F j, Y', strtotime($row['date_filled'])); ?></td>
+
 
                                         <td class="text-center">
                                             <?php

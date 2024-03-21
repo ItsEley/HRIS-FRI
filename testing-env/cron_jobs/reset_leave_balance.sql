@@ -1,0 +1,1 @@
+UPDATE `leave_balance` SET `paid`=5,`sick`=5,`annual`=5

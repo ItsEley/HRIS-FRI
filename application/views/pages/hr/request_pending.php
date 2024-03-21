@@ -3,7 +3,7 @@
 
 	<?php
 	// $_SESSION[]
-
+	
 	// navbar
 	$this->load->view('templates/nav_bar');
 	// sidebar
@@ -58,7 +58,7 @@
 						<h6>Pending Requests</h6>
 						<h4>
 
-							
+
 							<?php
 
 							$pending_leave = $this->db->count_all('f_leaves');
@@ -145,129 +145,56 @@
 									<th>Request Type</th>
 
 									<th>Date Filled</th>
-									<th>Department</th>
+									<!-- <th>Department</th> -->
 									<th class="text-center">Status</th>
 									<th class="text-end">Actions</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php
-
 								$row_arr = array();
 
+								// Query leaves table to get emp_id where status is 'pending'
+								$this->db->where('status', 'pending');
 								$query = $this->db->get('f_leaves');
+
+								// Iterate over the results
 								foreach ($query->result() as $row) {
 									$leave_id =  $row->id;
-									$name = ucwords(strtolower($row->name));
+									$emp_id = $row->emp_id;
 									$date_filled = $row->date_filled;
 									$leave_type = $row->type_of_leave;
-									$department = $row->department;
 									$status = $row->status;
 									$request_type = "LEAVE REQUEST";
+
+									// Query employee table to get pfp, fname, and lname using emp_id
+									$query_employee = $this->db->query("SELECT pfp, fname, lname FROM employee WHERE id = '$emp_id'");
+
+									if ($query_employee->num_rows() > 0) {
+										$employee_data = $query_employee->row();
+										$pfp = $employee_data->pfp;
+										$fname = $employee_data->fname;
+										$lname = $employee_data->lname;
+									} else {
+										// Handle if employee data not found
+										$pfp = "path/to/default_pfp.jpg"; // Provide default pfp path or handle it as needed
+										$fname = "Unknown";
+										$lname = "Unknown";
+									}
+
 									$row_arr[] = array(
 										'id' => $leave_id,
-										'name' => $name,
+										'name' => $fname . ' ' . $lname,
 										'leave_type' => $leave_type,
 										'date_filled' => $date_filled,
-										'department' => $department,
 										'status' => $status,
-										'request_type' => $request_type
+										'request_type' => $request_type,
+										'pfp' => $pfp // Adding pfp to the row data
 									);
 								}
 
-								$query2 = $this->db->get('f_undertime');
-								foreach ($query2->result() as $row2) {
-									$undertime_leave_id =  $row2->id;
-									$undertime_name = ucwords(strtolower($row2->name));
-									$undertime_date_filled = $row2->date_filled;
-									$undertime_department = $row2->department;
-									$undertime_status = $row2->status;
-									$request_type = "UNDERTIME REQUEST";
-									$row_arr[] = array(
-										'id' => $undertime_leave_id,
 
-										'name' => $undertime_name,
-										'date_filled' => $undertime_date_filled,
-										'department' => $undertime_department,
-										'status' => $undertime_status,
-										'request_type' => $request_type
-									);
-								}
-								$query3 = $this->db->get('f_outgoing');
-								foreach ($query3->result() as $row3) {
-									$outgoing_id =  $row3->id;
-									$outgoing_name = ucwords(strtolower($row3->name));
-									$outgoing_date_filled = $row3->date_filled;
-									$outgoing_department = $row3->department;
-									$outgoing_status = $row3->status;
-									$request_type = "OUTGOING PASS REQUEST";
-									$row_arr[] = array(
-										'id' => $outgoing_id,
 
-										'name' => $outgoing_name,
-										'date_filled' => $outgoing_date_filled,
-										'department' => $outgoing_department,
-										'status' => $outgoing_status,
-										'request_type' => $request_type
-									);
-								}
-
-								$query4 = $this->db->get('f_off_bussiness');
-								foreach ($query4->result() as $row4) {
-									$ob_id =  $row4->id;
-									$ob_name = ucwords(strtolower($row4->name));
-									$ob_date_filled = $row4->outgoing_pass_date;
-									$ob_department = $row4->department;
-									$ob_status = $row4->status;
-									$request_type = "OFFICIAL BUSINESS REQUEST";
-									$row_arr[] = array(
-										'id' => $ob_id,
-
-										'name' => $ob_name,
-										'date_filled' => $ob_date_filled,
-										'department' => $ob_department,
-										'status' => $ob_status,
-										'request_type' => $request_type
-									);
-								}
-								$query5 = $this->db->get('f_overtime');
-								foreach ($query5->result() as $row5) {
-									$ot_id =  $row5->id;
-									$ot_name = ucwords(strtolower($row5->name));
-									$date_ot = $row5->date_ot;
-									$ot_department = $row5->department;
-									$ot_status = $row5->status;
-									$request_type = "OVERTIME REQUEST";
-									$row_arr[] = array(
-										'id' => $ot_id,
-
-										'name' => $ob_name,
-										'date_filled' => $date_ot,
-										'department' => $ob_department,
-										'status' => $ob_status,
-										'request_type' => $request_type
-									);
-								}
-								// $query6 = $this->db->get('work_schedule_adjustment_table');
-								// foreach ($query6->result() as $row6) {
-								// 	$ws_id =  $row6->id;
-								// 	$ws_name = ucwords(strtolower($row6->name));
-								// 	$ws_date = $row6->date_filled;
-								// 	$ws_department = $row6->department;
-								// 	$ws_status = $row6->status;
-								// 	$request_type = "WORK SCHEDULE ADJUSTMENT REQUEST";
-								// 	$row_arr[] = array(
-								// 		'id' => $ws_id,
-
-								// 		'name' => $ws_name,
-								// 		'date_filled' => $ws_date,
-								// 		'department' => $ws_department,
-								// 		'status' => $ws_status,
-								// 		'request_type' => $request_type
-								// 	);
-								// }
-
-								$total_rows = count($row_arr);
 
 								foreach ($row_arr as $row) {
 								?>
@@ -280,8 +207,9 @@
 											</h2>
 										</td>
 										<td><?php echo $row['request_type']; ?></td>
-										<td><?php echo $row['date_filled']; ?></td>
-										<td><?php echo $row['department']; ?></td>
+										<td><?php echo date('F j, Y', strtotime($row['date_filled'])); ?></td>
+
+										<!-- <td><?php echo $row['department']; ?></td> -->
 										<td class="text-center">
 											<div class="dropdown action-label">
 												<a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
@@ -299,13 +227,29 @@
 											<div class="dropdown dropdown-action">
 												<a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
 												<div class="dropdown-menu dropdown-menu-right">
-													<a class="dropdown-item update-req" href="#" data-bs-toggle="modal" id="" data-bs-target="#edit_leave" data-target-id="<?php echo $row['id']; ?>"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
+													<a class="dropdown-item update-req" href="#" data-bs-toggle="modal" data-bs-target="#editModal" data-target-id="<?php echo $row['id']; ?>" data-request-type="<?php echo $row['request_type']; ?>">
+														<i class="fa-solid fa-pencil m-r-5"></i> Edit
+													</a>
 													<a class="dropdown-item delete-req" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve" data-target-id="<?php echo $row['id']; ?>"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
 												</div>
 											</div>
 										</td>
 									</tr>
-
+									<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+										<div class="modal-dialog" role="document">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="editModalLabel">Edit Request</h5>
+													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+														<span aria-hidden="true">&times;</span>
+													</button>
+												</div>
+												<div class="modal-body">
+													<!-- Data will be populated here -->
+												</div>
+											</div>
+										</div>
+									</div>
 								<?php
 								}
 								?>
@@ -313,6 +257,39 @@
 
 							</tbody>
 						</table>
+						<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Request</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <?php if(isset($row)): ?>
+                    <?php if($requestType === 'LEAVE REQUEST'): ?>
+                        <p>ID: <?php echo $row['id']; ?></p>
+                        <p>Date Filled: <?php echo $row['date_filled']; ?></p>
+                        <p>Date From: <?php echo $row['date_from']; ?></p>
+                        <p>Date To: <?php echo $row['date_to']; ?></p>
+                        <p>Reason: <?php echo $row['reason']; ?></p>
+                        <p>Employee ID: <?php echo $row['emp_id']; ?></p>
+                    <?php elseif($requestType === 'offbusiness'): ?>
+                        <p>ID: <?php echo $row['id']; ?></p>
+                        <p>Date Filled: <?php echo $row['date_filled']; ?></p>
+                        <p>Date: <?php echo $row['date']; ?></p>
+                        <p>Destination From: <?php echo $row['destination_from']; ?></p>
+                        <p>Destination To: <?php echo $row['destination_to']; ?></p>
+                        <p>Reason: <?php echo $row['reason']; ?></p>
+                        <p>Employee ID: <?php echo $row['emp_id']; ?></p>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
 					</div>
 				</div>
 			</div>
@@ -389,45 +366,6 @@
 		</div>
 		<!-- /Add Leave Modal -->
 
-		<!-- Edit Leave Modal -->
-		<div id="edit_leave" class="modal custom-modal fade" role="dialog">
-			<div class="modal-dialog modal-dialog-centered" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title">Edit Leave</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<form id="edit_leave_form">
-							<div class="input-block mb-3">
-								<label class="col-form-label">Leave Type <span class="text-danger">*</span></label>
-								<select id="leave_type" class="select">
-									<option>Select Leave Type</option>
-									<option>Casual Leave 12 Days</option>
-								</select>
-							</div>
-							<div class="input-block mb-3">
-								<label class="col-form-label">From <span class="text-danger">*</span></label>
-								<div class="cal-icon">
-									<input id="employee_name" class="form-control" value="" type="employee_name">
-								</div>
-							</div>
-							<!-- Other form fields -->
-							<div class="submit-section">
-								<button id="save_edit_leave" class="btn btn-primary submit-btn">Save</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-
-
-
-
-		<!-- /Edit Leave Modal -->
 
 		<!-- Approve Leave Modal -->
 		<div class="modal custom-modal fade" id="approve_leave" role="dialog">

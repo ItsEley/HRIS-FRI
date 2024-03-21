@@ -34,6 +34,7 @@ $route['hr/employees-list'] = 'humanr/C_hr_employees_list';
 $route['hr/employees/attendance'] = 'humanr/C_hr_emp_attendace';
 $route['hr/employees/shifts'] = 'humanr/C_hr_emp_shifts';
 $route['hr/employees/leaves'] = 'humanr/C_hr_emp_leaves';
+
 $route['adduser'] = 'humanr/adduser';
 $route['hr/departments'] = 'humanr/C_hr_departments';
 $route['hr/settings'] = 'humanr/C_hr_settings';
@@ -44,9 +45,7 @@ $route['hr/settings'] = 'humanr/C_hr_settings';
 $route['hr/assets'] = 'humanr/C_hr_assets';
 
 $route['hr/pendingrequests'] = 'humanr/pending_req';
-
-$route['hr/forms/history'] = 'humanr/leave_pending';
-
+$route['hr/historyrequests'] = 'humanr/history_req';
 
 // employee
 
