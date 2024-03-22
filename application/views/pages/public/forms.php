@@ -78,9 +78,7 @@
 			<div class="modal fade" id="modal_leave_request" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal_leave_request_label" aria-hidden="true">
 				<div class="modal-dialog">
 					<form id="leave_request" method="post">
-
 						<input type="text" name="emp_id" value="<?php echo $_SESSION['emp_id'] ?>">
-
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" id="staticBackdropLabel">Fill up form</h5>
@@ -90,8 +88,6 @@
 								<div class="container"> <!-- Employee leave form inputs -->
 									<div style="background-color: white;
 												max-width: 540px;max-height: auto;">
-										<!-- Header-->
-
 										<div class="row mb-2">
 											<div class="col-3">
 												<div class="account-logo">
@@ -101,12 +97,7 @@
 											<div class="col text-start">
 												<h3>Leave Request Form</h3>
 											</div>
-
 										</div>
-
-										<!-- /Form content -->
-
-
 										<div class="row ">
 											<div class="col-3">
 
@@ -118,21 +109,14 @@
 												<input type="date" class="form-control input-field mb-2" name="from_date" id="from_date" />
 											</div>
 										</div>
-
-
 										<div class="row">
 											<div class="col-3">
-
 												<label for="to_date" class="form-label mb-2">To:</label>
-
 											</div>
 											<div class="col-8">
-
 												<input type="date" class="form-control input-field mb-2 " name="to_date" id="to_date" />
 											</div>
 										</div>
-
-
 										<div class="row mb-2">
 											<label class="col-3">Type of Leave</label>
 											<div class="col-md-8">
@@ -547,7 +531,6 @@
 			<!-- Modal overtime-->
 			<div class="modal fade" id="modal_overtime_request" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal_overtime_request_label" aria-hidden="true">
 				<div class="modal-dialog">
-
 					<div class="modal-content">
 						<div class="modal-header">
 							<h5 class="modal-title" id="staticBackdropLabel">Fill up form</h5>
@@ -584,54 +567,33 @@
 
 											</div>
 											<div class="col-8">
-
 												<input type="date" class="form-control input-field mb-2" name="ot_date" id="ot_date" />
 											</div>
 										</div>
-
-
-
 										<div class="row">
 											<div class="col-3">
-
 												<label for="from_time" class="form-label mb-2">Time from:</label>
-
 											</div>
 											<div class="col-8">
-
 												<input type="time" class="form-control input-field mb-2 " name="from_time" id="from_time" />
 											</div>
 										</div>
-
-
 										<div class="row">
 											<div class="col-3">
-
 												<label for="to_time" class="form-label mb-2">Time to:</label>
-
 											</div>
 											<div class="col-8">
-
 												<input type="time" class="form-control input-field mb-2 " name="to_time" id="to_time" />
 											</div>
 										</div>
-
-
-
 										<div class=" mb-3 row">
 											<label class="col-form-label col-md-3">Reason</label>
 											<div class="col-md-8">
 												<textarea rows="1" cols="5" class="form-control" name="reason" placeholder="State your reason here"></textarea>
-
 											</div>
 										</div>
-
-
-
 								</div>
 							</div>
-
-
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

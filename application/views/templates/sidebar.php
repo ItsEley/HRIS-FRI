@@ -251,11 +251,10 @@
     <li><a href='" . base_url('hr/dashboard') . "'><i class='la la-dashboard'></i><span>Dashboard</span></a></li>
     <li><a href='" . base_url('hr/calendar') . "'><i class='fa-regular fa-calendar'></i><span>Calendar</span></a></li>
     <li><a href='" . base_url('hr/announcement') . "'><i class='la la-bullhorn'></i><span>Announcements</span></a></li>
-    <li><a href='" . base_url('hr/assets') . "'><i class='la la-folder'></i><span>Assets</span></a></li>
     <li class='submenu reports'>
         <a href='#' class=''><i class='la la-file-text'></i><span>Reports</span><span class='menu-arrow'></span></a>
         <ul>
-            <li><a href='hr_timesheet.html'>Timesheet</a></li>
+            <li><a href='" . base_url('hr/reports/timesheet') . "'>Timesheet</a></li>
             <li><a href='" . base_url('hr/employees/attendance') . "'>Attendance</a></li>
             <li><a href='" . base_url('hr/leaves') . "'>Leaves</a></li>
             <li><a href='hr_emp_performance.html'>Employee Performance</a></li>
@@ -265,10 +264,9 @@
         <a href='#'><i class='la la-user'></i><span>Employees</span><span class='menu-arrow'></span></a>
         <ul>
             <li><a href='" . base_url('hr/employees') . "'>Manage</a></li>
-            <li><a href='" . base_url('hr/employees/attendance') . "'>Attendance</a></li> 
             <li><a href='" . base_url('hr/departments') . "'>Designations</a></li>
             <li><a href='" . base_url('hr/employees/shifts') . "'>Shifts & Schedules</a></li>
-            <li><a href='" . base_url('hr/employees/leaves') . "'>Leaves</a></li>
+            <li><a href='" . base_url('hr/employees/leaves') . "'>Leaves(TATANGALIN TO)</a></li>
         </ul>
     </li>
     <li class='submenu payroll'>
@@ -314,7 +312,7 @@
 
 
 
-          
+
          </ul>
       </div>
    </div>

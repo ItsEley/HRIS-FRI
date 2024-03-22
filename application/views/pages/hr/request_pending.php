@@ -3,13 +3,61 @@
 
 	<?php
 	// $_SESSION[]
-	
+
 	// navbar
 	$this->load->view('templates/nav_bar');
 	// sidebar
 	$this->load->view('templates/sidebar');
 
+	// Assuming this is your_php_script.php
+	if (isset($_POST['request_type']) && !empty($_POST['request_type']) && isset($_POST['id']) && !empty($_POST['id'])) {
+		// Extract the request_type and id
+		$request_type = $_POST['request_type'];
+		$id = $_POST['id'];
+
+		// Perform database query based on request_type and id
+		// Here you need to replace this with your actual database query to fetch the necessary data
+		// Sample code to demonstrate
+		$data = array(); // This will hold the data to be returned
+		if ($request_type == 'LEAVE REQUEST') {
+			// Query to fetch data from leave_request table
+			$sql = "SELECT * FROM f_leaves WHERE id = $id";
+			// Execute your query
+			$result = $conn->query($sql);
+
+			// Check if query executed successfully and fetch data
+			if ($result && $result->num_rows > 0) {
+				$row = $result->fetch_assoc();
+				// Populate $data array with fetched data
+				$data['emp_id'] = $row['emp_id']; // Assuming emp_id is a column in f_leaves table
+				// Add other data to $data array as needed
+			}
+		} elseif ($request_type == 'OUTGOING REQUEST') {
+			// Query to fetch data from outgoing_request table
+			$sql = "SELECT * FROM f_outgoing WHERE id = $id";
+			// Execute your query
+			$result = $conn->query($sql);
+
+			// Check if query executed successfully and fetch data
+			if ($result && $result->num_rows > 0) {
+				$row = $result->fetch_assoc();
+				// Populate $data array with fetched data
+				$data['emp_id'] = $row['emp_id']; // Assuming emp_id is a column in f_outgoing table
+				// Add other data to $data array as needed
+			}
+		}
+		// Add more conditions for other request types if needed
+
+		// Return modal content as HTML
+		echo json_encode($data);
+	} else {
+		// Handle invalid or missing request_type or id parameter
+		echo json_encode(array('error' => 'Invalid request'));
+	}
+
+
 	?>
+
 	<!-- Page Wrapper -->
 	<div class="page-wrapper w-100">
 
@@ -182,6 +230,7 @@
 										$lname = "Unknown";
 									}
 
+									
 									$row_arr[] = array(
 										'id' => $leave_id,
 										'name' => $fname . ' ' . $lname,
@@ -227,29 +276,50 @@
 											<div class="dropdown dropdown-action">
 												<a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
 												<div class="dropdown-menu dropdown-menu-right">
-													<a class="dropdown-item update-req" href="#" data-bs-toggle="modal" data-bs-target="#editModal" data-target-id="<?php echo $row['id']; ?>" data-request-type="<?php echo $row['request_type']; ?>">
+													<a class="dropdown-item update-pending" href="#" data-bs-toggle="modal" data-bs-target="#view_request" data-target-id="<?php echo $row['id']; ?>" data-request-type="<?php echo $row['request_type']; ?>">
 														<i class="fa-solid fa-pencil m-r-5"></i> Edit
 													</a>
+
 													<a class="dropdown-item delete-req" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve" data-target-id="<?php echo $row['id']; ?>"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
 												</div>
 											</div>
 										</td>
 									</tr>
-									<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-										<div class="modal-dialog" role="document">
+
+
+
+									<div class="modal fade" id="view_request" tabindex="-1" aria-labelledby="view_request_label" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered">
 											<div class="modal-content">
 												<div class="modal-header">
-													<h5 class="modal-title" id="editModalLabel">Edit Request</h5>
-													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-														<span aria-hidden="true">&times;</span>
-													</button>
+													<h5 class="modal-title" id="view_request_label">Leave Request Details</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 												</div>
 												<div class="modal-body">
-													<!-- Data will be populated here -->
+													<form id="view_request_form">
+														<div class="mb-3">
+															<label for="vq_leave_id" class="form-label">Leave ID</label>
+															<input type="text" class="form-control" id="vq_leave_id" readonly>
+														</div>
+														<div class="mb-3">
+															<label for="vq_leave_type" class="form-label">Leave Type</label>
+															<input type="text" class="form-control" id="vq_leave_type" readonly>
+														</div>
+														<div class="mb-3">
+															<label for="vq_emp_name" class="form-label">Employee Name</label>
+															<input type="text" class="form-control" id="vq_emp_name" readonly>
+														</div>
+
+													</form>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 												</div>
 											</div>
 										</div>
 									</div>
+
+
 								<?php
 								}
 								?>
@@ -257,38 +327,7 @@
 
 							</tbody>
 						</table>
-						<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit Request</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <?php if(isset($row)): ?>
-                    <?php if($requestType === 'LEAVE REQUEST'): ?>
-                        <p>ID: <?php echo $row['id']; ?></p>
-                        <p>Date Filled: <?php echo $row['date_filled']; ?></p>
-                        <p>Date From: <?php echo $row['date_from']; ?></p>
-                        <p>Date To: <?php echo $row['date_to']; ?></p>
-                        <p>Reason: <?php echo $row['reason']; ?></p>
-                        <p>Employee ID: <?php echo $row['emp_id']; ?></p>
-                    <?php elseif($requestType === 'offbusiness'): ?>
-                        <p>ID: <?php echo $row['id']; ?></p>
-                        <p>Date Filled: <?php echo $row['date_filled']; ?></p>
-                        <p>Date: <?php echo $row['date']; ?></p>
-                        <p>Destination From: <?php echo $row['destination_from']; ?></p>
-                        <p>Destination To: <?php echo $row['destination_to']; ?></p>
-                        <p>Reason: <?php echo $row['reason']; ?></p>
-                        <p>Employee ID: <?php echo $row['emp_id']; ?></p>
-                    <?php endif; ?>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 					</div>
 				</div>
@@ -427,6 +466,58 @@
 
 
 <script>
+	// $(".update-pending").click(function(event) {
+	// 	event.preventDefault(); // Prevent default link behavior
+
+	// 	let leave_id = $(this).attr("data-target-id");
+	// 	let leave_type = $(this).attr("data-request-type");
+
+	// 	// Assuming you have the other necessary data attributes in the HTML
+
+	// 	// Set values in the modal
+	// 	$("#vq_leave_id").val(leave_id);
+	// 	$("#vq_leave_type").val(leave_type);
+	// 	// Set other values accordingly
+
+	// 	// Open the modal
+	// 	$('#view_request').modal('show');
+	// });
+
+	$(".update-pending").click(function(event) {
+		event.preventDefault(); // Prevent default link behavior
+
+		let leave_id = $(this).attr("data-target-id");
+		let leave_type = $(this).attr("data-request-type");
+
+		// Set values in the modal
+		$("#vq_leave_id").val(leave_id);
+		$("#vq_leave_type").val(leave_type);
+		// Set other values accordingly
+
+		// Make AJAX request to fetch data based on request_type
+		let request_type = $(this).attr("data-request-type");
+		$.ajax({
+			url: "", // Leave it empty as it's the same file
+			type: "POST",
+			data: {
+				request_type: request_type,
+				id: leave_id
+			}, // Send the request_type and id to the server
+			success: function(response) {
+				// Populate modal dynamically based on request type
+				$("#modal-body").html(response);
+				// Open the modal
+				$('#view_request').modal('show');
+			},
+			error: function(xhr, status, error) {
+				// Handle error
+				console.error(error);
+			}
+		});
+	});
+
+
+
 	$(document).ready(function() {
 
 		$("li > a[href='<?= base_url('leave_pending') ?>']").parent().parent().css("display", "block") //get sidebar item with link

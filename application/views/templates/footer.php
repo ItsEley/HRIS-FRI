@@ -30,7 +30,8 @@
     <script src="<?= base_url('assets/js/dataTables.bootstrap4.min.js') ?>"></script>
 
     <!-- Theme Settings JS -->
-
+    <script src="<?=base_url('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js')?>"></script>
+    <script src="<?=base_url('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js')?>"></script>
     <script src="<?= base_url('assets/js/greedynav.js') ?>"></script>
 
 

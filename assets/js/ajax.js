@@ -66,7 +66,6 @@ $("#login-form").submit(function(e) {
 
 
 
-
 $(document).ready(function() {
     $('#openSecondModalBtn').on('click', function() {
         var formData = $('#adduser').serializeArray();
@@ -432,30 +431,4 @@ $(document).ready(function() {
     });
 });
 
-$(document).ready(function () {
-    $('.update-req').click(function (e) {
-        e.preventDefault();
 
-        // Extract request type and ID from the clicked link
-        var requestType = $(this).data('request-type');
-        var id = $(this).data('target-id');
-
-        // Make AJAX request to fetch data
-        $.ajax({
-            url: base_url+"humanr/fetch_data",
-            method: 'POST',
-            data: {
-                requestType: requestType,
-                id: id
-            },
-            success: function (response) {
-                // Populate modal with fetched data
-                $('.modal-body').html(response);
-            },
-            error: function (xhr, status, error) {
-                // Handle errors
-                console.error(error);
-            }
-        });
-    });
-});

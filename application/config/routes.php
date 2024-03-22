@@ -29,11 +29,19 @@ $route['hr/dashboard'] = 'humanr/C_hr_dashboard';
 $route['hr/announcement'] = 'humanr/C_hr_announcement';
 $route['hr/profile'] = 'humanr/C_hr_profile';
 $route['hr/profile/settings'] = 'humanr/C_hr_profile';
+
+// hr/employees
 $route['hr/employees'] = 'humanr/C_hr_employees';
 $route['hr/employees-list'] = 'humanr/C_hr_employees_list';
 $route['hr/employees/attendance'] = 'humanr/C_hr_emp_attendace';
 $route['hr/employees/shifts'] = 'humanr/C_hr_emp_shifts';
 $route['hr/employees/leaves'] = 'humanr/C_hr_emp_leaves';
+
+// hr/reports
+$route['hr/reports/timesheet'] = 'humanr/C_hr_report_timesheet';
+
+
+
 
 $route['adduser'] = 'humanr/adduser';
 $route['hr/departments'] = 'humanr/C_hr_departments';
@@ -45,6 +53,7 @@ $route['hr/settings'] = 'humanr/C_hr_settings';
 $route['hr/assets'] = 'humanr/C_hr_assets';
 
 $route['hr/pendingrequests'] = 'humanr/pending_req';
+$route['hr/pendingrequests2'] = 'humanr/pending_req2';
 $route['hr/historyrequests'] = 'humanr/history_req';
 
 // employee
@@ -70,3 +79,13 @@ $route['outgoing_request'] = 'employee/C_outgoing';
 $route['undertime_request'] = 'employee/C_undertime';
 $route['overtime_request'] = 'employee/C_overtime';
 $route['worksched_adjust'] = 'employee/C_sched_adjust'; 
+
+
+
+
+//php_ajax
+$route['ajax/get_data'] = 'datatablec/ajax_get_data';
+
+$route['report/generate'] = 'datatablec/ajax_get_data';
+
+

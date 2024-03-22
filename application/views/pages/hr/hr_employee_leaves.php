@@ -175,9 +175,9 @@
                 </div>
                 <div class="tab-pane" id="solid-tab2">
 
-                
 
-                <div class="card mb-0">
+
+                    <div class="card mb-0">
                         <div class="card-header">
                             <h4 class="card-title mb-0">Leave history</h4>
                             <!-- <p class="card-text">
@@ -189,86 +189,86 @@
 
                             <div class="table-responsive">
 
-                               <!-- data table -->
-            <div class="row ">
-                <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table id="dt_emp_leaves_history" class="datatable table-striped custom-table mb-0">
-                            <thead>
-                                <tr>
+                                <!-- data table -->
+                                <div class="row ">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table id="dt_emp_leaves_history" class="datatable table-striped custom-table mb-0">
+                                                <thead>
+                                                    <tr>
 
-                                    <th>Name</th>
-                                    <th>Date Applied</th>
-                                    <th>Leave Type</th>
-                                    <th>From</th>
-                                    <th>To</th>
-                                    <th>Reason</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
+                                                        <th>Name</th>
+                                                        <th>Date Applied</th>
+                                                        <th>Leave Type</th>
+                                                        <th>From</th>
+                                                        <th>To</th>
+                                                        <th>Reason</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
 
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-
-
-                                // $this->db->where('status', 'pending');
-                                // Execute the query
-                                $query = $this->db->query("SELECT * FROM vw_emp_leaves WHERE status != 'pending'");;
-
-                                foreach ($query->result() as $row) {
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
 
 
+                                                    // $this->db->where('status', 'pending');
+                                                    // Execute the query
+                                                    $query = $this->db->query("SELECT * FROM vw_emp_leaves WHERE status != 'pending'");;
 
-                                ?>
-                                    <tr class="hoverable-row" id="double-click-row_<?php echo $row->leave_id ?>">
+                                                    foreach ($query->result() as $row) {
 
-                                        <td style="max-width: 200px; overflow: hidden; 
+
+
+                                                    ?>
+                                                        <tr class="hoverable-row" id="double-click-row_<?php echo $row->leave_id ?>">
+
+                                                            <td style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
-                                            <?php echo $row->fullname; ?>
-                                        </td>
+                                                                <?php echo $row->fullname; ?>
+                                                            </td>
 
-                                        <td><?php echo $row->date_filled; ?></td>
-                                        <td name="leave_type"><?php echo $row->leave_type; ?></td>
-                                        <td name="date_from"><?php echo formatDateOnly($row->from); ?></td>
-                                        <td name="date_to"><?php echo formatDateOnly($row->to); ?></td>
-                                        <td name="leave_reason" style="max-width: 200px; overflow: hidden; 
+                                                            <td><?php echo $row->date_filled; ?></td>
+                                                            <td name="leave_type"><?php echo $row->leave_type; ?></td>
+                                                            <td name="date_from"><?php echo formatDateOnly($row->from); ?></td>
+                                                            <td name="date_to"><?php echo formatDateOnly($row->to); ?></td>
+                                                            <td name="leave_reason" style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;cursor: pointer;user-select:none" title="Double click to expand"><?php echo $row->reason; ?></td>
 
 
-                                        <td name="status"><?php echo ucwords($row->status); ?></td>
+                                                            <td name="status"><?php echo ucwords($row->status); ?></td>
 
 
-                                        <td>
-                                            <div class="dropdown">
-                                                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="material-icons">more_vert</i>
-                                                </a>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
-                                                    <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?php echo $row->emp_id; ?>">
-                                                        <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                                    </a>
-                                                    <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
-                                                        <i class="fa-regular fa-trash-can m-r-5"></i> Delete
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <!-- /data table -->
+                                                            <td>
+                                                                <div class="dropdown">
+                                                                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                        <i class="material-icons">more_vert</i>
+                                                                    </a>
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
+                                                                        <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?php echo $row->emp_id; ?>">
+                                                                            <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                                                        </a>
+                                                                        <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
+                                                                            <i class="fa-regular fa-trash-can m-r-5"></i> Delete
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    <?php
+                                                    }
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /data table -->
                             </div>
                         </div>
                     </div>
 
-                
+
                 </div>
 
             </div>
@@ -362,7 +362,7 @@
 
         // });
 
-        
+
         // $('#dt_emp_leaves_history').DataTable({
         //     "paging": true, // Enable paging
         //     "ordering": true, // Enable sorting

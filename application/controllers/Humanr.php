@@ -12,6 +12,7 @@ class Humanr extends CI_Controller
 		$this->load->helper('url');
 	}
 
+
 	public function deleteEmployee()
 	{
 		if ($this->input->server('REQUEST_METHOD') === 'POST' && $this->input->post('emp_id')) {
@@ -98,7 +99,7 @@ class Humanr extends CI_Controller
 	{
 
 		if ($this->session->userdata('logged_in')) {
-			$data['title'] = 'HR | Announcement';
+			$data['title'] = 'HR | Announcements';
 			$this->load->view('templates/header', $data);
 			$this->load->view('pages/hr/hr_announcement');
 			$this->load->view('templates/footer');
@@ -112,12 +113,11 @@ class Humanr extends CI_Controller
 	public function C_hr_employees()
 	{
 
-		
-			$data['title'] = 'HR | Employees';
-			$this->load->view('templates/header', $data);
-			$this->load->view('pages/hr/hr_employees');
-			$this->load->view('templates/footer');
-		
+
+		$data['title'] = 'HR | Employees';
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/hr/hr_employees');
+		$this->load->view('templates/footer');
 	}
 
 	public function C_hr_employees_list()
@@ -160,7 +160,7 @@ class Humanr extends CI_Controller
 	public function C_hr_emp_shifts()
 	{
 		if ($this->session->userdata('logged_in')) {
-			$data['title'] = 'HR | Employees';
+			$data['title'] = 'HR | Employees | Shifts';
 			$this->load->view('templates/header', $data);
 			$this->load->view('pages/hr/hr_employees_shift');
 			$this->load->view('templates/footer');
@@ -172,7 +172,7 @@ class Humanr extends CI_Controller
 	public function C_hr_emp_leaves()
 	{
 		if ($this->session->userdata('logged_in')) {
-			$data['title'] = 'HR | Employees';
+			$data['title'] = 'HR | Employees | Leaves';
 			$this->load->view('templates/header', $data);
 			$this->load->view('pages/hr/hr_employee_leaves');
 			$this->load->view('templates/footer');
@@ -181,7 +181,32 @@ class Humanr extends CI_Controller
 		}
 	}
 
-	
+
+	public function pending_req2()
+	{
+
+		$data['title'] = 'HR | Pendings2';
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/hr/request_pending2');
+		$this->load->view('templates/footer');
+	}
+
+	public function C_hr_report_timesheet()
+	{
+		if ($this->session->userdata('logged_in')) {
+			$data['title'] = 'HR | Reports | Timesheet';
+			$this->load->view('templates/header', $data);
+			$this->load->view('pages/hr/hr_report_timesheet');
+			$this->load->view('templates/footer');
+		} else {
+			redirect('');
+		}
+	}
+
+
+
+
+
 
 
 
@@ -507,8 +532,8 @@ class Humanr extends CI_Controller
 
 		$data = array(
 			/*column name*/
-			
-		
+
+
 			'asset_name' => $asset_name,
 			'purchase_date' => $purchase_date,
 			'warranty_start' => $warranty_start,
@@ -516,7 +541,7 @@ class Humanr extends CI_Controller
 			'assetCondition' => $assetcondition,
 			'model' => $model,
 			'serial_number' => $serial_number
-			
+
 		);
 
 		$sql = $this->db->insert('assets', $data);
@@ -565,7 +590,7 @@ class Humanr extends CI_Controller
 	}
 	public function modal1()
 	{
-		
+
 		$this->load->view('templates/header');
 		$this->load->view('modal_view');
 		$this->load->view('templates/footer');
@@ -579,18 +604,18 @@ class Humanr extends CI_Controller
 	{
 		// Retrieve emp_id from POST data
 		$leave_id = $this->input->post('vq_leave_id');
-	
+
 		// Define data to be updated
 		$data = array(
 			// 'id' => ucwords($this->input->post('vq_leave_id')),
 			'status' => ucwords($this->input->post('vq_leave_status'))
-			
+
 		);
-	
+
 		// Update the employee record
 		$this->db->where('id', $leave_id);
 		$sql = $this->db->update('f_leaves', $data);
-	
+
 		// Prepare response
 		$response = array();
 		if ($sql) {
@@ -601,61 +626,36 @@ class Humanr extends CI_Controller
 			$response['status'] = 0;
 			$response['msg'] = 'Failed to update Leave data';
 		}
-	
+
 		// Echo JSON response
 		echo json_encode($response);
 	}
 
-	public function fetch_data() {
-        // Handle AJAX request to fetch data
-        $requestType = $this->input->post('requestType');
-        $id = $this->input->post('id');
+	public function fetch_data()
+	{
+		// Handle AJAX request to fetch data
+		$requestType = $this->input->post('requestType');
+		$id = $this->input->post('id');
 
-        // Perform query based on request type
-        if ($requestType === 'LEAVE REQUEST') {
-            $query = $this->db->get_where('f_leaves', array('id' => $id));
-        } elseif ($requestType === 'offbusiness') {
-            $query = $this->db->get_where('offbusiness_table', array('id' => $id));
-        } else {
-            // Handle invalid request type
-            echo "Invalid request type humanr";
-            return;
-        }
+		// Perform query based on request type
+		if ($requestType === 'LEAVE REQUEST') {
+			$query = $this->db->get_where('f_leaves', array('id' => $id));
+		} elseif ($requestType === 'offbusiness') {
+			$query = $this->db->get_where('offbusiness_table', array('id' => $id));
+		} else {
+			// Handle invalid request type
+			echo "Invalid request type humanr";
+			return;
+		}
 
-        // Check if query was successful
-        if ($query->num_rows() > 0) {
-            $data['row'] = $query->row_array();
-            $data['requestType'] = $requestType; // Pass request type to the view
-            // Load the view and pass fetched data
-            $this->load->view('modal_view', $data);
-        } else {
-            echo "No data found";
-        }
-    }
-
-
-
+		// Check if query was successful
+		if ($query->num_rows() > 0) {
+			$data['row'] = $query->row_array();
+			$data['requestType'] = $requestType; // Pass request type to the view
+			// Load the view and pass fetched data
+			$this->load->view('modal_view', $data);
+		} else {
+			echo "No data found";
+		}
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
