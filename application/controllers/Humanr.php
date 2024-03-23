@@ -181,6 +181,22 @@ class Humanr extends CI_Controller
 		}
 	}
 
+	public function C_hr_calendar()
+	{
+		if ($this->session->userdata('logged_in')) {
+			$data['title'] = 'HR | Calendar';
+			$this->load->view('templates/header', $data);
+			$this->load->view('pages/hr/hr_calendar');
+			$this->load->view('templates/footer');
+		} else {
+			redirect('');
+		}
+	}
+
+
+
+
+
 
 	public function pending_req2()
 	{
@@ -226,20 +242,20 @@ class Humanr extends CI_Controller
 	{
 		$response = array();
 		// Extract data from POST request
-		$fname = $this->input->post('fname');
-		$lname = $this->input->post('lname');
-		$mname = $this->input->post('mname');
-		$nickn = $this->input->post('nickn');
-		$current_add = $this->input->post('current_address');
-		$perm_add = $this->input->post('perm_add');
+		$fname = format_text($this->input->post('fname'));
+		$lname = format_text($this->input->post('lname'));
+		$mname = format_text($this->input->post('mname'));
+		$nickn = format_text($this->input->post('nickn'));
+		$current_add = format_text($this->input->post('current_address'));
+		$perm_add = format_text($this->input->post('perm_add'));
 		$dob = $this->input->post('dob');
-		$pob = $this->input->post('pob');
-		$religion = $this->input->post('religion');
-		$sex = $this->input->post('sex');
-		$civil_status = $this->input->post('civil_status');
+		$pob = format_text($this->input->post('pob'));
+		$religion = format_text($this->input->post('religion'));
+		$sex = format_text($this->input->post('sex'));
+		$civil_status = format_text($this->input->post('civil_status'));
 		$email = $this->input->post('email');
 
-		$password = hashPassword($this->input->post('password'));
+		$password = md5($this->input->post('password'));
 
 		// Handle image upload
 		if (isset($_FILES['capturedImage']) && $_FILES['capturedImage']['error'] == UPLOAD_ERR_OK) {
@@ -253,17 +269,17 @@ class Humanr extends CI_Controller
 		// Add other form data to the data array
 		$data = array(
 			'id' => generateEmployeeCode($full_name),
-			'fname' => ucwords($fname),
-			'mname' => ucwords($mname),
-			'lname' => ucwords($lname),
-			'nickn' => ucwords($nickn),
-			'current_add' => ucwords($current_add),
-			'perm_add' => ucwords($perm_add),
+			'fname' => $fname,
+			'mname' => $mname,
+			'lname' => $lname,
+			'nickn' => $nickn,
+			'current_add' => $current_add,
+			'perm_add' => $perm_add,
 			'dob' => $dob,
-			'pob' => ucwords($pob),
-			'religion' => ucwords($religion),
-			'sex' => ucwords($sex),
-			'civil_status' => ucwords($civil_status),
+			'pob' => $pob,
+			'religion' => $religion,
+			'sex' => $sex,
+			'civil_status' => $civil_status,
 			'email' => $email,
 			'password' => $password,
 			'pfp' => $pfp,
@@ -339,7 +355,9 @@ class Humanr extends CI_Controller
 						'sex' => $row->sex,
 						'civil_status' => $row->civil_status,
 						'pob' => $row->pob,
-						'email' => $row->email
+						'email' => $row->email,
+						'contact_no' => $row->contact_no
+
 					);
 
 					// Add the row data array to the main data array
@@ -368,17 +386,17 @@ class Humanr extends CI_Controller
 
 		// Define data to be updated
 		$data = array(
-			'fname' => ucwords($this->input->post('fname')),
-			'mname' => ucwords($this->input->post('mname')),
-			'lname' => ucwords($this->input->post('lname')),
-			'nickn' => ucwords($this->input->post('nickn')),
-			'current_add' => ucwords($this->input->post('current_add')),
-			'perm_add' => ucwords($this->input->post('perm_add')),
+			'fname' => format_text($this->input->post('fname')),
+			'mname' => format_text($this->input->post('mname')),
+			'lname' => format_text($this->input->post('lname')),
+			'nickn' => format_text($this->input->post('nickn')),
+			'current_add' => format_text($this->input->post('current_add')),
+			'perm_add' => format_text($this->input->post('perm_add')),
 			'dob' => $this->input->post('dob'),
-			'religion' => ucwords($this->input->post('religion')),
-			'sex' => ucwords($this->input->post('sex')),
-			'civil_status' => ucwords($this->input->post('civil_status')),
-			'pob' => ucwords($this->input->post('pob')),
+			'religion' => format_text($this->input->post('religion')),
+			'sex' => format_text($this->input->post('sex')),
+			'civil_status' => format_text($this->input->post('civil_status')),
+			'pob' => format_text($this->input->post('pob')),
 			'contact_no' => $this->input->post('contact_no'),
 			'email' => $this->input->post('email'),
 			// 'password' => $this->input->post('password')

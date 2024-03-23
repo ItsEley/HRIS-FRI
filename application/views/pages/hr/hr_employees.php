@@ -109,7 +109,8 @@
 
             </div>
 
-                <a href="<?php echo base_url('hr/departments#emp_no_roles')?>">Click here to view employees without designated roles.</a>
+
+            <a href="<?php echo base_url('hr/departments#emp_no_roles') ?>">Click here to view employees without designated roles.</a>
 
         </div>
         <!-- /Page Content -->
@@ -118,135 +119,135 @@
 
         <!-- MODALS -->
 
-        
-                <!-- Edit Employee Modal -->
-                <div id="edit_employee" class="modal custom-modal fade" role="dialog">
-                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Edit Employee</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
 
-                            </div>
-                            <div class="modal-body">
-                                <form id="edit_employee" enctype="multipart/form-data" method="post">
-                                    <input class="form-control" type="hidden" name="emp_id">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">First Name <span class="text-danger">*</span></label>
-                                                <input class="form-control" value="" type="text" name="fname">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Middle Name</label>
-                                                <input class="form-control" value="" type="text" name="mname">
+        <!-- Edit Employee Modal -->
+        <div id="edit_employee" class="modal custom-modal fade" role="dialog">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Employee</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
 
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Last Name <span class="text-danger">*</span></label>
-                                                <input class="form-control" value="" type="text" name="lname">
-
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Nickname <span class="text-danger">*</span></label>
-                                                <input class="form-control" type="text" name="nickn">
-
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Current Address</label>
-                                                <input class="form-control" type="text" name="current_add">
-
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Permanent Address</label>
-                                                <input class="form-control" type="text" name="perm_add">
-
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Date Of Birth <span class="text-danger">*</span></label>
-                                                <div class="cal-icon"><input class="form-control" name="dob" type="date"></div>
-
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Religion </label>
-                                                <input class="form-control" type="text" name="religion">
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Sex</label>
-                                                <select class="select form-control" name="sex">
-                                                    <option value="M">Male</option>
-                                                    <option value="F">Female</option>
-                                                    <option value="B">Bakla</option>
-
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Civil Status </label>
-                                                <select class="select form-control" name="civil_status">
-                                                    <option value="N/A">N/A</option>
-                                                    <option value="Single">Single</option>
-                                                    <option value="Married">Married</option>
-                                                    <option value="Live In">Live In</option>
-                                                    <option value="Widowed">Widowed</option>
-
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Place of Birth <span class="text-danger">*</span></label>
-                                                <input class="form-control" type="text" name="pob">
-                                            </div>
-                                        </div>
-
-
-
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Email <span class="text-danger">*</span></label>
-                                                <input class="form-control" type="email" name="email">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-sm-6">
-                                            <div class="input-block mb-3">
-                                                <label class="col-form-label">Contact Number <span class="text-danger">*</span></label>
-                                                <input class="form-control" type="text" name="contact_no">
-                                            </div>
-                                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <form id="edit_employee" enctype="multipart/form-data" method="post">
+                            <input class="form-control" type="hidden" name="emp_id">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">First Name <span class="text-danger">*</span></label>
+                                        <input class="form-control" value="" type="text" name="fname">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Middle Name</label>
+                                        <input class="form-control" value="" type="text" name="mname">
 
                                     </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Last Name <span class="text-danger">*</span></label>
+                                        <input class="form-control" value="" type="text" name="lname">
 
-                                    <div class="submit-section">
-                                        <button type="submit" class="btn btn-primary submit-btn">Save</button>
                                     </div>
-                                </form>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Nickname <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" name="nickn">
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Current Address</label>
+                                        <input class="form-control" type="text" name="current_add">
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Permanent Address</label>
+                                        <input class="form-control" type="text" name="perm_add">
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Date Of Birth <span class="text-danger">*</span></label>
+                                        <div class="cal-icon"><input class="form-control" name="dob" type="date"></div>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Religion </label>
+                                        <input class="form-control" type="text" name="religion">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Sex</label>
+                                        <select class="select form-control" name="sex">
+                                            <option value="M">Male</option>
+                                            <option value="F">Female</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Civil Status </label>
+                                        <select class="select form-control" name="civil_status">
+                                            <option value="N/A">N/A</option>
+                                            <option value="Single">Single</option>
+                                            <option value="Married">Married</option>
+                                            <option value="Live In">Live In</option>
+                                            <option value="Widowed">Widowed</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Place of Birth <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" name="pob">
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-sm-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Email <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="email" name="email">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="input-block mb-3">
+                                        <label class="col-form-label">Contact Number <span class="text-danger">*</span></label>
+                                        <input class="form-control input-mask" type="text" name="contact_no">
+
+                                    </div>
+                                </div>
+
                             </div>
-                        </div>
+
+                            <div class="submit-section">
+                                <button type="submit" class="btn btn-primary submit-btn">Save</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <!-- /Edit Employee Modal -->
+            </div>
+        </div>
+        <!-- /Edit Employee Modal -->
 
 
 
@@ -380,15 +381,15 @@
                                 <div class="col-md-6">
                                     <div class="input-block mb-3">
                                         <label class="col-form-label">Role <span class="text-danger">*</span></label>
-                                        <select class="form-select form-control" name="role" id = "add_emp_role">                                      
-                                        <option value="">Add role</option>
+                                        <select class="form-select form-control" name="role" id="add_emp_role">
+                                            <option value="">Add role</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6" hidden>
                                     <div class="input-block mb-3">
-                                        <label class="col-form-label">Add role on <span id = "add_selected_dep">{DEPARTMENT}</span><span class="text-danger">*</span></label>
+                                        <label class="col-form-label">Add role on <span id="add_selected_dep">{DEPARTMENT}</span><span class="text-danger">*</span></label>
                                         <input class="form-control" type="text" name="contact">
                                     </div>
                                 </div>
@@ -457,57 +458,57 @@
 
 
         <div class="modal custom-modal fade" id="delete_employee" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="form-header">
-                    <h3>Delete Employee</h3>
-                    <p>Are you sure want to delete?</p>
-                </div>
-                <div class="modal-btn delete-action">
-                    <div class="row">
-                        <div class="col-6">
-                            <a href="javascript:void(0);" class="btn btn-primary continue-btn" id="confirmFirstDeleteBtn">Delete</a>
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="form-header">
+                            <h3>Delete Employee</h3>
+                            <p>Are you sure want to delete?</p>
                         </div>
-                        <div class="col-6">
-                            <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Second Confirmation Modal -->
-<div class="modal custom-modal fade" id="confirm_delete" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="form-header">
-                    <h3>Confirmation</h3>
-                    <p>Are you really really really sure?</p>
-                </div>
-                <div class="modal-btn delete-action">
-                    <div class="row">
-                        <div class="col-6">
-                            <a href="javascript:void(0);" class="btn btn-primary continue-btn" id="confirmFinalDeleteBtn">Yes, Delete</a>
-                        </div>
-                        <div class="col-6">
-                            <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                        <div class="modal-btn delete-action">
+                            <div class="row">
+                                <div class="col-6">
+                                    <a href="javascript:void(0);" class="btn btn-primary continue-btn" id="confirmFirstDeleteBtn">Delete</a>
+                                </div>
+                                <div class="col-6">
+                                    <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Second Confirmation Modal -->
+        <div class="modal custom-modal fade" id="confirm_delete" role="dialog">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="form-header">
+                            <h3>Confirmation</h3>
+                            <p>Are you really really really sure?</p>
+                        </div>
+                        <div class="modal-btn delete-action">
+                            <div class="row">
+                                <div class="col-6">
+                                    <a href="javascript:void(0);" class="btn btn-primary continue-btn" id="confirmFinalDeleteBtn">Yes, Delete</a>
+                                </div>
+                                <div class="col-6">
+                                    <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- /Delete Employee Modal -->
+
+
     </div>
-</div>
-
-    <!-- /Delete Employee Modal -->
-
-
-</div>
-<!-- /Page Wrapper -->
+    <!-- /Page Wrapper -->
 </div>
 
 <!-- /Main Wrapper -->
@@ -643,7 +644,13 @@
         });
 
 
+        $('.input-mask[name="contact_no"]').inputmask({
+            mask: '0999-999-9999',
+            placeholder: 'X'
+        });
+
+
+
 
     }) //DOMContentLoaded end 
 </script>
-

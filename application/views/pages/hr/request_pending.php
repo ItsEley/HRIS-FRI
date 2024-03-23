@@ -146,17 +146,18 @@
 						<label class="focus-label">Leave Type</label>
 					</div>
 				</div>
+				
 				<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-					<div class="input-block mb-3 form-focus select-focus">
-						<select class="select form-control floating">
-							<option> -- Select -- </option>
+					<div class="input-group mb-3">
+						<select class="form-select">
+							<option selected> -- Select -- </option>
 							<option> Pending </option>
 							<option> Approved </option>
 							<option> Rejected </option>
 						</select>
-						<label class="focus-label">Leave Status</label>
 					</div>
 				</div>
+
 				<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
 					<div class="input-block mb-3 form-focus">
 						<div class="cal-icon">
@@ -230,7 +231,7 @@
 										$lname = "Unknown";
 									}
 
-									
+
 									$row_arr[] = array(
 										'id' => $leave_id,
 										'name' => $fname . ' ' . $lname,

@@ -37,12 +37,12 @@
                         <table id="dt_emp_shift" class="datatable table-striped custom-table mb-0">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th hidden>ID</th>
                                     <th>Name</th>
                                     <th>Deparment</th>
-                                    <th>Day-off</th>
-                                    <th>Next day-off</th>
-                                    <th>Shift</th>
+                                    <th>Time-in</th>
+                                    <th>Time-out</th>
+                                    <th>Total Hours Worked</th>
 
                                 </tr>
                             </thead>
@@ -120,8 +120,8 @@
 <!-- id, name, age, department -->
 <script>
     $(document).ready(function() {
-        $("li > a[href='<?= base_url('hr/employees/shifts') ?>']").addClass("active");
-        $("li > a[href='<?= base_url('hr/employees/shifts') ?>']").parent().parent().css("display", "block")
+        $("li > a[href='<?= base_url('hr/reports/timesheet') ?>']").addClass("active");
+        $("li > a[href='<?= base_url('hr/reports/timesheet') ?>']").parent().parent().css("display", "block")
 
 
         

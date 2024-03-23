@@ -116,5 +116,15 @@ function generateEmployeeCode($name)
 
 
 
+function format_text($string){
+
+    $string = strtolower($string);
+    $string = ucwords($string); 
+    return $string;
+
+
+}
+
+
 
 ?>

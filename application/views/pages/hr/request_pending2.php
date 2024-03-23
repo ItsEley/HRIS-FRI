@@ -10,6 +10,54 @@
 <!-- Main Wrapper -->
 <div class="main-wrapper">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
+    <?php
+
+    if (isset($_POST['request_type']) && !empty($_POST['request_type']) && isset($_POST['id']) && !empty($_POST['id'])) {
+        // Extract the request_type and id
+        $request_type = $_POST['request_type'];
+        $id = $_POST['id'];
+
+        // Perform database query based on request_type and id
+        // Here you need to replace this with your actual database query to fetch the necessary data
+        // Sample code to demonstrate
+        $data = array(); // This will hold the data to be returned
+        if ($request_type == 'LEAVE REQUEST') {
+            // Query to fetch data from leave_request table
+            $sql = "SELECT * FROM f_leaves WHERE id = $id";
+            // Execute your query
+            $result = $conn->query($sql);
+
+            // Check if query executed successfully and fetch data
+            if ($result && $result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                // Populate $data array with fetched data
+                $data['emp_id'] = $row['emp_id']; // Assuming emp_id is a column in f_leaves table
+                // Add other data to $data array as needed
+            }
+        } elseif ($request_type == 'OUTGOING REQUEST') {
+            // Query to fetch data from outgoing_request table
+            $sql = "SELECT * FROM f_outgoing WHERE id = $id";
+            // Execute your query
+            $result = $conn->query($sql);
+
+            // Check if query executed successfully and fetch data
+            if ($result && $result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                // Populate $data array with fetched data
+                $data['emp_id'] = $row['emp_id']; // Assuming emp_id is a column in f_outgoing table
+                // Add other data to $data array as needed
+            }
+        }
+        // Add more conditions for other request types if needed
+
+        // Return modal content as HTML
+        echo json_encode($data);
+    } else {
+        // Handle invalid or missing request_type or id parameter
+        echo json_encode(array('error' => 'Invalid request'));
+    }
+
+    ?>
     <?php $this->load->view('templates/nav_bar'); ?>
     <!-- /Header -->
     <!-- Sidebar -->
@@ -75,7 +123,6 @@
 
                     // Execute the query
                     $query = $this->db->get();
-
                     $data['count'] = $query->row_array()['count'];
                     $data['label'] = "Active Leaves";
 
@@ -202,25 +249,30 @@
                                 <table id="leavereq_dt" class="datatable table-striped custom-table mb-0">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Date Filled</th>
-                                            <th>Leave Type</th>
-                                            <th>Date From</th>
-                                            <th>Date To</th>
-                                            <th>Reason</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
+                                            <th class="text-center">Name</th>
+                                            <th class="text-center">Date Filled</th>
+                                            <th class="text-center">Leave Type</th>
+                                            <th class="text-center">Date From</th>
+                                            <th class="text-center">Date To</th>
+                                            <th class="text-center">Reason</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $query = $this->db->query("SELECT * FROM f_leaves WHERE status = 'pending'");;
+                                        $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_leaves f 
+                                            LEFT JOIN employee e ON f.emp_id = e.id 
+                                            WHERE f.status = 'pending'");
                                         foreach ($query->result() as $row) {
+                                            $fname = $row->fname;
+                                            $lname = $row->lname;
+                                            $fullname = $fname . ' ' . $lname;
                                         ?>
-                                            <tr class="hoverable-row" id="double-click-row_<?php echo $row->emp_id ?>">
+                                            <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
-                                                    <?php echo $row->emp_id; ?>
+                                                    <?php echo $fullname; ?>
                                                 </td>
                                                 <td name="date_filled"><?php echo formatDateOnly($row->date_filled); ?></td>
                                                 <td name="leave_type"><?php echo $row->type_of_leave; ?></td>
@@ -234,8 +286,11 @@
                                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                                             <i class="material-icons">more_vert</i>
                                                         </a>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
-                                                            <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_leavereq" data-emp-id="<?php echo $row->emp_id; ?>">
+                                                        <div class="dropdown-menu update-leave" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
+                                                            <!-- <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee"data-leave-id="<?php echo $row->id; ?>" data-request-type="LEAVE REQUEST" data-emp-id="<?php echo $row->emp_id; ?>">
+                                                                <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                                            </a> -->
+                                                            <a class="dropdown-item update-pending" href="#" data-bs-toggle="modal" data-bs-target="#view_request" data-target-id="<?php echo $row->id; ?>" data-request-type="LEAVE REQUEST">
                                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                                             </a>
                                                             <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
@@ -245,6 +300,84 @@
                                                     </div>
                                                 </td>
                                             </tr>
+
+                                            <div class="modal fade" id="edit_employee" tabindex="-1" aria-labelledby="edit_employee_label" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg ">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <!-- <h5 class="modal-title">Outgoing Pass</h5> -->
+                                                            <h3 class="m-0 text-center">Leave Request Details</h3>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row mb-4 justify-content-center"> <!-- Added justify-content-center to center horizontally -->
+                                                                <div class="col-md-9 d-flex justify-content-center align-items-center"> <!-- Added justify-content-center to center horizontally -->
+                                                                    <div class="account-logo">
+                                                                        <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" alt="Famco Retail Inc." style="max-width: 100px; height: auto;" /> <!-- Adjusted logo size -->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <form id="update_leave" method="posts">
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-md-6">
+                                                                        <label for="emp_name" class="form-label">Employee Name</label>
+                                                                        <input type="text" class="form-control text-left" id="emp_name" readonly>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label for="date_filled" class="form-label">Date Filled</label>
+                                                                        <input type="text" class="form-control" id="date_filled" readonly>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-md-4">
+                                                                        <label for="leave_type">Leave Type</label>
+                                                                        <div>
+                                                                            <input type="text" class="form-control" id="leave_type" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label for="date_from">Date From</label>
+                                                                        <div>
+                                                                            <input type="text" class="form-control" id="date_from" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label for="date_to">Date To</label>
+                                                                        <div>
+                                                                            <input type="text" class="form-control" id="date_to" readonly>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+
+
+                                                                <div class="mb-3 row">
+                                                                    <label for="leave_reason">Leave Reason</label>
+                                                                    <div>
+                                                                        <textarea class="form-control" id="leave_reason" rows="3" readonly></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
+                                                                        <div class="input-block mb-3 form-focus select-focus text-center">
+                                                                            <select class="select form-control floating">
+                                                                                <option> -- Select -- </option>
+                                                                                <option> Pending </option>
+                                                                                <option> Approved </option>
+                                                                                <option> Rejected </option>
+                                                                            </select>
+                                                                            <label class="focus-label">Leave Status</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         <?php
                                         }
                                         ?>
@@ -272,35 +405,38 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <!-- data table -->
+
                                 <div class="row ">
                                     <div class="col-md-12">
                                         <div class="table-responsive">
                                             <table id="outgoingreq_dt" class="datatable table-striped custom-table mb-0">
                                                 <thead>
                                                     <tr>
-                                                        <th>Name</th>
-                                                        <th>Date Filled</th>
-                                                        <th>Destination</th>
-                                                        <th>Time From</th>
-                                                        <th>Time To</th>
-                                                        <th>Reason</th>
-                                                        <th>Status</th>
-                                                        <th>Action</th>
+                                                        <th class="text-center">Name</th>
+                                                        <th class="text-center">Date Filled</th>
+                                                        <th class="text-center">Destination</th>
+                                                        <th class="text-center">Time From</th>
+                                                        <th class="text-center">Time To</th>
+                                                        <th class="text-center">Reason</th>
+                                                        <th class="text-center">Status</th>
+                                                        <th class="text-center">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    // $this->db->where('status', 'pending');
-                                                    // Execute the query
-                                                    $query = $this->db->query("SELECT * FROM f_outgoing WHERE status = 'pending'");;
 
+                                                    $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_outgoing f 
+                                            LEFT JOIN employee e ON f.emp_id = e.id 
+                                            WHERE f.status = 'pending'");
                                                     foreach ($query->result() as $row) {
+                                                        $fname = $row->fname;
+                                                        $lname = $row->lname;
+                                                        $fullname = $fname . ' ' . $lname;
                                                     ?>
                                                         <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                             <td style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
-                                                                <?php echo $row->emp_id; ?>
+                                                                <?php echo $fullname; ?>
                                                             </td>
                                                             <td><?php echo formatDateOnly($row->date_filled); ?></td>
                                                             <td name="leave_type"><?php echo $row->going_to; ?></td>
@@ -315,9 +451,13 @@
                                                                         <i class="material-icons">more_vert</i>
                                                                     </a>
                                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
-                                                                        <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?php echo $row->emp_id; ?>">
+                                                                        <!-- <a class="dropdown-item update-outgoing" href="#" data-bs-toggle="modal" data-bs-target="#edit_outgoing" data-emp-id="<?php echo $row->emp_id; ?>">
+                                                                                <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                                                            </a> -->
+                                                                        <a class="dropdown-item update-outgoing" href="#" data-bs-toggle="modal" data-bs-target="#edit_outgoing" data-og-id="<?php echo $row->id; ?>" data-request-type="OUTGOING REQUEST">
                                                                             <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                                                         </a>
+
                                                                         <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
                                                                             <i class="fa-regular fa-trash-can m-r-5"></i> Delete
                                                                         </a>
@@ -325,6 +465,87 @@
                                                                 </div>
                                                             </td>
                                                         </tr>
+
+                                                        <div class="modal fade" id="edit_outgoing" tabindex="-1" aria-labelledby="edit_outgoing_label" aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg ">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <!-- <h5 class="modal-title">Outgoing Pass</h5> -->
+                                                                        <h3 class="m-0 text-center">Outgoing Request Details</h3>
+                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="row mb-4 justify-content-center"> <!-- Added justify-content-center to center horizontally -->
+                                                                            <div class="col-md-9 d-flex justify-content-center align-items-center"> <!-- Added justify-content-center to center horizontally -->
+                                                                                <div class="account-logo">
+                                                                                    <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" alt="Famco Retail Inc." style="max-width: 100px; height: auto;" /> <!-- Adjusted logo size -->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <form id="update_outgoing" method="post">
+                                                                            <div class="mb-3 row">
+                                                                                <div class="col-md-6">
+                                                                                    <label for="emp_name" class="form-label">Employee Name</label>
+                                                                                    <input type="text" class="form-control text-left" id="emp_name" readonly>
+
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <label for="date_filled" class="form-label">Date Filled</label>
+                                                                                    <input type="text" class="form-control" id="date_filled" readonly>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="mb-3 row">
+                                                                                <div class="col-md-4">
+                                                                                    <label for="leave_type">Destination</label>
+                                                                                    <div>
+                                                                                        <input type="text" class="form-control" id="destin" readonly>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-4">
+                                                                                    <label for="date_from">Time From</label>
+                                                                                    <div>
+                                                                                        <input type="text" class="form-control" id="date_from" readonly>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-4">
+                                                                                    <label for="date_to">Time To</label>
+                                                                                    <div>
+                                                                                        <input type="text" class="form-control" id="date_to" readonly>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="mb-3 row">
+                                                                                <label for="leave_reason">Reason</label>
+                                                                                <div>
+                                                                                    <textarea class="form-control" id="outgoing_reason" rows="3" readonly></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="mb-3 row">
+                                                                                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
+                                                                                    <div class="input-block mb-3 form-focus select-focus text-center">
+                                                                                        <select class="select form-control floating">
+                                                                                            <option> -- Select -- </option>
+                                                                                            <option> Pending </option>
+                                                                                            <option> Approved </option>
+                                                                                            <option> Rejected </option>
+                                                                                        </select>
+                                                                                        <label class="focus-label">Outgoing Status</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                        </form>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
                                                     <?php
                                                     }
                                                     ?>
@@ -333,7 +554,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- /data table -->
+
                             </div>
                         </div>
                     </div>
@@ -356,28 +577,33 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="leavereq_dt" class="datatable table-striped custom-table mb-0">
+                                <table id="overtime_dt" class="datatable table-striped custom-table mb-0">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Date Filled</th>
-                                            <th>OT Date</th>
-                                            <th>Time From</th>
-                                            <th>Time To</th>
-                                            <th>Reason</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
+                                            <th class="text-center">Name</th>
+                                            <th class="text-center">Date Filled</th>
+                                            <th class="text-center">OT Date</th>
+                                            <th class="text-center">Time From</th>
+                                            <th class="text-center">Time To</th>
+                                            <th class="text-center">Reason</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $query = $this->db->query("SELECT * FROM f_overtime WHERE status = 'pending'");;
+                                        $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_overtime f 
+                                       LEFT JOIN employee e ON f.emp_id = e.id 
+                                       WHERE f.status = 'pending'");
                                         foreach ($query->result() as $row) {
+                                            $fname = $row->fname;
+                                            $lname = $row->lname;
+                                            $fullname = $fname . ' ' . $lname;
                                         ?>
                                             <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
-                                                    <?php echo $row->emp_id; ?>
+                                                    <?php echo $fullname; ?>
                                                 </td>
                                                 <td><?php echo formatDateOnly($row->date_filled); ?></td>
                                                 <td name="leave_type"><?php echo formatDateOnly($row->date_ot); ?></td>
@@ -394,7 +620,7 @@
                                                             <i class="material-icons">more_vert</i>
                                                         </a>
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
-                                                            <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?php echo $row->emp_id; ?>">
+                                                            <a class="dropdown-item update-overtime" href="#" data-bs-toggle="modal" data-bs-target="#edit_overtime" data-ot-id="<?php echo $row->id; ?>">
                                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                                             </a>
                                                             <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
@@ -404,6 +630,84 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                            <div class="modal fade" id="edit_overtime" tabindex="-1" aria-labelledby="edit_overtime_label" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg ">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <!-- <h5 class="modal-title">Outgoing Pass</h5> -->
+                                                            <h3 class="m-0 text-center">Overtime Request Details</h3>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row mb-4 justify-content-center"> <!-- Added justify-content-center to center horizontally -->
+                                                                <div class="col-md-9 d-flex justify-content-center align-items-center"> <!-- Added justify-content-center to center horizontally -->
+                                                                    <div class="account-logo">
+                                                                        <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" alt="Famco Retail Inc." style="max-width: 100px; height: auto;" /> <!-- Adjusted logo size -->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <form id="update_outgoing" method="post">
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-md-6">
+                                                                        <label for="emp_name" class="form-label">Employee Name</label>
+                                                                        <input type="text" class="form-control text-left" id="emp_name" readonly>
+
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label for="date_filled" class="form-label">Date Filled</label>
+                                                                        <input type="text" class="form-control" id="date_filled" readonly>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-md-4">
+                                                                        <label for="leave_type">Overtime Date</label>
+                                                                        <div>
+                                                                            <input type="text" class="form-control" id="ot_date" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label for="date_from">Time From</label>
+                                                                        <div>
+                                                                            <input type="text" class="form-control" id="time_from" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label for="date_to">Time To</label>
+                                                                        <div>
+                                                                            <input type="text" class="form-control" id="time_to" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-3 row">
+                                                                    <label for="leave_reason">Reason</label>
+                                                                    <div>
+                                                                        <textarea class="form-control" id="ot_reason" rows="3" readonly></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
+                                                                        <div class="input-block mb-3 form-focus select-focus text-center">
+                                                                            <select class="select form-control floating">
+                                                                                <option> -- Select -- </option>
+                                                                                <option> Pending </option>
+                                                                                <option> Approved </option>
+                                                                                <option> Rejected </option>
+                                                                            </select>
+                                                                            <label class="focus-label">OT Status</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         <?php
                                         }
                                         ?>
@@ -435,30 +739,35 @@
 
                             <div class="table-responsive">
 
-                                <table id="leavereq_dt" class="datatable table-striped custom-table mb-0">
+                                <table id="undertime_dt" class="datatable table-striped custom-table mb-0">
                                     <thead>
                                         <tr>
 
-                                            <th>Name</th>
-                                            <th>Date Filled</th>
-                                            <th>Undertime Date</th>
-                                            <th>Time From</th>
-                                            <th>Time To</th>
-                                            <th>Reason</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
+                                            <th class="text-center">Name</th>
+                                            <th class="text-center">Date Filled</th>
+                                            <th class="text-center">Undertime Date</th>
+                                            <th class="text-center">Time From</th>
+                                            <th class="text-center">Time To</th>
+                                            <th class="text-center">Reason</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Action</th>
 
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $query = $this->db->query("SELECT * FROM f_undertime WHERE status = 'pending'");;
+                                        $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_undertime f 
+                                       LEFT JOIN employee e ON f.emp_id = e.id 
+                                       WHERE f.status = 'pending'");
                                         foreach ($query->result() as $row) {
+                                            $fname = $row->fname;
+                                            $lname = $row->lname;
+                                            $fullname = $fname . ' ' . $lname;
                                         ?>
                                             <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
                     text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
-                                                    <?php echo $row->emp_id; ?>
+                                                    <?php echo $fullname; ?>
                                                 </td>
                                                 <td><?php echo formatDateOnly($row->date_filled); ?></td>
                                                 <td name="leave_type"><?php echo formatDateOnly($row->date_filled); ?></td>
@@ -474,7 +783,7 @@
                                                             <i class="material-icons">more_vert</i>
                                                         </a>
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
-                                                            <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?php echo $row->emp_id; ?>">
+                                                            <a class="dropdown-item update_undertime" href="#" data-bs-toggle="modal" data-bs-target="#edit_undertime" data-ut-id="<?php echo $row->id; ?>">
                                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                                             </a>
                                                             <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
@@ -484,6 +793,87 @@
                                                     </div>
                                                 </td>
                                             </tr>
+
+                                            <div class="modal fade" id="edit_undertime" tabindex="-1" aria-labelledby="edit_undertime_label" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg ">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <!-- <h5 class="modal-title">Outgoing Pass</h5> -->
+                                                            <h3 class="m-0 text-center">Undertime Request Details</h3>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row mb-4 justify-content-center"> <!-- Added justify-content-center to center horizontally -->
+                                                                <div class="col-md-9 d-flex justify-content-center align-items-center"> <!-- Added justify-content-center to center horizontally -->
+                                                                    <div class="account-logo">
+                                                                        <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" alt="Famco Retail Inc." style="max-width: 100px; height: auto;" /> <!-- Adjusted logo size -->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <form id="update_outgoing" method="post">
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-md-6">
+                                                                        <label for="emp_name" class="form-label">Employee Name</label>
+                                                                        <input type="text" class="form-control text-left" id="emp_name" readonly>
+
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label for="date_filled" class="form-label">Date Filled</label>
+                                                                        <input type="text" class="form-control" id="date_filled" readonly>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-md-4">
+                                                                        <label for="leave_type">Undertime Date</label>
+                                                                        <div>
+                                                                            <input type="text" class="form-control" id="ot_date" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label for="date_from">Time From</label>
+                                                                        <div>
+                                                                            <input type="text" class="form-control" id="time_from" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label for="date_to">Time To</label>
+                                                                        <div>
+                                                                            <input type="text" class="form-control" id="time_to" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-3 row">
+                                                                    <label for="leave_reason">Reason</label>
+                                                                    <div>
+                                                                        <textarea class="form-control" id="ot_reason" rows="3" readonly></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
+                                                                        <div class="input-block mb-3 form-focus select-focus text-center">
+                                                                            <select class="select form-control floating">
+                                                                                <option> -- Select -- </option>
+                                                                                <option> Pending </option>
+                                                                                <option> Approved </option>
+                                                                                <option> Rejected </option>
+                                                                            </select>
+                                                                            <label class="focus-label">UT Status</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
                                         <?php
                                         }
                                         ?>
@@ -492,10 +882,8 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="tab-pane" id="solid-tab5">
-
                     <div class="card mb-0">
                         <div class="card-header">
                             <div class="row align-items-center">
@@ -512,34 +900,37 @@
                             </div>
                         </div>
                         <div class="card-body">
-
                             <div class="table-responsive">
-
-                                <table id="leavereq_dt" class="datatable table-striped custom-table mb-0">
+                                <table id="ob_dt" class="datatable table-striped custom-table mb-0">
                                     <thead>
                                         <tr>
-
-                                            <th>Name</th>
-                                            <th>Date Applied</th>
-                                            <th>Destin From</th>
-                                            <th>Destin To</th>
-                                            <th>Time From</th>
-                                            <th>Time To</th>
-                                            <th>Reason</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-
+                                            <th class="text-center">Name</th>
+                                            <th class="text-center">Date Applied</th>
+                                            <th class="text-center">Destin From</th>
+                                            <th class="text-center">Destin To</th>
+                                            <th class="text-center">Time From</th>
+                                            <th class="text-center">Time To</th>
+                                            <th class="text-center">Reason</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $query = $this->db->query("SELECT * FROM f_off_bussiness WHERE status = 'pending'");;
+                                        $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_off_bussiness f 
+                                LEFT JOIN employee e ON f.emp_id = e.id 
+                                WHERE f.status = 'pending'");
                                         foreach ($query->result() as $row) {
+                                            $fname = $row->fname;
+                                            $lname = $row->lname;
+                                            $fullname = $fname . ' ' . $lname;
+
                                         ?>
+
                                             <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
                     text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
-                                                    <?php echo $row->emp_id; ?>
+                                                    <?php echo $fullname; ?>
                                                 </td>
                                                 <td><?php echo formatDateOnly($row->date_filled); ?></td>
                                                 <td name="leave_type"><?php echo $row->destin_from; ?></td>
@@ -557,7 +948,7 @@
                                                             <i class="material-icons">more_vert</i>
                                                         </a>
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
-                                                            <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?php echo $row->emp_id; ?>">
+                                                            <a class="dropdown-item update_ob" href="#" data-bs-toggle="modal" data-bs-target="#edit_ob" data-ob-id="<?php echo $row->id; ?>">
                                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                                             </a>
                                                             <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
@@ -567,6 +958,96 @@
                                                     </div>
                                                 </td>
                                             </tr>
+
+                                            <div class="modal fade" id="edit_ob" tabindex="-1" aria-labelledby="edit_ob_label" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg ">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <!-- <h5 class="modal-title">Outgoing Pass</h5> -->
+                                                            <h3 class="m-0 text-center">Official Business Request Details</h3>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row mb-4 justify-content-center"> <!-- Added justify-content-center to center horizontally -->
+                                                                <div class="col-md-9 d-flex justify-content-center align-items-center"> <!-- Added justify-content-center to center horizontally -->
+                                                                    <div class="account-logo">
+                                                                        <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" alt="Famco Retail Inc." style="max-width: 100px; height: auto;" /> <!-- Adjusted logo size -->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <form id="update_outgoing" method="post">
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-md-6">
+                                                                        <label for="emp_name" class="form-label">Employee Name</label>
+                                                                        <input type="text" class="form-control text-left" id="emp_name" readonly>
+
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label for="date_filled" class="form-label">Date Filled</label>
+                                                                        <input type="text" class="form-control" id="date_filled" readonly>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-md-6">
+                                                                        <label for="leave_type">Destination From</label>
+                                                                        <div>
+                                                                            <input type="text" class="form-control" id="destin_from" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label for="leave_type">Destination To</label>
+                                                                        <div>
+                                                                            <input type="text" class="form-control" id="destin_to" readonly>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                </div>
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-md-6">
+                                                                        <label for="date_from">Time From</label>
+                                                                        <div>
+                                                                            <input type="text" class="form-control" id="time_from" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label for="date_to">Time To</label>
+                                                                        <div>
+                                                                            <input type="text" class="form-control" id="time_to" readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <label for="leave_reason">Reason</label>
+                                                                    <div>
+                                                                        <textarea class="form-control" id="ot_reason" rows="3" readonly></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
+                                                                        <div class="input-block mb-3 form-focus select-focus text-center">
+                                                                            <select class="select form-control floating">
+                                                                                <option> -- Select -- </option>
+                                                                                <option> Pending </option>
+                                                                                <option> Approved </option>
+                                                                                <option> Rejected </option>
+                                                                            </select>
+                                                                            <label class="focus-label">OB Status</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
                                         <?php
                                         }
                                         ?>
@@ -592,7 +1073,7 @@
     <div class="modal-dialog modal-lg"> <!-- Increased modal size to large -->
         <form id="leave_request" method="post">
             <div class="modal-content">
-            <div class="modal-header">
+                <div class="modal-header">
                     <!-- <h5 class="modal-title">Outgoing Pass</h5> -->
                     <h3 class="m-0 text-center">Leave Request Form</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -719,7 +1200,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="outgoing_date" class="form-label">Date</label>
-                                <input type="date" class="form-control" name="outgoing_date" id="outgoing_date" />
+                                <input type="date" class="form-control" name="outgoing_date" id="outgoing_date" min="<?php echo date('Y-m-d'); ?>" />
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -760,19 +1241,17 @@
         <form method="post" id="ot_request">
             <div class="modal-content">
                 <div class="modal-header">
-
+                    <!-- <h5 class="modal-title">Outgoing Pass</h5> -->
+                    <h3 class="m-0 text-center">Overtime Request Form</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container">
-                        <div class="row mb-4">
-                            <div class="col-md-3">
+                        <div class="row mb-4 justify-content-center"> <!-- Added justify-content-center to center horizontally -->
+                            <div class="col-md-9 d-flex justify-content-center align-items-center"> <!-- Added justify-content-center to center horizontally -->
                                 <div class="account-logo">
-                                    <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" alt="Famco Retail Inc." style="max-width: 150px; height: auto;" /> <!-- Adjusted logo size -->
+                                    <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" alt="Famco Retail Inc." style="max-width: 100px; height: auto;" /> <!-- Adjusted logo size -->
                                 </div>
-                            </div>
-                            <div class="col-md-9 d-flex align-items-center">
-                                <h3 class="m-0">Overtime Request Form</h3>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -800,9 +1279,8 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="ot_date" class="form-label">Date of Overtime</label>
-                                <input type="date" class="form-control" name="ot_date" id="ot_date" />
+                                <input type="date" class="form-control" name="ot_date" id="ot_date" min="<?php echo date('Y-m-d'); ?>" />
                             </div>
-
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -813,8 +1291,6 @@
                                 <label for="to_time" class="form-label">Time to</label>
                                 <input type="time" class="form-control" name="to_time" id="to_time" />
                             </div>
-
-
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-12">
@@ -839,19 +1315,17 @@
 
             <div class="modal-content">
                 <div class="modal-header">
-
+                    <!-- <h5 class="modal-title">Outgoing Pass</h5> -->
+                    <h3 class="m-0 text-center">Undertime Request Form</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container">
-                        <div class="row mb-4">
-                            <div class="col-md-3">
+                        <div class="row mb-4 justify-content-center"> <!-- Added justify-content-center to center horizontally -->
+                            <div class="col-md-9 d-flex justify-content-center align-items-center"> <!-- Added justify-content-center to center horizontally -->
                                 <div class="account-logo">
-                                    <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" alt="Famco Retail Inc." style="max-width: 150px; height: auto;" /> <!-- Adjusted logo size -->
+                                    <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" alt="Famco Retail Inc." style="max-width: 100px; height: auto;" /> <!-- Adjusted logo size -->
                                 </div>
-                            </div>
-                            <div class="col-md-9 d-flex align-items-center">
-                                <h3 class="m-0">Undertime Request Form</h3>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -879,7 +1353,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="undertime_date" class="form-label">Date of Undertime</label>
-                                <input type="date" class="form-control" name="undertime_date" id="undertime_date" />
+                                <input type="date" class="form-control" name="undertime_date" id="undertime_date" min="<?php echo date('Y-m-d'); ?>" />
                             </div>
 
                         </div>
@@ -910,141 +1384,188 @@
         </form>
     </div>
 </div>
+<div class="modal fade" id="add_ob" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal_ob_request_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg"> <!-- Adjust modal size if needed -->
+        <form method="post" id="ob_request">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title m-0">Official Business Form</h5> <!-- Adjusted title -->
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-md-2 text-center">
+                                <div class="account-logo">
+                                    <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" alt="Famco Retail Incorporated" style="max-width: 100px; height: auto;" /> <!-- Adjusted logo size -->
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <!-- Empty column for alignment -->
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="emp_id" class="form-label">Select Employee</label>
+                                <select class="form-select show-tick" data-live-search="true" name="emp_id" id="emp_id">
+                                    <option value="">-- Select an Employee --</option>
+                                    <?php
+                                    // Get employees from the database
+                                    $employees = $this->db->order_by('id', 'ASC')->get('employee');
 
-
-
-<div id="view_request" class="modal custom-modal fade p-0 " role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                                    // Check if there are any employees
+                                    if ($employees->num_rows() > 0) {
+                                        // Loop through each employee
+                                        foreach ($employees->result() as $employee) {
+                                            // Output an option for each employee
+                                            echo '<option value="' . $employee->id . '">' . $employee->fname . ' ' . $employee->lname . '</option>';
+                                        }
+                                    } else {
+                                        // If no employees found, display a message
+                                        echo '<option disabled>No employees found</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="outgoing_pass_date" class="form-label">Date</label>
+                                <input type="date" class="form-control" name="outgoing_pass_date" id="outgoing_pass_date" min="<?php echo date('Y-m-d'); ?>" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="destin_from" class="form-label">Destination From</label>
+                                <input type="text" class="form-control" name="destin_from" id="destin_from" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="destin_to" class="form-label">Destination To</label>
+                                <input type="text" class="form-control" name="destin_to" id="destin_to" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="time_from" class="form-label">Time From</label>
+                                <input type="time" class="form-control" name="time_from" id="time_from" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="time_to" class="form-label">Time To</label>
+                                <input type="time" class="form-control" name="time_to" id="time_to" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="reason" class="form-label">Reason</label>
+                                <textarea class="form-control" name="reason" id="reason" rows="3" placeholder="State your reason here"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
             </div>
-            <div class="modal-body">
-
-                <form id="expanded_vq">
-
-                    <input type="text" name="vq_leave_status" id="vq_leave_status">
-                    <input type="text" name="vq_leave_id" id="vq_leave_id">
-
-
-
-                    <div class="input-block mb-3 row">
-                        <label class="col-lg-3 col-form-label">Name</label>
-                        <div class="col-lg-9">
-                            <input type="text" class="form-control" readonly id="vq_emp_name">
-                        </div>
-                    </div>
-                    <div class="input-block mb-3 row">
-                        <label class="col-lg-3 col-form-label">Leave Type</label>
-                        <div class="col-lg-9">
-                            <input type="text" class="form-control" readonly id="vq_leave_type">
-                        </div>
-                    </div>
-                    <div class="input-block mb-3 row">
-                        <label class="col-lg-3 col-form-label">Date</label>
-                        <div class="col-lg-9">
-                            <input type="email" class="form-control" readonly id="vq_date">
-                        </div>
-                    </div>
-                    <div class="input-block mb-3 row">
-                        <label class="col-lg-3 col-form-label">Reason</label>
-                        <div class="col-lg-9">
-                            <textarea rows="4" cols="5" class="form-control" placeholder="Enter message" readonly id="vq_leave_reason"></textarea>
-                        </div>
-                    </div>
-
-
-                    <div class="input-block mb-3 row">
-                        <label class="col-lg-3 col-form-label"></label>
-                        <div class="col-lg-9">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-danger" onclick='$("#vq_leave_status").val("denied")'>Deny</button>
-                            <button type="submit" class="btn btn-success" onclick='$("#vq_leave_status").val("approved")'>Approve</button>
-                        </div>
-                    </div>
-                </form>
-
-            </div>
-        </div>
+        </form>
     </div>
 </div>
-
 
 <script>
     $(document).ready(function() {
         $("li > a[href='<?= base_url('hr/employees/leaves') ?>']").addClass("active");
         $("li > a[href='<?= base_url('hr/employees/leaves') ?>']").parent().parent().css("display", "block")
 
+        $(".update-pending").click(function(event) {
+            event.preventDefault(); // Prevent default link behavior
 
-        // $('#dt_emp_leaves').DataTable({
-        //     "paging": true, // Enable paging
-        //     "ordering": true, // Enable sorting
-        //     "info": false, // Enable table information display
-        //     // You can add more options as needed
-        //     destroy: true,
-        //     autoWidth: false,
-        //     autoHeight: false
+            // Extract data from the clicked row
+            let leave_id = $(this).attr("data-target-id");
+            // let leave_type = $(this).attr("data-request-type");
+            let emp_id = $(this).attr("data-emp-id");
+            let emp_name = $(this).closest('tr').find('td[name="emp_name"]').text().trim();
 
-        // });
+            let date_filled = $(this).closest('tr').find('td[name="date_filled"]').text();
+            // let leave_type = $(this).closest('tr').find('td[name="leave_type"]').text();
+            let date_from = $(this).closest('tr').find('td[name="date_from"]').text();
+            let date_to = $(this).closest('tr').find('td[name="date_to"]').text();
+            let leave_reason = $(this).closest('tr').find('td[name="leave_reason"]').text();
+            let status = $(this).closest('tr').find('td[name="status"]').text();
 
-
-        // $('#dt_emp_leaves_history').DataTable({
-        //     "paging": true, // Enable paging
-        //     "ordering": true, // Enable sorting
-        //     "info": false, // Enable table information display
-        //     // You can add more options as needed
-        //     destroy: true,
-        //     autoWidth: false,
-        //     autoHeight: false
-
-        // });
-
-
-
-        $("#dt_emp_leaves td[name='leave_reason']").dblclick(function() {
-
-            // console.log($(this).parent());
-
-            let row = $(this).parent()[0].id;
-
-            // console.log(row)
-            let leave_id = row.replace("double-click-row_", "");;
-
-            let leave_type = $("#" + row + " td[name='leave_type']")[0].innerHTML;
-            let leave_reason = $("#" + row + " td[name='leave_reason']")[0].innerHTML;
-            let emp_name = $("#" + row + " td[name='emp_name']")[0].innerHTML;
-            let date_to = $("#" + row + " td[name='date_to']")[0].innerHTML;
-            let date_from = $("#" + row + " td[name='date_from']")[0].innerHTML;
-            let status = $("#" + row + " td[name='status']")[0].innerHTML;
-
-
-            // console.log(leave_reason[0].innerHTML)
-
-
-            $("#vq_leave_id").val(leave_id);
-            $("#view_request #vq_emp_name").val(emp_name.trim());
-            $("#view_request #vq_date").val("From : " + date_from + " To : " + date_to);
-            $("#view_request #vq_leave_type").val(leave_type);
-            $("#view_request #vq_leave_reason").val(leave_reason);
-
-
-            $("#view_request #vq_leave_status").val(status);
+            // Populate modal with data
+            $("#leave_id").val(leave_id);
+            $("#leave_type").val(leave_type);
+            $("#emp_id").val(emp_id);
+            $("#emp_name").val(emp_name);
+            $("#date_filled").val(date_filled);
+            $("#date_from").val(date_from);
+            $("#date_to").val(date_to);
+            $("#leave_reason").val(leave_reason);
+            $("#status").val(status);
 
             // Open the modal
-            $('#view_request').modal('show');
+            $('#edit_employee').modal('show');
         });
 
-        $("#view_request #vq_leave_status").on("change", function() {
 
-            $("#expanded_vq").submit();
-
-
-
-
+        $(document).ready(function() {
+            $('.update-outgoing').click(function(e) {
+                e.preventDefault();
+                var ogId = $(this).data('og-id');
+                // Fetch data from the server using AJAX based on ogId
+                $.ajax({
+                    url: 'fetch_outgoing_data.php', // Change this URL to the actual endpoint for fetching data
+                    method: 'GET',
+                    data: {
+                        ogId: ogId
+                    },
+                    success: function(response) {
+                        // Populate modal with fetched data
+                        var data = JSON.parse(response);
+                        $('#emp_name').val(data.emp_name);
+                        $('#date_filled').val(data.date_filled);
+                        $('#destin').val(data.destin);
+                        $('#date_from').val(data.date_from);
+                        $('#date_to').val(data.date_to);
+                        $('#outgoing_reason').val(data.outgoing_reason);
+                        // Show the modal
+                        $('#edit_outgoing').modal('show');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
         });
+
+        $(document).ready(function() {
+            $('.update-ob').click(function(e) {
+                e.preventDefault();
+                var ogId = $(this).data('og-id');
+                // Fetch data from the server using AJAX based on ogId
+                $.ajax({
+                    url: 'fetch_outgoing_data.php', // Change this URL to the actual endpoint for fetching data
+                    method: 'GET',
+                    data: {
+                        ogId: ogId
+                    },
+                    success: function(response) {
+                        // Populate modal with fetched data
+                        var data = JSON.parse(response);
+                        $('#emp_name').val(data.emp_name);
+                        $('#date_filled').val(data.date_filled);
+                        $('#destin').val(data.destin);
+                        $('#date_from').val(data.date_from);
+                        $('#date_to').val(data.date_to);
+                        $('#outgoing_reason').val(data.outgoing_reason);
+                        // Show the modal
+                        $('#edit_outgoing').modal('show');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+
 
 
         $(document).on("submit", "#expanded_vq", function(e) {
@@ -1079,6 +1600,17 @@
 
 
 
+    });
+</script>
+
+
+<script>
+    $(document).ready(function() {
+        $('#leavereq_dt').DataTable();
+        $('#outgoingreq_dt').DataTable();
+        $('#overtime_dt').DataTable();
+        $('#undertime_dt').DataTable();
+        $('#ob_dt').DataTable(); // Initialize DataTable
     });
 </script>
 

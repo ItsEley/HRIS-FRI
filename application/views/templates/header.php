@@ -23,6 +23,8 @@
 
     <!-- jquery -->
     <script src=<?= base_url("assets/js/jquery-3.7.1.min.js") ?>></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
+
 
 
     <!-- Fontawesome CSS -->
@@ -41,6 +43,10 @@
     <!-- datatables -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <link rel="stylesheet" href="<?= base_url('assets/css/dataTables.bootstrap4.min.css') ?>">
+
+
+
+
 
 </head>
 

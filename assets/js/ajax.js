@@ -191,6 +191,8 @@ $(document).on("click", ".dropdown-item.edit-employee", function(e) {
 
                 $("form#edit_employee input[name='pob']").val(employee.pob);
                 $("form#edit_employee input[name='email']").val(employee.email);
+                $("form#edit_employee input[name='contact_no']").val(employee.contact_no);
+
             } else {
                 console.error('Error:', response.message); // Log error message
                 // Handle error if necessary
