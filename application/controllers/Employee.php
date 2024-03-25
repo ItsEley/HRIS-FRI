@@ -71,11 +71,55 @@ class Employee extends CI_Controller
 		echo json_encode($response);
 	}
 
+	
+
 
 	public function C_off_buss()
 	{
 		$response = array();
 		$name = $this->input->post('name');
+		$date_filled = date('Y-m-d H:i:s', time());
+		// $department = $this->input->post('department');
+
+		$outgoing_pass_date = $this->input->post('ob_date');
+		$destin_from = $this->input->post('destin_from');
+		$destin_to = $this->input->post('destin_to');
+		$time_from = $this->input->post('time_from');
+		$time_to = $this->input->post('time_to');
+		$reason = $this->input->post('reason');
+		$empid = $this->input->post('emp_id');
+		$status = $this->input->post('status');
+		
+
+		$data = array(
+			/*column name*/
+			'destin_from' => $destin_from,
+			'destin_to' => $destin_to,
+			'time_from' => $time_from,
+			'time_to' => $time_to,
+			'date' => $outgoing_pass_date,
+			'date_filled' => $date_filled,
+			'reason' => $reason,
+			'status' => $status,
+			'emp_id' => $empid,
+		);
+
+		$sql = $this->db->insert('f_off_bussiness', $data);
+
+		if ($sql) {
+			$response['status'] = 1;
+			$response['msg'] = 'Done';
+		} else {
+			$response['status'] = 0;
+			$response['msg'] = 'Error';
+		}
+		echo json_encode($response);
+	}
+
+	public function C_off_buss1()
+	{
+		$response = array();
+	
 		$date_filled = date('Y-m-d H:i:s', time());
 		// $department = $this->input->post('department');
 
@@ -95,7 +139,7 @@ class Employee extends CI_Controller
 			'destin_to' => $destin_to,
 			'time_from' => $time_from,
 			'time_to' => $time_to,
-
+			'date' => $outgoing_pass_date,
 			'date_filled' => $date_filled,
 			'reason' => $reason,
 			'status' => $status,
@@ -124,7 +168,7 @@ class Employee extends CI_Controller
 		$time_to = $this->input->post('time_to');
 		$destination = $this->input->post('destination');
 		$reason = $this->input->post('reason');
-		$status = $this->input->post('status');
+		$status = "Pending";
 		$empid = $this->input->post('emp_id');
 
 		$data = array(
@@ -153,81 +197,83 @@ class Employee extends CI_Controller
 
 
 	public function C_undertime()
-	{
-		$response = array();
+{
+    $response = array();
 
-		$name = $this->input->post('name');
-		$department = $this->input->post('department');
-		$undertime_date = $this->input->post('undertime_date');
-		$time_in = $this->input->post('time_in');
-		$time_out = $this->input->post('time_out');
-		$reason = $this->input->post('reason');
-		$status = $this->input->post('status');
-		$empid = $this->input->post('empid');
+    // Get input data
+    $undertime_date = $this->input->post('undertime_date');
+    $time_in = $this->input->post('time_in');
+    $time_out = $this->input->post('time_out');
+    $reason = $this->input->post('reason');
+    $status = "Pending"; // Set status to "Pending"
+    $empid = $this->input->post('emp_id');
 
-		$data = array(
-			/*column name*/
-			'date_filled' => $undertime_date,
-			'date_of_undertime' => $undertime_date,
-			'time_in' => $time_in,
-			'time_out' => $time_out,
-			'reason' => $reason,
-			'status' => $status,
-			'emp_id' => $empid,
-			'department' => $department,
-			'name' => $name
+    // Prepare data array for insertion
+    $data = array(
+        'date_filled' => $undertime_date,
+        'date_of_undertime' => $undertime_date,
+        'time_in' => $time_in,
+        'time_out' => $time_out,
+        'reason' => $reason,
+        'status' => $status, // Use the status variable set above
+        'emp_id' => $empid
+    );
 
-		);
+    // Insert data into the database
+    $sql = $this->db->insert('f_undertime', $data);
+    if ($sql) {
+        $response['status'] = 1;
+        $response['msg'] = 'Undertime request submitted successfully.';
+    } else {
+        $response['status'] = 0;
+        $response['msg'] = 'Error occurred while submitting the undertime request.';
+    }
 
-		$sql = $this->db->insert('f_undertime', $data);
-		if ($sql) {
-			$response['status'] = 1;
-			$response['msg'] = 'Done';
-		} else {
-			$response['status'] = 0;
-			$response['msg'] = 'Error';
-		}
-		echo json_encode($response);
-	}
+    // Send JSON response
+    echo json_encode($response);
+}
 
 
-	public function C_overtime()
-	{
-		$response = array();
-		$date_filled = date('Y-m-d H:i:s', time());
-		$name = $this->input->post('name');
-		$department = $this->input->post('department');
-		$ot_date = $this->input->post('ot_date');
-		$time_in = $this->input->post('from_time');
-		$time_out = $this->input->post('to_time');
-		$reason = $this->input->post('reason');
-		$status = $this->input->post('status');
-		$empid = $this->input->post('empid');
+public function C_overtime()
+{
+    $response = array();
 
-		$data = array(
-			/*column name*/
+    // Get current date and time
+    $date_filled = date('Y-m-d H:i:s', time());
 
-			'date_filled' => $date_filled,
-			'date_ot' => $ot_date,
-			'time_in' => $time_in,
-			'time_out' => $time_out,
-			'reason' => $reason,
-			'status' => $status,
-			'emp_id' => $empid,
-			'department' => $department,
-			'name' => $name
-		);
+    // Get input data
+    $ot_date = $this->input->post('ot_date');
+    $time_in = $this->input->post('from_time');
+    $time_out = $this->input->post('to_time');
+    $reason = $this->input->post('reason');
+    $status = "Pending"; // Set status to "Pending"
+    $empid = $this->input->post('emp_id');
 
-		$sql = $this->db->insert('f_overtime', $data);
-		if ($sql) {
-			$response['status'] = 1;
-			$response['msg'] = 'Done';
-		} else {
-			$response['status'] = 0;
-			$response['msg'] = 'Error';
-		}
-		echo json_encode($response);
-	}
+    // Prepare data array for insertion
+    $data = array(
+        'date_filled' => $date_filled,
+        'date_ot' => $ot_date,
+        'time_in' => $time_in,
+        'time_out' => $time_out,
+        'reason' => $reason,
+        'status' => $status, // Use the status variable set above
+        'emp_id' => $empid
+    );
+
+    // Insert data into the database
+    $sql = $this->db->insert('f_overtime', $data);
+    if ($sql) {
+        $response['status'] = 1;
+        $response['msg'] = 'Overtime request submitted successfully.';
+    } else {
+        $response['status'] = 0;
+        $response['msg'] = 'Error occurred while submitting the overtime request.';
+    }
+
+    // Send JSON response
+    echo json_encode($response);
+}
+
 
 	public function C_sched_adjust()
 	{

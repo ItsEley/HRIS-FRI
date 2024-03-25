@@ -254,10 +254,13 @@
     <li class='submenu reports'>
         <a href='#' class=''><i class='la la-file-text'></i><span>Reports</span><span class='menu-arrow'></span></a>
         <ul>
-            <li><a href='" . base_url('hr/reports/timesheet') . "'>Timesheet</a></li>
+        <li><a href='hr_emp_performance.html'>Employee Performance |</a></li>
+
+        <li><a href='" . base_url('hr/reports/salary') . "'>Salary Report |</a></li>
+        <li><a href='" . base_url('hr/reports/timesheet') . "'>Timesheet</a></li>
+
             <li><a href='" . base_url('hr/employees/attendance') . "'>Attendance</a></li>
-            <li><a href='" . base_url('hr/leaves') . "'>Leaves</a></li>
-            <li><a href='hr_emp_performance.html'>Employee Performance</a></li>
+            <li><a href='" . base_url('hr/employees/leaves') . "'>Leaves</a></li>
         </ul>
     </li>
     <li class='submenu employees'>
@@ -266,15 +269,14 @@
             <li><a href='" . base_url('hr/employees') . "'>Manage</a></li>
             <li><a href='" . base_url('hr/departments') . "'>Designations</a></li>
             <li><a href='" . base_url('hr/employees/shifts') . "'>Shifts & Schedules</a></li>
-            <li><a href='" . base_url('hr/employees/leaves') . "'>Leaves(TATANGALIN TO)</a></li>
         </ul>
     </li>
     <li class='submenu payroll'>
         <a href='#' class=''><i class='la la-money'></i><span>Payroll</span><span class='menu-arrow'></span></a>
         <ul>
-            <li><a href='hr_emp_overview.html'>Salary Report</a></li>
-            <li><a href='hr_emp_manage.html'>Bonuses & Commissions</a></li>
-            <li><a href='hr_emp_designations.html'>Deductions</a></li>
+            <li><a href='hr_emp_overview.html'>Salary Rate |</a></li>
+            <li><a href='hr_emp_manage.html'>Bonuses & Commissions |</a></li>
+            <li><a href='hr_emp_designations.html'>Deductions |</a></li>
         </ul>
     </li>
     <li class='submenu forms'>
@@ -287,6 +289,8 @@
     </li>
 ";
             } else if (strtolower($_SESSION['department']) == 'sys-at') {
+
+               
             } else {
 
                echo "

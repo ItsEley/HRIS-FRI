@@ -94,125 +94,86 @@
 
 
          <div class="row">
-            <div class="col-lg-8 col-md-8">
+                <div class="col">
+                    <h2 class="page-title" >
+                        <!-- <?php //print_r($_SESSION) ?> -->
+                        <a href="../pages/hr_announcement.php" style = "color:black">Announcements</a>
+                    </h2>
 
-               <h3 class="page-title">
-                  <a href="../pages/hr_announcement.php">Announcements</a>
-               </h3>
+
+                    <?php
+
+                    $query = $this->db->get('announcement', 6);
+
+                    // print_r($this->session->get_userdata('fname'));
+                    // echo $_SESSION['fname'];
+
+                    foreach ($query->result() as $row) {
+                        $title =  $row->title;
+                        $content = $row->content;
+                        $author = $row->author;
+                        $department = $row->to_all;
+                        $date = $row->date_created;
+
+                        $data['title'] = $title;
+                        $data['content'] = $content;
+                        $data['author'] = $author;
+                        $data['department'] = $department;
+                        $data['date'] = $date;
 
 
-               <?php
+                        $this->load->view('components/card-announcement', $data);
+                    }
 
-               $query = $this->db->get('announcement');
+                    ?>
 
-               // print_r($this->session->get_userdata('fname'));
-               // echo $_SESSION['fname'];
 
-               if($query->num_rows() > 0){
 
-                  foreach ($query->result() as $row) {
-                     $title =  $row->title;
-                     $content = $row->content;
-                     $author = $row->author;
-                     // $department = $row->department;
-                     $date = $row->date_created;
-   
-                     $data['title'] = $title;
-                     $data['content'] = $content;
-                     $data['author'] = $author;
-                     // $data['department'] = $department;
-                     $data['date'] = $date;
-   
-   
-                     $this->load->view('components/card-announcement', $data);
-                  }
 
-               }else{
-                  echo "
-                  <h3>No announcements available at this moment.</h3>
-                  ";
 
-               }
-              
-               ?>
+
+                </div>
+                <div class="col-4">
+                    <h2 class="page-title">Upcoming Events</h2>
+
+                    <div class="row timeline-panel " style="background-color: white; ">
+                        <h3>It's John Leo Bayani's Birthday!</h3>
+                        <p>Today • March 26, 2023</p>
+                        <p class="text-overflow-ellipsis" style="height:120px;" onclick="$(this).css('height','auto')">Happy Birthday! 🎉🎂 Wishing you a day filled with joy, laughter,
+                            and all the things that make you smile. May this special day be as
+                            wonderful as you are, and may the year ahead bring you countless blessings,
+                            love, and unforgettable memories. Here's to celebrating you today and always!
+                            Have an amazing birthday Mr. Leo!</p>
+                        <img src="../assets/img/birthday-GIF.gif" alt="User Image" loop="infinite">
+
+                    </div>
+
+                    <div class="row timeline-panel " style="background-color: white;">
+                        <h3>Innovate 2024: Unleashing Creativity in the Digital Era</h3>
+                        <p>April 15, 2024, 9:00 AM - 5:00 PM</p>
+                        <p class="text-overflow-ellipsis" style="height:120px;" onclick="$(this).css('height','auto')">Join us for a day of exploration and inspiration as we delve into the world of digital
+                            innovation. From cutting-edge technologies to groundbreaking strategies, this event will
+                            ignite your creativity and empower you to shape the future. Engage with industry experts,
+                            participate in interactive workshops, and network with like-minded innovators. Don't miss
+                            this opportunity to unlock your potential and drive change in the digital landscape.
+                        </p>
+                    </div>
+
+                    <div class="row timeline-panel " style="background-color: white; ">
+                        <h3>Wellness Week: Mind, Body, and Soul</h3>
+                        <p>May 20-24, 2024, All Day</p>
+                        <p class="text-overflow-ellipsis" style="height:200px;" onclick="$(this).css('height','auto')">Take a break from the hustle and bustle of work and prioritize your well-being during Wellness Week.
+                            Join us for a series of activities designed to rejuvenate your mind, energize your body,
+                            and nourish your soul. From yoga sessions and meditation workshops to nutritious cooking
+                            classes and stress-relief seminars, this week-long event offers something for everyone.
+                            Invest in yourself and discover the power of holistic wellness.
+                        </p>
+                    </div>
+
+
+
+                </div>
             </div>
-
-            <div class="col-lg-4 col-md-4">
-               <div class="dash-sidebar">
-                  <section>
-                     <h5 class="dash-title">Projects</h5>
-                     <div class="card">
-                        <div class="card-body">
-                           <div class="time-list">
-                              <div class="dash-stats-list">
-                                 <h4>71</h4>
-                                 <p>Total Tasks</p>
-                              </div>
-                              <div class="dash-stats-list">
-                                 <h4>14</h4>
-                                 <p>Pending Tasks</p>
-                              </div>
-                           </div>
-                           <div class="request-btn">
-                              <div class="dash-stats-list">
-                                 <h4>2</h4>
-                                 <p>Total Projects</p>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </section>
-                  <section>
-                     <h5 class="dash-title">Your Leave</h5>
-                     <div class="card">
-                        <div class="card-body">
-                           <div class="time-list">
-                              <div class="dash-stats-list">
-                                 <h4>4.5</h4>
-                                 <p>Leave Taken</p>
-                              </div>
-                              <div class="dash-stats-list">
-                                 <h4>12</h4>
-                                 <p>Remaining</p>
-                              </div>
-                           </div>
-                           <div class="request-btn">
-                              <a class="btn btn-primary" href="#">Apply Leave</a>
-                           </div>
-                        </div>
-                     </div>
-                  </section>
-                  <section>
-                     <h5 class="dash-title">Your time off allowance</h5>
-                     <div class="card">
-                        <div class="card-body">
-                           <div class="time-list">
-                              <div class="dash-stats-list">
-                                 <h4>5.0 Hours</h4>
-                                 <p>Approved</p>
-                              </div>
-                              <div class="dash-stats-list">
-                                 <h4>15 Hours</h4>
-                                 <p>Remaining</p>
-                              </div>
-                           </div>
-                           <div class="request-btn">
-                              <a class="btn btn-primary" href="#">Apply Time Off</a>
-                           </div>
-                        </div>
-                     </div>
-                  </section>
-                  <section>
-                     <h5 class="dash-title">Upcoming Holiday</h5>
-                     <div class="card">
-                        <div class="card-body text-center">
-                           <h4 class="holiday-title mb-0">Mon 20 May 2019 - Ramzan</h4>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-            </div>
-         </div>
 
 
 

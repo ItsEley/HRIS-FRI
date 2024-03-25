@@ -20,6 +20,10 @@
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
+    <!-- custom css -->
+    <link rel="stylesheet" href="<?= base_url('assets/css/general.css') ?>">
+
+
 
     <!-- jquery -->
     <script src=<?= base_url("assets/js/jquery-3.7.1.min.js") ?>></script>

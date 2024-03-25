@@ -63,8 +63,60 @@ $("#login-form").submit(function(e) {
     }
 });
 
+$("#import_csv").submit(function(e) {
+    e.preventDefault();
 
+        var form_data = new FormData($('#import_csv')[0]);
 
+        $.ajax({
+            type: 'POST',
+            url: base_url+'humanr/import', // Assuming your controller's method is named import()
+            data: form_data,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                alert(response);
+                // window.location.reload(); // Reload the page after successful import
+            },
+            error: function(xhr, status, error) {
+                alert('An error occurred while processing the request.');
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
+	$(document).ready(function() {
+    $('#exportBtn').click(function(e) {
+        e.preventDefault(); // Prevent default anchor behavior
+
+        // Make AJAX request to export CSV
+        $.ajax({
+            type: 'GET',
+            url: base_url + 'humanr/export_csv',
+            success: function(response) {
+                // Create a Blob object from the CSV data
+                var blob = new Blob([response], { type: 'text/csv' });
+
+                // Create a temporary anchor element to trigger the download
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = 'employee_data.csv'; // Set the file name
+
+                // Append the anchor element to the document body and trigger the download
+                document.body.appendChild(link);
+                link.click();
+
+                // Clean up resources after download
+                window.URL.revokeObjectURL(link.href);
+                document.body.removeChild(link);
+            },
+            error: function(xhr, status, error) {
+                alert('An error occurred while processing the request.');
+                console.error(xhr.responseText);
+            }
+        });
+    });
+});
 
 $(document).ready(function() {
     $('#openSecondModalBtn').on('click', function() {
@@ -230,6 +282,25 @@ $("#add_announcement").submit(function(e){
 
 
 //leave request
+$("#leave_request1").submit(function(e){
+	e.preventDefault();
+	var leaveRequest = $(this).serialize();
+	$.ajax({
+		url: base_url + 'leave_request',
+		type: 'post',
+		data: leaveRequest,
+		dataType: 'json',
+		success: function(response){
+			if(response.status === 1){
+				alert(response.msg);
+				
+			}else{
+				alert(response.msg);
+			}
+		}
+	})
+})
+
 $("#leave_request").submit(function(e){
 	e.preventDefault();
 	var leaveRequest = $(this).serialize();
@@ -250,6 +321,8 @@ $("#leave_request").submit(function(e){
 })
 
 
+
+
 $("#ob_request").submit(function(e){
 	e.preventDefault();
 	var obRequest = $(this).serialize();
@@ -268,9 +341,44 @@ $("#ob_request").submit(function(e){
 	})
 })
 
+$("#ob_request1").submit(function(e){
+	e.preventDefault();
+	var obRequest = $(this).serialize();
+	$.ajax({
+		url: base_url + 'employee/C_off_buss1',
+		type: 'post',
+		data: obRequest,
+		dataType: 'json',
+		success: function(response){
+			if(response.status === 1){
+				alert(response.msg);
+			}else{
+				alert(response.msg);
+			}
+		}
+	})
+})
 
 
 $("#outgoing_request").submit(function(e){
+	e.preventDefault();
+	var outgoingRequest = $(this).serialize();
+	$.ajax({
+		url: base_url + 'outgoing_request',
+		type: 'post',
+		data: outgoingRequest,
+		dataType: 'json',
+		success: function(response){
+			if(response.status === 1){
+				alert(response.msg);
+			}else{
+				alert(response.msg);
+			}
+		}
+	})
+})
+
+$("#outgoing_request1").submit(function(e){
 	e.preventDefault();
 	var outgoingRequest = $(this).serialize();
 	$.ajax({
@@ -308,6 +416,24 @@ $("#undertime_request").submit(function(e){
 
 
 $("#ot_request").submit(function(e){
+	e.preventDefault();
+	var overtimeRequest = $(this).serialize();
+	$.ajax({
+		url: base_url + 'overtime_request',
+		type: 'post',
+		data: overtimeRequest,
+		dataType: 'json',
+		success: function(response){
+			if(response.status === 1){
+				alert(response.msg);
+			}else{
+				alert(response.msg);
+			}
+		}
+	})
+})
+
+$("#ot_request1").submit(function(e){
 	e.preventDefault();
 	var overtimeRequest = $(this).serialize();
 	$.ajax({

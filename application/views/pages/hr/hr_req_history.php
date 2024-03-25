@@ -39,154 +39,67 @@
 
 
 
-            <!-- Search Filter -->
-            <div class="row">
+            <!-- Data table -->
+            <div class="row timeline-panel">
                 <div class="col-md-12">
                     <div class="table-responsive">
-
-                        <table id="" class="datatable table-striped custom-table mb-0 datatable">
+                        <table id="dt_announcements" class="datatable table-striped custom-table mb-0 datatable">
                             <thead>
                                 <tr>
-                                    <th>Employee</th>
-                                    <th>Request Type</th>
-                                    <th>Date Filled</th>
-                                    <th class="text-center">Status</th>
-                                    <th class="text-end">Actions</th>
+                                    <th>Title</th>
+                                    <th>Content</th>
+                                    <th>Author</th>
+                                    <th>Department</th>
+                                    <th>Date Created</th>
+                                    <th>Action</th>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $row_arr = array();
-
-                                // Query leave data where status is either "approved" or "declined"
-                                $this->db->where_in('status', array('approved', 'declined'));
-                                $query_leaves = $this->db->get('f_leaves');
-
-                                foreach ($query_leaves->result() as $row) {
-                                    $leave_id =  $row->id;
-                                    $date_filled = $row->date_filled;
-                                    $leave_type = $row->type_of_leave;
-                                    $status = $row->status;
-                                    $request_type = "LEAVE REQUEST"; // Define request type
-
-                                    // Query employee data to get pfp, fname, and lname based on emp_id
-                                    $emp_id = $row->emp_id;
-                                    $query_employee = $this->db->query("SELECT pfp, fname, lname FROM employee WHERE id = '$emp_id'");
-                                    if ($query_employee->num_rows() > 0) {
-                                        $employee_data = $query_employee->row();
-                                        $pfp = $employee_data->pfp;
-                                        $fname = $employee_data->fname;
-                                        $lname = $employee_data->lname;
-                                    } else {
-                                        // Handle if employee data not found
-                                        $pfp = "path/to/default_pfp.jpg"; // Provide default pfp path or handle it as needed
-                                        $fname = "Unknown";
-                                        $lname = "Unknown";
-                                    }
-
-                                    // Construct row data including pfp, name, fname, and lname
-                                    $row_arr[] = array(
-                                        'pfp' => $pfp,
-                                        'id' => $leave_id,
-                                        'name' => $fname . " " . $lname, // Concatenate fname and lname
-                                        'request_type' => $request_type,
-                                        'date_filled' => $date_filled,
-                                        'status' => $status
-                                    );
-                                }
-
-                                foreach ($row_arr as $row) {
-                                    // Process or output each row as needed
-
+                                $query = $this->db->order_by('date_created', 'DESC')->get('announcement');
+                                foreach ($query->result() as $row) {
+                                    $ann_id = $row->id;
+                                    $title = $row->title;
+                                    $content = $row->content;
+                                    $author = $row->author;
+                                    // $department = $row->department;
+                                    $date = $row->date_created;
                                 ?>
-
-
-                                    <tr>
-                                        <td>
-                                            <h2 class="table-avatar">
-
-                                                <a href="profile.html" class="avatar">
-                                                    <img src="<?php
-                                                                // Retrieve base64-encoded image data from session
-                                                                if (!empty($row['pfp'])) {
-                                                                    $pfp = $row['pfp'];
-                                                                }
-
-
-                                                                // Check if $pfp is set and not empty
-                                                                if (!empty($pfp)) {
-                                                                    // Embed the base64-encoded image data in the 'src' attribute of the <img> tag
-                                                                    echo "data:image/jpeg;base64," . base64_encode($pfp);
-                                                                } else {
-                                                                    // If $pfp is empty or not set, display a placeholder image or handle it as per your requirement
-                                                                    echo "path/to/placeholder_image.jpg";
-                                                                }
-                                                                ?>" alt="User Image">
-                                                </a>
-                                                <a href="<?= base_url('hr_profile') ?>" style="font-size: 0.6em;"><?php echo $row['name']; ?></a>
-
-
-                                            </h2>
+                                    <tr class="hoverable-row">
+                                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                            <?php echo $title; ?>
                                         </td>
-                                        <td><?php echo $row['request_type']; ?></td>
-                                        <td><?php echo date('F j, Y', strtotime($row['date_filled'])); ?></td>
-
-
-                                        <td class="text-center">
-                                            <?php
-                                            // Set the color of the dot icon, the text color, and the border color based on the status
-                                            switch ($row['status']) {
-                                                case 'new':
-                                                    $dot_color = 'text-purple';
-                                                    $text_color = 'text-purple'; // Text color for 'New' status
-                                                    $border_color = 'border-purple'; // Border color for 'New' status
-                                                    $status_text = 'New';
-                                                    break;
-                                                case 'pending':
-                                                    $dot_color = 'text-info';
-                                                    $text_color = 'text-info'; // Text color for 'Pending' status
-                                                    $border_color = 'border-info'; // Border color for 'Pending' status
-                                                    $status_text = 'Pending';
-                                                    break;
-                                                case 'approved':
-                                                    $dot_color = 'text-success';
-                                                    $text_color = 'text-success'; // Text color for 'Approved' status
-                                                    $border_color = 'border-success'; // Border color for 'Approved' status
-                                                    $status_text = 'Approved';
-                                                    break;
-                                                case 'declined':
-                                                    $dot_color = 'text-danger';
-                                                    $text_color = 'text-danger'; // Text color for 'Declined' status
-                                                    $border_color = 'border-danger'; // Border color for 'Declined' status
-                                                    $status_text = 'Declined';
-                                                    break;
-                                                default:
-                                                    $dot_color = 'text-purple'; // Default dot color
-                                                    $text_color = 'text-dark'; // Default text color
-                                                    $border_color = 'border-dark'; // Default border color
-                                                    $status_text = 'Unknown'; // Default status text
-                                            }
-                                            ?>
-                                            <span class="badge rounded-pill <?php echo $text_color; ?> <?php echo $border_color; ?>">
-                                                <i class="fa-regular fa-circle-dot <?php echo $dot_color; ?>"></i> <?php echo $status_text; ?>
-                                            </span>
-                                        </td>
-                                        <td class="text-end">
-                                            <div class="dropdown dropdown-action">
-                                                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons"></i></a>
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item update-req" href="#" data-bs-toggle="modal" id="" data-bs-target="#edit_leave" data-target-id="<?php echo $row['id']; ?>"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
-                                                    <a class="dropdown-item delete-req" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve" data-target-id="<?php echo $row['id']; ?>"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
-                                                </div>
+                                        <td style="max-width: 200px; max-height: 100px; overflow: hidden;">
+                                            <div class="ellipsis" style="max-height: 1.2em; overflow: hidden;">
+                                                <?php echo $content; ?>
                                             </div>
                                         </td>
-                                    </tr>
 
+                                        <td><?php echo $author; ?></td>
+                                        <td><?php //echo $department; 
+                                            ?> {not implemented yet}</td>
+                                        <td><?php echo date('M j, Y', strtotime($date)); ?></td>
+
+                                        <td>
+                                        <div class="dropdown">
+                                                                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                        <i class="material-icons">more_vert</i>
+                                                                    </a>
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $ann_id ?>">
+                                                                        <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?php echo $ann_id ?>">
+                                                                            <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                                                        </a>
+                                                                        <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $ann_id ?>">
+                                                                            <i class="fa-regular fa-trash-can m-r-5"></i> Delete
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                        </td>
+                                    </tr>
                                 <?php
                                 }
                                 ?>
-
-
                             </tbody>
                         </table>
                     </div>
@@ -214,8 +127,8 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        $("li > a[href='<?= base_url('forms/history') ?>']").parent().parent().css("display", "block") //get sidebar item with link
-        $("li > a[href='<?= base_url('forms/history') ?>']").addClass("active"); // for items inside the sidebar
+        $("li > a[href='<?= base_url('hr/historyrequests') ?>']").parent().parent().css("display", "block") //get sidebar item with link
+        $("li > a[href='<?= base_url('hr/historyrequests') ?>']").addClass("active"); // for items inside the sidebar
 
 
 

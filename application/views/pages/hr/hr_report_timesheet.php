@@ -43,6 +43,7 @@
                                     <th>Time-in</th>
                                     <th>Time-out</th>
                                     <th>Total Hours Worked</th>
+                                    <th>Action</th>
 
                                 </tr>
                             </thead>
@@ -68,7 +69,7 @@
 
                                 ?>
                                     <tr class="hoverable-row">
-                                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" hidden>
                                             <?php echo $data['emp_id'] = $row->emp_id; ?>
                                         </td>
                                         <td style="max-width: 200px; max-height: 100px; overflow: hidden;">
@@ -81,21 +82,21 @@
                                         <td><?php //echo $department; 
                                             ?> {not implemented yet}</td>
                                         <td><?php echo $data['role'] = $row->roles; ?></td>
+                                        <td>{not implemented yet}</td>
                                         <td>
-                                            <div class="dropdown">
-                                                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="material-icons">more_vert</i>
-                                                </a>
-                                                <!-- <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
-                                                    <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?php echo $row->id; ?>">
-                                                        <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                                    </a>
-                                                    <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
-                                                        <i class="fa-regular fa-trash-can m-r-5"></i> Delete
-                                                    </a>
-                                                </div> -->
-                                            </div>
-
+                                        <div class="dropdown">
+                                                                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                        <i class="material-icons">more_vert</i>
+                                                                    </a>
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+                                                                        <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="">
+                                                                            <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                                                        </a>
+                                                                        <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_">
+                                                                            <i class="fa-regular fa-trash-can m-r-5"></i> Delete
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
                                         </td>
 
 

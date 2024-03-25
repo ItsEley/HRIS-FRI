@@ -3,7 +3,7 @@
         <div class="profile-img">
 
             <?php
-            echo "<img src='data:image/jpeg;base64," . base64_encode($pfp) . "' alt='' class='img img-fluid rounded-circle' style='object-fit: cover; aspect-ratio: 1; height: auto;'>";
+            echo "<img src='$pfp' alt='' class='img img-fluid rounded-circle' style='object-fit: cover; aspect-ratio: 1; height: auto;'>";
 
             ?>
 

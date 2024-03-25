@@ -80,6 +80,7 @@ $autoload['libraries'] = array('session','form_validation','database');
 |
 */
 $autoload['drivers'] = array();
+// $autoload['libraries'] = array('PhpSpreadsheet');
 
 /*
 | -------------------------------------------------------------------

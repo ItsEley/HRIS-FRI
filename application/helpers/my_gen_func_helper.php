@@ -70,25 +70,25 @@ function verify($plaintextPassword,$hashedPassword) {
 
 
 
-function generateEmployeeID($prefix,$name) {
-    // Default prefix
+// function generateEmployeeID($prefix,$name) {
+//     // Default prefix
 
 
-    // Extract initials from name
-    $initials = "";
-    $words = explode(" ", $name);
-    foreach ($words as $word) {
-        $initials .= strtoupper(substr($word, 0, 1));
-    }
+//     // Extract initials from name
+//     $initials = "";
+//     $words = explode(" ", $name);
+//     foreach ($words as $word) {
+//         $initials .= strtoupper(substr($word, 0, 1));
+//     }
 
-    // Generate unique random number
-    $randomNumber = generateRandomNumber(0,99999);
+//     // Generate unique random number
+//     $randomNumber = generateRandomNumber(0,99999);
 
-    // Construct ID
-    $employeeID = $prefix . $initials . "-" . str_pad($randomNumber, 5, '0', STR_PAD_LEFT);
+//     // Construct ID
+//     $employeeID = $prefix . $initials . "-" . str_pad($randomNumber, 5, '0', STR_PAD_LEFT);
 
-    return $employeeID;
-}
+//     return $employeeID;
+// }
 
 
 

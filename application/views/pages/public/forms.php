@@ -361,6 +361,7 @@
 												<h3>Undertime Form</h3>
 											</div>
 										</div>
+									
 										<!-- /Form content -->
 										<div class="row ">
 											<!-- <p>I, have to leave the company premises on this day : </p> -->
@@ -558,7 +559,8 @@
 									<!-- /Form content -->
 
 									<form method="post" id="ot_request" class="mb-2">
-
+									<input type="text" name="emp_id" value="<?php echo $_SESSION['emp_id'] ?>">
+									
 										<div class="row ">
 											<!-- <p>I, have to leave the company premises on this day : </p> -->
 											<div class="col-3">
@@ -624,17 +626,17 @@
 		$("li > a[href='<?= base_url('forms') ?>']").addClass("active"); // for items inside the sidebar
 
 
-		$("#work_sched_select").on('change',function(){
-			let val = $(this).val;
+		// $("#work_sched_select").on('change',function(){
+		// 	let val = $(this).val;
 
 
-			if(val == "change_time"){
+		// 	if(val == "change_time"){
 
-			}else if(val == "change_off"){
+		// 	}else if(val == "change_off"){
 
-			}else if()
+		// 	}else if()
 
-		})
+		// })
 
 
 

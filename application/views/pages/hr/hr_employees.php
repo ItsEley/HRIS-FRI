@@ -82,21 +82,50 @@
 
                 <?php
                 //display employee cards
-                $query = $this->db->query('
-                    SELECT vw_emp_designation.*, employee.pfp 
-                    FROM vw_emp_designation
-                    JOIN employee 
-                    ON vw_emp_designation.emp_id = employee.id
-                    ORDER BY vw_emp_designation.dept_id ASC, vw_emp_designation.full_name
-                    ');
+                $query = $this->db->query("
+                SELECT 
+                e.id AS emp_id,
+                CONCAT(e.fname, ' ', COALESCE(e.mname, ''), ' ', e.lname) AS full_name,
+                COALESCE(dr.department, '') AS department_id,
+                COALESCE(d.department, '') AS department,
+                COALESCE(dr.roles, '') AS roles,
+                e.pfp AS profile_picture
+            FROM 
+                employee e
+            LEFT JOIN 
+                department_roles dr ON e.id = dr.assigned_emp
+            LEFT JOIN 
+                department d ON dr.department = d.id;
+            
+                    ");
 
                 foreach ($query->result() as $row) {
 
                     $data['emp_name'] = $row->full_name;
                     $data['emp_id'] = $row->emp_id;
-                    $data['department'] = $row->department;
-                    $data['role'] = $row->roles;
-                    $data['pfp'] = $row->pfp;
+
+                    if ($row->department == '' || $row->department == NULL) {
+                        $data['department'] = "Not assigned to a deparment.";
+                    } else {
+                        $data['department'] = $row->department;
+                    }
+
+                    if ($row->roles == '' || $row->roles == NULL) {
+                        $data['role'] = "Not assigned to any roles.";
+                    } else {
+                        $data['role'] = $row->roles;
+                    }
+
+                    if ($row->profile_picture == '' || $row->profile_picture == NULL) {
+                        $data['pfp'] = base_url('assets\img\user.jpg');
+                    } else {
+
+                        $data['pfp'] = "data:image/jpeg;base64," . base64_encode($row->profile_picture) . "";
+                    }
+
+
+
+
 
                     $this->load->view('components/card-employee-basic', $data);
                 }
@@ -262,7 +291,9 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form method="post" id="adduser" enctype="multipart/form-data">
+                        <form accept-charset="UTF-8" method="post" id="adduser" enctype="multipart/form-data">
+
+
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="input-block mb-3">

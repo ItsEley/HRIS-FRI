@@ -59,12 +59,15 @@
                                     <th>Author</th>
                                     <th>Department</th>
                                     <th>Date Created</th>
+                                    <th>Action</th>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                 $query = $this->db->order_by('date_created', 'DESC')->get('announcement');
                                 foreach ($query->result() as $row) {
+                                    $ann_id = $row->id;
                                     $title = $row->title;
                                     $content = $row->content;
                                     $author = $row->author;
@@ -85,6 +88,22 @@
                                         <td><?php //echo $department; 
                                             ?> {not implemented yet}</td>
                                         <td><?php echo date('M j, Y', strtotime($date)); ?></td>
+
+                                        <td>
+                                        <div class="dropdown">
+                                                                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                        <i class="material-icons">more_vert</i>
+                                                                    </a>
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $ann_id ?>">
+                                                                        <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?php echo $ann_id ?>">
+                                                                            <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                                                        </a>
+                                                                        <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $ann_id ?>">
+                                                                            <i class="fa-regular fa-trash-can m-r-5"></i> Delete
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                        </td>
                                     </tr>
                                 <?php
                                 }

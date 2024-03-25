@@ -6,6 +6,7 @@ class Humanr extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
+
 		$this->load->model('Admin_model', 'hr');
 		$this->zone = date_default_timezone_set('Asia/Manila');
 		$this->load->library('session');
@@ -120,6 +121,86 @@ class Humanr extends CI_Controller
 		$this->load->view('templates/footer');
 	}
 
+	public function import()
+	{
+		if (isset($_FILES["file"]["name"])) {
+			$path = $_FILES["file"]["tmp_name"];
+			if ($_FILES["file"]["size"] > 0) {
+				$file = fopen($path, "r");
+				$firstRowSkipped = false;
+				while (($getData = fgetcsv($file, 10000, ",")) !== FALSE) {
+					if (!$firstRowSkipped) {
+						$firstRowSkipped = true;
+						continue; // Skip the first row
+					}
+					// Concatenate first name, middle name, and last name to form the full name
+					$full_name = $getData[0] . ' ' . $getData[1] . ' ' . $getData[2]; // Assuming fname is in column index 1, lname is in column index 2, and mname is in column index 3
+
+					$data = array(
+						'id' => generateEmployeeCode($full_name),
+						'fname' => $getData[0],
+						'mname' => $getData[1],
+						'lname' => $getData[2],
+						'email' => $getData[3]
+					);
+					$this->db->insert('employee2', $data);
+				}
+				fclose($file);
+				echo "CSV File has been successfully Imported.";
+			} else {
+				echo "Invalid File: Please Upload CSV File.";
+			}
+		}
+	}
+
+	public function export_csv()
+	{
+		// Select all columns from the database
+		$employees = $this->db->get('employee2')->result_array();
+
+		// Set CSV headers
+		header('Content-Type: text/csv; charset=utf-8');
+		header('Content-Disposition: attachment;filename="employee_data.csv"');
+		header('Cache-Control: max-age=0');
+
+		// Open output stream
+
+		$output = fopen('php://output', 'w');
+		fwrite($output, "\xEF\xBB\xBF");
+
+		// Write CSV headers
+		fputcsv($output, array('ID', 'First Name', 'Middle Name', 'Last Name', 'Email'));
+
+		// Write employee data to CSV
+		foreach ($employees as $employee) {
+			// Map the database column names to CSV column order
+			$csvData = array(
+				$employee['id'],
+				$employee['fname'],
+				$employee['mname'],
+				$employee['lname'],
+				$employee['email']
+			);
+			fputcsv($output, $csvData);
+		}
+
+		// Close output stream
+		fclose($output);
+	}
+
+
+
+
+	public function import_csv()
+	{
+
+
+		$data['title'] = 'HR | Importing';
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/hr/import_csv');
+		$this->load->view('templates/footer');
+	}
+
 	public function C_hr_employees_list()
 	{
 		if ($this->session->userdata('logged_in')) {
@@ -150,7 +231,7 @@ class Humanr extends CI_Controller
 		if ($this->session->userdata('logged_in')) {
 			$data['title'] = 'Employee | Attendance';
 			$this->load->view('templates/header', $data);
-			$this->load->view('pages/hr/hr_attendance');
+			$this->load->view('pages/hr/hr_report_attendance');
 			$this->load->view('templates/footer');
 		} else {
 			redirect('');
@@ -197,16 +278,6 @@ class Humanr extends CI_Controller
 
 
 
-
-	public function pending_req2()
-	{
-
-		$data['title'] = 'HR | Pendings2';
-		$this->load->view('templates/header', $data);
-		$this->load->view('pages/hr/request_pending2');
-		$this->load->view('templates/footer');
-	}
-
 	public function C_hr_report_timesheet()
 	{
 		if ($this->session->userdata('logged_in')) {
@@ -218,11 +289,6 @@ class Humanr extends CI_Controller
 			redirect('');
 		}
 	}
-
-
-
-
-
 
 
 

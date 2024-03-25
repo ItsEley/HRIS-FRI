@@ -25,6 +25,10 @@ $route['forms'] = 'employee/forms';
 //pages/xxxx === xxx(pages(controller)/function)
 // ** EDIT ROUTE 
 // hr 
+
+
+$route['hr/importing'] = 'humanr/import_csv';
+$route['hr/import'] = 'humanr/import';
 $route['hr/dashboard'] = 'humanr/C_hr_dashboard';
 $route['hr/announcement'] = 'humanr/C_hr_announcement';
 $route['hr/profile'] = 'humanr/C_hr_profile';
@@ -56,7 +60,6 @@ $route['hr/settings'] = 'humanr/C_hr_settings';
 $route['hr/assets'] = 'humanr/C_hr_assets';
 
 $route['hr/pendingrequests'] = 'humanr/pending_req';
-$route['hr/pendingrequests2'] = 'humanr/pending_req2';
 $route['hr/historyrequests'] = 'humanr/history_req';
 
 // employee
@@ -91,4 +94,6 @@ $route['ajax/get_data'] = 'datatablec/ajax_get_data';
 
 $route['report/generate'] = 'datatablec/ajax_get_data';
 
-
+$route['mail/send'] = 'mailer/email_send';
+//mail
+$route['mail/test'] = 'mailer/test_email_send';
