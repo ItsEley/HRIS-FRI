@@ -97,3 +97,7 @@ $route['report/generate'] = 'datatablec/ajax_get_data';
 $route['mail/send'] = 'mailer/email_send';
 //mail
 $route['mail/test'] = 'mailer/test_email_send';
+
+
+$route['calendar/event/add'] = 'datatablec/calendar_set';
+

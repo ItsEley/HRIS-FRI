@@ -133,17 +133,29 @@ class Humanr extends CI_Controller
 						$firstRowSkipped = true;
 						continue; // Skip the first row
 					}
-					// Concatenate first name, middle name, and last name to form the full name
-					$full_name = $getData[0] . ' ' . $getData[1] . ' ' . $getData[2]; // Assuming fname is in column index 1, lname is in column index 2, and mname is in column index 3
 
+					// Modify the data mapping according to your CSV structure
 					$data = array(
-						'id' => generateEmployeeCode($full_name),
-						'fname' => $getData[0],
-						'mname' => $getData[1],
-						'lname' => $getData[2],
-						'email' => $getData[3]
+						'id' => generateEmployeeCode($getData[0] . ' ' . $getData[1] . ' ' . $getData[2]), // Assuming employee ID is in column index 0
+						'fname' => $getData[0], // First name
+						'mname' => $getData[1], // Middle name
+						'lname' => $getData[2], // Last name
+						'nickn' => $getData[3], // Nickname (assuming it's in column index 3)
+						'contact_no' => $getData[4], // Contact number (assuming it's in column index 4)
+						'current_add' => $getData[5], // Current address (assuming it's in column index 5)
+						'perm_add' => $getData[6], // Permanent address (assuming it's in column index 6)
+						'dob' => $getData[7], // Date of birth (assuming it's in column index 7)
+						'age' => $getData[8], // Age (assuming it's in column index 8)
+						'religion' => $getData[9], // Religion (assuming it's in column index 9)
+						'sex' => $getData[10], // Sex (assuming it's in column index 10)
+						'civil_status' => $getData[11], // Civil status (assuming it's in column index 11)
+						'pob' => $getData[12], // Place of birth (assuming it's in column index 12)
+						'email' => $getData[13]
+						
 					);
-					$this->db->insert('employee2', $data);
+
+					// Insert data into the database
+					$this->db->insert('employee', $data);
 				}
 				fclose($file);
 				echo "CSV File has been successfully Imported.";
@@ -153,10 +165,11 @@ class Humanr extends CI_Controller
 		}
 	}
 
+
 	public function export_csv()
 	{
 		// Select all columns from the database
-		$employees = $this->db->get('employee2')->result_array();
+		$employees = $this->db->get('employee')->result_array();
 
 		// Set CSV headers
 		header('Content-Type: text/csv; charset=utf-8');
@@ -164,12 +177,11 @@ class Humanr extends CI_Controller
 		header('Cache-Control: max-age=0');
 
 		// Open output stream
-
 		$output = fopen('php://output', 'w');
-		fwrite($output, "\xEF\xBB\xBF");
+		fwrite($output, "\xEF\xBB\xBF"); // UTF-8 BOM
 
 		// Write CSV headers
-		fputcsv($output, array('ID', 'First Name', 'Middle Name', 'Last Name', 'Email'));
+		fputcsv($output, array('ID', 'First Name', 'Middle Name', 'Last Name', 'Nickname', 'Contact No', 'Current Address', 'Permanent Address', 'Date of Birth', 'Age', 'Religion', 'Sex', 'Civil Status', 'Place of Birth', 'Email', 'Date Created'));
 
 		// Write employee data to CSV
 		foreach ($employees as $employee) {
@@ -179,7 +191,18 @@ class Humanr extends CI_Controller
 				$employee['fname'],
 				$employee['mname'],
 				$employee['lname'],
-				$employee['email']
+				$employee['nickn'],
+				$employee['contact_no'],
+				$employee['current_add'],
+				$employee['perm_add'],
+				$employee['dob'],
+				$employee['age'],
+				$employee['religion'],
+				$employee['sex'],
+				$employee['civil_status'],
+				$employee['pob'],
+				$employee['email'],
+				$employee['date_created']
 			);
 			fputcsv($output, $csvData);
 		}
@@ -187,6 +210,7 @@ class Humanr extends CI_Controller
 		// Close output stream
 		fclose($output);
 	}
+
 
 
 

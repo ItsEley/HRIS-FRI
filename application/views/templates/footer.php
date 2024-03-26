@@ -35,7 +35,10 @@
     <script src="<?= base_url('assets/js/greedynav.js') ?>"></script>
 
 
-    <!-- jasny.net -->
+
+<!-- FullCalendar JavaScript -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.js"></script> -->
+<!-- <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script> -->
 
     </body>
 
