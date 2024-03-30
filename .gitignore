@@ -30,3 +30,4 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /tests/tests/
 /tests/results/
 assets/api/holidays-api/vendor/holidayapi/holidayapi-php
+assets/api/holidays-api/vendor/holidayapi/holidayapi-php
