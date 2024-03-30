@@ -46,7 +46,12 @@ $route['hr/employees/leaves'] = 'humanr/C_hr_emp_leaves';
 
 // hr/reports
 $route['hr/reports/timesheet'] = 'humanr/C_hr_report_timesheet';
+$route['hr/reports/employee_performance'] = 'humanr/C_hr_report_emp_performance';
+$route['hr/reports/salary'] = 'humanr/C_hr_report_salary';
 
+$route['hr/payroll/salary_rate'] = 'humanr/C_hr_payroll_rate';
+$route['hr/payroll/bonus'] = 'humanr/C_hr_payroll_bonus';
+$route['hr/payroll/deduction'] = 'humanr/C_hr_payroll_deduction';
 
 
 
@@ -63,7 +68,8 @@ $route['hr/pendingrequests'] = 'humanr/pending_req';
 $route['hr/historyrequests'] = 'humanr/history_req';
 
 // employee
-
+$route['employee/approval'] = 'employee/head_approval';
+$route['employee/history'] = 'employee/head_history';
 $route['employee/dashboard'] = 'employee/emphome';
 // $route['employee/profile'] = 'pages/emp_home';
 // $route['employee/profile/settings'] = 'pages/emp_home';
@@ -91,13 +97,13 @@ $route['worksched_adjust'] = 'employee/C_sched_adjust';
 
 //php_ajax
 $route['ajax/get_data'] = 'datatablec/ajax_get_data';
-
 $route['report/generate'] = 'datatablec/ajax_get_data';
-
 $route['mail/send'] = 'mailer/email_send';
 //mail
 $route['mail/test'] = 'mailer/test_email_send';
 
 
 $route['calendar/event/add'] = 'datatablec/calendar_set';
+$route['calendar/event/update'] = 'datatablec/calendar_update';
+
 

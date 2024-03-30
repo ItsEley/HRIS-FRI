@@ -18,6 +18,24 @@ class Employee extends CI_Controller
       $this->load->view('pages/public/forms');
       $this->load->view('templates/footer');
     }
+
+	
+    public function head_approval()
+    {
+      $data['title'] = 'Head | Approval';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/employee/head_approval');
+      $this->load->view('templates/footer');
+    }
+
+	public function head_history()
+    {
+      $data['title'] = 'Head | History';
+      $this->load->view('templates/header',$data);
+      $this->load->view('pages/employee/head_history');
+      $this->load->view('templates/footer');
+    }
+
 	public function pendingrequest()
     {
       $data['title'] = 'Employee | Pendings';

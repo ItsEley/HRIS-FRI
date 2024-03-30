@@ -5268,7 +5268,7 @@ li.previous {
 
 [data-layout-mode=orange] body .header {
   background: #ff9b44;
-  background: linear-gradient(to right, #070f4d 40%, #5a6dff 100%);
+  /* background: linear-gradient(to right, #070f4d 40%, #5a6dff 100%); */
 }
 [data-layout-mode=orange] body .header .header-left .logo {
   display: block;

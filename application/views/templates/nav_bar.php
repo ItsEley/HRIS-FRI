@@ -1,5 +1,5 @@
-<div class="header">
-   <!-- Logo -->
+<div class="header" style = "background: linear-gradient(to right, #070f4d 40%, #5a6dff 100%);">
+   <!-- Logo --> 
    <div class="header-left">
       <a href="admin-dashboard.html" class="logo">
          <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" width="80" height="80" alt="Logo">

@@ -76,7 +76,10 @@
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
-                        <!-- <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_employee"><i class="fa-solid fa-plus"></i> Add Employee</a> -->
+                        <!-- <a href="#" class="bt
+                        
+                        
+                        n add-btn" data-bs-toggle="modal" data-bs-target="#add_employee"><i class="fa-solid fa-plus"></i> Add Employee</a> -->
                         <div class="view-icons">
 
                         </div>
@@ -90,20 +93,19 @@
 
                     $total_count = 0;
                     $this->db->from('f_leaves');
-                    $this->db->where('status', 'pending');
-                    $this->db->where('head_status', 'approved');
+                    $this->db->where('head_status', 'pending');
                     $total_count += $this->db->count_all_results();
                     $this->db->from('f_outgoing');
-                    $this->db->where('status', 'pending');
+                    $this->db->where('head_status', 'pending');
                     $total_count += $this->db->count_all_results();
                     $this->db->from('f_overtime');
-                    $this->db->where('status', 'pending');
+                    $this->db->where('head_status', 'pending');
                     $total_count += $this->db->count_all_results();
                     $this->db->from('f_undertime');
-                    $this->db->where('status', 'pending');
+                    $this->db->where('head_status', 'pending');
                     $total_count += $this->db->count_all_results();
                     $this->db->from('f_off_bussiness');
-                    $this->db->where('status', 'pending');
+                    $this->db->where('head_status', 'pending');
                     $total_count += $this->db->count_all_results();
                     $data['icon'] = "fa fa-address-book";
                     $data['count'] = $total_count;
@@ -165,8 +167,7 @@
                         Pending Leaves
                         <?php
                         $this->db->from('f_leaves');
-                        $this->db->where('head_status', 'approved');
-                        $this->db->where('status', 'pending');
+                        $this->db->where('head_status', 'pending');
                         $data['count'] = $count = $this->db->count_all_results();
 
                         if ($count > 0) {
@@ -178,7 +179,7 @@
                 <li class="nav-item"><a class="nav-link" href="#solid-tab2" data-bs-toggle="tab">Pending Outgoing
                         <?php
                         $this->db->from('f_outgoing');
-                        $this->db->where('status', 'pending');
+                        $this->db->where('head_status', 'pending');
                         $data['count'] = $count = $this->db->count_all_results();
 
                         if ($count > 0) {
@@ -191,7 +192,7 @@
 
                         <?php
                         $this->db->from('f_overtime');
-                        $this->db->where('status', 'pending');
+                        $this->db->where('head_status', 'pending');
                         $data['count'] = $count = $this->db->count_all_results();
 
                         if ($count > 0) {
@@ -205,7 +206,7 @@
 
                         <?php
                         $this->db->from('f_undertime');
-                        $this->db->where('status', 'pending');
+                        $this->db->where('head_status', 'pending');
                         $data['count'] = $count = $this->db->count_all_results();
 
                         if ($count > 0) {
@@ -219,7 +220,7 @@
 
                         <?php
                         $this->db->from('f_off_bussiness');
-                        $this->db->where('status', 'pending');
+                        $this->db->where('head_status', 'pending');
                         $data['count'] = $count = $this->db->count_all_results();
 
                         if ($count > 0) {
@@ -237,13 +238,13 @@
                                 <div class="col">
                                     <h4 class="card-title mb-0">Pending Leave Request</h4>
                                 </div>
-                                <div class="col-auto">
+                                <!-- <div class="col-auto">
                                     <div class="float-end ms-auto">
                                         <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#modal_leave_request">
                                             <i class="fa-solid fa-plus"></i> Add Leave Request
                                         </a>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="card-body">
@@ -263,10 +264,9 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                       $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_leaves f 
-                                       LEFT JOIN employee e ON f.emp_id = e.id 
-                                       WHERE f.head_status = 'approved' AND f.status = 'pending'");
-            
+                                        $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_leaves f 
+                                            LEFT JOIN employee e ON f.emp_id = e.id 
+                                            WHERE f.head_status = 'pending'");
                                         foreach ($query->result() as $row) {
                                             $fname = $row->fname;
                                             $lname = $row->lname;
@@ -312,10 +312,10 @@
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <div class="row mb-4 justify-content-center"> <!-- Added justify-content-center to center horizontally -->
-                                                                <div class="col-md-9 d-flex justify-content-center align-items-center"> <!-- Added justify-content-center to center horizontally -->
+                                                            <div class="row mb-4 justify-content-center">
+                                                                <div class="col-md-9 d-flex justify-content-center align-items-center"> 
                                                                     <div class="account-logo">
-                                                                        <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" alt="Famco Retail Inc." style="max-width: 100px; height: auto;" /> <!-- Adjusted logo size -->
+                                                                        <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" alt="Famco Retail Inc." style="max-width: 100px; height: auto;" />
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -393,13 +393,13 @@
                                 <div class="col">
                                     <h4 class="card-title mb-0">Pending Outgoing Request</h4>
                                 </div>
-                                <div class="col-auto">
+                                <!-- <div class="col-auto">
                                     <div class="float-end ms-auto">
                                         <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#modal_outgoing_pass">
                                             <i class="fa-solid fa-plus"></i> Add Outgoing Request
                                         </a>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="card-body">
@@ -426,7 +426,7 @@
 
                                                     $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_outgoing f 
                                             LEFT JOIN employee e ON f.emp_id = e.id 
-                                            WHERE f.status = 'pending'");
+                                            WHERE f.head_status = 'pending'");
                                                     foreach ($query->result() as $row) {
                                                         $fname = $row->fname;
                                                         $lname = $row->lname;
@@ -565,13 +565,13 @@
                                 <div class="col">
                                     <h4 class="card-title mb-0">Pending Overtime Request</h4>
                                 </div>
-                                <div class="col-auto">
+                                <!-- <div class="col-auto">
                                     <div class="float-end ms-auto">
                                         <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#modal_overtime_request">
                                             <i class="fa-solid fa-plus"></i> Add Overtime Request
                                         </a>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="card-body">
@@ -593,7 +593,7 @@
                                         <?php
                                         $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_overtime f 
                                        LEFT JOIN employee e ON f.emp_id = e.id 
-                                       WHERE f.status = 'pending'");
+                                       WHERE f.head_status = 'pending'");
                                         foreach ($query->result() as $row) {
                                             $fname = $row->fname;
                                             $lname = $row->lname;
@@ -725,13 +725,13 @@
                                 <div class="col">
                                     <h4 class="card-title mb-0">Pending Undertime Request</h4>
                                 </div>
-                                <div class="col-auto">
+                                <!-- <div class="col-auto">
                                     <div class="float-end ms-auto">
                                         <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#modal_undertime_request">
                                             <i class="fa-solid fa-plus"></i> Add Undertime Request
                                         </a>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="card-body">
@@ -757,7 +757,7 @@
                                         <?php
                                         $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_undertime f 
                                        LEFT JOIN employee e ON f.emp_id = e.id 
-                                       WHERE f.status = 'pending'");
+                                       WHERE f.head_status = 'pending'");
                                         foreach ($query->result() as $row) {
                                             $fname = $row->fname;
                                             $lname = $row->lname;
@@ -889,13 +889,13 @@
                                 <div class="col">
                                     <h4 class="card-title mb-0">Pending Official Business Request</h4>
                                 </div>
-                                <div class="col-auto">
+                                <!-- <div class="col-auto">
                                     <div class="float-end ms-auto">
                                         <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_ob">
                                             <i class="fa-solid fa-plus"></i> Add Official Business Request
                                         </a>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="card-body">
@@ -918,7 +918,7 @@
                                         <?php
                                         $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_off_bussiness f 
                                 LEFT JOIN employee e ON f.emp_id = e.id 
-                                WHERE f.status = 'pending'");
+                                WHERE f.head_status = 'pending'");
                                         foreach ($query->result() as $row) {
                                             $fname = $row->fname;
                                             $lname = $row->lname;
@@ -1607,7 +1607,7 @@
 <script src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.min.js"></script>
  -->
 
-<script>
+<!-- <script>
     $(document).ready(function() {
         $('#leavereq_dt').DataTable();
         $('#outgoingreq_dt').DataTable();
@@ -1615,6 +1615,6 @@
         $('#undertime_dt').DataTable();
         $('#ob_dt').DataTable(); // Initialize DataTable
     });
-</script>
+</script> -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>

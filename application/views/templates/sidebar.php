@@ -254,9 +254,9 @@
     <li class='submenu reports'>
         <a href='#' class=''><i class='la la-file-text'></i><span>Reports</span><span class='menu-arrow'></span></a>
         <ul>
-        <li><a href='hr_emp_performance.html'>Employee Performance |</a></li>
+        <li><a href='" . base_url('hr/reports/employee_performance') . "'>Employee Performance</a></li>
 
-        <li><a href='" . base_url('hr/reports/salary') . "'>Salary Report |</a></li>
+        <li><a href='" . base_url('hr/reports/salary') . "'>Salary Report</a></li>
         <li><a href='" . base_url('hr/reports/timesheet') . "'>Timesheet</a></li>
 
             <li><a href='" . base_url('hr/employees/attendance') . "'>Attendance</a></li>
@@ -274,9 +274,9 @@
     <li class='submenu payroll'>
         <a href='#' class=''><i class='la la-money'></i><span>Payroll</span><span class='menu-arrow'></span></a>
         <ul>
-            <li><a href='hr_emp_overview.html'>Salary Rate |</a></li>
-            <li><a href='hr_emp_manage.html'>Bonuses & Commissions |</a></li>
-            <li><a href='hr_emp_designations.html'>Deductions |</a></li>
+            <li><a href='" . base_url('hr/payroll/salary_rate') . "'>Salary Rate </a></li>
+            <li><a href='" . base_url('hr/payroll/bonus') . "'>Bonuses & Commissions</a></li>
+            <li><a href='" . base_url('hr/payroll/deduction') . "'>Deductions</a></li>
         </ul>
     </li>
     <li class='submenu forms'>
@@ -289,11 +289,35 @@
     </li>
 ";
             } else if (strtolower($_SESSION['department']) == 'sys-at') {
-
-               
             } else {
-
-               echo "
+               if (strtolower($_SESSION['roles']) == 'head') {
+                  echo "
+                  <li><a href='" . base_url('employee/dashboard') . "'><i class='la la-dashboard'></i><span>Dashboard | Head</span></a></li>
+                  
+                  <li class='submenu forms'>
+        <a href='#' class=''><i class='la la-object-group'></i><span>Forms</span><span class='menu-arrow'></span></a>
+        <ul>
+            <li><a href='" . base_url('forms') . "'>Apply</a></li>
+            <li><a href='" . base_url('employee/pendingrequests') . "'>Pending</a></li>
+            <li><a href='" . base_url('forms/history') . "'>History</a></li>
+        </ul>
+        
+    </li>
+    <li class='submenu forms'>
+    <a href='#' class=''><i class='la la-object-group'></i><span>Requests for Approval</span><span class='menu-arrow'></span></a>
+    <ul>
+      
+        <li><a href='" . base_url('employee/approval') . "'>Pending Requests</a></li>
+        <li><a href='" . base_url('employee/history') . "'>History</a></li>
+    </ul>
+    
+</li>
+                  
+                  
+                  
+                  ";
+               } else {
+                  echo "
                   <li><a href='" . base_url('employee/dashboard') . "'><i class='la la-dashboard'></i><span>Dashboard (Employee)</span></a></li>
                   
                   <li class='submenu forms'>
@@ -308,6 +332,7 @@
                   
                   
                   ";
+               }
             }
 
             ?>
@@ -321,4 +346,3 @@
       </div>
    </div>
 </div>
-

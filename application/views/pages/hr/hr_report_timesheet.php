@@ -39,7 +39,7 @@
                                 <tr>
                                     <th hidden>ID</th>
                                     <th>Name</th>
-                                    <th>Deparment</th>
+                                    <th>Date</th>
                                     <th>Time-in</th>
                                     <th>Time-out</th>
                                     <th>Total Hours Worked</th>

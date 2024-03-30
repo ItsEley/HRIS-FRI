@@ -1,3 +1,34 @@
+body{
+font-size: 12px !important;  
+/* font-size: 10%; */
+}
+
+
+
+  ::-webkit-scrollbar{
+    width: 3px !important;
+  }
+  
+  /* Targeting scrollbar track */
+body::-webkit-scrollbar {
+    width: 6px !important; /* Width of the scrollbar */
+  }
+
+
+  /* Targeting scrollbar thumb (the draggable bar) */
+  ::-webkit-scrollbar-thumb {
+    background-color: #c1c1c1; /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Rounded corners */
+  }
+  
+  /* Targeting scrollbar track */
+  ::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Color of the scrollbar track */
+    border-radius: 10px; /* Rounded corners */
+
+  }
+
+
 .text-overflow-ellipsis {
     /* white-space: nowrap; */
     overflow: hidden;

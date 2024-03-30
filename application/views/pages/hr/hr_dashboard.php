@@ -36,7 +36,7 @@
          <!-- /Page Header -->
 
          <div class="row"> <!-- main metrics -->
-            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+            <div class="col-lg-3 col-6">
 
                <?php
 
@@ -50,7 +50,7 @@
 
 
             </div>
-            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+            <div class="col-lg-3 col-6">
 
                <?php
                $data['icon'] = "fa fa-address-book";
@@ -61,7 +61,7 @@
                ?>
 
             </div>
-            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+            <div class="col-lg-3 col-6">
                <?php
                $data['icon'] = "fa fa-check-circle";
                $data['count'] = rand(0, 200);
@@ -71,7 +71,7 @@
                ?>
 
             </div>
-            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+            <div class="col-lg-3 col-6">
                <?php
 
                $pending_leave = $this->db->count_all('f_leaves');
@@ -128,12 +128,8 @@
                     ?>
 
 
-
-
-
-
                 </div>
-                <div class="col-4">
+                <div class="col-lg-4 col-md-12">
                     <h2 class="page-title">Upcoming Events</h2>
 
                     <div class="row timeline-panel " style="background-color: white; ">

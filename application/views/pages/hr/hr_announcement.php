@@ -6,14 +6,14 @@
 
 
     }
-    input[type='checkbox']:checked + label.btn.btn-light.btn-rounded {
-    /* Your styles here */
-    
+
+    input[type='checkbox']:checked+label.btn.btn-light.btn-rounded {
+        /* Your styles here */
+
         background-color: #26c769 !important;
         color: #fff !important;
 
-}
-
+    }
 </style>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 <link href="..\assets\text-editor\node_modules\froala-editor\css\froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
@@ -37,17 +37,29 @@
         <div class="content container-fluid">
 
 
-            <div class="row">
-                <div class="col">
-                    <h1>Announcements <span>
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h3 class="page-title">Announcements</h3>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="admin-dashboard.html">HR Home</a></li>
+                            <li class="breadcrumb-item active">Announcements</li>
+                        </ul>
+                    </div>
+                    <div class="col text-end">
+                        <button type="button" class="btn btn-primary waves-effect waves-light mt-1"
+                         data-bs-toggle="modal" data-bs-target="#con-close-modal">
+                         <span class="fa-solid fa-plus"></span> Create Announcement</button>
 
-                            <button type="button" class="btn btn-primary waves-effect waves-light mt-1" data-bs-toggle="modal" data-bs-target="#con-close-modal"> <span class="fa-solid fa-plus"></span></button>
-                        </span></h1>
+                    </div>
+
                 </div>
             </div>
+            <!-- /Page Header -->
 
-            
-<!-- data table -->
+
+            <!-- data table -->
             <div class="row timeline-panel">
                 <div class="col-md-12">
                     <div class="table-responsive">
@@ -90,19 +102,19 @@
                                         <td><?php echo date('M j, Y', strtotime($date)); ?></td>
 
                                         <td>
-                                        <div class="dropdown">
-                                                                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                        <i class="material-icons">more_vert</i>
-                                                                    </a>
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $ann_id ?>">
-                                                                        <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?php echo $ann_id ?>">
-                                                                            <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                                                        </a>
-                                                                        <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $ann_id ?>">
-                                                                            <i class="fa-regular fa-trash-can m-r-5"></i> Delete
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
+                                            <div class="dropdown">
+                                                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="material-icons">more_vert</i>
+                                                </a>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $ann_id ?>">
+                                                    <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?php echo $ann_id ?>">
+                                                        <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                                    </a>
+                                                    <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $ann_id ?>">
+                                                        <i class="fa-regular fa-trash-can m-r-5"></i> Delete
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php
@@ -113,7 +125,7 @@
                     </div>
                 </div>
             </div>
-<!-- /data table -->
+            <!-- /data table -->
 
 
 
@@ -150,46 +162,38 @@
                     <div class="input-block mb-3 row">
                         <label class="col-form-label col-md-2">Department</label>
                         <div class="col-md-10">
-                            <select class="form-control form-select" name="department">
-                                <option value="All">All</option>
-                                <option value="Multiple">Multiple</option>
 
-                                <?php
-                                //get select-options
-                                $query =  $this->db->get('department');
-                                $data['query'] = $query;
-                                $this->load->view('components/select-options', $data);
-                                ?>
-                            </select>
+
+
+                            <?php
+
+                            echo ' <input type="checkbox" class="btn-check" id="select_all" group="dept_multi" autocomplete="off">
+                                <label class="btn btn-light btn-rounded d-inline-flex w-auto" for="select_all" style = "font-size:12px;margin:2px">All</label>';
+
+                            //get select-options
+                            $query =  $this->db->get('department');
+                            $data['query'] = $query;
+                            // Check if query executed successfully
+                            if ($query->num_rows() > 0) {
+                                foreach ($query->result() as $row) {
+
+                                    // Output each department as an option
+                                    echo '
+                                        <input type="checkbox" class="btn-check" id="' . $row->id . '" group="dept_multi" autocomplete="off">
+                                        <label class="btn btn-light btn-rounded d-inline-flex w-auto" for="' . $row->id . '" style = "font-size:12px;margin:2px">' . $row->department . '</label>';
+
+                                    // echo '<option value="' . $row->id . '">' .  $row->department . '</option>';
+                                }
+                            } else {
+                                // Handle no results from the database
+                                echo '<option value="">No departments found</option>';
+                            }
+                            ?>
                         </div>
                     </div>
 
 
 
-                    <div class="mb-3 row" style="margin-left:20px;">
-
-
-                        <?php
-                        //get select-options
-                        $query =  $this->db->get('department');
-                        $data['query'] = $query;
-                        // Check if query executed successfully
-                        if ($query->num_rows() > 0) {
-                            foreach ($query->result() as $row) {
-
-                                // Output each department as an option
-                                echo '
-                                        <input type="checkbox" class="btn-check" id="' . $row->id . '" group="dept_multi" autocomplete="off">
-                                        <label class="btn btn-light btn-rounded d-inline-flex w-auto" for="' . $row->id . '" style = "font-size:12px;margin:2px">' . $row->department . '</label>';
-
-                                // echo '<option value="' . $row->id . '">' .  $row->department . '</option>';
-                            }
-                        } else {
-                            // Handle no results from the database
-                            echo '<option value="">No departments found</option>';
-                        }
-                        ?>
-                    </div>
 
 
                     <div class="row">
@@ -215,7 +219,47 @@
         new FroalaEditor('textarea#froala-editor');
 
 
-        // $("label.btn.btn-light.btn-rounded")
+        //     $("#select_all").on('change',function(){
 
+        //         if (this.checked) {
+        //     console.log('Toggle is active');
+        //   } else {
+        //     console.log('Toggle is inactive');
+        //   }
+
+        //     });
+
+        var checkboxes = document.querySelectorAll('input.btn-check');
+
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                if (this.id == "select_all") {
+                    console.log("select")
+
+
+                    if (this.checked) {
+                        console.log('Toggle is active');
+                        checkboxes.forEach(function(x) {
+                            if (x.id !== "select_all") {
+                                $("#" + x.id).attr("disabled", "disabled")
+                            }
+                        })
+
+                    } else {
+                        console.log('Toggle is inactive');
+                        checkboxes.forEach(function(x) {
+                            if (x.id !== "select_all") {
+                                $("#" + x.id).removeAttr("disabled", "disabled")
+                            }
+                        })
+                    }
+                } else {
+
+                }
+
+            });
+
+
+        })
     })
 </script>

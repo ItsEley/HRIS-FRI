@@ -314,6 +314,69 @@ class Humanr extends CI_Controller
 		}
 	}
 
+	public function C_hr_report_emp_performance()
+	{
+		if ($this->session->userdata('logged_in')) {
+			$data['title'] = 'HR | Reports | Employee Performance';
+			$this->load->view('templates/header', $data);
+			$this->load->view('pages/hr/hr_report_emp_performance');
+			$this->load->view('templates/footer');
+		} else {
+			redirect('');
+		}
+	}
+
+	public function C_hr_report_salary()
+	{
+		if ($this->session->userdata('logged_in')) {
+			$data['title'] = 'HR | Reports | Salary';
+			$this->load->view('templates/header', $data);
+			$this->load->view('pages/hr/hr_report_salary');
+			$this->load->view('templates/footer');
+		} else {
+			redirect('');
+		}
+	}
+
+	public function C_hr_payroll_rate()
+	{
+		if ($this->session->userdata('logged_in')) {
+			$data['title'] = 'HR | Reports | Salary';
+			$this->load->view('templates/header', $data);
+			$this->load->view('pages/hr/hr_payroll_salary_rate');
+			$this->load->view('templates/footer');
+		} else {
+			redirect('');
+		}
+	}
+
+	public function C_hr_payroll_bonus()
+	{
+		if ($this->session->userdata('logged_in')) {
+			$data['title'] = 'HR | Reports | Salary';
+			$this->load->view('templates/header', $data);
+			$this->load->view('pages/hr/hr_payroll_bonuses');
+			$this->load->view('templates/footer');
+		} else {
+			redirect('');
+		}
+	}
+
+	public function C_hr_payroll_deduction()
+	{
+		if ($this->session->userdata('logged_in')) {
+			$data['title'] = 'HR | Reports | Salary';
+			$this->load->view('templates/header', $data);
+			$this->load->view('pages/hr/hr_payroll_deductions');
+			$this->load->view('templates/footer');
+		} else {
+			redirect('');
+		}
+	}
+
+
+
+
 
 
 	public function C_formshistory()
