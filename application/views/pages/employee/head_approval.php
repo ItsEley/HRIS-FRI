@@ -166,67 +166,192 @@
 
                         Pending Leaves
                         <?php
-                        $this->db->from('f_leaves');
-                        $this->db->where('head_status', 'pending');
-                        $data['count'] = $count = $this->db->count_all_results();
+                        // Get the current user's emp_id from the session
+                        $current_user_id = $this->session->userdata('emp_id');
 
-                        if ($count > 0) {
-                            echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
+                        // Query to get the department from department_roles based on the current user's emp_id
+                        $dept_query = $this->db->query("
+    SELECT department 
+    FROM department_roles 
+    WHERE assigned_emp = '$current_user_id'
+");
+
+                        // Check if the query returned any rows
+                        if ($dept_query->num_rows() > 0) {
+                            // Fetch the row
+                            $row = $dept_query->row();
+
+                            // Get the department from the row
+                            $current_department = $row->department;
+
+                            // Now you have the current user's department
+                            // You can use $current_department as needed
+
+                            // Now integrate this department into your code for counting pending official business requests
+                            $this->db->from('f_leaves');
+                            $this->db->where('head_status', 'pending');
+                            $this->db->where('department', $current_department); // Use the retrieved department
+                            $data['count'] = $count = $this->db->count_all_results();
+
+                            if ($count > 0) {
+                                echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
+                            }
                         }
+                        ?>
 
-                        ?></a>
+                    </a>
                 </li>
                 <li class="nav-item"><a class="nav-link" href="#solid-tab2" data-bs-toggle="tab">Pending Outgoing
                         <?php
-                        $this->db->from('f_outgoing');
-                        $this->db->where('head_status', 'pending');
-                        $data['count'] = $count = $this->db->count_all_results();
+                        // Get the current user's emp_id from the session
+                        $current_user_id = $this->session->userdata('emp_id');
 
-                        if ($count > 0) {
-                            echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
+                        // Query to get the department from department_roles based on the current user's emp_id
+                        $dept_query = $this->db->query("
+    SELECT department 
+    FROM department_roles 
+    WHERE assigned_emp = '$current_user_id'
+");
+
+                        // Check if the query returned any rows
+                        if ($dept_query->num_rows() > 0) {
+                            // Fetch the row
+                            $row = $dept_query->row();
+
+                            // Get the department from the row
+                            $current_department = $row->department;
+
+                            // Now you have the current user's department
+                            // You can use $current_department as needed
+
+                            // Now integrate this department into your code for counting pending official business requests
+                            $this->db->from('f_outgoing');
+                            $this->db->where('head_status', 'pending');
+                            $this->db->where('department', $current_department); // Use the retrieved department
+                            $data['count'] = $count = $this->db->count_all_results();
+
+                            if ($count > 0) {
+                                echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
+                            }
                         }
                         ?>
+
 
                     </a></li>
                 <li class="nav-item"><a class="nav-link" href="#solid-tab3" data-bs-toggle="tab">Pending Overtime
 
                         <?php
-                        $this->db->from('f_overtime');
-                        $this->db->where('head_status', 'pending');
-                        $data['count'] = $count = $this->db->count_all_results();
+                        // Get the current user's emp_id from the session
+                        $current_user_id = $this->session->userdata('emp_id');
 
-                        if ($count > 0) {
-                            echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
+                        // Query to get the department from department_roles based on the current user's emp_id
+                        $dept_query = $this->db->query("
+    SELECT department 
+    FROM department_roles 
+    WHERE assigned_emp = '$current_user_id'
+");
+
+                        // Check if the query returned any rows
+                        if ($dept_query->num_rows() > 0) {
+                            // Fetch the row
+                            $row = $dept_query->row();
+
+                            // Get the department from the row
+                            $current_department = $row->department;
+
+                            // Now you have the current user's department
+                            // You can use $current_department as needed
+
+                            // Now integrate this department into your code for counting pending official business requests
+                            $this->db->from('f_overtime');
+                            $this->db->where('head_status', 'pending');
+                            $this->db->where('department', $current_department); // Use the retrieved department
+                            $data['count'] = $count = $this->db->count_all_results();
+
+                            if ($count > 0) {
+                                echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
+                            }
                         }
                         ?>
+
 
 
                     </a></li>
                 <li class="nav-item"><a class="nav-link" href="#solid-tab4" data-bs-toggle="tab">Pending Undertime
 
                         <?php
-                        $this->db->from('f_undertime');
-                        $this->db->where('head_status', 'pending');
-                        $data['count'] = $count = $this->db->count_all_results();
+                        // Get the current user's emp_id from the session
+                        $current_user_id = $this->session->userdata('emp_id');
 
-                        if ($count > 0) {
-                            echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
+                        // Query to get the department from department_roles based on the current user's emp_id
+                        $dept_query = $this->db->query("
+    SELECT department 
+    FROM department_roles 
+    WHERE assigned_emp = '$current_user_id'
+");
+
+                        // Check if the query returned any rows
+                        if ($dept_query->num_rows() > 0) {
+                            // Fetch the row
+                            $row = $dept_query->row();
+
+                            // Get the department from the row
+                            $current_department = $row->department;
+
+                            // Now you have the current user's department
+                            // You can use $current_department as needed
+
+                            // Now integrate this department into your code for counting pending official business requests
+                            $this->db->from('f_undertime');
+                            $this->db->where('head_status', 'pending');
+                            $this->db->where('department', $current_department); // Use the retrieved department
+                            $data['count'] = $count = $this->db->count_all_results();
+
+                            if ($count > 0) {
+                                echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
+                            }
                         }
                         ?>
+
 
 
                     </a></li>
                 <li class="nav-item"><a class="nav-link" href="#solid-tab5" data-bs-toggle="tab">Pending Official Business
 
                         <?php
-                        $this->db->from('f_off_bussiness');
-                        $this->db->where('head_status', 'pending');
-                        $data['count'] = $count = $this->db->count_all_results();
+                        // Get the current user's emp_id from the session
+                        $current_user_id = $this->session->userdata('emp_id');
 
-                        if ($count > 0) {
-                            echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
+                        // Query to get the department from department_roles based on the current user's emp_id
+                        $dept_query = $this->db->query("
+    SELECT department 
+    FROM department_roles 
+    WHERE assigned_emp = '$current_user_id'
+");
+
+                        // Check if the query returned any rows
+                        if ($dept_query->num_rows() > 0) {
+                            // Fetch the row
+                            $row = $dept_query->row();
+
+                            // Get the department from the row
+                            $current_department = $row->department;
+
+                            // Now you have the current user's department
+                            // You can use $current_department as needed
+
+                            // Now integrate this department into your code for counting pending official business requests
+                            $this->db->from('f_off_bussiness');
+                            $this->db->where('head_status', 'pending');
+                            $this->db->where('department', $current_department); // Use the retrieved department
+                            $data['count'] = $count = $this->db->count_all_results();
+
+                            if ($count > 0) {
+                                echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
+                            }
                         }
                         ?>
+
 
                     </a></li>
             </ul>
@@ -264,13 +389,37 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_leaves f 
-                                            LEFT JOIN employee e ON f.emp_id = e.id 
-                                            WHERE f.head_status = 'pending'");
+                                        echo "Session emp_id: " . $this->session->userdata('emp_id') . "<br>";
+
+                                        // Assuming $this->session->userdata('emp_id') holds the current user's ID
+                                        $current_user_id = $this->session->userdata('emp_id');
+
+                                        // Query to get the department of the current user from department_roles
+                                        $dept_query = $this->db->query("
+                                          SELECT department 
+                                          FROM department_roles 
+                                          WHERE assigned_emp = '$current_user_id'
+                                      ");
+                                        $row = $dept_query->row();
+                                        $current_department = $row->department;
+
+                                        // Now, construct the query for fetching leaves for employees in the same department with pending status
+                                        $query = $this->db->query("
+                                          SELECT f.*, e.fname, e.lname 
+                                          FROM f_leaves f 
+                                          LEFT JOIN employee e ON f.emp_id = e.id 
+                                          WHERE f.head_status = 'pending'
+                                          AND f.department = '$current_department'
+                                      ");
+
                                         foreach ($query->result() as $row) {
                                             $fname = $row->fname;
                                             $lname = $row->lname;
                                             $fullname = $fname . ' ' . $lname;
+
+                                            // Your further processing here
+
+
                                         ?>
                                             <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
@@ -313,7 +462,7 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="row mb-4 justify-content-center">
-                                                                <div class="col-md-9 d-flex justify-content-center align-items-center"> 
+                                                                <div class="col-md-9 d-flex justify-content-center align-items-center">
                                                                     <div class="account-logo">
                                                                         <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" alt="Famco Retail Inc." style="max-width: 100px; height: auto;" />
                                                                     </div>
@@ -359,16 +508,12 @@
                                                                 <div class="mb-3 row">
                                                                     <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                         <div class="input-block mb-3 form-focus select-focus text-center">
-                                                                            <select class="select form-control floating">
-                                                                                <option> -- Select -- </option>
-                                                                                <option> Pending </option>
-                                                                                <option> Approved </option>
-                                                                                <option> Rejected </option>
-                                                                            </select>
-                                                                            <label class="focus-label">Leave Status</label>
+                                                                            <button id="approveButton" class="btn btn-primary">Approve</button>
+                                                                            <button id="denyButton" class="btn btn-danger">Deny</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
+
                                                             </form>
                                                         </div>
                                                         <div class="modal-footer">
@@ -393,13 +538,7 @@
                                 <div class="col">
                                     <h4 class="card-title mb-0">Pending Outgoing Request</h4>
                                 </div>
-                                <!-- <div class="col-auto">
-                                    <div class="float-end ms-auto">
-                                        <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#modal_outgoing_pass">
-                                            <i class="fa-solid fa-plus"></i> Add Outgoing Request
-                                        </a>
-                                    </div>
-                                </div> -->
+
                             </div>
                         </div>
                         <div class="card-body">
@@ -423,15 +562,36 @@
                                                 </thead>
                                                 <tbody>
                                                     <?php
+                                                    // Assuming $this->session->userdata('emp_id') holds the current user's ID
+                                                    $current_user_id = $this->session->userdata('emp_id');
 
-                                                    $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_outgoing f 
-                                            LEFT JOIN employee e ON f.emp_id = e.id 
-                                            WHERE f.head_status = 'pending'");
+                                                    // Query to get the department of the current user from department_roles
+                                                    $dept_query = $this->db->query("
+    SELECT department 
+    FROM department_roles 
+    WHERE assigned_emp = '$current_user_id'
+");
+                                                    $row = $dept_query->row();
+                                                    $current_department = $row->department;
+
+                                                    // Query to fetch outgoing requests with pending status for employees in the same department
+                                                    $query = $this->db->query("
+    SELECT f.*, e.fname, e.lname 
+    FROM f_outgoing f 
+    LEFT JOIN employee e ON f.emp_id = e.id 
+    WHERE f.head_status = 'pending'
+    AND f.department = '$current_department'
+");
+
                                                     foreach ($query->result() as $row) {
+                                                        // Extracting data for each row
                                                         $fname = $row->fname;
                                                         $lname = $row->lname;
                                                         $fullname = $fname . ' ' . $lname;
+
+
                                                     ?>
+
                                                         <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                             <td style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
@@ -523,13 +683,8 @@
                                                                             <div class="mb-3 row">
                                                                                 <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                                     <div class="input-block mb-3 form-focus select-focus text-center">
-                                                                                        <select class="select form-control floating">
-                                                                                            <option> -- Select -- </option>
-                                                                                            <option> Pending </option>
-                                                                                            <option> Approved </option>
-                                                                                            <option> Rejected </option>
-                                                                                        </select>
-                                                                                        <label class="focus-label">Outgoing Status</label>
+                                                                                        <button id="apapproveButtonproveButton" class="btn btn-primary">Approve</button>
+                                                                                        <button id="denyButton" class="btn btn-danger">Deny</button>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -565,13 +720,7 @@
                                 <div class="col">
                                     <h4 class="card-title mb-0">Pending Overtime Request</h4>
                                 </div>
-                                <!-- <div class="col-auto">
-                                    <div class="float-end ms-auto">
-                                        <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#modal_overtime_request">
-                                            <i class="fa-solid fa-plus"></i> Add Overtime Request
-                                        </a>
-                                    </div>
-                                </div> -->
+
                             </div>
                         </div>
                         <div class="card-body">
@@ -591,14 +740,36 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_overtime f 
-                                       LEFT JOIN employee e ON f.emp_id = e.id 
-                                       WHERE f.head_status = 'pending'");
+                                        // Assuming $this->session->userdata('emp_id') holds the current user's ID
+                                        $current_user_id = $this->session->userdata('emp_id');
+
+                                        // Query to get the department of the current user from department_roles
+                                        $dept_query = $this->db->query("
+    SELECT department 
+    FROM department_roles 
+    WHERE assigned_emp = '$current_user_id'
+");
+                                        $row = $dept_query->row();
+                                        $current_department = $row->department;
+
+                                        // Query to fetch overtime requests with pending status for employees in the same department
+                                        $query = $this->db->query("
+    SELECT f.*, e.fname, e.lname 
+    FROM f_overtime f 
+    LEFT JOIN employee e ON f.emp_id = e.id 
+    WHERE f.head_status = 'pending'
+    AND f.department = '$current_department'
+");
+
                                         foreach ($query->result() as $row) {
+                                            // Extracting data for each row
                                             $fname = $row->fname;
                                             $lname = $row->lname;
                                             $fullname = $fname . ' ' . $lname;
+
+
                                         ?>
+
                                             <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
@@ -687,16 +858,13 @@
                                                                 <div class="mb-3 row">
                                                                     <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                         <div class="input-block mb-3 form-focus select-focus text-center">
-                                                                            <select class="select form-control floating">
-                                                                                <option> -- Select -- </option>
-                                                                                <option> Pending </option>
-                                                                                <option> Approved </option>
-                                                                                <option> Rejected </option>
-                                                                            </select>
-                                                                            <label class="focus-label">OT Status</label>
+                                                                            <button id="approveButton" class="btn btn-primary">Approve</button>
+                                                                            <button id="denyButton" class="btn btn-danger">Deny</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
+
+
 
 
                                                             </form>
@@ -755,14 +923,35 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_undertime f 
-                                       LEFT JOIN employee e ON f.emp_id = e.id 
-                                       WHERE f.head_status = 'pending'");
+                                        // Assuming $this->session->userdata('emp_id') holds the current user's ID
+                                        $current_user_id = $this->session->userdata('emp_id');
+
+                                        // Query to get the department of the current user from department_roles
+                                        $dept_query = $this->db->query("
+    SELECT department 
+    FROM department_roles 
+    WHERE assigned_emp = '$current_user_id'
+");
+                                        $row = $dept_query->row();
+                                        $current_department = $row->department;
+
+                                        // Query to fetch undertime requests with pending status for employees in the same department
+                                        $query = $this->db->query("
+    SELECT f.*, e.fname, e.lname 
+    FROM f_undertime f 
+    LEFT JOIN employee e ON f.emp_id = e.id 
+    WHERE f.head_status = 'pending'
+    AND f.department = '$current_department'
+");
+
                                         foreach ($query->result() as $row) {
+                                            // Extracting data for each row
                                             $fname = $row->fname;
                                             $lname = $row->lname;
                                             $fullname = $fname . ' ' . $lname;
+
                                         ?>
+
                                             <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
                     text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
@@ -851,16 +1040,12 @@
                                                                 <div class="mb-3 row">
                                                                     <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                         <div class="input-block mb-3 form-focus select-focus text-center">
-                                                                            <select class="select form-control floating">
-                                                                                <option> -- Select -- </option>
-                                                                                <option> Pending </option>
-                                                                                <option> Approved </option>
-                                                                                <option> Rejected </option>
-                                                                            </select>
-                                                                            <label class="focus-label">UT Status</label>
+                                                                            <button id="approveButton" class="btn btn-primary">Approve</button>
+                                                                            <button id="denyButton" class="btn btn-danger">Deny</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
+
 
 
                                                             </form>
@@ -916,15 +1101,35 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_off_bussiness f 
-                                LEFT JOIN employee e ON f.emp_id = e.id 
-                                WHERE f.head_status = 'pending'");
+                                        // Assuming $this->session->userdata('emp_id') holds the current user's ID
+                                        $current_user_id = $this->session->userdata('emp_id');
+
+                                        // Query to get the department of the current user from department_roles
+                                        $dept_query = $this->db->query("
+    SELECT department 
+    FROM department_roles 
+    WHERE assigned_emp = '$current_user_id'
+");
+                                        $row = $dept_query->row();
+                                        $current_department = $row->department;
+
+                                        // Query to fetch business off requests with pending status for employees in the same department
+                                        $query = $this->db->query("
+    SELECT f.*, e.fname, e.lname 
+    FROM f_off_bussiness f 
+    LEFT JOIN employee e ON f.emp_id = e.id 
+    WHERE f.head_status = 'pending'
+    AND f.department = '$current_department'
+");
+
                                         foreach ($query->result() as $row) {
+                                            // Extracting data for each row
                                             $fname = $row->fname;
                                             $lname = $row->lname;
                                             $fullname = $fname . ' ' . $lname;
 
                                         ?>
+
 
                                             <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
@@ -1024,16 +1229,12 @@
                                                                 <div class="mb-3 row">
                                                                     <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                         <div class="input-block mb-3 form-focus select-focus text-center">
-                                                                            <select class="select form-control floating">
-                                                                                <option> -- Select -- </option>
-                                                                                <option> Pending </option>
-                                                                                <option> Approved </option>
-                                                                                <option> Rejected </option>
-                                                                            </select>
-                                                                            <label class="focus-label">OB Status</label>
+                                                                            <button id="approveButton" class="btn btn-primary">Approve</button>
+                                                                            <button id="denyButton" class="btn btn-danger">Deny</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
+
 
 
                                                             </form>
@@ -1110,7 +1311,7 @@
                                     ?>
                                 </select>
                             </div>
-                         
+
                         </div>
 
                         <div class="row mb-3">
@@ -1464,6 +1665,54 @@
         </form>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="approveModalLabel">Confirm Action</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to perform this action?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="confirmApprove">Approve</button>
+                <button type="button" class="btn btn-danger" id="confirmDeny">Deny</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var approveButton = document.getElementById('approveButton');
+        var denyButton = document.getElementById('denyButton');
+        var approveModal = new bootstrap.Modal(document.getElementById('approveModal'));
+
+        approveButton.addEventListener('click', function() {
+            approveModal.show();
+        });
+
+        denyButton.addEventListener('click', function() {
+            approveModal.show();
+        });
+
+        var confirmApproveButton = document.getElementById('confirmApprove');
+        var confirmDenyButton = document.getElementById('confirmDeny');
+
+        confirmApproveButton.addEventListener('click', function() {
+            // Perform logic for approving OT status here
+            approveModal.hide();
+        });
+
+        confirmDenyButton.addEventListener('click', function() {
+            // Perform logic for denying OT status here
+            approveModal.hide();
+        });
+    });
+</script>
 
 <script>
     $(document).ready(function() {
@@ -1502,8 +1751,8 @@
         });
 
 
- 
-       
+
+
 
         $(document).ready(function() {
             $('.update-outgoing').click(function(e) {

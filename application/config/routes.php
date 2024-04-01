@@ -34,6 +34,8 @@ $route['hr/announcement'] = 'humanr/C_hr_announcement';
 $route['hr/profile'] = 'humanr/C_hr_profile';
 $route['hr/profile/settings'] = 'humanr/C_hr_profile';
 $route['hr/calendar'] = 'humanr/C_hr_calendar';
+$route['hr/departments'] = 'humanr/C_hr_departments';
+
 
 
 // hr/employees
@@ -41,6 +43,10 @@ $route['hr/employees'] = 'humanr/C_hr_employees';
 $route['hr/employees-list'] = 'humanr/C_hr_employees_list';
 $route['hr/employees/attendance'] = 'humanr/C_hr_emp_attendace';
 $route['hr/employees/shifts'] = 'humanr/C_hr_emp_shifts';
+$route['hr/employees/designation'] = 'humanr/C_hr_employees_designation';
+
+$route['hr/employees/evaluation'] = 'humanr/C_hr_emp_performance_evaluation';
+
 $route['hr/employees/leaves'] = 'humanr/C_hr_emp_leaves';
 
 
@@ -56,7 +62,6 @@ $route['hr/payroll/deduction'] = 'humanr/C_hr_payroll_deduction';
 
 
 $route['adduser'] = 'humanr/adduser';
-$route['hr/departments'] = 'humanr/C_hr_departments';
 $route['hr/settings'] = 'humanr/C_hr_settings';
 
 

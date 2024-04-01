@@ -240,7 +240,11 @@
          <ul class="sidebar-vertical"> <!-- desktop size -->
 
             <li class="menu-title">
-               <span>Main</span>
+               <?php
+               if (strtolower($_SESSION['roles']) == 'head') {
+                  echo "<span>Main | " . ucwords($_SESSION['department']) ." - HEAD ". "</span>";
+               } 
+               ?>
             </li>
 
             <?php
@@ -251,6 +255,8 @@
     <li><a href='" . base_url('hr/dashboard') . "'><i class='la la-dashboard'></i><span>Dashboard</span></a></li>
     <li><a href='" . base_url('hr/calendar') . "'><i class='fa-regular fa-calendar'></i><span>Calendar</span></a></li>
     <li><a href='" . base_url('hr/announcement') . "'><i class='la la-bullhorn'></i><span>Announcements</span></a></li>
+    <li><a href='" . base_url('hr/departments') . "'><img src = '".base_url('assets/img/icons/department-2.png')."' class = 'my-img-icon'>
+                                       <span>Departments</span></a></li>
     <li class='submenu reports'>
         <a href='#' class=''><i class='la la-file-text'></i><span>Reports</span><span class='menu-arrow'></span></a>
         <ul>
@@ -267,8 +273,10 @@
         <a href='#'><i class='la la-user'></i><span>Employees</span><span class='menu-arrow'></span></a>
         <ul>
             <li><a href='" . base_url('hr/employees') . "'>Manage</a></li>
-            <li><a href='" . base_url('hr/departments') . "'>Designations</a></li>
+            <li><a href='" . base_url('hr/employees/designation') . "'>Designations</a></li>
             <li><a href='" . base_url('hr/employees/shifts') . "'>Shifts & Schedules</a></li>
+            <li><a href='" . base_url('hr/employees/evaluation') . "'>Performance Evaluation</a></li>
+
         </ul>
     </li>
     <li class='submenu payroll'>

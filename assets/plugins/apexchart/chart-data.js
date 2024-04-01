@@ -327,40 +327,53 @@ var chart = new ApexCharts(
 chart.render();
 }
 
-// Simple Bar
-if($('#s-bar').length > 0 ){
-var sBar = {
-    chart: {
-        height: 350,
-        type: 'bar',
-        toolbar: {
-          show: false,
+// Check if the element exists
+if ($('#s-bar').length > 0) {
+    // AJAX request to fetch department data from the server
+    $.ajax({
+        url: base_url+('humanr/barchart'),
+        method: "GET",
+        success: function(response) {
+            // Update the chart configuration with the retrieved department data
+            var sBar = {
+                chart: {
+                    height: 350,
+                    type: 'bar',
+                    toolbar: {
+                        show: false,
+                    }
+                },
+                colors: ['rgb(252, 96, 117)'],
+                plotOptions: {
+                    bar: {
+                        horizontal: true,
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                series: [{
+                    data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
+                }],
+                xaxis: {
+                    categories: response // Update categories with retrieved department data
+                }
+            };
+
+            // Render the chart with updated configuration
+            var chart = new ApexCharts(
+                document.querySelector("#s-bar"),
+                sBar
+            );
+
+            chart.render();
+        },
+        error: function(xhr, status, error) {
+            console.error("Error fetching department data: " + error);
         }
-    },
-    colors: ['rgb(252, 96, 117)'],
-    plotOptions: {
-        bar: {
-            horizontal: true,
-        }
-    },
-    dataLabels: {
-        enabled: false
-    },
-    series: [{
-        data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
-    }],
-    xaxis: {
-        categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan', 'United States', 'China', 'Germany'],
-    }
+    });
 }
 
-var chart = new ApexCharts(
-    document.querySelector("#s-bar"),
-    sBar
-);
-
-chart.render();
-}
 
 // Mixed Chart
 if($('#mixed-chart').length > 0 ){

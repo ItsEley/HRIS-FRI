@@ -49,7 +49,7 @@
                     </div>
                     <div class="col text-end">
                         <button type="button" class="btn btn-primary waves-effect waves-light mt-1"
-                         data-bs-toggle="modal" data-bs-target="#con-close-modal">
+                         data-bs-toggle="modal" data-bs-target="#con-close-modal" id = "btn_create_ann">
                          <span class="fa-solid fa-plus"></span> Create Announcement</button>
 
                     </div>
@@ -140,7 +140,7 @@
 <!-- jQuery -->
 
 
-<div id="con-close-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+<div id="modal_announcement_detail" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -218,16 +218,15 @@
 
         new FroalaEditor('textarea#froala-editor');
 
+    $("#btn_create_ann").on('click',function(){
+        $('a[href="https://www.froala.com/wysiwyg-editor?k=u"]').css('display','none');
+    })
 
-        //     $("#select_all").on('change',function(){
 
-        //         if (this.checked) {
-        //     console.log('Toggle is active');
-        //   } else {
-        //     console.log('Toggle is inactive');
-        //   }
+    
 
-        //     });
+
+   
 
         var checkboxes = document.querySelectorAll('input.btn-check');
 

@@ -34,23 +34,23 @@
 
             <!-- data table -->
             <div class="row timeline-panel">
-                        <table id="dt_emp_shift" class="datatable table-striped custom-table mb-0">
-                            <thead>
-                                <tr>
-                                    <th hidden>ID</th>
-                                    <th>Name</th>
-                                    <th>Date</th>
-                                    <th>Time-in</th>
-                                    <th>Time-out</th>
-                                    <th>Total Hours Worked</th>
-                                    <th>Action</th>
+                <table id="dt_emp_shift" class="datatable table-striped custom-table mb-0">
+                    <thead>
+                        <tr class = "text-center">
+                            <th hidden>ID</th>
+                            <th>Name</th>
+                            <th>Date</th>
+                            <th>Time-in</th>
+                            <th>Time-out</th>
+                            <th>Total Hours Worked</th>
+                            <th>Remarks</th>
 
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
 
-                                $query = $this->db->query('
+                        $query = $this->db->query('
                                 SELECT
                                 *
                             FROM
@@ -63,50 +63,98 @@
                             
                                 ');
 
-                                foreach ($query->result() as $row) {
+                        foreach ($query->result() as $row) {
 
 
 
-                                ?>
-                                    <tr class="hoverable-row">
-                                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" hidden>
-                                            <?php echo $data['emp_id'] = $row->emp_id; ?>
-                                        </td>
-                                        <td style="max-width: 200px; max-height: 100px; overflow: hidden;">
-                                            <div class="ellipsis" style="max-height: 1.2em; overflow: hidden;">
-                                                <?php echo $data['emp_name'] = $row->full_name;; ?>
-                                            </div>
-                                        </td>
+                        ?>
+                            <tr class="hoverable-row text-center">
+                                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" hidden>
+                                    <?php echo $data['emp_id'] = $row->emp_id; ?>
+                                </td>
+                                <td style="max-width: 200px; max-height: 100px; overflow: hidden;">
+                                    <div class="ellipsis" style="max-height: 1.2em; overflow: hidden;">
+                                        <?php echo $data['emp_name'] = $row->full_name;; ?>
+                                    </div>
+                                </td>
 
-                                        <td><?php ?></td>
-                                        <td><?php //echo $department; 
-                                            ?> {not implemented yet}</td>
-                                        <td><?php echo $data['role'] = $row->roles; ?></td>
-                                        <td>{not implemented yet}</td>
-                                        <td>
-                                        <div class="dropdown">
-                                                                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                        <i class="material-icons">more_vert</i>
-                                                                    </a>
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
-                                                                        <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="">
-                                                                            <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                                                        </a>
-                                                                        <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_">
-                                                                            <i class="fa-regular fa-trash-can m-r-5"></i> Delete
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                        </td>
+                                <td><?php echo "March 26, 2024" ?></td>
+                                <td><?php
+
+                                    // Generate random hour between 7 and 8
+                                    $hour = rand(7, 8);
+                                    // If the hour is 8, generate random minute between 0 and 15, otherwise between 0 and 59
+                                    $minute = ($hour == 8) ? rand(0, 15) : rand(0, 59);
+                                    // Format the time
+                                    $time_in = sprintf('%02d:%02d', $hour, $minute);
+                                    // Output the generated time
+                                    if($hour >= 8 ){
+                                        echo "$time_in - <span class='att-o'></span>";
+                                    }else{
+                                        echo "$time_in - <span class='att-l'></span>";
 
 
-                                    </tr>
-                                <?php
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
+                                    }
+                                    ?></td>
+
+                                <td><?php
+
+                                    // Generate random hour between 7 and 8
+                                    $hour = rand(4, 6);
+                                    // If the hour is 8, generate random minute between 0 and 15, otherwise between 0 and 59
+                                    $minute = ($hour == 6) ? rand(0, 15) : rand(0, 59);
+                                    // Format the time
+                                    $time_out = sprintf('%02d:%02d', $hour, $minute);
+                                    // Output the generated time
+                                    echo $time_out;
+                                    ?> </td>
+
+                                <td>
+                                    <?php
+
+
+                                    // Convert time strings to DateTime objects
+                                    $time_in_obj = DateTime::createFromFormat('H:i', $time_in);
+                                    $time_out_obj = DateTime::createFromFormat('H:i', $time_out);
+
+                                    // Add 12 hours to time_out
+                                    $time_out_obj->modify('+11 hours');
+
+                                    // Calculate the time difference
+                                    $time_diff = $time_out_obj->diff($time_in_obj);
+
+                                    // Format the result
+                                    $total_time_formatted = $time_diff->format('%H:%I');
+                               // Calculate total hours
+                                    $total_hours = $time_diff->h + ($time_diff->days * 24);
+
+                                    
+
+                                    echo $total_time_formatted;
+
+                                    ?>
+
+                                </td>
+
+                                <td>
+                                    <?php
+                                    if ($total_hours >= 8) {
+                                        echo "✅";
+                                    } else {
+                                        echo "❌";
+                                    }
+                                    ?>
+
+                                </td>
+
+
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
             <!-- /data table -->
 
         </div>
@@ -125,7 +173,7 @@
         $("li > a[href='<?= base_url('hr/reports/timesheet') ?>']").parent().parent().css("display", "block")
 
 
-        
+
 
     });
 </script>

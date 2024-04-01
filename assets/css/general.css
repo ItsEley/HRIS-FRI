@@ -1,36 +1,114 @@
-body{
-font-size: 12px !important;  
-/* font-size: 10%; */
+/* change body's font size */
+
+body {
+  font-size: 12px !important;
+}
+
+/* change the scroll bar appearance */
+
+::-webkit-scrollbar {
+  width: 3px !important;
+}
+
+/* Targeting scrollbar track */
+body::-webkit-scrollbar {
+  width: 6px !important;
+  /* Width of the scrollbar */
+}
+
+/* Targeting scrollbar thumb (the draggable bar) */
+::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+  /* Color of the scrollbar thumb */
+  border-radius: 10px;
+  /* Rounded corners */
+}
+
+/* Targeting scrollbar track */
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  /* Color of the scrollbar track */
+  border-radius: 10px;
+  /* Rounded corners */
+}
+
+/* handle text overflows */
+.text-overflow-ellipsis {
+  /* white-space: nowrap; */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* for attendance markings */
+
+.att-p:before {  /* Present */
+  color: green;
+  content: "P";
+}
+
+.att-o:before {/* Ontime */
+  color: rgb(61, 148, 61);
+  content: "O";
+}
+
+.att-l:before {/* Late */
+  color: orange;
+  content: "L";
+}
+
+.att-a:before {/* Absent */
+  color: red;
+  content: "A";
+}
+
+.att-d:before {/* Day-off  */
+  color: #ff00ac;
+  content: "D";
+}
+
+.att-e:before {/* On Leave */
+  color: #55b5bd;
+  content: "E";
+}
+
+.att-b:before {/* On official Business */
+  color: blue;
+  content: "B";
+}
+
+.att-h:before {/* Halfday */
+  color: black;
+  content: "H";
+}
+
+.att-n:before {/* No workday */
+  color: black;
+  content: "X";
 }
 
 
 
-  ::-webkit-scrollbar{
-    width: 3px !important;
-  }
-  
-  /* Targeting scrollbar track */
-body::-webkit-scrollbar {
-    width: 6px !important; /* Width of the scrollbar */
-  }
+
+/* custom icon using png */
+
+.my-img-icon {
+  aspect-ratio: 1/1;
+  width: 24px;
+  height: 24px;
+  filter: invert(100%) sepia(21%) saturate(3796%) hue-rotate(176deg) brightness(85%) contrast(87%);
+}
+
+li>a:hover>img.my-img-icon {
+  filter: invert(1) !important;
+  transition: all 0.2s ease;
+}
+
+.my-img-icon.active {
+  filter: invert(1) !important;
+}
 
 
-  /* Targeting scrollbar thumb (the draggable bar) */
-  ::-webkit-scrollbar-thumb {
-    background-color: #c1c1c1; /* Color of the scrollbar thumb */
-    border-radius: 10px; /* Rounded corners */
-  }
-  
-  /* Targeting scrollbar track */
-  ::-webkit-scrollbar-track {
-    background-color: #f1f1f1; /* Color of the scrollbar track */
-    border-radius: 10px; /* Rounded corners */
-
-  }
-
-
-.text-overflow-ellipsis {
-    /* white-space: nowrap; */
-    overflow: hidden;
-    text-overflow: ellipsis;
+.my-hover:hover{
+  color:#ffbb5b !important;
+ 
 }

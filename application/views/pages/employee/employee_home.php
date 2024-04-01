@@ -99,27 +99,27 @@
 
                     <?php
 
-                    $query = $this->db->get('announcement', 6);
+                    // $query = $this->db->get('announcement', 6);
 
                     // print_r($this->session->get_userdata('fname'));
                     // echo $_SESSION['fname'];
 
-                    foreach ($query->result() as $row) {
-                        $title =  $row->title;
-                        $content = $row->content;
-                        $author = $row->author;
-                        $department = $row->to_all;
-                        $date = $row->date_created;
+                    // foreach ($query->result() as $row) {
+                    //     $title =  $row->title;
+                    //     $content = $row->content;
+                    //     $author = $row->author;
+                    //     $department = $row->to_all;
+                    //     $date = $row->date_created;
 
-                        $data['title'] = $title;
-                        $data['content'] = $content;
-                        $data['author'] = $author;
-                        $data['department'] = $department;
-                        $data['date'] = $date;
+                    //     $data['title'] = $title;
+                    //     $data['content'] = $content;
+                    //     $data['author'] = $author;
+                    //     $data['department'] = $department;
+                    //     $data['date'] = $date;
 
 
-                        $this->load->view('components/card-announcement', $data);
-                    }
+                    //     $this->load->view('components/card-announcement', $data);
+                    // }
 
                     ?>
 

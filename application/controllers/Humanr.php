@@ -8,11 +8,26 @@ class Humanr extends CI_Controller
 		parent::__construct();
 
 		$this->load->model('Admin_model', 'hr');
-		$this->zone = date_default_timezone_set('Asia/Manila');
-		$this->load->library('session');
-		$this->load->helper('url');
+		// $this->zone = date_default_timezone_set('Asia/Manila');
+		// $this->load->library('session');
+		// $this->load->helper('url');
 	}
 
+	public function barchart() {
+       
+        $query = $this->db->query("SELECT DISTINCT department FROM department");
+
+        // Initialize an empty array to store department values
+        $departmentValues = array();
+
+        // Fetch the result and store department values in the array
+        foreach ($query->result_array() as $row) {
+            $departmentValues[] = $row["department"];
+        }
+
+        // Send JSON response with department values
+        $this->output->set_content_type('application/json')->set_output(json_encode($departmentValues));
+    }
 
 	public function deleteEmployee()
 	{
@@ -120,6 +135,18 @@ class Humanr extends CI_Controller
 		$this->load->view('pages/hr/hr_employees');
 		$this->load->view('templates/footer');
 	}
+
+	
+	public function C_hr_departments()
+	{
+
+
+		$data['title'] = 'HR | Departments';
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/hr/hr_departments');
+		$this->load->view('templates/footer');
+	}
+
 
 	public function import()
 	{
@@ -237,12 +264,12 @@ class Humanr extends CI_Controller
 		}
 	}
 
-	public function C_hr_departments()
+	public function C_hr_employees_designation()
 	{
 		if ($this->session->userdata('logged_in')) {
 			$data['title'] = 'HR | Departments';
 			$this->load->view('templates/header', $data);
-			$this->load->view('pages/hr/hr_departments');
+			$this->load->view('pages/hr/hr_employees_designation');
 			$this->load->view('templates/footer');
 		} else {
 			redirect('');
@@ -268,6 +295,18 @@ class Humanr extends CI_Controller
 			$data['title'] = 'HR | Employees | Shifts';
 			$this->load->view('templates/header', $data);
 			$this->load->view('pages/hr/hr_employees_shift');
+			$this->load->view('templates/footer');
+		} else {
+			redirect('');
+		}
+	}
+
+	public function C_hr_emp_performance_evaluation()
+	{
+		if ($this->session->userdata('logged_in')) {
+			$data['title'] = 'HR | Employees | Performance Evaluation';
+			$this->load->view('templates/header', $data);
+			$this->load->view('pages/hr/hr_employees_performance');
 			$this->load->view('templates/footer');
 		} else {
 			redirect('');

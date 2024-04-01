@@ -1,52 +1,5 @@
 <style>
-    .att-p:before {
-        color: green;
-        content: "P";
-        
-
-    }
-
-    .att-a:before {
-        color: red;
-        content: "A";
-    }
-
-    .att-l:before {
-        color: orange;
-        content: "L";
-
-    }
-
-    .att-d:before {
-        color: #ff00ac;
-        content: "D";
-
-    }
-
-    .att-e:before {
-        color: #55b5bd;
-        content: "E";
-
-    }
-
-    .att-b:before {
-        color: blue;
-        content: "B";
-
-    }
-
-    .att-h:before {
-        color: black;
-        content: "H";
-
-    }
-    .att-n:before {
-        color: black;
-        content: "X";
-
-    }
-
-    #emp_attendance_table >thead th{ 
+    #emp_attendance_table>thead th {
         border: none;
     }
 
@@ -60,12 +13,13 @@
             /* size: landscape */
         }
 
-        #report_header{
+        #report_header {
             display: block !important;
             /* visibility: visible; */
             /* position: absolute; */
 
         }
+
         #print-area {
             visibility: visible;
             position: absolute;
@@ -77,10 +31,7 @@
             /* margin: 20px; */
         }
 
-        /* #emp_attendance_table{
-            overflow:visible;
-        } */
-        
+     
 
 
     }
@@ -116,7 +67,7 @@
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
-                        <button class = "btn btn-primary" onclick="window.print()">Print as PDF</button>
+                        <button class="btn btn-primary" onclick="window.print()">Print as PDF</button>
                         <!-- <div class="view-icons">
                             <a href="employees.html" class="grid-view btn btn-link active"><i class="fa fa-th"></i></a>
                             <a href="employees-list.html" class="list-view btn btn-link"><i class="fa-solid fa-bars"></i></a>
@@ -187,17 +138,18 @@
 
             <div id="print-area">
 
-                <h1 class="text-center" style="display:none" id = "report_header">Employee Attendance Report - March 2024</h1>
+                <h1 class="text-center" style="display:none" id="report_header">Employee Attendance Report - March 2024</h1>
 
                 <div class="row legend timeline-panel" id="emp_att_legend">
                     <div class="d-flex justify-content-between">
                         <!-- <h3>Legend</h3> -->
                         <p class="m-0"><span class="att-p"></span> - Present</p>
+                        <p class="m-0"><span class="att-o"></span> - On time</p>
+                        <p class="m-0"><span class="att-l"></span> - Late</p>
                         <p class="m-0"><span class="att-a"></span> - Absent</p>
                         <p class="m-0"><span class="att-d"></span> - Day-off</p>
                         <p class="m-0"><span class="att-e"></span> - On Leave</p>
                         <p class="m-0"><span class="att-h"></span> - Half-day</p>
-                        <p class="m-0"><span class="att-l"></span> - Late</p>
                         <p class="m-0"><span class="att-b"></span> - On Official Business</p>
                         <p class="m-0"><span class="att-n"></span> - No Work Day</p>
                     </div>
@@ -205,7 +157,7 @@
                 </div>
 
 
-                <div class="row timeline-panel" >
+                <div class="row timeline-panel">
                     <div class="col-lg-12">
                         <div class="table-responsive">
                             <table class="table table-striped " id="emp_attendance_table">
@@ -245,7 +197,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr id = "emp_id">
+                                    <tr id="emp_id">
                                         <td>
                                             <h2 class="table-avatar">
                                                 <a class="avatar avatar-xs" href="profile.html"><img src="<?php echo base_url('assets\img\user.jpg') ?>" alt="User Image"></a>

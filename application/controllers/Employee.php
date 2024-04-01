@@ -67,16 +67,30 @@ class Employee extends CI_Controller
 		$status = 'pending';
 		$empid = $this->input->post('emp_id');
 
-		$data = array(
-			/*column name*/
-			'date_from' => $from_date,
-			'date_to' => $to_date,
-			'type_of_leave' => $leaveType,
-			'reason' => $reason,
-			'status' => $status,
-			'date_filled' => $date_filled,
-			'emp_id' => $empid,
-		);
+		    // Query to get the department of the employee from department_roles
+			$dept_query = $this->db->query("
+			SELECT department 
+			FROM department_roles 
+			WHERE assigned_emp = '$empid'
+		");
+	
+		// Check if the query returned any rows
+		if ($dept_query->num_rows() > 0) {
+			// Fetch the department from the result
+			$row = $dept_query->row();
+			$department = $row->department;
+	
+			$data = array(
+				/*column name*/
+				'date_from' => $from_date,
+				'date_to' => $to_date,
+				'type_of_leave' => $leaveType,
+				'reason' => $reason,
+				'status' => $status,
+				'date_filled' => $date_filled,
+				'emp_id' => $empid,
+				'department' => $department, // Add the department to the data array
+			);
 
 		$sql = $this->db->insert('f_leaves', $data);
 		if ($sql) {
@@ -89,7 +103,7 @@ class Employee extends CI_Controller
 		echo json_encode($response);
 	}
 
-	
+}
 
 
 	public function C_off_buss()

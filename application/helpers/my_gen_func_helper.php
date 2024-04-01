@@ -69,27 +69,18 @@ function verify($plaintextPassword,$hashedPassword) {
 
 
 
+function generatePayslipId() {
+    // Get current date in YYYYMM format
+    $date = date('Ymd');
 
-// function generateEmployeeID($prefix,$name) {
-//     // Default prefix
+    // Generate a random string
+    $randomString = bin2hex(random_bytes(3)); // Generates a random 4-character hex string
 
+    // Concatenate date and random string to form the payslip ID
+    $payslipId = $date ."-". $randomString;
 
-//     // Extract initials from name
-//     $initials = "";
-//     $words = explode(" ", $name);
-//     foreach ($words as $word) {
-//         $initials .= strtoupper(substr($word, 0, 1));
-//     }
-
-//     // Generate unique random number
-//     $randomNumber = generateRandomNumber(0,99999);
-
-//     // Construct ID
-//     $employeeID = $prefix . $initials . "-" . str_pad($randomNumber, 5, '0', STR_PAD_LEFT);
-
-//     return $employeeID;
-// }
-
+    return $payslipId;
+}
 
 
 
