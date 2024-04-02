@@ -357,18 +357,22 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="mb-3 row">
-                                                                    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
+                                                                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-12 mx-auto">
                                                                         <div class="input-block mb-3 form-focus select-focus text-center">
-                                                                            <select class="select form-control floating">
-                                                                                <option> -- Select -- </option>
-                                                                                <option> Pending </option>
-                                                                                <option> Approved </option>
-                                                                                <option> Rejected </option>
-                                                                            </select>
-                                                                            <label class="focus-label">Leave Status</label>
+                                                                            <div class="row">
+                                                                                <div class="mb-3 row">
+                                                                                    <div class="col-sm-6">
+                                                                                        <button id="denyButton" class="btn text-danger btn-block bg-white border border-danger">Deny</button>
+                                                                                    </div>
+                                                                                    <div class="col-sm-6">
+                                                                                    <button id="approveButtonhr" class="btn btn-primary btn-block" data-row-id="<?php echo $row->id; ?>">Approve</button>
+
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
                                                             </form>
                                                         </div>
                                                         <div class="modal-footer">
@@ -1616,5 +1620,59 @@
         $('#ob_dt').DataTable(); // Initialize DataTable
     });
 </script>
+<div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="approveModalLabel">Confirm Action</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to perform this action?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="confirmApprovehr">Approve</button>
+                <button type="button" class="btn btn-danger" id="confirmDeny">Deny</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var approveButtonhr = document.getElementById('approveButtonhr');
+        var denyButton = document.getElementById('denyButton');
+        var approveModal = new bootstrap.Modal(document.getElementById('approveModal'));
+        var editEmployeeModal = new bootstrap.Modal(document.getElementById('edit_employee'));
+
+        approveButtonhr.addEventListener('click', function() {
+            editEmployeeModal.hide(); // Hide the edit_employee modal
+            approveModal.show(); // Show the approveModal
+        });
+
+        denyButton.addEventListener('click', function() {
+            editEmployeeModal.hide(); // Hide the edit_employee modal
+            approveModal.show(); // Show the approveModal
+        });
+
+        var confirmApprovehrButton = document.getElementById('confirmApprovehr');
+        var confirmDenyButton = document.getElementById('confirmDeny');
+
+        confirmApprovehrButton.addEventListener('click', function() {
+            // Perform logic for approving OT status here
+            approveModal.hide();
+        });
+
+        confirmDenyButton.addEventListener('click', function() {
+            // Perform logic for denying OT status here
+            approveModal.hide();
+        });
+
+        // Add an event listener to the shown.bs.modal event of approveModal
+        approveModal.addEventListener('shown.bs.modal', function () {
+            editEmployeeModal.hide(); // Hide the edit_employee modal when approveModal is shown
+        });
+    });
+</script> -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>

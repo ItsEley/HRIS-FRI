@@ -21,9 +21,9 @@
 					<h3 class="account-title">Human Resource Management System</h3>
 					<p class="account-subtitle">
 
-					<?php
+					<!-- <?php
 					print_r($_SESSION);
-					?>
+					?> -->
 					</p>
 
 

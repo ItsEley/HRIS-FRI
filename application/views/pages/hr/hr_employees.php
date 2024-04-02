@@ -518,7 +518,7 @@
                     <div class="modal-body">
                         <div class="form-header">
                             <h3>Confirmation</h3>
-                            <p>Are you really really really sure?</p>
+                            <p>Are you really sure?</p>
                         </div>
                         <div class="modal-btn delete-action">
                             <div class="row">

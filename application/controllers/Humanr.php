@@ -13,6 +13,48 @@ class Humanr extends CI_Controller
 		// $this->load->helper('url');
 	}
 
+	public function hrapprove() {
+		// Get the row ID sent via AJAX
+		$rowId = $this->input->post('row_id');
+	
+		// Get the current user's ID from the session
+		$session_emp_id = $this->session->userdata('emp_id');
+	
+		// Update the row status and insert the session ID directly in the controller
+		$this->db->set('status', 'approved');
+		$this->db->set('hr_id', $session_emp_id);
+		$this->db->where('id', $rowId);
+		$this->db->update('f_leaves');
+	
+		// Check if the update was successful
+		if ($this->db->affected_rows() > 0) {
+			// Send a response indicating success
+			echo 'Leave approved successfully';
+		} else {
+			// Send a response indicating failure
+			echo 'Error: Leave not approved';
+		}
+	}
+	
+	
+
+	public function headapprove() {
+		// Get the row ID sent via AJAX
+		$rowId = $this->input->post('row_id');
+	
+		// Get the current user's ID from the session
+		$session_emp_id = $this->session->userdata('emp_id');
+	
+		// Update the row status and insert the session ID directly in the controller
+		$this->db->set('head_status', 'approved');
+		$this->db->set('head_id', $session_emp_id);
+		$this->db->where('id', $rowId);
+		$this->db->update('f_leaves');
+	
+		// Send a response indicating success
+		echo 'Leave approved successfully';
+	}
+	
 	public function barchart() {
        
         $query = $this->db->query("SELECT DISTINCT department FROM department");

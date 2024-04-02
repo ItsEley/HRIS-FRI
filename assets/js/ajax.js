@@ -63,6 +63,58 @@ $("#login-form").submit(function(e) {
     }
 });
 
+$(document).ready(function() {
+    $('#approveButton').click(function() {
+        var rowId = $(this).data('row-id');
+        $.ajax({
+            type: 'POST',
+            url: base_url+'humanr/headapprove',
+            data: {
+                row_id: rowId
+            },
+            success: function(response) {
+                // Handle the response, maybe show a success message
+                console.log('Leave approved successfully');
+                $('#approve_employee').modal('hide');
+            },
+            error: function(xhr, status, error) {
+                // Handle any errors
+                console.error('Error approving leave');
+            }
+        });
+    });
+});
+
+$(document).ready(function() {
+    $('#approveButtonhr').click(function() {
+        // Display the confirmation modal when the "Approve" button on the first modal is clicked
+        $('#approveModal').modal('show');
+    });
+
+    $('#confirmApprovehr').click(function() {
+        // Get the row ID from the first modal
+        var rowId = $('#approveButtonhr').data('row-id');
+        $.ajax({
+            type: 'POST',
+            url: base_url+('humanr/hrapprove'),
+            data: {
+                row_id: rowId
+            },
+            success: function(response) {
+                // Handle the response, maybe show a success message
+                console.log('Leave approved successfully');
+                $('#approveModal').modal('hide');
+            },
+            error: function(xhr, status, error) {
+                // Handle any errors
+                console.error('Error approving leave');
+            }
+        });
+    });
+});
+
+
+
 $("#import_csv").submit(function(e) {
     e.preventDefault();
 

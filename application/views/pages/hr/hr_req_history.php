@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row timeline-panel">
                 <div class="col-md-12">
                     <div class="table-responsive">
 
@@ -446,11 +446,11 @@
                                                                     echo "data:image/jpeg;base64," . base64_encode($pfp);
                                                                 } else {
                                                                     // If $pfp is empty or not set, display a placeholder image or handle it as per your requirement
-                                                                    echo "path/to/placeholder_image.jpg";
+                                                                    echo base_url('assets/img/user.jpg');
                                                                 }
                                                                 ?>" alt="User Image">
                                                 </a>
-                                                <a href="<?= base_url('hr_profile') ?>" style="font-size: 0.6em;"><?php echo $row['name']; ?></a>
+                                                <a href="<?= base_url('hr_profile') ?>" style="color:black;font-size:12px;"><?php echo $row['name']; ?></a>
                                             </h2>
                                         </td>
                                         <td><?php echo $row['request_type']; ?></td>
@@ -531,8 +531,8 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        $("li > a[href='<?= base_url('forms/history') ?>']").parent().parent().css("display", "block") //get sidebar item with link
-        $("li > a[href='<?= base_url('forms/history') ?>']").addClass("active"); // for items inside the sidebar
+        $("li > a[href='<?= base_url('hr/historyrequests') ?>']").parent().parent().css("display", "block") //get sidebar item with link
+        $("li > a[href='<?= base_url('hr/historyrequests') ?>']").addClass("active"); // for items inside the sidebar
 
 
 

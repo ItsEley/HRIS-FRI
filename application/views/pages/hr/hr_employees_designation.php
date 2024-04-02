@@ -336,8 +336,8 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        $("li > a[href='<?= base_url('hr/departments') ?>']").addClass("active");
-        $("li > a[href='<?= base_url('hr/departments') ?>']").parent().parent().css("display", "block")
+        $("li > a[href='<?= base_url('hr/employees/designation') ?>']").addClass("active");
+        $("li > a[href='<?= base_url('hr/employees/designation') ?>']").parent().parent().css("display", "block")
 
 
 

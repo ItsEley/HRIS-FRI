@@ -266,7 +266,7 @@
         <li><a href='" . base_url('hr/reports/timesheet') . "'>Timesheet</a></li>
 
             <li><a href='" . base_url('hr/employees/attendance') . "'>Attendance</a></li>
-            <li><a href='" . base_url('hr/employees/leaves') . "'>Leaves</a></li>
+          
         </ul>
     </li>
     <li class='submenu employees'>

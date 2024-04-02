@@ -3,13 +3,10 @@
         /* background-color: red !important; */
         background-color: #26c769 !important;
         /* color: #fff !important; */
-
-
     }
 
     input[type='checkbox']:checked+label.btn.btn-light.btn-rounded {
-        /* Your styles here */
-
+    
         background-color: #26c769 !important;
         color: #fff !important;
 
@@ -48,9 +45,8 @@
                         </ul>
                     </div>
                     <div class="col text-end">
-                        <button type="button" class="btn btn-primary waves-effect waves-light mt-1"
-                         data-bs-toggle="modal" data-bs-target="#con-close-modal" id = "btn_create_ann">
-                         <span class="fa-solid fa-plus"></span> Create Announcement</button>
+                        <button type="button" class="btn btn-primary waves-effect waves-light mt-1" data-bs-toggle="modal" data-bs-target="#modal_announcement_detail" id="btn_create_ann">
+                            <span class="fa-solid fa-plus"></span> Create Announcement</button>
 
                     </div>
 
@@ -218,15 +214,15 @@
 
         new FroalaEditor('textarea#froala-editor');
 
-    $("#btn_create_ann").on('click',function(){
-        $('a[href="https://www.froala.com/wysiwyg-editor?k=u"]').css('display','none');
-    })
+        $("#btn_create_ann").on('click', function() {
+            $('a[href="https://www.froala.com/wysiwyg-editor?k=u"]').css('display', 'none');
+        })
 
 
-    
 
 
-   
+
+
 
         var checkboxes = document.querySelectorAll('input.btn-check');
 
@@ -241,6 +237,8 @@
                         checkboxes.forEach(function(x) {
                             if (x.id !== "select_all") {
                                 $("#" + x.id).attr("disabled", "disabled")
+                                // $("#" + x.id).checked = false;
+
                             }
                         })
 

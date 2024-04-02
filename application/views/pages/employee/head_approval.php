@@ -506,14 +506,22 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="mb-3 row">
-                                                                    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
+                                                                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-12 mx-auto">
                                                                         <div class="input-block mb-3 form-focus select-focus text-center">
-                                                                            <button id="approveButton" class="btn btn-primary">Approve</button>
-                                                                            <button id="denyButton" class="btn btn-danger">Deny</button>
+                                                                            <div class="row">
+                                                                                <div class="mb-3 row">
+                                                                                    <div class="col-sm-6">
+                                                                                        <button id="denyButton" class="btn text-danger btn-block bg-white border border-danger">Deny</button>
+                                                                                    </div>
+                                                                                    <div class="col-sm-6">
+                                                                                    <button id="approveButton" class="btn btn-primary btn-block" data-row-id="<?php echo $row->id; ?>">Approve</button>
+
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-
                                                             </form>
                                                         </div>
                                                         <div class="modal-footer">
@@ -588,10 +596,7 @@
                                                         $fname = $row->fname;
                                                         $lname = $row->lname;
                                                         $fullname = $fname . ' ' . $lname;
-
-
                                                     ?>
-
                                                         <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                             <td style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
@@ -698,8 +703,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
-
                                                     <?php
                                                     }
                                                     ?>
@@ -1749,11 +1752,6 @@
             // Open the modal
             $('#edit_employee').modal('show');
         });
-
-
-
-
-
         $(document).ready(function() {
             $('.update-outgoing').click(function(e) {
                 e.preventDefault();
@@ -1851,19 +1849,8 @@
 
     });
 </script>
-<!-- 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.min.js"></script>
- -->
 
-<!-- <script>
-    $(document).ready(function() {
-        $('#leavereq_dt').DataTable();
-        $('#outgoingreq_dt').DataTable();
-        $('#overtime_dt').DataTable();
-        $('#undertime_dt').DataTable();
-        $('#ob_dt').DataTable(); // Initialize DataTable
-    });
-</script> -->
+
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>

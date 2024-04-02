@@ -32,7 +32,18 @@
             </div>
             <!-- /Page Header -->
 
+            <div class = "timeline-panel">
+                <h4>Bonuses</h4>
+
+                <p class = "mb-0"><b>Overtime</b> - ₱200.00</p>
+                <p class = "mb-0"><b>Social Security System (SSS)</b>
+                <i>For employees with more than ₱20,000.00 salary</i> - 12%</p>
+                <p class = "mb-0"><b>Philhealth</b> - 5% </p>
+            </div>
+
             
+
+
         </div>
         <!-- /Page Content -->
     </div>

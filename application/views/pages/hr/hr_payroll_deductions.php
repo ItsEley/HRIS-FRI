@@ -32,7 +32,25 @@
             </div>
             <!-- /Page Header -->
 
+            <div class = "timeline-panel">
+                <h4>Mandatory Deductions</h4>
+
+                <p class = "mb-0"><b>Pag-ibig</b> - ₱200.00</p>
+                <p class = "mb-0"><b>Social Security System (SSS)</b>
+                <i>For employees with more than ₱20,000.00 salary</i> - 12%</p>
+                <p class = "mb-0"><b>Philhealth</b> - 5% </p>
+            </div>
+
             
+            <div class = "timeline-panel">
+                <h4>Optinal Deductions</h4>
+
+                <p class = "mb-0"><b>Cashadvance</b></p>
+                <p class = "mb-0"><b>Den Expenses</b> </p>
+                <p class = "mb-0"><b>Philhealth</b></p>
+            </div>
+
+
         </div>
         <!-- /Page Content -->
     </div>
