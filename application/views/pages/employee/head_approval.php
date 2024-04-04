@@ -514,7 +514,7 @@
                                                                                         <button id="denyButton" class="btn text-danger btn-block bg-white border border-danger">Deny</button>
                                                                                     </div>
                                                                                     <div class="col-sm-6">
-                                                                                    <button id="approveButton" class="btn btn-primary btn-block" data-row-id="<?php echo $row->id; ?>">Approve</button>
+                                                                                        <button id="approveButton" class="btn btn-primary btn-block" data-row-id="<?php echo $row->id; ?>">Approve</button>
 
                                                                                     </div>
                                                                                 </div>
@@ -570,32 +570,37 @@
                                                 </thead>
                                                 <tbody>
                                                     <?php
+                                                    echo "Session emp_id: " . $this->session->userdata('emp_id') . "<br>";
+
                                                     // Assuming $this->session->userdata('emp_id') holds the current user's ID
                                                     $current_user_id = $this->session->userdata('emp_id');
 
                                                     // Query to get the department of the current user from department_roles
                                                     $dept_query = $this->db->query("
-    SELECT department 
-    FROM department_roles 
-    WHERE assigned_emp = '$current_user_id'
-");
+                                          SELECT department 
+                                          FROM department_roles 
+                                          WHERE assigned_emp = '$current_user_id'
+                                      ");
                                                     $row = $dept_query->row();
                                                     $current_department = $row->department;
 
-                                                    // Query to fetch outgoing requests with pending status for employees in the same department
+                                                    // Now, construct the query for fetching leaves for employees in the same department with pending status
                                                     $query = $this->db->query("
-    SELECT f.*, e.fname, e.lname 
-    FROM f_outgoing f 
-    LEFT JOIN employee e ON f.emp_id = e.id 
-    WHERE f.head_status = 'pending'
-    AND f.department = '$current_department'
-");
+                                          SELECT f.*, e.fname, e.lname 
+                                          FROM f_outgoing f 
+                                          LEFT JOIN employee e ON f.emp_id = e.id 
+                                          WHERE f.head_status = 'pending'
+                                          AND f.department = '$current_department'
+                                      ");
 
                                                     foreach ($query->result() as $row) {
-                                                        // Extracting data for each row
                                                         $fname = $row->fname;
                                                         $lname = $row->lname;
                                                         $fullname = $fname . ' ' . $lname;
+
+                                                        // Your further processing here
+
+
                                                     ?>
                                                         <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                             <td style="max-width: 200px; overflow: hidden; 
@@ -608,7 +613,7 @@
                                                             <td name="date_to"><?php echo date("h:i A", strtotime($row->time_to)); ?></td>
                                                             <td name="leave_reason" style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;cursor: pointer;user-select:none" title="Double click to expand"><?php echo $row->reason; ?></td>
-                                                            <td name="status"><?php echo ucwords($row->status); ?></td>
+                                                            <td name="status"><?php echo ucwords($row->head_status); ?></td>
                                                             <td>
                                                                 <div class="dropdown">
                                                                     <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -743,32 +748,35 @@
                                     </thead>
                                     <tbody>
                                         <?php
+                                        echo "Session emp_id: " . $this->session->userdata('emp_id') . "<br>";
+
                                         // Assuming $this->session->userdata('emp_id') holds the current user's ID
                                         $current_user_id = $this->session->userdata('emp_id');
 
                                         // Query to get the department of the current user from department_roles
                                         $dept_query = $this->db->query("
-    SELECT department 
-    FROM department_roles 
-    WHERE assigned_emp = '$current_user_id'
-");
+                                          SELECT department 
+                                          FROM department_roles 
+                                          WHERE assigned_emp = '$current_user_id'
+                                      ");
                                         $row = $dept_query->row();
                                         $current_department = $row->department;
 
-                                        // Query to fetch overtime requests with pending status for employees in the same department
+                                        // Now, construct the query for fetching leaves for employees in the same department with pending status
                                         $query = $this->db->query("
-    SELECT f.*, e.fname, e.lname 
-    FROM f_overtime f 
-    LEFT JOIN employee e ON f.emp_id = e.id 
-    WHERE f.head_status = 'pending'
-    AND f.department = '$current_department'
-");
+                                          SELECT f.*, e.fname, e.lname 
+                                          FROM f_overtime f 
+                                          LEFT JOIN employee e ON f.emp_id = e.id 
+                                          WHERE f.head_status = 'pending'
+                                          AND f.department = '$current_department'
+                                      ");
 
                                         foreach ($query->result() as $row) {
-                                            // Extracting data for each row
                                             $fname = $row->fname;
                                             $lname = $row->lname;
                                             $fullname = $fname . ' ' . $lname;
+
+                                            // Your further processing here
 
 
                                         ?>
@@ -926,34 +934,39 @@
                                     </thead>
                                     <tbody>
                                         <?php
+                                        echo "Session emp_id: " . $this->session->userdata('emp_id') . "<br>";
+
                                         // Assuming $this->session->userdata('emp_id') holds the current user's ID
                                         $current_user_id = $this->session->userdata('emp_id');
 
                                         // Query to get the department of the current user from department_roles
                                         $dept_query = $this->db->query("
-    SELECT department 
-    FROM department_roles 
-    WHERE assigned_emp = '$current_user_id'
-");
+                                          SELECT department 
+                                          FROM department_roles 
+                                          WHERE assigned_emp = '$current_user_id'
+                                      ");
                                         $row = $dept_query->row();
                                         $current_department = $row->department;
 
-                                        // Query to fetch undertime requests with pending status for employees in the same department
+                                        // Now, construct the query for fetching leaves for employees in the same department with pending status
                                         $query = $this->db->query("
-    SELECT f.*, e.fname, e.lname 
-    FROM f_undertime f 
-    LEFT JOIN employee e ON f.emp_id = e.id 
-    WHERE f.head_status = 'pending'
-    AND f.department = '$current_department'
-");
+                                          SELECT f.*, e.fname, e.lname 
+                                          FROM f_undertime f 
+                                          LEFT JOIN employee e ON f.emp_id = e.id 
+                                          WHERE f.head_status = 'pending'
+                                          AND f.department = '$current_department'
+                                      ");
 
                                         foreach ($query->result() as $row) {
-                                            // Extracting data for each row
                                             $fname = $row->fname;
                                             $lname = $row->lname;
                                             $fullname = $fname . ' ' . $lname;
 
+                                            // Your further processing here
+
+
                                         ?>
+
 
                                             <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
@@ -1104,36 +1117,35 @@
                                     </thead>
                                     <tbody>
                                         <?php
+                                        echo "Session emp_id: " . $this->session->userdata('emp_id') . "<br>";
+
                                         // Assuming $this->session->userdata('emp_id') holds the current user's ID
                                         $current_user_id = $this->session->userdata('emp_id');
 
                                         // Query to get the department of the current user from department_roles
                                         $dept_query = $this->db->query("
-    SELECT department 
-    FROM department_roles 
-    WHERE assigned_emp = '$current_user_id'
-");
+                                          SELECT department 
+                                          FROM department_roles 
+                                          WHERE assigned_emp = '$current_user_id'
+                                      ");
                                         $row = $dept_query->row();
                                         $current_department = $row->department;
 
-                                        // Query to fetch business off requests with pending status for employees in the same department
+                                        // Now, construct the query for fetching leaves for employees in the same department with pending status
                                         $query = $this->db->query("
-    SELECT f.*, e.fname, e.lname 
-    FROM f_off_bussiness f 
-    LEFT JOIN employee e ON f.emp_id = e.id 
-    WHERE f.head_status = 'pending'
-    AND f.department = '$current_department'
-");
+                                          SELECT f.*, e.fname, e.lname 
+                                          FROM f_off_bussiness f 
+                                          LEFT JOIN employee e ON f.emp_id = e.id 
+                                          WHERE f.head_status = 'pending'
+                                          AND f.department = '$current_department'
+                                      ");
 
                                         foreach ($query->result() as $row) {
-                                            // Extracting data for each row
                                             $fname = $row->fname;
                                             $lname = $row->lname;
                                             $fullname = $fname . ' ' . $lname;
 
                                         ?>
-
-
                                             <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
                     text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
@@ -1265,6 +1277,7 @@
             </div>
         </div>
         <!-- /Page Content -->
+        
     </div>
     <!-- /Page Wrapper -->
 

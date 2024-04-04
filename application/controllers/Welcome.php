@@ -54,47 +54,38 @@ class Welcome extends CI_Controller
 
 
 	public function login()
-	{
-		$response = array();
-		$username = $this->input->post('email', TRUE);
-		$password = md5($this->input->post('password', TRUE));
-		$validate = $this->login->authenticate($username, $password);
+{
+    $response = array();
+    $username = $this->input->post('email', TRUE);
+    $password = md5($this->input->post('password', TRUE));
+    $validate = $this->login->authenticate($username, $password); // Call authenticate directly, as the model is not initialized
 
-		
-			// print_r($validate);
+	if ($validate->num_rows() > 0) {
+    $data = $validate->row_array();
+    $emp_id = $data['id'];
+    $fullname = $data['fname'].' '.$data['lname'];
+    $role = $data['emp_role'];
+    $department = $data['department'];
+    $acrodept = $data['acro_dept'];
+    $pfp = $data['pfp'];
+    $response['status'] = 1;
+    $response['message'] = "Welcome to FamCO HR System";
+    $session_data = array(
+      'id' => $emp_id,
+      'fullname' => $fullname,
+      'role' => $role,
+      'pfp' => $pfp,
+      'department' => $department,
+      'acro' => $acrodept,
+      'logged_in' => TRUE
+    );
+    $this->session->set_userdata($session_data);
+	}else{
+    $response['status'] = 0;
+    $response['message'] = 'Unable To Access!';
+  }
+  echo json_encode($response);
+}
 
-		if ($validate['status'] == 1) {
-
-			// echo 'login()-status : ' . $validate['status'] . "--";
-
-			$emp_id = $validate['emp_id'];
-
-			$query = $this->db->query("SELECT emp_id,acro_dept,full_name,roles FROM `vw_emp_designation`
-										WHERE emp_id = '$emp_id'");
-
-			if ($query->num_rows() > 0) {
-				// print_r($query->row_array());
-				$data = $query->row_array();
-		
-				$response = array(
-					'status' => $validate['status'],
-					'emp_id' => $validate['emp_id'],
-					'name' => $data['full_name'],
-					'department' => $data['acro_dept'],
-					'roles' => $data['roles'],
-					'logged_in' => TRUE
-				);
-
-				$this->session->set_userdata($response);
 	
-			}
-			// echo "responseee";
-			echo json_encode($response);
-		} else {
-			// echo "status 00";
-
-			echo json_encode($validate);
-		}
-
-	}
 }

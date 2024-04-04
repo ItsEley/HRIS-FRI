@@ -33,10 +33,10 @@
                 <div class="col-md-12">
                     <div class="welcome-box">
                         <div class="welcome-img">
-
+                            
                         </div>
                         <div class="welcome-det">
-                            <h3>Welcome, <span><?php echo ucwords(strtolower($_SESSION['name'])); ?> !</span> </h3>
+                            <h3>Welcome, <span><?php echo ucwords(strtolower($this->session->userdata('fullname'))); ?> ! </span> </h3>
                             <p><?php echo date("l, jS F Y") ?></p>
                         </div>
                     </div>

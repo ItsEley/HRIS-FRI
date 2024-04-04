@@ -76,9 +76,6 @@
 
                                 <?php
 
-                                echo ' <input type="checkbox" class="btn-check" id="select_all" group="dept_multi" autocomplete="off">
-    <label class="btn btn-light btn-rounded d-inline-flex w-auto" for="select_all" style = "font-size:12px;margin:2px">All</label>';
-
                                 //get select-options
                                 $query =  $this->db->get('department');
                                 $data['query'] = $query;
@@ -137,19 +134,6 @@
                                               
 
 
-                                                <!-- <div class="dropdown">
-                                                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        <i class="material-icons">more_vert</i>
-                                                    </a>
-                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="">
-                                                            <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                                        </a>
-                                                        <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_">
-                                                            <i class="fa-regular fa-trash-can m-r-5"></i> Delete
-                                                        </a>
-                                                    </div>
-                                                </div> -->
                                             </td>
                                         </tr>
 
@@ -161,7 +145,6 @@
                                 }
                                 ?>
 
-                                ?>
 
                             </tbody>
                         </table>

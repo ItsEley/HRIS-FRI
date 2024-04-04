@@ -13,56 +13,12 @@ class Login_model extends CI_Model
 
 
     public function authenticate($username, $password)
-    {
+{
+    $query = $this->db->query("SELECT *, dr.roles as emp_role FROM employee e inner join department_roles dr on e.role = dr.id 
+                               inner join department d on e.department = d.id WHERE e.id = '$username' 
+                               OR e.email = '$username' AND e.password = '$password'");  
+    return $query;
+    // look for id or email
+}
 
-        // look for id or email
-        $query = $this->db->query("
-        SELECT id, password 
-        FROM employee
-        WHERE id = '$username' or email = '$username'
-        ");
-
-        if ($query->num_rows() > 0) {  //if email exists
-
-            $data = $query->row_array();
-            $emp_id = $data['id'];
-            $hashed_pass = $data['password'];
-
-            if ($password == $hashed_pass) { //  if the password is CORRECT
-                $status = 1;
-                $message = "Logged in";
-
-                $response = array(
-                    'status' => $status,
-                    'message' => $message,
-                    'emp_id' => $emp_id
-                );
-
-            } else { // if the password is wrong
-                $status = 0;
-                $message = "Wrong password. Please check your credentials again.";
-
-
-                $response = array(
-                    'status' => $status,
-                    'message' => $message,
-                    'username' => $username
-                );
-                
-            }
-        } else {  //  if email does NOT exists
-            $status = 0;
-            $message = "Email is not registered to the system. Please check your credentials again.";
-
-            $response = array(
-                'status' => $status,
-                'message' => $message
-            );
-        }
-
-
-
-        // return to welcome/login
-        return $response;
-    }
 }

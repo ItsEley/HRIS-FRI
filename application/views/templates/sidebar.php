@@ -241,7 +241,7 @@
 
             <li class="menu-title">
                <?php
-               if (strtolower($_SESSION['roles']) == 'head') {
+               if (strtolower($this->session->userdata('role')) == 'HR_Officer') {
                   echo "<span>Main | " . ucwords($_SESSION['department']) ." - HEAD ". "</span>";
                } 
                ?>
@@ -249,7 +249,7 @@
 
             <?php
 
-            if (strtolower($_SESSION['department']) == 'hr') {
+            if ($this->session->userdata('acro') == 'HR') {
 
                echo "
     <li><a href='" . base_url('hr/dashboard') . "'><i class='la la-dashboard'></i><span>Dashboard</span></a></li>
@@ -298,7 +298,7 @@
 ";
             } else if (strtolower($_SESSION['department']) == 'sys-at') {
             } else {
-               if (strtolower($_SESSION['roles']) == 'head') {
+               if (strtolower($this->session->userdata('role')) == 'HR_Officer') {
                   echo "
                   <li><a href='" . base_url('employee/dashboard') . "'><i class='la la-dashboard'></i><span>Dashboard | Head</span></a></li>
                   

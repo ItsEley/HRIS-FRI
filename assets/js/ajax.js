@@ -1,4 +1,3 @@
-/*Admin login*/
 $("#login-form").submit(function(e) {
     e.preventDefault();
     var email = $("#email").val(); 
@@ -12,56 +11,47 @@ $("#login-form").submit(function(e) {
             data: loginform,
             dataType: 'json',
             beforeSend: function() {
-				$("#btn_login").attr('disabled', true);
-                $("#login-form").attr('disabled', true).html("<div class = 'text-center'>Logging in ....<span class='fa fa-spinner fa-1x fa-spin'></span></div>");
+                $("#btn_login").attr('disabled', true);
+                $("#login-form").attr('disabled', true).html("<div class='text-center'>Logging in ....<span class='fa fa-spinner fa-1x fa-spin'></span></div>");
             },
             success: function(response) {
-		
+                console.log("success : ", response);
 
-				console.log("success : ",JSON.stringify(response));
+                if (response.status === 1) {
+                    let department = response.department;
 
+                    // console.log('Department:', department); // Display department information in the console
 
-                if (response.status === 0) {
+                    if (response.acro === 'HR' ) {
+                        console.log('hr/dashboard');
+                        window.location = base_url + 'hr/dashboard';
+                    } else {
+                        console.log('employee/dashboard');
+                        window.location = base_url + 'employee/dashboard';
+                    }
+                
+                } else if (response.status === 0 ) {
                     $("#alert").html('<div class="alert alert-danger">' + response.message + '</div>');
                     $("#login-form").attr("disabled", false).html("Login");
-					console.log("error");
-
-                } else if(response.status === 1) {
-                    // Check if response.user_type exists before calling toLowerCase()
-
-					let department =  response.department.toLowerCase();
-
-					if(department == "hr"){
-						console.log('hr/dashboard')
-						window.location = base_url + 'hr/dashboard';
-
-					}else if(department == "sys-at"){
-						// console.log('humanr/dashboard')
-
-						// window.location = base_url + 'humanr/home';
-
-
-					}else{
-						console.log('employee/dashboard')
-
-						window.location = base_url + 'employee/dashboard';	
-					}
+                    console.log("error");
                 }
             },
-			failed: function(response) {
-				console.log("failed : ");
-
-				console.log("failed", response)
-			}
+            error: function(response) {
+                console.log("failed : ");
+                console.log("failed", response);
+            }
         })
     } else {
         swal({
-            title: 'All Field are REQUIRED !',
+            title: 'All Fields are REQUIRED !',
             type: 'warning',
             confirmButtonClass: 'btn btn-success',
         });
     }
 });
+
+
+
 
 $(document).ready(function() {
     $('#approveButton').click(function() {

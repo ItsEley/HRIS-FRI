@@ -11,47 +11,49 @@ class Employee extends CI_Controller
 	}
 
 
-    public function forms()
-    {
-      $data['title'] = 'Employee | Forms';
-      $this->load->view('templates/header',$data);
-      $this->load->view('pages/public/forms');
-      $this->load->view('templates/footer');
-    }
+	public function forms()
+	{
+		$data['title'] = 'Employee | Forms';
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/public/forms');
+		$this->load->view('templates/footer');
+	}
 
-	
-    public function head_approval()
-    {
-      $data['title'] = 'Head | Approval';
-      $this->load->view('templates/header',$data);
-      $this->load->view('pages/employee/head_approval');
-      $this->load->view('templates/footer');
-    }
+
+	public function head_approval()
+	{
+		$data['title'] = 'Head | Approval';
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/employee/head_approval');
+		$this->load->view('templates/footer');
+	}
 
 	public function head_history()
-    {
-      $data['title'] = 'Head | History';
-      $this->load->view('templates/header',$data);
-      $this->load->view('pages/employee/head_history');
-      $this->load->view('templates/footer');
-    }
+	{
+		$data['title'] = 'Head | History';
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/employee/head_history');
+		$this->load->view('templates/footer');
+	}
 
 	public function pendingrequest()
-    {
-      $data['title'] = 'Employee | Pendings';
-      $this->load->view('templates/header',$data);
-      $this->load->view('pages/employee/request_pending');
-      $this->load->view('templates/footer');
-    }
+	{
+		$data['title'] = 'Employee | Pendings';
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/employee/request_pending');
+		$this->load->view('templates/footer');
+	}
 
 
 	public function emphome()
-    {
-      $data['title'] = 'Employee | Home';
-      $this->load->view('templates/header',$data);
-      $this->load->view('pages/employee/employee_home');
-      $this->load->view('templates/footer');
-    }
+	{
+		$data['title'] = 'Employee | Home';
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/employee/employee_home');
+		$this->load->view('templates/footer');
+	}
+
+
 
 	public function C_leave()
 	{
@@ -59,7 +61,7 @@ class Employee extends CI_Controller
 
 
 		$date_filled = date('Y-m-d H:i:s', time());
-	
+
 		$from_date = $this->input->post('from_date');
 		$to_date = $this->input->post('to_date');
 		$leaveType = $this->input->post('leaveType');
@@ -67,19 +69,19 @@ class Employee extends CI_Controller
 		$status = 'pending';
 		$empid = $this->input->post('emp_id');
 
-		    // Query to get the department of the employee from department_roles
-			$dept_query = $this->db->query("
+		// Query to get the department of the employee from department_roles
+		$dept_query = $this->db->query("
 			SELECT department 
 			FROM department_roles 
 			WHERE assigned_emp = '$empid'
 		");
-	
+
 		// Check if the query returned any rows
 		if ($dept_query->num_rows() > 0) {
 			// Fetch the department from the result
 			$row = $dept_query->row();
 			$department = $row->department;
-	
+
 			$data = array(
 				/*column name*/
 				'date_from' => $from_date,
@@ -92,18 +94,17 @@ class Employee extends CI_Controller
 				'department' => $department, // Add the department to the data array
 			);
 
-		$sql = $this->db->insert('f_leaves', $data);
-		if ($sql) {
-			$response['status'] = 1;
-			$response['msg'] = 'Done';
-		} else {
-			$response['status'] = 0;
-			$response['msg'] = 'Error';
+			$sql = $this->db->insert('f_leaves', $data);
+			if ($sql) {
+				$response['status'] = 1;
+				$response['msg'] = 'Done';
+			} else {
+				$response['status'] = 0;
+				$response['msg'] = 'Error';
+			}
+			echo json_encode($response);
 		}
-		echo json_encode($response);
 	}
-
-}
 
 
 	public function C_off_buss()
@@ -121,7 +122,7 @@ class Employee extends CI_Controller
 		$reason = $this->input->post('reason');
 		$empid = $this->input->post('emp_id');
 		$status = $this->input->post('status');
-		
+
 
 		$data = array(
 			/*column name*/
@@ -151,7 +152,7 @@ class Employee extends CI_Controller
 	public function C_off_buss1()
 	{
 		$response = array();
-	
+
 		$date_filled = date('Y-m-d H:i:s', time());
 		// $department = $this->input->post('department');
 
@@ -163,7 +164,7 @@ class Employee extends CI_Controller
 		$reason = $this->input->post('reason');
 		$empid = $this->input->post('emp_id');
 		$status = $this->input->post('status');
-		
+
 
 		$data = array(
 			/*column name*/
@@ -194,25 +195,41 @@ class Employee extends CI_Controller
 	public function C_outgoing()
 	{
 		$response = array();
-		
+
 		$outgoing_date = $this->input->post('outgoing_date');
 		$time_from = $this->input->post('time_from');
 		$time_to = $this->input->post('time_to');
 		$destination = $this->input->post('destination');
 		$reason = $this->input->post('reason');
-		$status = "Pending";
+		// $head_status = "Pending";
+		// $status = "Pending";
 		$empid = $this->input->post('emp_id');
+		// Query to get the department of the employee from department_roles
+		$dept_query = $this->db->query("
+ SELECT department 
+ FROM department_roles 
+ WHERE assigned_emp = '$empid'
+");
 
+
+
+if ($dept_query->num_rows() > 0) {
+	// Fetch the department from the result
+	$row = $dept_query->row();
+
+	$department = $row->department;
 		$data = array(
 			/*column name*/
-			
+
 			'date_filled' => $outgoing_date,
 			'time_from' => $time_from,
 			'time_to' => $time_to,
 			'going_to' => $destination,
 			'reason' => $reason,
-			'status' => $status,
+			'department' => $department,
 			'emp_id' => $empid,
+
+
 		);
 
 		$sql = $this->db->insert('f_outgoing', $data);
@@ -226,85 +243,86 @@ class Employee extends CI_Controller
 		}
 		echo json_encode($response);
 	}
+}
 
 
 	public function C_undertime()
-{
-    $response = array();
+	{
+		$response = array();
 
-    // Get input data
-    $undertime_date = $this->input->post('undertime_date');
-    $time_in = $this->input->post('time_in');
-    $time_out = $this->input->post('time_out');
-    $reason = $this->input->post('reason');
-    $status = "Pending"; // Set status to "Pending"
-    $empid = $this->input->post('emp_id');
+		// Get input data
+		$undertime_date = $this->input->post('undertime_date');
+		$time_in = $this->input->post('time_in');
+		$time_out = $this->input->post('time_out');
+		$reason = $this->input->post('reason');
+		$status = "Pending"; // Set status to "Pending"
+		$empid = $this->input->post('emp_id');
 
-    // Prepare data array for insertion
-    $data = array(
-        'date_filled' => $undertime_date,
-        'date_of_undertime' => $undertime_date,
-        'time_in' => $time_in,
-        'time_out' => $time_out,
-        'reason' => $reason,
-        'status' => $status, // Use the status variable set above
-        'emp_id' => $empid
-    );
+		// Prepare data array for insertion
+		$data = array(
+			'date_filled' => $undertime_date,
+			'date_of_undertime' => $undertime_date,
+			'time_in' => $time_in,
+			'time_out' => $time_out,
+			'reason' => $reason,
+			'status' => $status, // Use the status variable set above
+			'emp_id' => $empid
+		);
 
-    // Insert data into the database
-    $sql = $this->db->insert('f_undertime', $data);
-    if ($sql) {
-        $response['status'] = 1;
-        $response['msg'] = 'Undertime request submitted successfully.';
-    } else {
-        $response['status'] = 0;
-        $response['msg'] = 'Error occurred while submitting the undertime request.';
-    }
+		// Insert data into the database
+		$sql = $this->db->insert('f_undertime', $data);
+		if ($sql) {
+			$response['status'] = 1;
+			$response['msg'] = 'Undertime request submitted successfully.';
+		} else {
+			$response['status'] = 0;
+			$response['msg'] = 'Error occurred while submitting the undertime request.';
+		}
 
-    // Send JSON response
-    echo json_encode($response);
-}
+		// Send JSON response
+		echo json_encode($response);
+	}
 
 
-public function C_overtime()
-{
-    $response = array();
+	public function C_overtime()
+	{
+		$response = array();
 
-    // Get current date and time
-    $date_filled = date('Y-m-d H:i:s', time());
+		// Get current date and time
+		$date_filled = date('Y-m-d H:i:s', time());
 
-    // Get input data
-    $ot_date = $this->input->post('ot_date');
-    $time_in = $this->input->post('from_time');
-    $time_out = $this->input->post('to_time');
-    $reason = $this->input->post('reason');
-    $status = "Pending"; // Set status to "Pending"
-    $empid = $this->input->post('emp_id');
+		// Get input data
+		$ot_date = $this->input->post('ot_date');
+		$time_in = $this->input->post('from_time');
+		$time_out = $this->input->post('to_time');
+		$reason = $this->input->post('reason');
+		$status = "Pending"; // Set status to "Pending"
+		$empid = $this->input->post('emp_id');
 
-    // Prepare data array for insertion
-    $data = array(
-        'date_filled' => $date_filled,
-        'date_ot' => $ot_date,
-        'time_in' => $time_in,
-        'time_out' => $time_out,
-        'reason' => $reason,
-        'status' => $status, // Use the status variable set above
-        'emp_id' => $empid
-    );
+		// Prepare data array for insertion
+		$data = array(
+			'date_filled' => $date_filled,
+			'date_ot' => $ot_date,
+			'time_in' => $time_in,
+			'time_out' => $time_out,
+			'reason' => $reason,
+			'status' => $status, // Use the status variable set above
+			'emp_id' => $empid
+		);
 
-    // Insert data into the database
-    $sql = $this->db->insert('f_overtime', $data);
-    if ($sql) {
-        $response['status'] = 1;
-        $response['msg'] = 'Overtime request submitted successfully.';
-    } else {
-        $response['status'] = 0;
-        $response['msg'] = 'Error occurred while submitting the overtime request.';
-    }
+		// Insert data into the database
+		$sql = $this->db->insert('f_overtime', $data);
+		if ($sql) {
+			$response['status'] = 1;
+			$response['msg'] = 'Overtime request submitted successfully.';
+		} else {
+			$response['status'] = 0;
+			$response['msg'] = 'Error occurred while submitting the overtime request.';
+		}
 
-    // Send JSON response
-    echo json_encode($response);
-}
+		// Send JSON response
+		echo json_encode($response);
+	}
 
 
 	public function C_sched_adjust()
@@ -329,7 +347,7 @@ public function C_overtime()
 			'reason' => $reason,
 			'status' => $status,
 			'emp_id' => $empid
-			
+
 		);
 
 		$sql = $this->db->insert('f_worksched_adj', $data);
@@ -343,5 +361,4 @@ public function C_overtime()
 
 		echo json_encode($response);
 	}
-
 }

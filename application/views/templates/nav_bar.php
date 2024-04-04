@@ -30,7 +30,7 @@
       <?php
 
 
-      $query = $this->db->query("SELECT * FROM employee WHERE id = '" . $_SESSION['emp_id'] . "'");
+      $query = $this->db->query("SELECT * FROM employee WHERE id = '" . $_SESSION['id'] . "'");
 
       foreach ($query->result() as $row) {
 
@@ -232,9 +232,9 @@
       <li class="nav-item dropdown has-arrow main-drop">
          <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
             <span class="user-img">
-               <img src="data:image/jpeg;base64,<?= base64_encode($pfp) ?>" alt="" style="object-fit: cover; aspect-ratio: 1; height: auto;">
+               <img src="data:image/jpeg;base64,<?= base64_encode($this->session->userdata('pfp')) ?>" alt="" style="object-fit: cover; aspect-ratio: 1; height: auto;">
                <span class="status online"></span></span>
-            <span><?php echo ucwords($fname); ?></span>
+            <span><?php echo ucwords($this->session->userdata('fullname')); ?></span>
 
 
          </a>
