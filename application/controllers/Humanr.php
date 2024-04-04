@@ -55,21 +55,53 @@ class Humanr extends CI_Controller
 		echo 'Leave approved successfully';
 	}
 	
+	
+
 	public function barchart() {
-       
-        $query = $this->db->query("SELECT DISTINCT department FROM department");
-
-        // Initialize an empty array to store department values
-        $departmentValues = array();
-
-        // Fetch the result and store department values in the array
-        foreach ($query->result_array() as $row) {
-            $departmentValues[] = $row["department"];
-        }
-
-        // Send JSON response with department values
-        $this->output->set_content_type('application/json')->set_output(json_encode($departmentValues));
-    }
+		// updated code for graph
+		$query = $this->db->query("SELECT d.acro_dept as dept, COUNT(dr.department) as count FROM department_roles dr inner join department d on dr.department = d.id GROUP BY d.department");
+		$result = $query->result();
+	
+		$data['labels'] = [];
+		$data['counts'] = [];
+	
+		foreach ($result as $row) {
+			$data['labels'][] = $row->dept;
+			$data['counts'][] = $row->count;
+		}
+	
+		echo json_encode($data);
+	  }
+	
+	
+	  // new code for attendance status
+	  public function attendance_status()
+	  {
+		$query = $this->db->query("SELECT MONTH(date) as month, 
+									   SUM(CASE WHEN status = '0' THEN 1 ELSE 0 END) as late_count,
+									   SUM(CASE WHEN status = '1' THEN 1 ELSE 0 END) as ontime_count
+									   FROM attendance
+									   GROUP BY MONTH(date)");
+	
+			$data['labels'] = [];
+			$data['lateCounts'] = [];
+			$data['ontimeCounts'] = [];
+	
+			for ($i = 1; $i <= 12; $i++) {
+				$data['labels'][] = date('M', mktime(0, 0, 0, $i, 1));
+				$data['lateCounts'][] = 0;
+				$data['ontimeCounts'][] = 0;
+			}
+	
+			foreach ($query->result() as $row) {
+				$month = $row->month;
+				$data['lateCounts'][$month - 1] = $row->late_count;
+				$data['ontimeCounts'][$month - 1] = $row->ontime_count;
+			}
+	
+			echo json_encode($data);
+	
+	  }
 
 	public function deleteEmployee()
 	{
@@ -675,26 +707,22 @@ class Humanr extends CI_Controller
 		$datetime = date('Y-m-d H:i:s', time());
 		$response = array();
 
-		$author = $this->input->post('author');
-		$title = $this->input->post('title');
-		$department = $this->input->post('department');
-		$content = $this->input->post('content');
-		$postdate = $this->input->post('postdate');
+		// print_r($this->input->post);
 
 		$data = array(
 			/*column name*/
-			'author' => $author,
-			'title' => $title,
-			'to_all' => $department,
-			'content' => $content,
-			'date_created' => $postdate
+			'author' => $this->input->post('author'),
+			'title' => $this->input->post('title'),
+			'to_all' => $this->input->post('department'),
+			'content' => $this->input->post('editor_content'),
+			'date_created' => $this->input->post('postdate')
 		);
 
 		$sql = $this->db->insert('announcement', $data);
 
 		if ($sql) {
 			$response['status'] = 1;
-			$response['msg'] = 'Done';
+			$response['msg'] = json_encode($data);
 		} else {
 			$response['status'] = 0;
 			$response['msg'] = 'Error';

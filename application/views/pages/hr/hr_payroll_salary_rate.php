@@ -37,7 +37,7 @@
             <div class="row timeline-panel">
                 <div class="col-md-12">
                     <div class="table-responsive">
-                        <table id="dt_emp_shift" class="datatable table-striped custom-table mb-0">
+                        <table id="dt_emp_salary" class="datatable table-striped custom-table mb-0">
                             <thead>
                                 <tr>
                                     <th hidden>ID</th>
@@ -53,14 +53,25 @@
                             <tbody>
                                 <?php
 
-                                $query = $this->db->query('
-                                SELECT emp.emp_id,emp.full_name, emp.dept_id, emp.department, emp.acro_dept,
-                                 emp.dept_roles_id, emp.roles, emp.salary, emp.salary_type
-                                FROM vw_emp_designation AS emp
-                                INNER JOIN vw_emp_shifts AS shifts ON emp.emp_id = shifts.emp_id;
-                                
-                         
-                                ');
+                                $query = $this->db->query("SELECT 
+                                e.employee_id,
+                                e.id,
+                              CONCAT(e.fname, ' ', e.mname, ' ', e.lname) AS full_name,
+                                e.department AS department_id,
+                                d.department,
+                                e.role AS role_id,
+                                dr.roles AS role,
+                                dr.salary,
+                                dr.salary_type,
+                                e.shift
+                            FROM 
+                                employee e
+                            JOIN 
+                                department d ON e.department = d.id
+                            JOIN 
+                                department_roles dr ON e.role = dr.id;
+                            
+                            ");
 
                                 foreach ($query->result() as $row) {
 
@@ -78,7 +89,7 @@
                                             </div>
                                         </td>
 
-                                        <td><?php echo $row->roles;?></td>
+                                        <td><?php echo $row->role;?></td>
                                         <td><?php echo $row->salary;?> </td>
                                         <td><?php echo $row->salary_type;?></td>
                                         <td>
@@ -130,6 +141,7 @@
         $("li > a[href='<?= base_url('hr/payroll/salary_rate') ?>']").addClass("active");
         $("li > a[href='<?= base_url('hr/payroll/salary_rate') ?>']").parent().parent().css("display", "block")
 
+        $('#dt_emp_salary').DataTable();
 
 
     })

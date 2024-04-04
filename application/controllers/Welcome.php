@@ -68,13 +68,18 @@ class Welcome extends CI_Controller
     $department = $data['department'];
     $acrodept = $data['acro_dept'];
     $pfp = $data['pfp'];
+
+
     $response['status'] = 1;
     $response['message'] = "Welcome to FamCO HR System";
+    $response['acro_dept'] = $acrodept;
+
+
     $session_data = array(
       'id' => $emp_id,
       'fullname' => $fullname,
-      'role' => $role,
       'pfp' => $pfp,
+      'role' => $role,
       'department' => $department,
       'acro' => $acrodept,
       'logged_in' => TRUE

@@ -36,7 +36,16 @@
                             
                         </div>
                         <div class="welcome-det">
-                            <h3>Welcome, <span><?php echo ucwords(strtolower($this->session->userdata('fullname'))); ?> ! </span> </h3>
+                        <h3>Welcome, <span><?php echo ucwords(strtolower($this->session->userdata('fullname'))); ?></span>!</h3>
+
+<?php
+// Display department if it exists in the session
+if ($this->session->userdata('department')) {
+    echo "<p>Department: " . $this->session->userdata('department') . "</p>";
+    echo "<p>ID: " . $this->session->userdata('id') . "</p>";
+}
+?>
+
                             <p><?php echo date("l, jS F Y") ?></p>
                         </div>
                     </div>

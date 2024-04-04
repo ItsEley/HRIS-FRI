@@ -6,15 +6,16 @@
     }
 
     input[type='checkbox']:checked+label.btn.btn-light.btn-rounded {
-    
+
         background-color: #26c769 !important;
         color: #fff !important;
 
     }
 </style>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
-<link href="..\assets\text-editor\node_modules\froala-editor\css\froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="..\assets\text-editor\node_modules\froala-editor\js\froala_editor.pkgd.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+
+
 
 <!-- Main Wrapper -->
 <div class="main-wrapper">
@@ -82,35 +83,34 @@
                                     // $department = $row->department;
                                     $date = $row->date_created;
                                 ?>
-                                    <tr class="hoverable-row">
+                                    <tr class="hoverable-row" data-ann-id ="<?= $ann_id?>">
                                         <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                             <?php echo $title; ?>
                                         </td>
                                         <td style="max-width: 200px; max-height: 100px; overflow: hidden;">
-                                            <div class="ellipsis" style="max-height: 1.2em; overflow: hidden;">
+                                            <a class="ellipsis announcement-open" style="max-height: 1.2em; overflow: hidden;color:black !important"
+                                            href = "#" 
+                                            data-bs-toggle="modal" data-bs-target="#modal_announcement_detail"
+                                              data-ann-id = "<?= $ann_id?>">
+                                            
                                                 <?php echo $content; ?>
-                                            </div>
+                                            </a>
                                         </td>
 
                                         <td><?php echo $author; ?></td>
                                         <td><?php //echo $department; 
                                             ?> {not implemented yet}</td>
-                                        <td><?php echo date('M j, Y', strtotime($date)); ?></td>
+                                        <td><?php echo formatDateTime($date); ?></td>
 
                                         <td>
-                                            <div class="dropdown">
-                                                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="material-icons">more_vert</i>
-                                                </a>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $ann_id ?>">
-                                                    <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?php echo $ann_id ?>">
-                                                        <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                                    </a>
-                                                    <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $ann_id ?>">
-                                                        <i class="fa-regular fa-trash-can m-r-5"></i> Delete
-                                                    </a>
-                                                </div>
-                                            </div>
+
+                                            <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?php echo $ann_id ?>">
+                                                <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                            </a>
+                                            <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $ann_id ?>">
+                                                <i class="fa-regular fa-trash-can m-r-5"></i> Delete
+                                            </a>
+
                                         </td>
                                     </tr>
                                 <?php
@@ -136,7 +136,7 @@
 <!-- jQuery -->
 
 
-<div id="modal_announcement_detail" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+<div id="modal_announcement_create" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -150,7 +150,7 @@
                         <label class="col-form-label col-md-2">Title</label>
 
                         <div class="col-md-10">
-                            <input type="text" class="form-control" name="title" placeholder="Title">
+                            <input type="text" class="form-control" name="title" placeholder="Title" required>
                         </div>
 
                     </div>
@@ -189,12 +189,12 @@
                     </div>
 
 
+                    <!-- Hidden input field to store Summernote content -->
+                    <input type="hidden" name="editor_content" id="editor_content">
+                    <!-- Editor container -->
+                    <div id="editor" name="content"></div>
 
 
-
-                    <div class="row">
-                        <textarea id="froala-editor" name="content"></textarea>
-                    </div>
 
                 </div>
                 <div class="modal-footer">
@@ -207,19 +207,57 @@
     </div>
 </div><!-- /.modal -->
 
+<?php $this->load->view('components\modal-announcement-details.php'); ?>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         $("li > a[href='<?= base_url('hr/announcement') ?>']").parent().addClass("active");
 
-        new FroalaEditor('textarea#froala-editor');
+        $('#dt_announcements').DataTable();
 
-        $("#btn_create_ann").on('click', function() {
-            $('a[href="https://www.froala.com/wysiwyg-editor?k=u"]').css('display', 'none');
+
+        // Initialize Summernote when modal is shown
+        $('#modal_announcement_create').on('shown.bs.modal', function() {
+            if (!window.summernoteInitialized) {
+                $('#editor').summernote({
+                    placeholder: 'Type your text here...',
+                    tabsize: 1,
+                    height: 300
+                });
+                window.summernoteInitialized = true; // Set flag to indicate Summernote instance is initialized
+            }
+        });
+
+        // add announcement 
+        $("#add_announcement").submit(function(e) {
+            e.preventDefault();
+            // Get the HTML content from Summernote editor
+            var content = $('#editor').summernote('code');
+
+            // Set the value of the hidden input field to the Summernote content
+            $('#editor_content').val(content);
+
+            var addAnnounce = $(this).serialize();
+
+            // console.log("1: ", addAnnounce);
+
+            // console.log("2: ", content);
+            $.ajax({
+                url: base_url + 'humanr/add_announce',
+                type: 'post',
+                data: addAnnounce,
+                dataType: 'json',
+                success: function(res) {
+                    if (res.status === 1) {
+                        alert(JSON.stringify(res));
+                        // console.log('reloading')
+
+                    } else {
+                        alert(res.msg);
+                    }
+                }
+            })
         })
-
-
-
 
 
 

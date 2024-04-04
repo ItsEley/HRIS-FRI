@@ -58,7 +58,7 @@
                                 <?php
                                 $row_arr = array();
 
-                                $emp_id = $this->session->userdata('emp_id');
+                                $emp_id = $this->session->userdata('id');
                                 
                                 // Query employee data to get the profile picture (pfp) and name
                                 $query_employee = $this->db->query("SELECT * FROM employee WHERE id = '$emp_id'");

@@ -35,7 +35,7 @@
 
              <!-- data table -->
              <div class="row timeline-panel">
-                <table id="dt_emp_shift" class="datatable table-striped custom-table mb-0">
+                <table id="dt_report_salary" class="datatable table-striped custom-table mb-0">
                     <thead>
                         <tr>
                             <th hidden>ID</th>
@@ -52,18 +52,25 @@
                     <tbody>
                         <?php
 
-                        $query = $this->db->query('
-                                SELECT
-                                *
-                            FROM
-                                vw_emp_designation
-                            WHERE
-                                vw_emp_designation.emp_id IS NOT NULL
-                            ORDER BY
-                                vw_emp_designation.emp_id ASC,
-                                vw_emp_designation.full_name;
-                            
-                                ');
+                        $query = $this->db->query("SELECT 
+                        e.employee_id,
+                        e.id,
+                      CONCAT(e.fname, ' ', e.mname, ' ', e.lname) AS full_name,
+                        e.department AS department_id,
+                        d.department,
+                        e.role AS role_id,
+                        dr.roles AS role,
+                        dr.salary,
+                        dr.salary_type,
+                        e.shift
+                    FROM 
+                        employee e
+                    JOIN 
+                        department d ON e.department = d.id
+                    JOIN 
+                        department_roles dr ON e.role = dr.id;
+                    
+                    ");
 
                         foreach ($query->result() as $row) {
 
@@ -72,7 +79,7 @@
                         ?>
                             <tr class="hoverable-row">
                                 <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" hidden>
-                                    <?php echo $data['emp_id'] = $row->emp_id; ?>
+                                    <?php echo $data['emp_id'] = $row->employee_id; ?>
                                 </td>
                                 <td style="max-width: 200px; max-height: 100px; overflow: hidden;">
                                     <div class="ellipsis" style="max-height: 1.2em; overflow: hidden;">
@@ -80,10 +87,10 @@
                                     </div>
                                 </td>
 
-                                <td name = "emp_dept_id" data-dept-id = "<?php echo $row->dept_id?>">
+                                <td name = "emp_dept_id" data-dept-id = "<?php echo $row->department_id?>">
                                     <?php echo $row->department?></td>
-                                <td name = "emp_role_id" data-role-id = "<?php echo $row->dept_roles_id?>">
-                                <?php echo $row->roles; ?></td>
+                                <td name = "emp_role_id" data-role-id = "<?php echo $row->role_id?>">
+                                <?php echo $row->role; ?></td>
 
                                 <td>
                                     <?php
@@ -163,6 +170,7 @@
         $("li > a[href='<?= base_url('hr/reports/salary') ?>']").addClass("active");
         $("li > a[href='<?= base_url('hr/reports/salary') ?>']").parent().parent().css("display", "block")
 
+        $('#dt_report_salary').DataTable();
 
 
     })

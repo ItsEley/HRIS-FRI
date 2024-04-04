@@ -5,14 +5,16 @@
     <!-- Bootstrap Core JS -->
     <script src=<?= base_url("assets/js/bootstrap.bundle.min.js") ?>></script>
 
-    <!-- Slimscroll JS -->
-    <script src=<?= base_url("assets/js/jquery.slimscroll.min.js") ?>></script>
+
 
     <!-- Chart JS -->
     <script src=<?= base_url("assets/plugins/morris/morris.min.js") ?>></script>
     <script src=<?= base_url("assets/plugins/raphael/raphael.min.js") ?>></script>
-    <script src=<?= base_url("assets/js/chart.js") ?>></script>
     <script src=<?= base_url("assets/js/greedynav.js") ?>></script>
+
+    <script src="<?= base_url("assets/plugins/chartjs/chart.min.js") ?>"></script>
+    <script src="<?= base_url("assets/plugins/chartjs/chart-data.js") ?>"></script>
+
 
     <!-- Theme Settings JS -->
     <script src=<?= base_url("assets/js/layout.js") ?>></script>
@@ -26,33 +28,15 @@
 
     <!-- data tables -->
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-    <script src="<?= base_url('assets/js/jquery.dataTables.min.js') ?>"></script>
-    <script src="<?= base_url('assets/js/dataTables.bootstrap4.min.js') ?>"></script>
+    
 
     <!-- Theme Settings JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script> -->
     <script src="<?= base_url('assets/js/greedynav.js') ?>"></script>
 
-    <script src=<?=base_url("assets/plugins/apexchart/apexcharts.min.js")?>></script>
-		<script src=<?=base_url("assets/plugins/apexchart/chart-data.js")?>></script>
-    <script>
-    $(document).ready(function() {
-        // Initialize DataTable
-        
-        $('#leavereq_dt').DataTable();
-        $('#outgoingreq_dt').DataTable();
-        $('#overtime_dt').DataTable();
-        $('#undertime_dt').DataTable();
-        $('#ob_dt').DataTable();
-        
 
-        
-    });
-</script>
-<!-- FullCalendar JavaScript -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.js"></script> -->
-<!-- <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script> -->
+
 
     </body>
 

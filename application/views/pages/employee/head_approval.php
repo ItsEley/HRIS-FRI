@@ -90,27 +90,46 @@
             <div class="row">
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                     <?php
+                    // Retrieve department name from the session
+                    $current_department_name = $this->session->userdata('department');
 
-                    $total_count = 0;
-                    $this->db->from('f_leaves');
-                    $this->db->where('head_status', 'pending');
-                    $total_count += $this->db->count_all_results();
-                    $this->db->from('f_outgoing');
-                    $this->db->where('head_status', 'pending');
-                    $total_count += $this->db->count_all_results();
-                    $this->db->from('f_overtime');
-                    $this->db->where('head_status', 'pending');
-                    $total_count += $this->db->count_all_results();
-                    $this->db->from('f_undertime');
-                    $this->db->where('head_status', 'pending');
-                    $total_count += $this->db->count_all_results();
-                    $this->db->from('f_off_bussiness');
-                    $this->db->where('head_status', 'pending');
-                    $total_count += $this->db->count_all_results();
-                    $data['icon'] = "fa fa-address-book";
-                    $data['count'] = $total_count;
-                    $data['label'] = "Requests Pending";
-                    $this->load->view('components/card-dash-widget', $data)
+                    // Query to get the department ID based on the department name
+                    $department_query = $this->db->query("
+    SELECT id 
+    FROM department 
+    WHERE department = ?
+", array($current_department_name));
+
+                    // Check if the department exists
+                    if ($department_query->num_rows() > 0) {
+                        $department_row = $department_query->row();
+                        $department_id = $department_row->id;
+
+                        // Initialize total count
+                        $total_count = 0;
+
+                        // Loop through each table and count pending requests
+                        $tables = array('f_leaves', 'f_outgoing', 'f_overtime', 'f_undertime', 'f_off_bussiness');
+                        foreach ($tables as $table) {
+                            $this->db->from($table);
+                            $this->db->where('head_status', 'pending');
+
+                            // Add department condition using the department ID
+                            $this->db->where('department', $department_id);
+
+                            $total_count += $this->db->count_all_results();
+                        }
+
+                        // Prepare data for the view
+                        $data['icon'] = "fa fa-address-book";
+                        $data['count'] = $total_count;
+                        $data['label'] = "Request Pending";
+                        $this->load->view('components/card-dash-widget', $data);
+                    } else {
+                        // Handle case where department does not exist
+                        // You can set a default count or show an error message
+                    }
+
                     ?>
 
                 </div>
@@ -166,193 +185,168 @@
 
                         Pending Leaves
                         <?php
-                        // Get the current user's emp_id from the session
-                        $current_user_id = $this->session->userdata('emp_id');
+                        // Get the department name from the session
+                        $current_department_name = $this->session->userdata('department');
 
-                        // Query to get the department from department_roles based on the current user's emp_id
+                        // Query to retrieve the department ID from the department table based on the department name
                         $dept_query = $this->db->query("
-    SELECT department 
-    FROM department_roles 
-    WHERE assigned_emp = '$current_user_id'
-");
+            SELECT id 
+            FROM department 
+            WHERE department = ?
+        ", array($current_department_name));
 
-                        // Check if the query returned any rows
+                        // Check if the query returned a row
                         if ($dept_query->num_rows() > 0) {
                             // Fetch the row
                             $row = $dept_query->row();
+                            $department_id = $row->id;
 
-                            // Get the department from the row
-                            $current_department = $row->department;
-
-                            // Now you have the current user's department
-                            // You can use $current_department as needed
-
-                            // Now integrate this department into your code for counting pending official business requests
+                            // Count the number of pending requests in the f_outgoing table for the department ID
                             $this->db->from('f_leaves');
                             $this->db->where('head_status', 'pending');
-                            $this->db->where('department', $current_department); // Use the retrieved department
-                            $data['count'] = $count = $this->db->count_all_results();
+                            $this->db->where('department', $department_id);
+                            $count = $this->db->count_all_results();
 
+                            // Check if there are any pending requests
                             if ($count > 0) {
                                 echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
                             }
                         }
                         ?>
-
                     </a>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="#solid-tab2" data-bs-toggle="tab">Pending Outgoing
+                <li class="nav-item">
+                    <a class="nav-link" href="#solid-tab2" data-bs-toggle="tab">
+                        Pending Outgoing
                         <?php
-                        // Get the current user's emp_id from the session
-                        $current_user_id = $this->session->userdata('emp_id');
+                        // Get the department name from the session
+                        $current_department_name = $this->session->userdata('department');
 
-                        // Query to get the department from department_roles based on the current user's emp_id
+                        // Query to retrieve the department ID from the department table based on the department name
                         $dept_query = $this->db->query("
-    SELECT department 
-    FROM department_roles 
-    WHERE assigned_emp = '$current_user_id'
-");
+            SELECT id 
+            FROM department 
+            WHERE department = ?
+        ", array($current_department_name));
 
-                        // Check if the query returned any rows
+                        // Check if the query returned a row
                         if ($dept_query->num_rows() > 0) {
                             // Fetch the row
                             $row = $dept_query->row();
+                            $department_id = $row->id;
 
-                            // Get the department from the row
-                            $current_department = $row->department;
-
-                            // Now you have the current user's department
-                            // You can use $current_department as needed
-
-                            // Now integrate this department into your code for counting pending official business requests
+                            // Count the number of pending requests in the f_outgoing table for the department ID
                             $this->db->from('f_outgoing');
                             $this->db->where('head_status', 'pending');
-                            $this->db->where('department', $current_department); // Use the retrieved department
-                            $data['count'] = $count = $this->db->count_all_results();
+                            $this->db->where('department', $department_id);
+                            $count = $this->db->count_all_results();
 
+                            // Check if there are any pending requests
                             if ($count > 0) {
                                 echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
                             }
                         }
                         ?>
+                    </a>
+                </li>
 
-
-                    </a></li>
                 <li class="nav-item"><a class="nav-link" href="#solid-tab3" data-bs-toggle="tab">Pending Overtime
 
                         <?php
-                        // Get the current user's emp_id from the session
-                        $current_user_id = $this->session->userdata('emp_id');
+                        // Get the department name from the session
+                        $current_department_name = $this->session->userdata('department');
 
-                        // Query to get the department from department_roles based on the current user's emp_id
+                        // Query to retrieve the department ID from the department table based on the department name
                         $dept_query = $this->db->query("
-    SELECT department 
-    FROM department_roles 
-    WHERE assigned_emp = '$current_user_id'
-");
+            SELECT id 
+            FROM department 
+            WHERE department = ?
+        ", array($current_department_name));
 
-                        // Check if the query returned any rows
+                        // Check if the query returned a row
                         if ($dept_query->num_rows() > 0) {
                             // Fetch the row
                             $row = $dept_query->row();
+                            $department_id = $row->id;
 
-                            // Get the department from the row
-                            $current_department = $row->department;
-
-                            // Now you have the current user's department
-                            // You can use $current_department as needed
-
-                            // Now integrate this department into your code for counting pending official business requests
+                            // Count the number of pending requests in the f_outgoing table for the department ID
                             $this->db->from('f_overtime');
                             $this->db->where('head_status', 'pending');
-                            $this->db->where('department', $current_department); // Use the retrieved department
-                            $data['count'] = $count = $this->db->count_all_results();
+                            $this->db->where('department', $department_id);
+                            $count = $this->db->count_all_results();
 
+                            // Check if there are any pending requests
                             if ($count > 0) {
                                 echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
                             }
                         }
                         ?>
-
-
-
                     </a></li>
                 <li class="nav-item"><a class="nav-link" href="#solid-tab4" data-bs-toggle="tab">Pending Undertime
 
                         <?php
-                        // Get the current user's emp_id from the session
-                        $current_user_id = $this->session->userdata('emp_id');
+                        // Get the department name from the session
+                        $current_department_name = $this->session->userdata('department');
 
-                        // Query to get the department from department_roles based on the current user's emp_id
+                        // Query to retrieve the department ID from the department table based on the department name
                         $dept_query = $this->db->query("
-    SELECT department 
-    FROM department_roles 
-    WHERE assigned_emp = '$current_user_id'
-");
+            SELECT id 
+            FROM department 
+            WHERE department = ?
+        ", array($current_department_name));
 
-                        // Check if the query returned any rows
+                        // Check if the query returned a row
                         if ($dept_query->num_rows() > 0) {
                             // Fetch the row
                             $row = $dept_query->row();
+                            $department_id = $row->id;
 
-                            // Get the department from the row
-                            $current_department = $row->department;
-
-                            // Now you have the current user's department
-                            // You can use $current_department as needed
-
-                            // Now integrate this department into your code for counting pending official business requests
+                            // Count the number of pending requests in the f_outgoing table for the department ID
                             $this->db->from('f_undertime');
                             $this->db->where('head_status', 'pending');
-                            $this->db->where('department', $current_department); // Use the retrieved department
-                            $data['count'] = $count = $this->db->count_all_results();
+                            $this->db->where('department', $department_id);
+                            $count = $this->db->count_all_results();
 
+                            // Check if there are any pending requests
                             if ($count > 0) {
                                 echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
                             }
                         }
                         ?>
-
 
 
                     </a></li>
                 <li class="nav-item"><a class="nav-link" href="#solid-tab5" data-bs-toggle="tab">Pending Official Business
 
                         <?php
-                        // Get the current user's emp_id from the session
-                        $current_user_id = $this->session->userdata('emp_id');
+                        // Get the department name from the session
+                        $current_department_name = $this->session->userdata('department');
 
-                        // Query to get the department from department_roles based on the current user's emp_id
+                        // Query to retrieve the department ID from the department table based on the department name
                         $dept_query = $this->db->query("
-    SELECT department 
-    FROM department_roles 
-    WHERE assigned_emp = '$current_user_id'
-");
+            SELECT id 
+            FROM department 
+            WHERE department = ?
+        ", array($current_department_name));
 
-                        // Check if the query returned any rows
+                        // Check if the query returned a row
                         if ($dept_query->num_rows() > 0) {
                             // Fetch the row
                             $row = $dept_query->row();
+                            $department_id = $row->id;
 
-                            // Get the department from the row
-                            $current_department = $row->department;
-
-                            // Now you have the current user's department
-                            // You can use $current_department as needed
-
-                            // Now integrate this department into your code for counting pending official business requests
+                            // Count the number of pending requests in the f_outgoing table for the department ID
                             $this->db->from('f_off_bussiness');
                             $this->db->where('head_status', 'pending');
-                            $this->db->where('department', $current_department); // Use the retrieved department
-                            $data['count'] = $count = $this->db->count_all_results();
+                            $this->db->where('department', $department_id);
+                            $count = $this->db->count_all_results();
 
+                            // Check if there are any pending requests
                             if ($count > 0) {
                                 echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
                             }
                         }
                         ?>
-
-
                     </a></li>
             </ul>
             <div class="tab-content">
@@ -389,38 +383,32 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        echo "Session emp_id: " . $this->session->userdata('emp_id') . "<br>";
-
-                                        // Assuming $this->session->userdata('emp_id') holds the current user's ID
-                                        $current_user_id = $this->session->userdata('emp_id');
-
-                                        // Query to get the department of the current user from department_roles
+                                        $current_department_name = $this->session->userdata('department');
                                         $dept_query = $this->db->query("
-                                          SELECT department 
-                                          FROM department_roles 
-                                          WHERE assigned_emp = '$current_user_id'
-                                      ");
-                                        $row = $dept_query->row();
-                                        $current_department = $row->department;
+                                         SELECT id 
+                                         FROM department 
+                                         WHERE department = ?
+                                     ", array($current_department_name));
 
-                                        // Now, construct the query for fetching leaves for employees in the same department with pending status
+                                        if ($dept_query->num_rows() > 0) {
+                                            $row = $dept_query->row();
+                                            $current_department_id = $row->id;
+                                        } else {
+                                        }
                                         $query = $this->db->query("
-                                          SELECT f.*, e.fname, e.lname 
-                                          FROM f_leaves f 
-                                          LEFT JOIN employee e ON f.emp_id = e.id 
-                                          WHERE f.head_status = 'pending'
-                                          AND f.department = '$current_department'
-                                      ");
+                                         SELECT f.*, e.fname, e.lname 
+                                         FROM f_leaves f 
+                                         LEFT JOIN employee e ON f.emp_id = e.id 
+                                         WHERE f.head_status = 'pending'
+                                         AND f.department = ?
+                                     ", array($current_department_id));
 
                                         foreach ($query->result() as $row) {
                                             $fname = $row->fname;
                                             $lname = $row->lname;
                                             $fullname = $fname . ' ' . $lname;
-
-                                            // Your further processing here
-
-
                                         ?>
+
                                             <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
@@ -439,9 +427,7 @@
                                                             <i class="material-icons">more_vert</i>
                                                         </a>
                                                         <div class="dropdown-menu update-leave" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
-                                                            <!-- <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee"data-leave-id="<?php echo $row->id; ?>" data-request-type="LEAVE REQUEST" data-emp-id="<?php echo $row->emp_id; ?>">
-                                                                <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                                            </a> -->
+
                                                             <a class="dropdown-item update-pending" href="#" data-bs-toggle="modal" data-bs-target="#view_request" data-target-id="<?php echo $row->id; ?>" data-request-type="LEAVE REQUEST">
                                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                                             </a>
@@ -452,7 +438,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <div class="modal fade" id="edit_employee" tabindex="-1" aria-labelledby="edit_employee_label" aria-hidden="true">
+                                            <div class="modal fade" id="edit_leave" tabindex="-1" aria-labelledby="edit_leave_label" aria-hidden="true">
                                                 <div class="modal-dialog modal-lg ">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -546,12 +532,10 @@
                                 <div class="col">
                                     <h4 class="card-title mb-0">Pending Outgoing Request</h4>
                                 </div>
-
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-
                                 <div class="row ">
                                     <div class="col-md-12">
                                         <div class="table-responsive">
@@ -570,48 +554,41 @@
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    echo "Session emp_id: " . $this->session->userdata('emp_id') . "<br>";
-
-                                                    // Assuming $this->session->userdata('emp_id') holds the current user's ID
-                                                    $current_user_id = $this->session->userdata('emp_id');
-
-                                                    // Query to get the department of the current user from department_roles
+                                                    $current_department_name = $this->session->userdata('department');
                                                     $dept_query = $this->db->query("
-                                          SELECT department 
-                                          FROM department_roles 
-                                          WHERE assigned_emp = '$current_user_id'
-                                      ");
-                                                    $row = $dept_query->row();
-                                                    $current_department = $row->department;
+                                         SELECT id 
+                                         FROM department 
+                                         WHERE department = ?
+                                     ", array($current_department_name));
 
-                                                    // Now, construct the query for fetching leaves for employees in the same department with pending status
+                                                    if ($dept_query->num_rows() > 0) {
+                                                        $row = $dept_query->row();
+                                                        $current_department_id = $row->id;
+                                                    } else {
+                                                    }
                                                     $query = $this->db->query("
-                                          SELECT f.*, e.fname, e.lname 
-                                          FROM f_outgoing f 
-                                          LEFT JOIN employee e ON f.emp_id = e.id 
-                                          WHERE f.head_status = 'pending'
-                                          AND f.department = '$current_department'
-                                      ");
+                                         SELECT f.*, e.fname, e.lname 
+                                         FROM f_outgoing f 
+                                         LEFT JOIN employee e ON f.emp_id = e.id 
+                                         WHERE f.head_status = 'pending'
+                                         AND f.department = ?
+                                     ", array($current_department_id));
 
                                                     foreach ($query->result() as $row) {
                                                         $fname = $row->fname;
                                                         $lname = $row->lname;
                                                         $fullname = $fname . ' ' . $lname;
-
-                                                        // Your further processing here
-
-
                                                     ?>
                                                         <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                             <td style="max-width: 200px; overflow: hidden; 
-                                        text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
+                                        text-overflow: ellipsis; white-space: nowrap;" name="og_name">
                                                                 <?php echo $fullname; ?>
                                                             </td>
                                                             <td><?php echo formatDateOnly($row->date_filled); ?></td>
-                                                            <td name="leave_type"><?php echo $row->going_to; ?></td>
-                                                            <td name="date_from"><?php echo date("h:i A", strtotime($row->time_from)); ?></td>
-                                                            <td name="date_to"><?php echo date("h:i A", strtotime($row->time_to)); ?></td>
-                                                            <td name="leave_reason" style="max-width: 200px; overflow: hidden; 
+                                                            <td name="going_to"><?php echo $row->going_to; ?></td>
+                                                            <td name="og_date_from"><?php echo date("h:i A", strtotime($row->time_from)); ?></td>
+                                                            <td name="og_date_to"><?php echo date("h:i A", strtotime($row->time_to)); ?></td>
+                                                            <td name="og_reason" style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;cursor: pointer;user-select:none" title="Double click to expand"><?php echo $row->reason; ?></td>
                                                             <td name="status"><?php echo ucwords($row->head_status); ?></td>
                                                             <td>
@@ -634,7 +611,6 @@
                                                                 </div>
                                                             </td>
                                                         </tr>
-
                                                         <div class="modal fade" id="edit_outgoing" tabindex="-1" aria-labelledby="edit_outgoing_label" aria-hidden="true">
                                                             <div class="modal-dialog modal-lg ">
                                                                 <div class="modal-content">
@@ -655,7 +631,7 @@
                                                                             <div class="mb-3 row">
                                                                                 <div class="col-md-6">
                                                                                     <label for="emp_name" class="form-label">Employee Name</label>
-                                                                                    <input type="text" class="form-control text-left" id="emp_name" readonly>
+                                                                                    <input type="text" class="form-control text-left" name="emp_name" id="emp_name" readonly>
 
                                                                                 </div>
                                                                                 <div class="col-md-6">
@@ -698,8 +674,6 @@
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-
-
                                                                         </form>
                                                                     </div>
                                                                     <div class="modal-footer">
@@ -728,7 +702,6 @@
                                 <div class="col">
                                     <h4 class="card-title mb-0">Pending Overtime Request</h4>
                                 </div>
-
                             </div>
                         </div>
                         <div class="card-body">
@@ -747,53 +720,42 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                        echo "Session emp_id: " . $this->session->userdata('emp_id') . "<br>";
+                                    <?php
+                                                    $current_department_name = $this->session->userdata('department');
+                                                    $dept_query = $this->db->query("
+                                         SELECT id 
+                                         FROM department 
+                                         WHERE department = ?
+                                     ", array($current_department_name));
 
-                                        // Assuming $this->session->userdata('emp_id') holds the current user's ID
-                                        $current_user_id = $this->session->userdata('emp_id');
+                                                    if ($dept_query->num_rows() > 0) {
+                                                        $row = $dept_query->row();
+                                                        $current_department_id = $row->id;
+                                                    } else {
+                                                    }
+                                                    $query = $this->db->query("
+                                         SELECT f.*, e.fname, e.lname 
+                                         FROM f_overtime
+                                          f 
+                                         LEFT JOIN employee e ON f.emp_id = e.id 
+                                         WHERE f.head_status = 'pending'
+                                         AND f.department = ?
+                                     ", array($current_department_id));
 
-                                        // Query to get the department of the current user from department_roles
-                                        $dept_query = $this->db->query("
-                                          SELECT department 
-                                          FROM department_roles 
-                                          WHERE assigned_emp = '$current_user_id'
-                                      ");
-                                        $row = $dept_query->row();
-                                        $current_department = $row->department;
-
-                                        // Now, construct the query for fetching leaves for employees in the same department with pending status
-                                        $query = $this->db->query("
-                                          SELECT f.*, e.fname, e.lname 
-                                          FROM f_overtime f 
-                                          LEFT JOIN employee e ON f.emp_id = e.id 
-                                          WHERE f.head_status = 'pending'
-                                          AND f.department = '$current_department'
-                                      ");
-
-                                        foreach ($query->result() as $row) {
-                                            $fname = $row->fname;
-                                            $lname = $row->lname;
-                                            $fullname = $fname . ' ' . $lname;
-
-                                            // Your further processing here
-
-
-                                        ?>
-
+                                                    foreach ($query->result() as $row) {
+                                                        $fname = $row->fname;
+                                                        $lname = $row->lname;
+                                                        $fullname = $fname . ' ' . $lname;
+                                                    ?>
                                             <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
-                                                <td style="max-width: 200px; overflow: hidden; 
-                                        text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
+                                                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
                                                     <?php echo $fullname; ?>
                                                 </td>
-                                                <td><?php echo formatDateOnly($row->date_filled); ?></td>
-                                                <td name="leave_type"><?php echo formatDateOnly($row->date_ot); ?></td>
-
-
-                                                <td name="date_from"><?php echo date("h:i A", strtotime($row->time_in)); ?></td>
-                                                <td name="date_to"><?php echo date("h:i A", strtotime($row->time_out)); ?></td>
-                                                <td name="leave_reason" style="max-width: 200px; overflow: hidden; 
-                                        text-overflow: ellipsis; white-space: nowrap;cursor: pointer;user-select:none" title="Double click to expand"><?php echo $row->reason; ?></td>
+                                                <td name="date_filled"><?php echo formatDateOnly($row->date_filled); ?></td>
+                                                <td name="leave_type"><?php echo $row->leave_type; ?></td>
+                                                <td name="date_from"><?php echo date("h:i A", strtotime($row->date_from)); ?></td>
+                                                <td name="date_to"><?php echo date("h:i A", strtotime($row->date_to)); ?></td>
+                                                <td name="leave_reason" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; user-select: none;" title="Double click to expand"><?php echo $row->leave_reason; ?></td>
                                                 <td name="status"><?php echo ucwords($row->status); ?></td>
                                                 <td>
                                                     <div class="dropdown">
@@ -801,7 +763,7 @@
                                                             <i class="material-icons">more_vert</i>
                                                         </a>
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
-                                                            <a class="dropdown-item update-ot" href="#" data-bs-toggle="modal" data-bs-target="#edit_overtime" data-ot-id="<?php echo $row->id; ?>">
+                                                            <a class="dropdown-item update-ot" href="#" data-ot-id="<?php echo $row->ot_id; ?>" data-emp-id="<?php echo $row->emp_id; ?>">
                                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                                             </a>
                                                             <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
@@ -811,81 +773,61 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <div class="modal fade" id="edit_overtime" tabindex="-1" aria-labelledby="edit_overtime_label" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg ">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <!-- <h5 class="modal-title">Outgoing Pass</h5> -->
-                                                            <h3 class="m-0 text-center">Overtime Request Details</h3>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="row mb-4 justify-content-center"> <!-- Added justify-content-center to center horizontally -->
-                                                                <div class="col-md-9 d-flex justify-content-center align-items-center"> <!-- Added justify-content-center to center horizontally -->
-                                                                    <div class="account-logo">
-                                                                        <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" alt="Famco Retail Inc." style="max-width: 100px; height: auto;" /> <!-- Adjusted logo size -->
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <form id="update_outgoing" method="post">
-                                                                <div class="mb-3 row">
-                                                                    <div class="col-md-6">
-                                                                        <label for="emp_name" class="form-label">Employee Name</label>
-                                                                        <input type="text" class="form-control text-left" id="emp_name" readonly>
 
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <label for="date_filled" class="form-label">Date Filled</label>
-                                                                        <input type="text" class="form-control" id="date_filled" readonly>
-                                                                    </div>
-                                                                </div>
+                                            <div class="modal fade" id="edit_employee" tabindex="-1" aria-labelledby="edit_employee_label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="m-0 text-center">Employee Details</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="update_employee" method="post">
+                    <div class="mb-3 row">
+                        <div class="col-md-6">
+                            <label for="emp_name" class="form-label">Employee Name</label>
+                            <input type="text" class="form-control text-left" name="emp_name" id="emp_name" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="date_filled" class="form-label">Date Filled</label>
+                            <input type="text" class="form-control" id="date_filled" readonly>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-md-4">
+                            <label for="leave_type">Leave Type</label>
+                            <input type="text" class="form-control" id="leave_type" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="date_from">Date From</label>
+                            <input type="text" class="form-control" id="date_from" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="date_to">Date To</label>
+                            <input type="text" class="form-control" id="date_to" readonly>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="leave_reason">Leave Reason</label>
+                        <div>
+                            <textarea class="form-control" id="leave_reason" rows="3" readonly></textarea>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-md-12">
+                            <label for="status">Status</label>
+                            <input type="text" class="form-control" id="status" readonly>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-                                                                <div class="mb-3 row">
-                                                                    <div class="col-md-4">
-                                                                        <label for="leave_type">Overtime Date</label>
-                                                                        <div>
-                                                                            <input type="text" class="form-control" id="ot_date" readonly>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <label for="date_from">Time From</label>
-                                                                        <div>
-                                                                            <input type="text" class="form-control" id="time_from" readonly>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <label for="date_to">Time To</label>
-                                                                        <div>
-                                                                            <input type="text" class="form-control" id="time_to" readonly>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="mb-3 row">
-                                                                    <label for="leave_reason">Reason</label>
-                                                                    <div>
-                                                                        <textarea class="form-control" id="ot_reason" rows="3" readonly></textarea>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="mb-3 row">
-                                                                    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
-                                                                        <div class="input-block mb-3 form-focus select-focus text-center">
-                                                                            <button id="approveButton" class="btn btn-primary">Approve</button>
-                                                                            <button id="denyButton" class="btn btn-danger">Deny</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-
-
-
-                                                            </form>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         <?php
                                         }
                                         ?>
@@ -904,13 +846,7 @@
                                 <div class="col">
                                     <h4 class="card-title mb-0">Pending Undertime Request</h4>
                                 </div>
-                                <!-- <div class="col-auto">
-                                    <div class="float-end ms-auto">
-                                        <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#modal_undertime_request">
-                                            <i class="fa-solid fa-plus"></i> Add Undertime Request
-                                        </a>
-                                    </div>
-                                </div> -->
+
                             </div>
                         </div>
                         <div class="card-body">
@@ -934,40 +870,31 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        echo "Session emp_id: " . $this->session->userdata('emp_id') . "<br>";
-
-                                        // Assuming $this->session->userdata('emp_id') holds the current user's ID
-                                        $current_user_id = $this->session->userdata('emp_id');
-
-                                        // Query to get the department of the current user from department_roles
+                                        $current_department_name = $this->session->userdata('department');
                                         $dept_query = $this->db->query("
-                                          SELECT department 
-                                          FROM department_roles 
-                                          WHERE assigned_emp = '$current_user_id'
-                                      ");
-                                        $row = $dept_query->row();
-                                        $current_department = $row->department;
+                                         SELECT id 
+                                         FROM department 
+                                         WHERE department = ?
+                                     ", array($current_department_name));
 
-                                        // Now, construct the query for fetching leaves for employees in the same department with pending status
+                                        if ($dept_query->num_rows() > 0) {
+                                            $row = $dept_query->row();
+                                            $current_department_id = $row->id;
+                                        } else {
+                                        }
                                         $query = $this->db->query("
-                                          SELECT f.*, e.fname, e.lname 
-                                          FROM f_undertime f 
-                                          LEFT JOIN employee e ON f.emp_id = e.id 
-                                          WHERE f.head_status = 'pending'
-                                          AND f.department = '$current_department'
-                                      ");
+                                         SELECT f.*, e.fname, e.lname 
+                                         FROM f_undertime f 
+                                         LEFT JOIN employee e ON f.emp_id = e.id 
+                                         WHERE f.head_status = 'pending'
+                                         AND f.department = ?
+                                     ", array($current_department_id));
 
                                         foreach ($query->result() as $row) {
                                             $fname = $row->fname;
                                             $lname = $row->lname;
                                             $fullname = $fname . ' ' . $lname;
-
-                                            // Your further processing here
-
-
                                         ?>
-
-
                                             <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
                     text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
@@ -1002,7 +929,7 @@
                                                 <div class="modal-dialog modal-lg ">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <!-- <h5 class="modal-title">Outgoing Pass</h5> -->
+
                                                             <h3 class="m-0 text-center">Undertime Request Details</h3>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
@@ -1014,7 +941,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <form id="update_outgoing" method="post">
+                                                            <form id="update_undertime" method="post">
                                                                 <div class="mb-3 row">
                                                                     <div class="col-md-6">
                                                                         <label for="emp_name" class="form-label">Employee Name</label>
@@ -1117,34 +1044,30 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        echo "Session emp_id: " . $this->session->userdata('emp_id') . "<br>";
-
-                                        // Assuming $this->session->userdata('emp_id') holds the current user's ID
-                                        $current_user_id = $this->session->userdata('emp_id');
-
-                                        // Query to get the department of the current user from department_roles
+                                        $current_department_name = $this->session->userdata('department');
                                         $dept_query = $this->db->query("
-                                          SELECT department 
-                                          FROM department_roles 
-                                          WHERE assigned_emp = '$current_user_id'
-                                      ");
-                                        $row = $dept_query->row();
-                                        $current_department = $row->department;
+                                         SELECT id 
+                                         FROM department 
+                                         WHERE department = ?
+                                     ", array($current_department_name));
 
-                                        // Now, construct the query for fetching leaves for employees in the same department with pending status
+                                        if ($dept_query->num_rows() > 0) {
+                                            $row = $dept_query->row();
+                                            $current_department_id = $row->id;
+                                        } else {
+                                        }
                                         $query = $this->db->query("
-                                          SELECT f.*, e.fname, e.lname 
-                                          FROM f_off_bussiness f 
-                                          LEFT JOIN employee e ON f.emp_id = e.id 
-                                          WHERE f.head_status = 'pending'
-                                          AND f.department = '$current_department'
-                                      ");
+                                         SELECT f.*, e.fname, e.lname 
+                                         FROM f_off_bussiness f 
+                                         LEFT JOIN employee e ON f.emp_id = e.id 
+                                         WHERE f.head_status = 'pending'
+                                         AND f.department = ?
+                                     ", array($current_department_id));
 
                                         foreach ($query->result() as $row) {
                                             $fname = $row->fname;
                                             $lname = $row->lname;
                                             $fullname = $fname . ' ' . $lname;
-
                                         ?>
                                             <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
@@ -1182,7 +1105,7 @@
                                                 <div class="modal-dialog modal-lg ">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <!-- <h5 class="modal-title">Outgoing Pass</h5> -->
+
                                                             <h3 class="m-0 text-center">Official Business Request Details</h3>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
@@ -1194,7 +1117,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <form id="update_outgoing" method="post">
+                                                            <form id="update_ob" method="post">
                                                                 <div class="mb-3 row">
                                                                     <div class="col-md-6">
                                                                         <label for="emp_name" class="form-label">Employee Name</label>
@@ -1220,8 +1143,6 @@
                                                                             <input type="text" class="form-control" id="destin_to" readonly>
                                                                         </div>
                                                                     </div>
-
-
                                                                 </div>
                                                                 <div class="mb-3 row">
                                                                     <div class="col-md-6">
@@ -1260,9 +1181,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-
-
                                         <?php
                                         }
                                         ?>
@@ -1277,7 +1195,7 @@
             </div>
         </div>
         <!-- /Page Content -->
-        
+
     </div>
     <!-- /Page Wrapper -->
 
@@ -1290,7 +1208,7 @@
         <form id="leave_request1" method="post">
             <div class="modal-content">
                 <div class="modal-header">
-                    <!-- <h5 class="modal-title">Outgoing Pass</h5> -->
+
                     <h3 class="m-0 text-center">Leave Request Form</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -1303,7 +1221,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="emp_id" class="form-label">Select Employee</label>
@@ -1383,7 +1300,7 @@
         <form id="outgoing_request1" method="post">
             <div class="modal-content">
                 <div class="modal-header">
-                    <!-- <h5 class="modal-title">Outgoing Pass</h5> -->
+
                     <h3 class="m-0 text-center">Outgoing Pass Form</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -1763,43 +1680,37 @@
             $("#status").val(status);
 
             // Open the modal
-            $('#edit_employee').modal('show');
+            $('#edit_leave').modal('show');
         });
-        $(document).ready(function() {
-            $('.update-outgoing').click(function(e) {
-                e.preventDefault();
-                var ogId = $(this).data('og-id');
-                // Fetch data from the server using AJAX based on ogId
-                $.ajax({
-                    url: 'fetch_outgoing_data.php', // Change this URL to the actual endpoint for fetching data
-                    method: 'GET',
-                    data: {
-                        ogId: ogId
-                    },
-                    success: function(response) {
-                        // Populate modal with fetched data
-                        var data = JSON.parse(response);
-                        $('#emp_name').val(data.emp_name);
-                        $('#date_filled').val(data.date_filled);
-                        $('#destin').val(data.destin);
-                        $('#date_from').val(data.date_from);
-                        $('#date_to').val(data.date_to);
-                        $('#outgoing_reason').val(data.outgoing_reason);
-                        // Show the modal
-                        $('#edit_outgoing').modal('show');
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
-                    }
-                });
-            });
+
+        $('.update-outgoing').click(function(event) {
+            event.preventDefault(); // Prevent default link behavior
+
+            // Extract data from the clicked row
+            let og_id = $(this).data("og-id");
+            let emp_name = $(this).closest('tr').find('td[name="og_name"]').text().trim();
+            let date_filled = $(this).closest('tr').find('td:nth-child(2)').text().trim(); // Assuming "Date Filled" is the second column
+            let destin = $(this).closest('tr').find('td[name="going_to"]').text().trim(); // Assuming "Destination" column has the attribute 'name="going_to"'
+            let date_from = $(this).closest('tr').find('td[name="og_date_from"]').text().trim(); // Assuming "Date From" column has the attribute 'name="og_date_from"'
+            let date_to = $(this).closest('tr').find('td[name="og_date_to"]').text().trim(); // Assuming "Date To" column has the attribute 'name="og_date_to"'
+            let outgoing_reason = $(this).closest('tr').find('td[name="og_reason"]').text().trim(); // Assuming "Reason" column has the attribute 'name="og_reason"'
+
+            // Populate modal with data
+            $("#og_id").val(og_id);
+            $("#emp_name").val(emp_name);
+            $("#date_filled").val(date_filled);
+            $("#destin").val(destin);
+            $("#date_from").val(date_from);
+            $("#date_to").val(date_to);
+            $("#outgoing_reason").val(outgoing_reason);
+
+            // Open the modal
+            $('#edit_outgoing').modal('show');
         });
 
 
         $(".update-ot").click(function(event) {
-            event.preventDefault(); // Prevent default link behavior
-
-            // Extract data from the clicked row
+            event.preventDefault();
             let leave_id = $(this).attr("data-ot-id");
             // let leave_type = $(this).attr("data-request-type");
             let emp_id = $(this).attr("data-emp-id");

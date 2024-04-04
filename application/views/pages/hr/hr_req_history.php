@@ -40,7 +40,7 @@
                 <div class="col-md-12">
                     <div class="table-responsive">
 
-                        <table id="" class="datatable table-striped custom-table mb-0 datatable">
+                        <table id="dt_request_history" class="datatable table-striped custom-table mb-0 datatable">
                             <thead>
                                 <tr>
                                     <th>Employee</th>
@@ -66,11 +66,68 @@
                                 );
 
                                 // Query the forms pending view to retrieve relevant rows
-                                $query_forms_pending = $this->db
-                                    ->select('emp_id, id, date_filled, status, table_name')
-                                    ->from('vw_forms_pending')
-                                    ->where_in('status', array('approved', 'denied', 'expired'))
-                                    ->get();
+                                $query_forms_pending = $this->db->query("SELECT
+                                `famco-hrms`.`f_leaves`.`hr_id` AS `hr_id`,
+                                `famco-hrms`.`f_leaves`.`head_id` AS `head_id`,
+                                `famco-hrms`.`f_leaves`.`head_status` AS `head_status`,
+                                `famco-hrms`.`f_leaves`.`emp_id` AS `emp_id`,
+                                `famco-hrms`.`f_leaves`.`id` AS `id`,
+                                'f_leaves' AS `table_name`,
+                                `famco-hrms`.`f_leaves`.`status` AS `status`,
+                                `famco-hrms`.`f_leaves`.`date_filled` AS `date_filled`
+                            FROM
+                                `famco-hrms`.`f_leaves`
+                            UNION ALL
+                            SELECT
+                                `famco-hrms`.`f_off_bussiness`.`hr_id` AS `hr_id`,
+                                `famco-hrms`.`f_off_bussiness`.`head_id` AS `head_id`,
+                                `famco-hrms`.`f_off_bussiness`.`head_Status` AS `head_status`,
+                                `famco-hrms`.`f_off_bussiness`.`emp_id` AS `emp_id`,
+                                `famco-hrms`.`f_off_bussiness`.`id` AS `id`,
+                                'f_off_bussiness' AS `table_name`,
+                                `famco-hrms`.`f_off_bussiness`.`status` AS `status`,
+                                `famco-hrms`.`f_off_bussiness`.`date_filled` AS `date_filled`
+                            FROM
+                                `famco-hrms`.`f_off_bussiness`
+                            UNION ALL
+                            SELECT
+                                `famco-hrms`.`f_overtime`.`hr_id` AS `hr_id`,
+                                `famco-hrms`.`f_overtime`.`head_id` AS `head_id`,
+                                `famco-hrms`.`f_overtime`.`head_Status` AS `head_status`,
+                                `famco-hrms`.`f_overtime`.`emp_id` AS `emp_id`,
+                                `famco-hrms`.`f_overtime`.`id` AS `id`,
+                                'f_overtime' AS `table_name`,
+                                `famco-hrms`.`f_overtime`.`status` AS `status`,
+                                `famco-hrms`.`f_overtime`.`date_filled` AS `date_filled`
+                            FROM
+                                `famco-hrms`.`f_overtime`
+                            UNION ALL
+                            SELECT
+                                `famco-hrms`.`f_undertime`.`hr_id` AS `hr_id`,
+                                `famco-hrms`.`f_undertime`.`head_id` AS `head_id`,
+                                `famco-hrms`.`f_undertime`.`head_Status` AS `head_status`,
+                                `famco-hrms`.`f_undertime`.`emp_id` AS `emp_id`,
+                                `famco-hrms`.`f_undertime`.`id` AS `id`,
+                                'f_undertime' AS `table_name`,
+                                `famco-hrms`.`f_undertime`.`status` AS `status`,
+                                `famco-hrms`.`f_undertime`.`date_filled` AS `date_filled`
+                            FROM
+                                `famco-hrms`.`f_undertime`
+                            UNION ALL
+                            SELECT
+                                `famco-hrms`.`f_outgoing`.`hr_id` AS `hr_id`,
+                                `famco-hrms`.`f_outgoing`.`head_id` AS `head_id`,
+                                `famco-hrms`.`f_outgoing`.`head_status` AS `head_status`,
+                                `famco-hrms`.`f_outgoing`.`emp_id` AS `emp_id`,
+                                `famco-hrms`.`f_outgoing`.`id` AS `id`,
+                                'f_outgoing' AS `table_name`,
+                                NULL AS `status`,
+                                NULL AS `date_filled`
+                            FROM
+                                `famco-hrms`.`f_outgoing`
+                                
+                                ");
+
 
                                 // Iterate through the query results
                                 foreach ($query_forms_pending->result() as $row) {
@@ -371,7 +428,7 @@
                                                                     <div class="col-md-4 mb-2">
                                                                         <div class="form-group">
                                                                             <label for="date_filled" class="form-label">Date</label>
-                                                                            <input type="text" class="form-control" id="date_filled" value="<?php echo date('F j, Y', strtotime($row['date_filled']));?>" readonly>
+                                                                            <input type="text" class="form-control" id="date_filled" value="<?php echo date('F j, Y', strtotime($row['date_filled'])); ?>" readonly>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-4 mb-2">
@@ -535,6 +592,7 @@
         $("li > a[href='<?= base_url('hr/historyrequests') ?>']").addClass("active"); // for items inside the sidebar
 
 
+        $('#dt_request_history').DataTable();
 
 
     })

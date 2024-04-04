@@ -45,16 +45,8 @@
 
                     <?php
                     $data['icon'] = "fa fa-address-book";
+                    $data['count'] = rand(0,10);
 
-                    $this->db->select('COUNT(*) as count');
-                    $this->db->from('f_leaves');
-                    $this->db->where('status', 'Approved');
-                    $this->db->where('CURDATE() BETWEEN date_from AND date_to');
-
-                    // Execute the query
-                    $query = $this->db->get();
-
-                    $data['count'] = $query->row_array()['count'];
                     $data['label'] = "Pending Evaluation";
                     $this->load->view('components/card-dash-widget', $data)
 
@@ -65,10 +57,7 @@
 
                     <?php
                     $data['icon'] = "fa fa-address-book";
-
-                    $this->db->from('vw_emp_leaves');
-                    $this->db->where('status', 'pending');
-                    $data['count'] = $count = $this->db->count_all_results();;
+                    $data['count'] = rand(0,20);
                     $data['label'] = "Lowest Rating";
                     $this->load->view('components/card-dash-widget', $data)
 
@@ -80,10 +69,7 @@
 
                     <?php
                     $data['icon'] = "fa fa-address-book";
-
-                    $this->db->from('vw_emp_leaves');
-                    $this->db->where('status', 'pending');
-                    $data['count'] = $count = $this->db->count_all_results();;
+                    $data['count'] = rand(60,80);
                     $data['label'] = "Average Rating";
                     $this->load->view('components/card-dash-widget', $data)
 
@@ -95,10 +81,7 @@
 
                     <?php
                     $data['icon'] = "fa fa-address-book";
-
-                    $this->db->from('vw_emp_leaves');
-                    $this->db->where('status', 'pending');
-                    $data['count'] = $count = $this->db->count_all_results();;
+                    $data['count'] = rand(80,100);
                     $data['label'] = "Highest Rating";
                     $this->load->view('components/card-dash-widget', $data)
 
@@ -138,20 +121,22 @@
                                     <tbody>
                                         <?php
 
-                                        $query = $this->db->query('
-                                SELECT employee.id,vw_emp_designation.full_name,employee.current_add,
-                                employee.contact_no,vw_emp_designation.department,vw_emp_designation.roles,
-                                employee.date_created
-                                FROM vw_emp_designation
-                                JOIN employee
-                                ON employee.id = vw_emp_designation.emp_id
-                                WHERE
-                                    vw_emp_designation.emp_id IS NOT NULL
-                                ORDER BY
-                                    vw_emp_designation.emp_id ASC,
-                                    vw_emp_designation.full_name;
-                            
-                                ');
+                                        $query = $this->db->query("SELECT 
+                                        e.employee_id,
+                                        e.id,
+                                      CONCAT(e.fname, ' ', e.mname, ' ', e.lname) AS full_name,
+                                        e.department AS department_id,
+                                        d.department AS department,
+                                        e.role AS role_id,
+                                        dr.roles AS role,
+                                        e.date_created
+                                    FROM 
+                                        employee e
+                                    JOIN 
+                                        department d ON e.department = d.id
+                                    JOIN 
+                                        department_roles dr ON e.role = dr.id;
+                                    ");
 
                                         foreach ($query->result() as $row) {
 
@@ -170,7 +155,7 @@
 
                                                 <td><?php echo $row->department; ?></td>
 
-                                                <td><?php echo $row->roles; ?></td>
+                                                <td><?php echo $row->role; ?></td>
                                                 <td><?php echo formatDateOnly($row->date_created);?></td>
                                                 <td> -- </td>
 
@@ -240,6 +225,7 @@ $this->load->view('components/modal_emp_performance_evaluation');
         $("li > a[href='<?= base_url('hr/employees/evaluation') ?>']").parent().parent().css("display", "block")
 
 
+        $('#dt_emp_list').DataTable();
 
 
 

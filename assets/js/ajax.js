@@ -21,13 +21,14 @@ $("#login-form").submit(function(e) {
                     let department = response.department;
 
                     // console.log('Department:', department); // Display department information in the console
-
-                    if (response.acro === 'HR' ) {
-                        console.log('hr/dashboard');
-                        window.location = base_url + 'hr/dashboard';
+                    if (response.acro_dept === 'HR') {
+                        console.log('Redirecting to HR dashboard');
+                        window.location.href = base_url + 'hr/dashboard';
+                    } else if (response.acro_dept === 'SALES') {
+                        console.log('Redirecting to Employee dashboard');
+                        window.location.href = base_url + 'employee/dashboard';
                     } else {
-                        console.log('employee/dashboard');
-                        window.location = base_url + 'employee/dashboard';
+                        console.log('No matching department found for redirection');
                     }
                 
                 } else if (response.status === 0 ) {
@@ -300,27 +301,6 @@ $(document).on("click", ".dropdown-item.edit-employee", function(e) {
 });
 
 
-
-
-// add announcement 
-$("#add_announcement").submit(function(e){
-	e.preventDefault();
-	var addAnnounce = $(this).serialize();
-	$.ajax({
-		url: base_url + 'humanr/add_announce',
-		type: 'post',
-		data: addAnnounce,
-		dataType: 'json',
-		success: function(res){
-			if(res.status === 1){
-				alert(res.msg);
-				location.reload();
-			}else{
-				alert(res.msg);
-			}
-		}
-	})
-})
 
 
 //leave request

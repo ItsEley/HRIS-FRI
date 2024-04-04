@@ -78,7 +78,23 @@
                                         <table class="table">
 
                                             <?php
-                                            $query_roles = $this->db->get_where('vw_emp_designation', array('department' => $row_department->department));
+                                            $query_roles = $this->db->query("SELECT 
+                                            e.employee_id,
+                                            e.id,
+                                          CONCAT(e.fname, ' ', e.mname, ' ', e.lname) AS full_name,
+                                            e.department AS department_id,
+                                            d.department,
+                                            e.role AS role_id,
+                                            dr.roles AS role,
+                                            dr.salary,
+                                            dr.salary_type,
+                                            e.shift
+                                        FROM 
+                                            employee e
+                                        JOIN 
+                                            department d ON e.department = d.id
+                                        JOIN 
+                                            department_roles dr ON e.role = dr.id;");
 
                                             // Check if query executed successfully
                                             if ($query_roles->num_rows() > 0) {
@@ -98,11 +114,11 @@
 
                                                 foreach ($query_roles->result() as $row_role) {
 
-                                                    if ($row_role->emp_id == null || $row_role->emp_id == 'null') {
+                                                    if ($row_role->employee_id == null || $row_role->employee_id == 'null') {
                                                         $emp_id = 'Open';
                                                         $emp_name = 'Open';
                                                     } else {
-                                                        $emp_id = $row_role->emp_id;
+                                                        $emp_id = $row_role->employee_id;
                                                         $emp_name = $row_role->full_name;
                                                     }
 
@@ -111,7 +127,7 @@
                                                     echo "<tr class= ''>";
                                                     echo "<td>$emp_id</td>";
                                                     echo "<td>$emp_name</td>";
-                                                    echo "<td>$row_role->roles</td>";
+                                                    echo "<td>$row_role->role</td>";
                                                     echo "<td>$row_role->salary" . "/" . $row_role->salary_type . " </td>";
                                                     echo '<td>
                                                         <div class="dropdown dropdown-action">
@@ -169,15 +185,28 @@
                                     <tbody>
                                         <?php
                                         // Querying employees with null roles
-                                        $query_null_roles = $this->db->where("roles = '' OR roles IS NULL")->get('vw_emp_designation');
+                                        $query_null_roles = $this->db->query("SELECT 
+                                        e.employee_id,
+                                        e.id AS employee_id,
+                                        CONCAT(e.fname, ' ', e.mname, ' ', e.lname) AS full_name,
+                                        e.department AS department_id,
+                                        d.department AS department,
+                                        e.role AS role_id,
+                                        dr.roles AS role
+                                    FROM 
+                                        employee e
+                                    JOIN 
+                                        department d ON e.department = d.id
+                                    JOIN 
+                                        department_roles dr ON e.role = dr.id;");
 
 
                                         // Check if query executed successfully
                                         if ($query_null_roles->num_rows() > 0) {
                                             foreach ($query_null_roles->result() as $row_role) {
                                                 echo "<tr>";
-                                                echo "<td>$row_role->ins_id</td>";
-                                                echo "<td>$row_role->fullname</td>";
+                                                echo "<td>$row_role->department_id</td>";
+                                                echo "<td>$row_role->full_name</td>";
                                                 echo "<td>$row_role->department</td>";
                                                 echo "<td>Assign</td>";
 

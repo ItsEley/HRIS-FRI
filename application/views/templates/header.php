@@ -10,12 +10,9 @@
     <title><?= $title ?></title>
 
     <!-- Favicon -->
-    <!-- base -->
-
     <link rel="shortcut icon" type="image/x-icon" href='<?= base_url('assets/img/famco_logo_clear2.png') ?>'>
 
     <!-- Bootstrap CSS -->
-    <!-- <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap.min.css') ?>"> -->
     <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap.min.css') ?>">
 
     <!-- Main CSS -->
@@ -32,7 +29,6 @@
 
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="<?= base_url('assets/plugins/fontawesome/css/fontawesome.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/plugins/fontawesome/css/all.min.css') ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://kit.fontawesome.com/062e995cd4.js" crossorigin="anonymous"></script>
@@ -41,21 +37,12 @@
     <link rel="stylesheet" href="<?= base_url('assets/css/line-awesome.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/material.css') ?>">
 
-    <!-- Chart CSS -->
-    <link rel="stylesheet" href="<?= base_url('assets/plugins/morris/morris.css') ?>">
+  
 
     <!-- datatables -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
-    <link rel="stylesheet" href="<?= base_url('assets/css/dataTables.bootstrap4.min.css') ?>">
 
 
-<!-- FullCalendar JS -->
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
-
- <!-- FullCalendar core CSS -->
- <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.css" rel="stylesheet">
-  <!-- FullCalendar Sandstone theme CSS -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/themes/sandstone.min.css" rel="stylesheet">
 
 </head>
 

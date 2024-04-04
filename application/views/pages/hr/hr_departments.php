@@ -174,5 +174,9 @@
         $("li > a[href='<?= base_url('hr/departments') ?>']").parent().addClass("active");
 
 
+        $('#dt_announcements').DataTable();
+
+
+
     })
 </script>

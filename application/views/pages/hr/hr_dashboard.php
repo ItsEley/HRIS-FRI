@@ -4,28 +4,22 @@
 
 
    <?php
-   // $_SESSION[]
-
-   // navbar
+ 
    $this->load->view('templates/nav_bar');
-   // sidebar
+
    $this->load->view('templates/sidebar');
 
    ?>
-   <!-- /Sidebar -->
-   <!-- Two Col Sidebar -->
 
-   <!-- /Two Col Sidebar -->
-   <!-- Page Wrapper -->
    <div class="page-wrapper w-100">
 
-      <!-- Page Content -->
+  
       <div class="content container-fluid">
-         <!-- Page Header -->
+     
          <div class="page-header">
             <div class="row">
                <div class="col-sm-12">
-                  <h3 class="page-title">Welcome <span><?php echo ucwords(strtolower($_SESSION['name'])); ?> !</span></h3>
+                  <h3 class="page-title">Welcome <span><?php echo ucwords(strtolower($_SESSION['fullname'])); ?> !</span></h3>
                   <ul class="breadcrumb">
                      <li class="breadcrumb-item active">HR Dashboard / <?php echo date("l, jS F Y") ?></li>
 
@@ -33,9 +27,8 @@
                </div>
             </div>
          </div>
-         <!-- /Page Header -->
 
-         <div class="row"> <!-- main metrics -->
+         <div class="row"> 
             <div class="col-lg-3 col-6">
 
                <?php
@@ -47,7 +40,6 @@
                $data['label'] = "Employees";
                $this->load->view('components/card-dash-widget', $data)
                ?>
-
 
             </div>
             <div class="col-lg-3 col-6">
@@ -67,7 +59,6 @@
                $data['count'] = rand(0, 200);
                $data['label'] = "Overtime";
                $this->load->view('components/card-dash-widget', $data)
-
                ?>
 
             </div>
@@ -82,7 +73,6 @@
                $pending_wsa = $this->db->count_all('f_worksched_adj');
 
                $total = $pending_leave + $pending_ob + $pending_og + $pending_ot + $pending_ut + $pending_wsa;
-
                $data['icon'] = "fa fa-rocket";
                $data['count'] = $total;
                $data['label'] = "Leaves";
@@ -91,40 +81,42 @@
                ?>
             </div>
          </div>
-        
-
-               <!-- Page Header -->
                <div class="page-header">
                   <div class="content-page-header">
-                     <h5>Charts</h5>
+                     <h5>Analytics</h5>
                   </div>
                </div>
                
                <div class="row">
-                 
-                  <div class="col-md-6">
-                     <div class="card">
-                        <div class="card-header">
-                           <h5 class="card-title">Column Chart</h5>
+               <div class="col-md-8">
+                    <div class="card">
+                      <div class="card-header">
+                        <h5 class="card-title">Attendance Status Per Month</h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="chartjs-wrapper-demo">
+                          <canvas id="chartStacked1" class="h-300"></canvas>
                         </div>
-                        <div class="card-body">
-                           <div id="s-col"></div>
-                        </div>
-                     </div>
+                      </div>
+                    </div>
                   </div>
-               
-                  <div class="col-md-6">
-                     <div class="card">
-                        <div class="card-header">
-                           <h5 class="card-title">Employees in Departments</h5>
+               <!-- new added -->
+                  <div class="col-md-4">
+                    <div class="card">
+                      <div class="card-header">
+                        <h5 class="card-title">Employee Per Department</h5>
+                      </div>
+                      <div class="card-body">
+                        <div>
+                          <canvas id="empPerdept" class="h-300"></canvas>
                         </div>
-                        <div class="card-body">
-                           <div id="s-bar"></div>
-                        </div>
-                     </div>
+                      </div>
+                    </div>
                   </div>
-                  
+
                </div>
+
+               
             
 
          <div class="row">
@@ -135,16 +127,9 @@
                </h2>
 
                <div class="timeline-panel">
-
-
                   <?php
-
-                  $query = $this->db->get('announcement', 6);
-
-
-
+                  $query = $this->db->get('announcement');
                   foreach ($query->result() as $row) {
-
 
                      $data['id'] = $row->id;
                      $data['title'] = $row->title;
@@ -153,18 +138,13 @@
                      $data['department'] = $row->to_all;
                      $data['date'] =  $row->date_created;
 
-
-
                      $this->load->view('components/card-announcement', $data);
                   }
 
+                
                   ?>
 
                </div>
-
-
-
-
             </div>
             <div class="col-lg-4 col-md-12">
                <h2 class="page-title">Upcoming Events</h2>
@@ -202,15 +182,8 @@
                      Invest in yourself and discover the power of holistic wellness.
                   </p>
                </div>
-
-
-
             </div>
          </div>
-
-
-
-
          <div id="con-close-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
             <div class="modal-dialog modal-lg">
                <div class="modal-content">
@@ -294,95 +267,18 @@
 </div>
 <!-- /Main Wrapper -->
 
+<?php $this->load->view('components\modal-announcement-details.php'); ?>
+
 <!-- jQuery -->
 
-<!-- modal -->
-<div id="modal_announcement_detail" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-   <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h4 class="modal-title">Announcement Title</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-         </div>
-
-         <div class="modal-body p-4">
-
-            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Atque, debitis
-               voluptas ea consequatur harum eum odit vero at quibusdam unde necessitatibus
-               officiis eligendi aperiam sit commodi nesciunt corrupti ullam doloribus!</p>
-
-
-
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
-         </div>
-      </div>
-
-   </div>
-</div>
-<!-- modal end -->
+<script src=<?= base_url("assets/js/analytics.js") ?>></script>
 
 <script>
    document.addEventListener('DOMContentLoaded', function() {
       $("li > a[href='<?= base_url('hr/dashboard') ?>']").parent().addClass("active");
 
 
-
       
-$(document).on("click", ".announcement-open", function(e) {
-    e.preventDefault();
-
-    var ann_id = $(this).data("ann-id"); // Use data() instead of attr() for data attributes
-    console.log('Employee ID:', emp_id);
-
-    // Use shorthand $.ajax method for cleaner code
-    $.ajax({
-        url: base_url + 'humanr/showUserdetails',
-        type: 'POST',
-        data: {'emp_id': emp_id },
-        dataType: 'json', // Specify JSON data type for automatic parsing
-        success: function(response) {
-            console.log('Response:', response);
-
-            if (response.status === "success") {
-                var employee = response.data;
-
-                // Populate form fields using object destructuring for cleaner code
-                $("form#edit_employee input[name='emp_id']").val(employee.id);
-                $("form#edit_employee input[name='fname']").val(employee.fname);
-                $("form#edit_employee input[name='mname']").val(employee.mname || ''); // Handle null or undefined values
-                $("form#edit_employee input[name='lname']").val(employee.lname);
-                $("form#edit_employee input[name='nickn']").val(employee.nickn);
-                $("form#edit_employee input[name='current_add']").val(employee.current_add);
-                $("form#edit_employee input[name='perm_add']").val(employee.perm_add);
-                $("form#edit_employee input[name='dob']").val(employee.dob);
-                $("form#edit_employee input[name='religion']").val(employee.religion);
-                $("form#edit_employee select[name='sex']").val(employee.sex);
-                $("form#edit_employee select[name='civil_status']").val(employee.civil_status);
-
-                // Handle select option for civil_status
-                var civilStatusSelect = $("form#edit_employee select[name='civil_status']");
-                civilStatusSelect.val(employee.civil_status);
-                if (!civilStatusSelect.val()) {
-                    civilStatusSelect.val('N/A');
-                }
-
-                $("form#edit_employee input[name='pob']").val(employee.pob);
-                $("form#edit_employee input[name='email']").val(employee.email);
-                $("form#edit_employee input[name='contact_no']").val(employee.contact_no);
-
-            } else {
-                console.error('Error:', response.message); // Log error message
-                // Handle error if necessary
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('AJAX error:', status, error);
-            // Handle AJAX error if necessary
-        }
-    });
-});
 
    })
 </script>

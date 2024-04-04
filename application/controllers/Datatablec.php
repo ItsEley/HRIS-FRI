@@ -107,21 +107,21 @@ class Datatablec extends CI_Controller
     
         try {
             // Retrieve emp_id from the query parameter using CodeIgniter's input library
-            $ann_id = $this->input->post('ann_id');
+            $ann_id = $this->input->post('announcement_id');
     
             // Log emp_id to ensure it's correctly retrieved
             log_message('debug', 'Announcement ID: ' . $ann_id);
     
             // Fetch employee details based on emp_id using the loaded model
             // array('department' => $row_department->department)
-            $employee = $this->db->get_where('announcement', array('id' => $ann_id));
+            $announcement = $this->db->get_where('announcement', array('id' => $ann_id));
     
-            if ($employee->num_rows() > 0) {
+            if ($announcement->num_rows() > 0) {
                 $data = array(); // Initialize an array to store all the data
     
                 $data['status'] = "success";
     
-                foreach ($employee->result() as $row) {
+                foreach ($announcement->result() as $row) {
                     // Add each row data to the array
                  
                     // Add the row data array to the main data array
@@ -132,7 +132,7 @@ class Datatablec extends CI_Controller
                 echo json_encode($data);
             } else {
                 $data['status'] = "failed";
-                $data['detail'] = "Employee ID not found.";
+                $data['detail'] = "Announcement details not found. : $ann_id";
                 echo json_encode($data);
             }
         } catch (\Throwable $th) {

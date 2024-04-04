@@ -52,9 +52,7 @@
                                 <tr>
                                     <th hidden>ID</th>
                                     <th>Name</th>
-                                    <th>Deparment</th>
-                                    <th>Role</th>
-                                    <th>Day-off</th>
+                                   
                                     <th>Shift Group</th>
                                     <th>Action</th>
 
@@ -63,13 +61,17 @@
                             <tbody>
                                 <?php
 
-                                $query = $this->db->query('
-                                SELECT emp.emp_id,emp.full_name, emp.dept_id, emp.department, emp.acro_dept, emp.dept_roles_id, emp.roles,
-                                shifts.day_off, shifts.shift_id, shifts.group_, shifts.time_from, shifts.time_to
-                         FROM vw_emp_designation AS emp
-                         INNER JOIN vw_emp_shifts AS shifts ON emp.emp_id = shifts.emp_id;
-                         
-                                ');
+                                $query = $this->db->query("SELECT 
+                                e.employee_id,
+                                e.id AS employee_id,
+                                CONCAT(e.fname, ' ', e.mname, ' ', e.lname) AS full_name,
+                                s.group_ AS shift_group,
+                                s.time_from,
+                                s.time_to
+                                FROM 
+                                employee e
+                                LEFT JOIN 
+                                sys_shifts s ON e.shift = s.id;");
 
                                 foreach ($query->result() as $row) {
 
@@ -81,18 +83,11 @@
                                         <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                             <?php echo $row->full_name; ?>
                                         </td>
-                                        <td style="max-width: 200px; max-height: 100px; overflow: hidden;">
-                                            <div class="ellipsis" style="max-height: 1.2em; overflow: hidden;">
-                                                <?php echo $row->department;; ?>
-                                            </div>
-                                        </td>
-
-                                        <td><?php echo $row->roles; ?></td>
-                                        <td><?php echo $row->day_off; ?> </td>
-                                        <td><?php echo $row->group_; ?></td>
+                                
+                                        <td><?php echo $row->shift_group; ?></td>
                                         <td>
 
-                                            <a class="" href="#" data-bs-toggle="modal" data-bs-target="#modal_edit_shift" data-emp-id="<?= $row->emp_id ?>">
+                                            <a class="" href="#" data-bs-toggle="modal" data-bs-target="#modal_edit_shift" data-emp-id="<?= $row->employee_id ?>">
                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                             </a>
 
@@ -188,6 +183,9 @@
         $("li > a[href='<?= base_url('hr/employees/shifts') ?>']").addClass("active");
         $("li > a[href='<?= base_url('hr/employees/shifts') ?>']").parent().parent().css("display", "block")
 
+
+
+    $('#dt_emp_shift').DataTable();
 
 
         $('#approveButton').click(function() {

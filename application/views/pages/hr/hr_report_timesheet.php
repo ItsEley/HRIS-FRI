@@ -34,7 +34,7 @@
 
             <!-- data table -->
             <div class="row timeline-panel">
-                <table id="dt_emp_shift" class="datatable table-striped custom-table mb-0">
+                <table id="dt_report_timesheet" class="datatable table-striped custom-table mb-0">
                     <thead>
                         <tr class = "text-center">
                             <th hidden>ID</th>
@@ -50,18 +50,20 @@
                     <tbody>
                         <?php
 
-                        $query = $this->db->query('
-                                SELECT
-                                *
-                            FROM
-                                vw_emp_designation
-                            WHERE
-                                vw_emp_designation.emp_id IS NOT NULL
-                            ORDER BY
-                                vw_emp_designation.emp_id ASC,
-                                vw_emp_designation.full_name;
-                            
-                                ');
+                        $query = $this->db->query("SELECT 
+                        e.employee_id,
+                        e.id AS employee_id,
+                        CONCAT(e.fname, ' ', e.mname, ' ', e.lname) AS full_name,
+                        e.department AS department_id,
+                        d.department AS department,
+                        e.role AS role_id,
+                        dr.roles AS role
+                    FROM 
+                        employee e
+                    JOIN 
+                        department d ON e.department = d.id
+                    JOIN 
+                        department_roles dr ON e.role = dr.id;");
 
                         foreach ($query->result() as $row) {
 
@@ -174,6 +176,7 @@
 
 
 
+        $('#dt_report_timesheet').DataTable();
 
     });
 </script>

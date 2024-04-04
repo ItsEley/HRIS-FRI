@@ -78,7 +78,7 @@
 			<div class="modal fade" id="modal_leave_request" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal_leave_request_label" aria-hidden="true">
 				<div class="modal-dialog">
 					<form id="leave_request" method="post">
-						<input type="text" name="emp_id" value="<?php echo $_SESSION['emp_id'] ?>" hidden>
+						<input type="text" name="emp_id" value="<?php echo $_SESSION['id'] ?>" hidden>
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" id="staticBackdropLabel">Fill up form</h5>
@@ -187,7 +187,7 @@
 										</div>
 										<!-- /Form content -->
 										<div class="row ">
-											<input type="text" name="emp_id" value="<?php echo $_SESSION['emp_id'] ?>" hidden>
+											<input type="text" name="emp_id" value="<?php echo $_SESSION['id'] ?>" hidden>
 								
 											<!-- <p>I, have to leave the company premises on this day : </p> -->
 											<div class="col-3">
@@ -277,7 +277,7 @@
 												</select>
 											</div>
 										</div>
-										<input type="text" name="emp_id" value="<?php echo $_SESSION['emp_id'] ?>" hidden>
+										<input type="text" name="emp_id" value="<?php echo $_SESSION['id'] ?>" hidden>
 									
 										<div id="time_sched_div">
 											<div class="row ">
@@ -341,7 +341,7 @@
 			<div class="modal fade" id="modal_undertime_request" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modal_undertime_request_label" aria-hidden="true">
 				<div class="modal-dialog">
 					<form method="post" id="undertime_request" class="mb-2">
-						<input type="text" name="emp_id" value="<?php echo $_SESSION['emp_id'] ?>" hidden>
+						<input type="text" name="emp_id" value="<?php echo $_SESSION['id'] ?>" hidden>
 						<div class="modal-content">
 							<div class="modal-header">
 								<h5 class="modal-title" id="staticBackdropLabel">Fill up form</h5>
@@ -430,12 +430,15 @@
 											</div>
 											<div class="col text-center">
 												<h3>Official Business Form</h3>
+											
+												<?php echo $_SESSION['department'];?>
+
 											</div>
 
 										</div>
 										<!-- /Form content -->
 										<div class="row ">
-											<input type="text" name="emp_id" value="<?php echo $_SESSION['emp_id'] ?>" hidden>
+											<input type="text" name="emp_id" value="<?php echo $_SESSION['id'] ?>" hidden>
 										
 											<!-- <p>I, have to leave the company premises on this day : </p> -->
 											<div class="col-3">
@@ -559,7 +562,8 @@
 									<!-- /Form content -->
 
 									<form method="post" id="ot_request" class="mb-2">
-									<input type="text" name="emp_id" value="<?php echo $_SESSION['emp_id'] ?>" hidden>
+									<input type="text" name="emp_id" id="emp_id" value="<?php echo $this->session->userdata('id'); ?>" readonly>
+
 									
 										<div class="row ">
 											<!-- <p>I, have to leave the company premises on this day : </p> -->

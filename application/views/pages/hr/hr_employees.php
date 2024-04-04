@@ -84,25 +84,27 @@
                 //display employee cards
                 $query = $this->db->query("
                 SELECT 
-                e.id AS emp_id,
-                CONCAT(e.fname, ' ', COALESCE(e.mname, ''), ' ', e.lname) AS full_name,
-                COALESCE(dr.department, '') AS department_id,
-                COALESCE(d.department, '') AS department,
-                COALESCE(dr.roles, '') AS roles,
-                e.pfp AS profile_picture
+                e.employee_id,
+                e.id AS employee_id,
+                CONCAT(e.fname, ' ', e.mname, ' ', e.lname) AS full_name,
+                e.pfp,
+                e.department AS department_id,
+                d.department AS department,
+                e.role AS role_id,
+                dr.roles AS role
             FROM 
                 employee e
-            LEFT JOIN 
-                department_roles dr ON e.id = dr.assigned_emp
-            LEFT JOIN 
-                department d ON dr.department = d.id;
+            JOIN 
+                department d ON e.department = d.id
+            JOIN 
+                department_roles dr ON e.role = dr.id;
             
                     ");
 
                 foreach ($query->result() as $row) {
 
                     $data['emp_name'] = $row->full_name;
-                    $data['emp_id'] = $row->emp_id;
+                    $data['emp_id'] = $row->employee_id;
 
                     if ($row->department == '' || $row->department == NULL) {
                         $data['department'] = "Not assigned to a deparment.";
@@ -110,17 +112,17 @@
                         $data['department'] = $row->department;
                     }
 
-                    if ($row->roles == '' || $row->roles == NULL) {
+                    if ($row->role == '' || $row->role == NULL) {
                         $data['role'] = "Not assigned to any roles.";
                     } else {
-                        $data['role'] = $row->roles;
+                        $data['role'] = $row->role;
                     }
 
-                    if ($row->profile_picture == '' || $row->profile_picture == NULL) {
+                    if ($row->pfp == '' || $row->pfp == NULL) {
                         $data['pfp'] = base_url('assets\img\user.jpg');
                     } else {
 
-                        $data['pfp'] = "data:image/jpeg;base64," . base64_encode($row->profile_picture) . "";
+                        $data['pfp'] = "data:image/jpeg;base64," . base64_encode($row->pfp) . "";
                     }
 
 
