@@ -67,7 +67,7 @@
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
-                        <button class="btn btn-primary" onclick="window.print()">Print as PDF</button>
+                        <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print as PDF</button>
                         <!-- <div class="view-icons">
                             <a href="employees.html" class="grid-view btn btn-link active"><i class="fa fa-th"></i></a>
                             <a href="employees-list.html" class="list-view btn btn-link"><i class="fa-solid fa-bars"></i></a>
@@ -77,64 +77,7 @@
             </div>
             <!-- /Page Header -->
 
-            <!-- Search Filter -->
-            <!-- <div class="row filter-row">
-
-                <div class="col-sm-6 col-md-3">
-                    <div class="input-block mb-3 form-focus">
-                        <input type="text" class="form-control floating">
-                        <label class="focus-label">Employee Name</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3">
-                    <div class="input-block mb-3 form-focus select-focus">
-                        <select class="form-select form-control">
-                            <option value="">All</option>
-
-                            <?php
-                            $query = $this->db->get('department');
-
-                            // Check if query executed successfully
-                            if ($query->num_rows() > 0) {
-                                foreach ($query->result() as $row) {
-                                    // $depID = $row->id;
-                                    // $department1 = $row->department;
-                                    // $acro = $row->acro_dept;
-                                    // $data['department'] = $department1;
-                                    // Output each department as an option
-                                    // echo '<option value="' . $depID . '">' .  $data['department'] . '</option>';
-                                }
-                            } else {
-                                // Handle no results from the database
-                                // echo '<option value="">No departments found</option>';
-                            }
-                            ?>
-                        </select>
-
-                        <label class="focus-label">Department</label>
-                    </div>
-                </div>
-
-                <div class="col-sm-6 col-md-3">
-                    <div class="input-block mb-3 form-focus select-focus">
-                        <select class="select floating form-select form-control">
-
-                            <option>All</option>
-                            <option>Web Developer</option>
-                            <option>Web Designer</option>
-                            <option>Android Developer</option>
-                            <option>Ios Developer</option>
-                        </select>
-                        <label class="focus-label">Role</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3">
-                    <div class="d-grid">
-                        <a href="#" class="btn btn-success w-100"> Search </a>
-                    </div>
-                </div>
-            </div> -->
-            <!-- Search Filter -->
+          
 
             <div id="print-area">
 

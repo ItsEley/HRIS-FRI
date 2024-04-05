@@ -37,6 +37,10 @@
     <link rel="stylesheet" href="<?= base_url('assets/css/line-awesome.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/material.css') ?>">
 
+    <!-- toastr CSS -->
+
+    <link rel="stylesheet" href="<?= base_url('assets/plugins/toastr/toatr.css') ?>">
+
   
 
     <!-- datatables -->

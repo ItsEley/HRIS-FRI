@@ -1,3 +1,4 @@
+
 <!-- Main Wrapper -->
 <div class="main-wrapper">
     <?php $this->load->view('templates/nav_bar'); ?>
@@ -6,13 +7,13 @@
     <?php $this->load->view('templates/sidebar') ?>
 
 
-    <div class="page-wrapper w-100">
+    <div class="page-wrapper">
 
         <!-- Page Content -->
         <div class="content container-fluid">
 
-            <!-- Page Header -->
-            <div class="page-header">
+              <!-- Page Header -->
+              <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
                         <h3 class="page-title">Employee</h3>
@@ -22,7 +23,8 @@
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
-                        <!-- <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_employee"><i class="fa-solid fa-plus"></i> Add Employee</a> -->
+                        <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_employee">
+                            <i class="fa-solid fa-plus"></i>Edit Shifts</a>
                         <div class="view-icons">
 
                         </div>
@@ -30,21 +32,20 @@
                 </div>
             </div>
             <!-- /Page Header -->
-
-
-
             <div class="row legend timeline-panel" id="emp_att_legend">
-                <div class="d-flex justify-content-between">
+                <div class="d-inline-flex justify-content-between">
                     <!-- <h3>Legend</h3> -->
-                    <p class="m-0"><span class="">Group A</span> - 8:00 AM - 5:00 PM (Regular)</p>
+                    <p class="m-0"><span class="group_">Group A</span> - <span class= "shift">8:00 AM - 5:00 PM</span> <span class = "description"></span>(Regular)</p>
                     <p class="m-0"><span class="">Group B</span> - 6:00 AM - 6:00 PM (Dayshift)</p>
                     <p class="m-0"><span class="">Group C</span> - 6:00 PM - 6:00 AM (Nightshift)</p>
                 </div>
                 <div class="col-4"></div>
             </div>
 
-            <!-- data table -->
-            <div class="row timeline-panel">
+            
+
+        <!-- data table -->
+        <div class="row timeline-panel">
                 <div class="col-md-12">
                     <div class="table-responsive">
                         <table id="dt_emp_shift" class="datatable table-striped custom-table mb-0">
@@ -87,7 +88,7 @@
                                         <td><?php echo $row->shift_group; ?></td>
                                         <td>
 
-                                            <a class="" href="#" data-bs-toggle="modal" data-bs-target="#modal_edit_shift" data-emp-id="<?= $row->employee_id ?>">
+                                            <a class="" href="#" data-bs-toggle="modal" data-bs-target="#modal_edit_emp_shift" data-emp-id="<?= $row->employee_id ?>">
                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                             </a>
 
@@ -106,6 +107,10 @@
             </div>
             <!-- /data table -->
 
+            
+
+
+
         </div>
         <!-- /Page Content -->
 
@@ -118,8 +123,11 @@
 <!-- /Main Wrapper -->
 
 
+
+
+
 <!-- modal -->
-<div id="modal_edit_shift" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+<div id="modal_edit_emp_shift" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">

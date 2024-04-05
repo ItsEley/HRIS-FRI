@@ -62,7 +62,7 @@
     <!-- /Header -->
     <!-- Sidebar -->
     <?php $this->load->view('templates/sidebar') ?>
-    <div class="page-wrapper w-100">
+    <div class="page-wrapper">
         <!-- Page Content -->
         <div class="content container-fluid">
             <!-- Page Header -->
@@ -229,13 +229,10 @@
             WHERE department = ?
         ", array($current_department_name));
 
-                        // Check if the query returned a row
                         if ($dept_query->num_rows() > 0) {
-                            // Fetch the row
+
                             $row = $dept_query->row();
                             $department_id = $row->id;
-
-                            // Count the number of pending requests in the f_outgoing table for the department ID
                             $this->db->from('f_outgoing');
                             $this->db->where('head_status', 'pending');
                             $this->db->where('department', $department_id);
@@ -253,10 +250,8 @@
                 <li class="nav-item"><a class="nav-link" href="#solid-tab3" data-bs-toggle="tab">Pending Overtime
 
                         <?php
-                        // Get the department name from the session
-                        $current_department_name = $this->session->userdata('department');
 
-                        // Query to retrieve the department ID from the department table based on the department name
+                        $current_department_name = $this->session->userdata('department');
                         $dept_query = $this->db->query("
             SELECT id 
             FROM department 
@@ -357,13 +352,7 @@
                                 <div class="col">
                                     <h4 class="card-title mb-0">Pending Leave Request</h4>
                                 </div>
-                                <!-- <div class="col-auto">
-                                    <div class="float-end ms-auto">
-                                        <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#modal_leave_request">
-                                            <i class="fa-solid fa-plus"></i> Add Leave Request
-                                        </a>
-                                    </div>
-                                </div> -->
+
                             </div>
                         </div>
                         <div class="card-body">
@@ -413,6 +402,7 @@
                                                 <td style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
                                                     <?php echo $fullname; ?>
+
                                                 </td>
                                                 <td name="date_filled"><?php echo formatDateOnly($row->date_filled); ?></td>
                                                 <td name="leave_type"><?php echo $row->type_of_leave; ?></td>
@@ -420,7 +410,7 @@
                                                 <td name="date_to"><?php echo formatDateOnly($row->date_to); ?></td>
                                                 <td name="leave_reason" style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;cursor: pointer;user-select:none" title="Double click to expand"><?php echo $row->reason; ?></td>
-                                                <td name="status"><?php echo ucwords($row->status); ?></td>
+                                                <td name="status"><?php echo ucwords($row->head_status); ?></td>
                                                 <td>
                                                     <div class="dropdown">
                                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -500,7 +490,7 @@
                                                                                         <button id="denyButton" class="btn text-danger btn-block bg-white border border-danger">Deny</button>
                                                                                     </div>
                                                                                     <div class="col-sm-6">
-                                                                                        <button id="approveButton" class="btn btn-primary btn-block" data-row-id="<?php echo $row->id; ?>">Approve</button>
+                                                                                        <button id="leave_approveButton" class="btn btn-primary btn-block" data-row-id="<?php echo $row->id; ?>">Approve</button>
 
                                                                                     </div>
                                                                                 </div>
@@ -556,10 +546,10 @@
                                                     <?php
                                                     $current_department_name = $this->session->userdata('department');
                                                     $dept_query = $this->db->query("
-                                         SELECT id 
-                                         FROM department 
-                                         WHERE department = ?
-                                     ", array($current_department_name));
+                                                        SELECT id 
+                                                        FROM department 
+                                                        WHERE department = ?
+                                                    ", array($current_department_name));
 
                                                     if ($dept_query->num_rows() > 0) {
                                                         $row = $dept_query->row();
@@ -567,12 +557,12 @@
                                                     } else {
                                                     }
                                                     $query = $this->db->query("
-                                         SELECT f.*, e.fname, e.lname 
-                                         FROM f_outgoing f 
-                                         LEFT JOIN employee e ON f.emp_id = e.id 
-                                         WHERE f.head_status = 'pending'
-                                         AND f.department = ?
-                                     ", array($current_department_id));
+                                                        SELECT f.*, e.fname, e.lname 
+                                                        FROM f_outgoing f 
+                                                        LEFT JOIN employee e ON f.emp_id = e.id 
+                                                        WHERE f.head_status = 'pending'
+                                                        AND f.department = ?
+                                                    ", array($current_department_id));
 
                                                     foreach ($query->result() as $row) {
                                                         $fname = $row->fname;
@@ -582,11 +572,13 @@
                                                         <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                             <td style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;" name="og_name">
-                                                                <?php echo $fullname; ?>
+
+                                                                <?php echo $fullname ?>
+
                                                             </td>
                                                             <td><?php echo formatDateOnly($row->date_filled); ?></td>
                                                             <td name="going_to"><?php echo $row->going_to; ?></td>
-                                                            <td name="og_date_from"><?php echo date("h:i A", strtotime($row->time_from)); ?></td>
+                                                            <td name="og_date_from"><?php echo  date("h:i A", strtotime($row->time_from)); ?></td>
                                                             <td name="og_date_to"><?php echo date("h:i A", strtotime($row->time_to)); ?></td>
                                                             <td name="og_reason" style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;cursor: pointer;user-select:none" title="Double click to expand"><?php echo $row->reason; ?></td>
@@ -631,12 +623,12 @@
                                                                             <div class="mb-3 row">
                                                                                 <div class="col-md-6">
                                                                                     <label for="emp_name" class="form-label">Employee Name</label>
-                                                                                    <input type="text" class="form-control text-left" name="emp_name" id="emp_name" readonly>
+                                                                                    <input type="text" class="form-control text-left" name="og_emp_name" id="og_emp_name" readonly>
 
                                                                                 </div>
                                                                                 <div class="col-md-6">
                                                                                     <label for="date_filled" class="form-label">Date Filled</label>
-                                                                                    <input type="text" class="form-control" id="date_filled" readonly>
+                                                                                    <input type="text" class="form-control" id="og_date_filled" readonly>
                                                                                 </div>
                                                                             </div>
 
@@ -650,13 +642,13 @@
                                                                                 <div class="col-md-4">
                                                                                     <label for="date_from">Time From</label>
                                                                                     <div>
-                                                                                        <input type="text" class="form-control" id="date_from" readonly>
+                                                                                        <input type="text" class="form-control" id="og_time_from" readonly>
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-md-4">
                                                                                     <label for="date_to">Time To</label>
                                                                                     <div>
-                                                                                        <input type="text" class="form-control" id="date_to" readonly>
+                                                                                        <input type="text" class="form-control" id="og_time_to" readonly>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -669,7 +661,7 @@
                                                                             <div class="mb-3 row">
                                                                                 <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                                     <div class="input-block mb-3 form-focus select-focus text-center">
-                                                                                        <button id="apapproveButtonproveButton" class="btn btn-primary">Approve</button>
+                                                                                        <button id="og_approveButton" class="btn btn-primary">Approve</button>
                                                                                         <button id="denyButton" class="btn btn-danger">Deny</button>
                                                                                     </div>
                                                                                 </div>
@@ -720,113 +712,120 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php
-                                                    $current_department_name = $this->session->userdata('department');
-                                                    $dept_query = $this->db->query("
+                                        <?php
+                                        $current_department_name = $this->session->userdata('department');
+                                        $dept_query = $this->db->query("
                                          SELECT id 
                                          FROM department 
                                          WHERE department = ?
                                      ", array($current_department_name));
 
-                                                    if ($dept_query->num_rows() > 0) {
-                                                        $row = $dept_query->row();
-                                                        $current_department_id = $row->id;
-                                                    } else {
-                                                    }
-                                                    $query = $this->db->query("
+                                        if ($dept_query->num_rows() > 0) {
+                                            $row = $dept_query->row();
+                                            $current_department_id = $row->id;
+                                        } else {
+                                        }
+                                        $query = $this->db->query("
                                          SELECT f.*, e.fname, e.lname 
-                                         FROM f_overtime
-                                          f 
+                                         FROM f_overtime f 
                                          LEFT JOIN employee e ON f.emp_id = e.id 
                                          WHERE f.head_status = 'pending'
                                          AND f.department = ?
                                      ", array($current_department_id));
 
-                                                    foreach ($query->result() as $row) {
-                                                        $fname = $row->fname;
-                                                        $lname = $row->lname;
-                                                        $fullname = $fname . ' ' . $lname;
-                                                    ?>
+                                        foreach ($query->result() as $row) {
+                                            $fname = $row->fname;
+                                            $lname = $row->lname;
+                                            $fullname = $fname . ' ' . $lname;
+                                        ?>
                                             <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
                                                     <?php echo $fullname; ?>
                                                 </td>
                                                 <td name="date_filled"><?php echo formatDateOnly($row->date_filled); ?></td>
-                                                <td name="leave_type"><?php echo $row->leave_type; ?></td>
-                                                <td name="date_from"><?php echo date("h:i A", strtotime($row->date_from)); ?></td>
-                                                <td name="date_to"><?php echo date("h:i A", strtotime($row->date_to)); ?></td>
-                                                <td name="leave_reason" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; user-select: none;" title="Double click to expand"><?php echo $row->leave_reason; ?></td>
-                                                <td name="status"><?php echo ucwords($row->status); ?></td>
+                                                <td name="date_ot"><?php echo $row->date_ot; ?></td>
+                                                <td name="time_in"><?php echo date("h:i A", strtotime($row->time_in)); ?></td>
+                                                <td name="time_out"><?php echo date("h:i A", strtotime($row->time_out)); ?></td>
+                                                <td name="ot_reason" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; user-select: none;" title="Double click to expand"><?php echo $row->reason; ?></td>
+                                                <td name="status"><?php echo ucwords($row->head_status); ?></td>
                                                 <td>
                                                     <div class="dropdown">
-                                                        <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <button class="btn btn-link action-icon dropdown-toggle" type="button" id="dropdownMenuButton_<?php echo $row->emp_id; ?>" data-bs-toggle="dropdown" aria-expanded="false">
                                                             <i class="material-icons">more_vert</i>
-                                                        </a>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
-                                                            <a class="dropdown-item update-ot" href="#" data-ot-id="<?php echo $row->ot_id; ?>" data-emp-id="<?php echo $row->emp_id; ?>">
-                                                                <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                                            </a>
-                                                            <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
-                                                                <i class="fa-regular fa-trash-can m-r-5"></i> Delete
-                                                            </a>
-                                                        </div>
+                                                        </button>
+                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
+                                                            <li>
+                                                                <a class="dropdown-item update-ot" href="#" data-ot-id="<?php echo $row->id; ?>" data-emp-id="<?php echo $row->emp_id; ?>">
+                                                                    <i class="fas fa-pencil-alt"></i> Edit
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
+                                                                    <i class="fas fa-trash-alt"></i> Delete
+                                                                </a>
+                                                            </li>
+                                                        </ul>
                                                     </div>
                                                 </td>
+
                                             </tr>
 
                                             <div class="modal fade" id="edit_employee" tabindex="-1" aria-labelledby="edit_employee_label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="m-0 text-center">Employee Details</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="update_employee" method="post">
-                    <div class="mb-3 row">
-                        <div class="col-md-6">
-                            <label for="emp_name" class="form-label">Employee Name</label>
-                            <input type="text" class="form-control text-left" name="emp_name" id="emp_name" readonly>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="date_filled" class="form-label">Date Filled</label>
-                            <input type="text" class="form-control" id="date_filled" readonly>
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <div class="col-md-4">
-                            <label for="leave_type">Leave Type</label>
-                            <input type="text" class="form-control" id="leave_type" readonly>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="date_from">Date From</label>
-                            <input type="text" class="form-control" id="date_from" readonly>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="date_to">Date To</label>
-                            <input type="text" class="form-control" id="date_to" readonly>
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="leave_reason">Leave Reason</label>
-                        <div>
-                            <textarea class="form-control" id="leave_reason" rows="3" readonly></textarea>
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <div class="col-md-12">
-                            <label for="status">Status</label>
-                            <input type="text" class="form-control" id="status" readonly>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h3 class="m-0 text-center">Overtime Details</h3>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form id="update_employee" method="post">
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-md-6">
+                                                                        <label for="emp_name" class="form-label">Employee Name</label>
+                                                                        <input type="text" class="form-control text-left" name="ot_emp_name" id="ot_emp_name" readonly>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label for="date_filled" class="form-label">Date Filled</label>
+                                                                        <input type="text" class="form-control" id="ot_date_filled" readonly>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-3 row">
+                                                                    <!-- <div class="col-md-4">
+                                                                        <label for="leave_type">Leave Type</label>
+                                                                        <input type="text" class="form-control" id="leave_type" readonly>
+                                                                    </div> -->
+                                                                    <div class="col-md-4">
+                                                                        <label for="date_from">Time From</label>
+                                                                        <input type="text" class="form-control" id="ot_time_in" readonly>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label for="date_to">Time To</label>
+                                                                        <input type="text" class="form-control" id="ot_time_out" readonly>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-3 row">
+                                                                    <label for="leave_reason">Overtime Reason</label>
+                                                                    <div>
+                                                                        <textarea class="form-control" id="ot_reason" rows="3" readonly></textarea>
+                                                                    </div>
+                                                                </div>
+                                                              
+                                                                <div class="mb-3 row">
+                                                                    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
+                                                                        <div class="input-block mb-3 form-focus select-focus text-center">
+                                                                            <button id="ot_approveButton" class="btn btn-primary">Approve</button>
+                                                                            <button id="denyButton" class="btn btn-danger">Deny</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                         <?php
                                         }
@@ -885,7 +884,7 @@
                                         $query = $this->db->query("
                                          SELECT f.*, e.fname, e.lname 
                                          FROM f_undertime f 
-                                         LEFT JOIN employee e ON f.emp_id = e.id 
+                                         LEFT JOIN employee e ON f.emp_id = e.employee_id 
                                          WHERE f.head_status = 'pending'
                                          AND f.department = ?
                                      ", array($current_department_id));
@@ -897,17 +896,17 @@
                                         ?>
                                             <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
-                    text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
+                                            text-overflow: ellipsis; white-space: nowrap;" name="ut_emp_name">
                                                     <?php echo $fullname; ?>
                                                 </td>
                                                 <td><?php echo formatDateOnly($row->date_filled); ?></td>
-                                                <td name="leave_type"><?php echo formatDateOnly($row->date_filled); ?></td>
+                                                <td name="ut_date"><?php echo formatDateOnly($row->date_of_undertime); ?></td>
                                                 <td name="time_in"><?php echo date("h:i A", strtotime($row->time_in)); ?></td>
                                                 <td name="time_out"><?php echo date("h:i A", strtotime($row->time_out)); ?></td>
 
                                                 <td name="leave_reason" style="max-width: 200px; overflow: hidden; 
                     text-overflow: ellipsis; white-space: nowrap;cursor: pointer;user-select:none" title="Double click to expand"><?php echo $row->reason; ?></td>
-                                                <td name="status"><?php echo ucwords($row->status); ?></td>
+                                                <td name="status"><?php echo ucwords($row->head_status); ?></td>
                                                 <td>
                                                     <div class="dropdown">
                                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -944,13 +943,14 @@
                                                             <form id="update_undertime" method="post">
                                                                 <div class="mb-3 row">
                                                                     <div class="col-md-6">
-                                                                        <label for="emp_name" class="form-label">Employee Name</label>
-                                                                        <input type="text" class="form-control text-left" id="emp_name" readonly>
+                                                                        <label for="ut_emp_name" class="form-label">Employee Name</label>
+
+                                                                        <input type="text" class="form-control text-left" name="ut_emp_name" id="ut_emp_name" readonly>
 
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <label for="date_filled" class="form-label">Date Filled</label>
-                                                                        <input type="text" class="form-control" id="date_filled" readonly>
+                                                                        <input type="text" class="form-control" id="ut_date_filled" readonly>
                                                                     </div>
                                                                 </div>
 
@@ -958,32 +958,32 @@
                                                                     <div class="col-md-4">
                                                                         <label for="leave_type">Undertime Date</label>
                                                                         <div>
-                                                                            <input type="text" class="form-control" id="ot_date" readonly>
+                                                                            <input type="text" class="form-control" id="ut_date" readonly>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-4">
                                                                         <label for="date_from">Time From</label>
                                                                         <div>
-                                                                            <input type="text" class="form-control" id="time_from" readonly>
+                                                                            <input type="text" class="form-control" id="ut_time_from" readonly>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-4">
                                                                         <label for="date_to">Time To</label>
                                                                         <div>
-                                                                            <input type="text" class="form-control" id="time_to" readonly>
+                                                                            <input type="text" class="form-control" id="ut_time_to" readonly>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="mb-3 row">
                                                                     <label for="leave_reason">Reason</label>
                                                                     <div>
-                                                                        <textarea class="form-control" id="ot_reason" rows="3" readonly></textarea>
+                                                                        <textarea class="form-control" id="ut_reason" rows="3" readonly></textarea>
                                                                     </div>
                                                                 </div>
                                                                 <div class="mb-3 row">
                                                                     <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                         <div class="input-block mb-3 form-focus select-focus text-center">
-                                                                            <button id="approveButton" class="btn btn-primary">Approve</button>
+                                                                            <button id="ut_approveButton" class="btn btn-primary">Approve</button>
                                                                             <button id="denyButton" class="btn btn-danger">Deny</button>
                                                                         </div>
                                                                     </div>
@@ -1017,13 +1017,7 @@
                                 <div class="col">
                                     <h4 class="card-title mb-0">Pending Official Business Request</h4>
                                 </div>
-                                <!-- <div class="col-auto">
-                                    <div class="float-end ms-auto">
-                                        <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_ob">
-                                            <i class="fa-solid fa-plus"></i> Add Official Business Request
-                                        </a>
-                                    </div>
-                                </div> -->
+
                             </div>
                         </div>
                         <div class="card-body">
@@ -1083,7 +1077,8 @@
 
                                                 <td name="leave_reason" style="max-width: 200px; overflow: hidden; 
                     text-overflow: ellipsis; white-space: nowrap;cursor: pointer;user-select:none" title="Double click to expand"><?php echo $row->reason; ?></td>
-                                                <td name="status"><?php echo ucwords($row->status); ?></td>
+
+                                                <td name="status"><?php echo ucwords($row->head_status); ?></td>
                                                 <td>
                                                     <div class="dropdown">
                                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -1121,12 +1116,12 @@
                                                                 <div class="mb-3 row">
                                                                     <div class="col-md-6">
                                                                         <label for="emp_name" class="form-label">Employee Name</label>
-                                                                        <input type="text" class="form-control text-left" id="emp_name" readonly>
+                                                                        <input type="text" class="form-control text-left" id="ob_emp_name" readonly>
 
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <label for="date_filled" class="form-label">Date Filled</label>
-                                                                        <input type="text" class="form-control" id="date_filled" readonly>
+                                                                        <input type="text" class="form-control" id="ob_date_filled" readonly>
                                                                     </div>
                                                                 </div>
 
@@ -1159,20 +1154,17 @@
                                                                     </div>
                                                                     <label for="leave_reason">Reason</label>
                                                                     <div>
-                                                                        <textarea class="form-control" id="ot_reason" rows="3" readonly></textarea>
+                                                                        <textarea class="form-control" id="ob_reason" rows="3" readonly></textarea>
                                                                     </div>
                                                                 </div>
                                                                 <div class="mb-3 row">
                                                                     <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                         <div class="input-block mb-3 form-focus select-focus text-center">
-                                                                            <button id="approveButton" class="btn btn-primary">Approve</button>
+                                                                            <button id="ob_approveButton" class="btn btn-primary">Approve</button>
                                                                             <button id="denyButton" class="btn btn-danger">Deny</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-
-
-
                                                             </form>
                                                         </div>
                                                         <div class="modal-footer">
@@ -1598,7 +1590,7 @@
         </form>
     </div>
 </div>
-<!-- Modal -->
+
 <div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1619,32 +1611,32 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var approveButton = document.getElementById('approveButton');
-        var denyButton = document.getElementById('denyButton');
-        var approveModal = new bootstrap.Modal(document.getElementById('approveModal'));
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     var approveButton = document.getElementById('approveButton');
+    //     var denyButton = document.getElementById('denyButton');
+    //     var approveModal = new bootstrap.Modal(document.getElementById('approveModal'));
 
-        approveButton.addEventListener('click', function() {
-            approveModal.show();
-        });
+    //     approveButton.addEventListener('click', function() {
+    //         approveModal.show();
+    //     });
 
-        denyButton.addEventListener('click', function() {
-            approveModal.show();
-        });
+    //     denyButton.addEventListener('click', function() {
+    //         approveModal.show();
+    //     });
 
-        var confirmApproveButton = document.getElementById('confirmApprove');
-        var confirmDenyButton = document.getElementById('confirmDeny');
+    //     var confirmApproveButton = document.getElementById('confirmApprove');
+    //     var confirmDenyButton = document.getElementById('confirmDeny');
 
-        confirmApproveButton.addEventListener('click', function() {
-            // Perform logic for approving OT status here
-            approveModal.hide();
-        });
+    //     confirmApproveButton.addEventListener('click', function() {
+    //         // Perform logic for approving OT status here
+    //         approveModal.hide();
+    //     });
 
-        confirmDenyButton.addEventListener('click', function() {
-            // Perform logic for denying OT status here
-            approveModal.hide();
-        });
-    });
+    //     confirmDenyButton.addEventListener('click', function() {
+    //         // Perform logic for denying OT status here
+    //         approveModal.hide();
+    //     });
+    // });
 </script>
 
 <script>
@@ -1653,22 +1645,17 @@
         $("li > a[href='<?= base_url('hr/pendingrequests') ?>']").parent().parent().css("display", "block")
 
         $(".update-pending").click(function(event) {
-            event.preventDefault(); // Prevent default link behavior
+            event.preventDefault();
 
-            // Extract data from the clicked row
             let leave_id = $(this).attr("data-target-id");
-            // let leave_type = $(this).attr("data-request-type");
             let emp_id = $(this).attr("data-emp-id");
             let emp_name = $(this).closest('tr').find('td[name="emp_name"]').text().trim();
-
             let date_filled = $(this).closest('tr').find('td[name="date_filled"]').text();
-            // let leave_type = $(this).closest('tr').find('td[name="leave_type"]').text();
             let date_from = $(this).closest('tr').find('td[name="date_from"]').text();
             let date_to = $(this).closest('tr').find('td[name="date_to"]').text();
             let leave_reason = $(this).closest('tr').find('td[name="leave_reason"]').text();
             let status = $(this).closest('tr').find('td[name="status"]').text();
 
-            // Populate modal with data
             $("#leave_id").val(leave_id);
             $("#leave_type").val(leave_type);
             $("#emp_id").val(emp_id);
@@ -1679,76 +1666,102 @@
             $("#leave_reason").val(leave_reason);
             $("#status").val(status);
 
-            // Open the modal
             $('#edit_leave').modal('show');
         });
 
-        $('.update-outgoing').click(function(event) {
-            event.preventDefault(); // Prevent default link behavior
+        $(".update-outgoing").click(function(event) {
+            event.preventDefault();
 
-            // Extract data from the clicked row
-            let og_id = $(this).data("og-id");
+            let og_id = $(this).attr("data-og-id");
             let emp_name = $(this).closest('tr').find('td[name="og_name"]').text().trim();
-            let date_filled = $(this).closest('tr').find('td:nth-child(2)').text().trim(); // Assuming "Date Filled" is the second column
-            let destin = $(this).closest('tr').find('td[name="going_to"]').text().trim(); // Assuming "Destination" column has the attribute 'name="going_to"'
-            let date_from = $(this).closest('tr').find('td[name="og_date_from"]').text().trim(); // Assuming "Date From" column has the attribute 'name="og_date_from"'
-            let date_to = $(this).closest('tr').find('td[name="og_date_to"]').text().trim(); // Assuming "Date To" column has the attribute 'name="og_date_to"'
-            let outgoing_reason = $(this).closest('tr').find('td[name="og_reason"]').text().trim(); // Assuming "Reason" column has the attribute 'name="og_reason"'
+            let date_filled = $(this).closest('tr').find('td:eq(1)').text();
+            let destin = $(this).closest('tr').find('td[name="going_to"]').text();
+            let time_from = $(this).closest('tr').find('td[name="og_date_from"]').text();
+            let time_to = $(this).closest('tr').find('td[name="og_date_to"]').text();
+            let outgoing_reason = $(this).closest('tr').find('td[name="og_reason"]').text();
 
-            // Populate modal with data
-            $("#og_id").val(og_id);
-            $("#emp_name").val(emp_name);
-            $("#date_filled").val(date_filled);
+            $("#og_emp_name").val(emp_name);
+            $("#og_date_filled").val(date_filled);
             $("#destin").val(destin);
-            $("#date_from").val(date_from);
-            $("#date_to").val(date_to);
+            $("#og_time_from").val(time_from);
+            $("#og_time_to").val(time_to);
             $("#outgoing_reason").val(outgoing_reason);
 
-            // Open the modal
             $('#edit_outgoing').modal('show');
         });
-
 
         $(".update-ot").click(function(event) {
             event.preventDefault();
             let leave_id = $(this).attr("data-ot-id");
-            // let leave_type = $(this).attr("data-request-type");
-            let emp_id = $(this).attr("data-emp-id");
-            let emp_name = $(this).closest('tr').find('td[name="emp_name"]').text().trim();
+            let ot_emp_id = $(this).attr("data-emp-id");
+            let ot_emp_name = $(this).closest('tr').find('td[name="emp_name"]').text().trim();
+            let ot_date_filled = $(this).closest('tr').find('td[name="date_ot"]').text();
+            let ot_time_in = $(this).closest('tr').find('td[name="time_in"]').text();
+            let ot_time_out = $(this).closest('tr').find('td[name="time_out"]').text();
+            let ot_reason = $(this).closest('tr').find('td[name="ot_reason"]').text();
+            let ot_status = $(this).closest('tr').find('td[name="status"]').text();
 
-            let date_filled = $(this).closest('tr').find('td[name="date_filled"]').text();
-            // let leave_type = $(this).closest('tr').find('td[name="leave_type"]').text();
-            let date_from = $(this).closest('tr').find('td[name="date_from"]').text();
-            let date_to = $(this).closest('tr').find('td[name="date_to"]').text();
-            let leave_reason = $(this).closest('tr').find('td[name="leave_reason"]').text();
-            let status = $(this).closest('tr').find('td[name="status"]').text();
+            $("#ot_id").val(leave_id);
+            $("#ot_emp_id").val(ot_emp_id);
+            $("#ot_emp_name").val(ot_emp_name);
+            $("#ot_date_filled").val(ot_date_filled);
+            $("#ot_time_in").val(ot_time_in);
+            $("#ot_time_out").val(ot_time_out);
+            $("#ot_reason").val(ot_reason);
+            $("#ot_status").val(ot_status);
 
-            // Populate modal with data
-            $("#leave_id").val(leave_id);
-            $("#leave_type").val(leave_type);
-            $("#emp_id").val(emp_id);
-            $("#emp_name").val(emp_name);
-            $("#date_filled").val(date_filled);
-            $("#date_from").val(date_from);
-            $("#date_to").val(date_to);
-            $("#leave_reason").val(leave_reason);
-            $("#status").val(status);
-
-            // Open the modal
             $('#edit_employee').modal('show');
+
         });
 
+        $(".update_undertime").click(function(event) {
+            event.preventDefault();
+
+            let ut_id = $(this).attr("data-ut-id");
+            let ut_emp_name = $(this).closest('tr').find('td[name="ut_emp_name"]').text().trim();
+            let ut_date_filled = $(this).closest('tr').find('td:eq(1)').text().trim();
+            let ut_date = $(this).closest('tr').find('td[name="ut_date"]').text().trim();
+            let time_from = $(this).closest('tr').find('td[name="time_in"]').text().trim();
+            let time_to = $(this).closest('tr').find('td[name="time_out"]').text().trim();
+            let ot_reason = $(this).closest('tr').find('td[name="leave_reason"]').text().trim();
+
+            $("#ut_emp_name").val(ut_emp_name);
+            $("#ut_date_filled").val(ut_date_filled);
+            $("#ut_date").val(ut_date);
+            $("#ut_time_from").val(time_from);
+            $("#ut_time_to").val(time_to);
+            $("#ut_reason").val(ot_reason);
+
+            $('#edit_undertime').modal('show');
+        });
+
+        $(".update_ob").click(function(event) {
+            event.preventDefault();
+
+            let ob_id = $(this).attr("data-ob-id");
+            let ob_emp_name = $(this).closest('tr').find('td[name="emp_name"]').text().trim();
+            let ob_date_filled = $(this).closest('tr').find('td:eq(1)').text().trim();
+            let destin_from = $(this).closest('tr').find('td[name="leave_type"]').eq(0).text().trim();
+            let destin_to = $(this).closest('tr').find('td[name="leave_type"]').eq(1).text().trim();
+            let time_from = $(this).closest('tr').find('td[name="time_from"]').text().trim();
+            let time_to = $(this).closest('tr').find('td[name="time_to"]').text().trim();
+            let ob_reason = $(this).closest('tr').find('td[name="leave_reason"]').text().trim();
+
+            $("#ob_emp_name").val(ob_emp_name);
+            $("#ob_date_filled").val(ob_date_filled);
+            $("#destin_from").val(destin_from);
+            $("#destin_to").val(destin_to);
+            $("#time_from").val(time_from);
+            $("#time_to").val(time_to);
+            $("#ob_reason").val(ob_reason);
+
+            $('#edit_ob').modal('show');
+        });
 
         $(document).on("submit", "#expanded_vq", function(e) {
             e.preventDefault();
-
-            // Serialize form data
             var expanded_vq = $(this).serialize();
-
-            // Log serialized form data
             console.log("Serialized Form Data:", expanded_vq);
-
-            // Send AJAX request
             $.ajax({
                 url: base_url + 'humanr/update_leave_status',
                 type: 'post',
@@ -1766,9 +1779,6 @@
                 }
             });
         });
-
-
-
 
 
     });

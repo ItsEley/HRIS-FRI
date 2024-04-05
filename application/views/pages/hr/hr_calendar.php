@@ -15,7 +15,7 @@
   <?php $this->load->view('templates/sidebar') ?>
 
 
-  <div class="page-wrapper w-100">
+  <div class="page-wrapper">
 
     <!-- Page Content -->
     <div class="content container-fluid">
@@ -31,7 +31,8 @@
             </ul>
           </div>
           <div class="col-auto float-end ms-auto">
-            <!-- <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_employee"><i class="fa-solid fa-plus"></i> Add Employee</a> -->
+            <button class="btn add-btn" id = "btn_holiday_update">
+              <i class="fa-solid fa-plus"></i>Update Holidays</button>
             <div class="view-icons">
 
             </div>
@@ -88,24 +89,6 @@
               <input type="date" class="form-control" id="eventEndDate" name="eventEndDate">
             </div>
           </div>
-
-
-          <!-- <div class="row">
-            <h3>Time</h3>
-          <div class="mb-3">
-            <label for="eventTitle" class="form-label">From</label>
-            <input type="time" class="form-control" id="eventTitle" name="title">
-          </div>
-          <div class="mb-3">
-            <label for="eventTitle" class="form-label">To</label>
-            <input type="time" class="form-control" id="eventTitle" name="title">
-          </div>
-          </div>
-
-          <div class="mb-3">
-            <label for="eventTitle" class="form-label">Category</label>
-            <input type="text" class="form-control" id="eventTitle" name="title">
-          </div> -->
 
 
 
@@ -202,16 +185,38 @@
       },
       events: [
         <?php
-        $query = $this->db->query('SELECT * FROM `sys_holidays`');
+        $query = $this->db->query("SELECT 
+        'event' AS type,
+        `id`, `event_name` AS name, 
+        `event_description` AS description, 
+        `date_start`, `date_end`, 
+        `time_start`, `time_end`, 
+        `is_workday`, `date_created` 
+    FROM 
+        `sys_events`
+    
+    UNION
+    
+    SELECT 
+        'holiday' AS type,
+        `id`, `holiday_name` AS name, 
+        `holiday_description`, 
+        `date_start`, `date_end`, 
+        `time_start`, `time_end`, 
+        `is_workday`, `date_created` 
+    FROM 
+        `sys_holidays`;
+    ");
+foreach ($query->result() as $row) {
+  echo '{';
+  echo "id: '$row->id',";
+  // Enclose title in double quotes and escape any double quotes within the value
+  echo "title: \"" . str_replace('"', '\"', $row->name) . "\",";
+  echo "start: '$row->date_start',";
+  echo "end: '$row->date_end'";
+  echo '},';
+}
 
-        foreach ($query->result() as $row) {
-          echo '{';
-          echo "id : '$row->id',";
-          echo "title : '$row->holiday_name',";
-          echo "start : '$row->date_start',";
-          echo "end : '$row->date_end'";
-          echo '},';
-        }
         ?>
       ]
     });
@@ -310,6 +315,24 @@
 
 
     calendar.render();
+
+
+    $("#btn_holiday_update").on('click',function(){
+
+      $.ajax({
+        type: 'GET',
+        url: base_url + 'data/api/holiday/insert',
+        success: function(response) {
+          console.log("SUCCESS calendar insert")
+        },
+        error: function(xhr, status, error) {
+          console.log("FAILED calendar insert")
+
+        }
+      });
+    })
+
+  
 
 
   });

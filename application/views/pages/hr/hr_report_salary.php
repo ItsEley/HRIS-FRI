@@ -11,7 +11,7 @@
     <!-- /Sidebar -->
 
     <!-- Page Wrapper -->
-    <div class="page-wrapper w-100">
+    <div class="page-wrapper">
 
         <!-- Page Content -->
         <div class="content container-fluid">

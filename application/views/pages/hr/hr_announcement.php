@@ -16,7 +16,6 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 
 
-
 <!-- Main Wrapper -->
 <div class="main-wrapper">
     <!-- Header -->
@@ -29,7 +28,7 @@
 
     <!-- /Two Col Sidebar -->
     <!-- Page Wrapper -->
-    <div class="page-wrapper w-100">
+    <div class="page-wrapper">
 
         <!-- Page Content -->
         <div class="content container-fluid">
@@ -46,7 +45,7 @@
                         </ul>
                     </div>
                     <div class="col text-end">
-                        <button type="button" class="btn btn-primary waves-effect waves-light mt-1" data-bs-toggle="modal" data-bs-target="#modal_announcement_detail" id="btn_create_ann">
+                        <button type="button" class="btn btn-primary waves-effect waves-light mt-1" data-bs-toggle="modal" data-bs-target="#modal_announcement_create" id="btn_create_ann">
                             <span class="fa-solid fa-plus"></span> Create Announcement</button>
 
                     </div>
@@ -83,36 +82,29 @@
                                     // $department = $row->department;
                                     $date = $row->date_created;
                                 ?>
-                                    <tr class="hoverable-row" data-ann-id ="<?= $ann_id?>">
-                                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                            <?php echo $title; ?>
+                                    <tr class="hoverable-row" data-ann-id="<?= $ann_id ?>">
+                                        <td><?= $title ?></td>
+                                        <td style="max-width: 200px; overflow: hidden;">
+                                            <div style="max-height: 60px; overflow: hidden;">
+                                                <a class="ellipsis announcement-open" style="color: black !important; display: block;" href="#" data-bs-toggle="modal" data-bs-target="#modal_announcement_detail" data-ann-id="<?= $ann_id ?>">
+                                                    <?= $content ?>
+                                                </a>
+                                            </div>
                                         </td>
-                                        <td style="max-width: 200px; max-height: 100px; overflow: hidden;">
-                                            <a class="ellipsis announcement-open" style="max-height: 1.2em; overflow: hidden;color:black !important"
-                                            href = "#" 
-                                            data-bs-toggle="modal" data-bs-target="#modal_announcement_detail"
-                                              data-ann-id = "<?= $ann_id?>">
-                                            
-                                                <?php echo $content; ?>
-                                            </a>
-                                        </td>
-
-                                        <td><?php echo $author; ?></td>
-                                        <td><?php //echo $department; 
-                                            ?> {not implemented yet}</td>
-                                        <td><?php echo formatDateTime($date); ?></td>
-
+                                        <td><?= $author ?></td>
+                                        <td>{not implemented yet}</td>
+                                        <td><?= formatDateTime($date) ?></td>
                                         <td>
-
-                                            <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?php echo $ann_id ?>">
+                                            <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?= $ann_id ?>">
                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                             </a>
-                                            <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $ann_id ?>">
+                                            <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?= $ann_id ?>">
                                                 <i class="fa-regular fa-trash-can m-r-5"></i> Delete
                                             </a>
-
                                         </td>
                                     </tr>
+
+
                                 <?php
                                 }
                                 ?>
@@ -136,6 +128,7 @@
 <!-- jQuery -->
 
 
+
 <div id="modal_announcement_create" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -152,6 +145,8 @@
                         <div class="col-md-10">
                             <input type="text" class="form-control" name="title" placeholder="Title" required>
                         </div>
+
+                        <input type="text" name="selected_dept" id="selected_dept" hidden>
 
                     </div>
 
@@ -175,8 +170,8 @@
 
                                     // Output each department as an option
                                     echo '
-                                        <input type="checkbox" class="btn-check" id="' . $row->id . '" group="dept_multi" autocomplete="off">
-                                        <label class="btn btn-light btn-rounded d-inline-flex w-auto" for="' . $row->id . '" style = "font-size:12px;margin:2px">' . $row->department . '</label>';
+                                        <input type="checkbox" class="btn-check" id="dept_' . $row->id . '" value = "' . $row->id . '" group="dept_multi" autocomplete="off">
+                                        <label class="btn btn-light btn-rounded d-inline-flex w-auto" for="dept_' . $row->id . '" style = "font-size:12px;margin:2px">' . $row->department . '</label>';
 
                                     // echo '<option value="' . $row->id . '">' .  $row->department . '</option>';
                                 }
@@ -222,7 +217,7 @@
                 $('#editor').summernote({
                     placeholder: 'Type your text here...',
                     tabsize: 1,
-                    height: 300
+                    height: 250
                 });
                 window.summernoteInitialized = true; // Set flag to indicate Summernote instance is initialized
             }
@@ -239,9 +234,6 @@
 
             var addAnnounce = $(this).serialize();
 
-            // console.log("1: ", addAnnounce);
-
-            // console.log("2: ", content);
             $.ajax({
                 url: base_url + 'humanr/add_announce',
                 type: 'post',
@@ -249,17 +241,23 @@
                 dataType: 'json',
                 success: function(res) {
                     if (res.status === 1) {
-                        alert(JSON.stringify(res));
+                        // alert(JSON.stringify(res));
                         // console.log('reloading')
+                        toastr.success('Success! Announcement has been created.');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 5000);
+
 
                     } else {
-                        alert(res.msg);
+                        // alert(res.msg);
+                        toastr.error('Error! Announcement has failed to be created due to an error.');
+                        console.log(res.msg)
+
                     }
                 }
             })
         })
-
-
 
 
         var checkboxes = document.querySelectorAll('input.btn-check');
@@ -267,34 +265,44 @@
         checkboxes.forEach(function(checkbox) {
             checkbox.addEventListener('change', function() {
                 if (this.id == "select_all") {
-                    console.log("select")
-
-
                     if (this.checked) {
-                        console.log('Toggle is active');
+                        // Disable all other checkboxes if "select all" is checked
                         checkboxes.forEach(function(x) {
                             if (x.id !== "select_all") {
-                                $("#" + x.id).attr("disabled", "disabled")
-                                // $("#" + x.id).checked = false;
-
+                                x.disabled = true;
                             }
-                        })
-
+                        });
+                        // Set the hidden input value to "all"
+                        $("#selected_dept").val("all");
                     } else {
-                        console.log('Toggle is inactive');
+                        // Enable all checkboxes if "select all" is unchecked
                         checkboxes.forEach(function(x) {
-                            if (x.id !== "select_all") {
-                                $("#" + x.id).removeAttr("disabled", "disabled")
-                            }
-                        })
+                            x.disabled = false;
+                        });
+                        // Reset the hidden input value
+                        logSelectedDepartments();
                     }
                 } else {
-
+                    // Log selected departments when individual checkbox is changed
+                    logSelectedDepartments();
                 }
-
             });
+        });
+
+        function logSelectedDepartments() {
+            var selectedDepartments = "";
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.id !== "select_all" && checkbox.checked) {
+                    selectedDepartments += checkbox.value + ",";
+                }
+            });
+            // Remove trailing comma
+            selectedDepartments = selectedDepartments.replace(/,$/, "");
+            console.log("Selected departments: ", selectedDepartments);
+            // Update the hidden input field with selected departments
+            $("#selected_dept").val(selectedDepartments);
+        }
 
 
-        })
     })
 </script>

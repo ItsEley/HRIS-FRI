@@ -20,7 +20,6 @@ $("#login-form").submit(function(e) {
                 if (response.status === 1) {
                     let department = response.department;
 
-                    // console.log('Department:', department); // Display department information in the console
                     if (response.acro_dept === 'HR') {
                         console.log('Redirecting to HR dashboard');
                         window.location.href = base_url + 'hr/dashboard';
@@ -50,59 +49,106 @@ $("#login-form").submit(function(e) {
         });
     }
 });
-
-
-
-
 $(document).ready(function() {
-    $('#approveButton').click(function() {
-        var rowId = $(this).data('row-id');
-        $.ajax({
-            type: 'POST',
-            url: base_url+'humanr/headapprove',
-            data: {
-                row_id: rowId
-            },
-            success: function(response) {
-                // Handle the response, maybe show a success message
-                console.log('Leave approved successfully');
-                $('#approve_employee').modal('hide');
-            },
-            error: function(xhr, status, error) {
-                // Handle any errors
-                console.error('Error approving leave');
-            }
-        });
-    });
-});
-
-$(document).ready(function() {
-    $('#approveButtonhr').click(function() {
-        // Display the confirmation modal when the "Approve" button on the first modal is clicked
+    $('#og_approveButton').click(function(event) {
+        event.preventDefault();
         $('#approveModal').modal('show');
+        $('#confirmApprove').attr('data-source', 'og_approveButton');
     });
 
-    $('#confirmApprovehr').click(function() {
-        // Get the row ID from the first modal
-        var rowId = $('#approveButtonhr').data('row-id');
+    $('#leave_approveButton').click(function(event) {
+        event.preventDefault();
+        $('#approveModal').modal('show');
+        $('#confirmApprove').attr('data-source', 'leave_approveButton');
+    });
+
+    $('#ot_approveButton').click(function(event) {
+        event.preventDefault();
+        $('#approveModal').modal('show');
+        $('#confirmApprove').attr('data-source', 'ot_approveButton');
+    });
+
+    $('#ut_approveButton').click(function(event) {
+        event.preventDefault();
+        $('#approveModal').modal('show');
+        $('#confirmApprove').attr('data-source', 'ut_approveButton');
+    });
+
+    $('#ob_approveButton').click(function(event) {
+        event.preventDefault();
+        $('#approveModal').modal('show');
+        $('#confirmApprove').attr('data-source', 'ob_approveButton');
+    });
+
+    $('#confirmApprove').click(function() {
+        var rowId;
+        var empId;
+        var source = $(this).attr('data-source'); // Get the source value
+
+        if (source === 'og_approveButton') {
+            rowId = $('#og_emp_name').val();
+            empId = $('#employee_id').val();
+        } else if (source === 'leave_approveButton') {
+            rowId = $('#leave_emp_name').val();
+            empId = $('#leave_employee_id').val();
+        } else if (source === 'ot_approveButton') {
+            rowId = $('#ot_emp_name').val();
+            empId = $('#ot_employee_id').val();
+        } else if (source === 'ut_approveButton') {
+            rowId = $('#ut_emp_name').val();
+            empId = $('#ut_employee_id').val();
+        } else if (source === 'ob_approveButton') {
+            rowId = $('#ob_emp_name').val();
+            empId = $('#ob_employee_id').val();
+        }
+
+        console.log('Row ID:', rowId);
+        console.log('Employee ID:', empId);
+        console.log('Source:', source);
+
         $.ajax({
-            type: 'POST',
-            url: base_url+('humanr/hrapprove'),
+            type: "POST",
+            url: base_url + 'humanr/headapprove',
             data: {
-                row_id: rowId
+                row_id: rowId,
+                emp_id: empId,
+                source: source
             },
             success: function(response) {
-                // Handle the response, maybe show a success message
-                console.log('Leave approved successfully');
-                $('#approveModal').modal('hide');
-            },
-            error: function(xhr, status, error) {
-                // Handle any errors
-                console.error('Error approving leave');
+                alert(response);
             }
         });
+
+        $('#approveModal').modal('hide');
     });
 });
+
+
+
+// $(document).ready(function() {
+//     $('#approveButton').click(function() {
+//         var rowId = $(this).data('row-id');
+//         $.ajax({
+//             type: 'POST',
+//             url: base_url+'humanr/headapprove',
+//             data: {
+//                 row_id: rowId
+//             },
+//             success: function(response) {
+            
+//                 console.log('Leave approved successfully');
+//                 $('#approve_employee').modal('hide');
+//             },
+//             error: function(xhr, status, error) {
+             
+//                 console.error('Error approving leave');
+//             }
+//         });
+//     });
+// });
+
+// Assuming each modal has a unique ID and you want to distinguish between them
+
 
 
 

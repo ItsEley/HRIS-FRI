@@ -11,7 +11,7 @@
 
     <!-- /Two Col Sidebar -->
     <!-- Page Wrapper -->
-    <div class="page-wrapper w-100">
+    <div class="page-wrapper">
 
         <!-- Page Content -->
         <div class="content container-fluid" data-select2-id="select2-data-23-5b7q">

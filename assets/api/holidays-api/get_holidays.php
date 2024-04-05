@@ -1,34 +1,40 @@
 <?php
+// Set your API key
+$api_key = 'zkQ4Ee61n5fyx9iv4psfjg6y7WxnPtad';
 
-// API endpoint URL
-$url = 'https://holidayapi.com/v1/holidays?pretty&key=a3721957-310a-4127-b58a-0944efcf62e2&country=PH&year=2023';
+// Set the country code and year for which you want to get holidays
+$country_code = 'PH'; // Example: United States
+$year = '2024'; // Example: 2022
 
-// Make the API call using file_get_contents
-$response = file_get_contents($url);
+// Construct the API endpoint URL
+$api_url = "https://calendarific.com/api/v2/holidays?api_key=$api_key&country=$country_code&year=$year";
+
+// Make the API request
+$response = file_get_contents($api_url);
 
 // Check if the request was successful
 if ($response === false) {
-    // Handle error
-    echo 'Error fetching data from the API';
+    echo "Error: Unable to fetch data from Calendarific API.";
 } else {
-    // Decode the JSON response if applicable
+    // Decode the JSON response
     $data = json_decode($response, true);
 
-    // Do something with the data
-    // print_r($data);
+    print_r($data);
 }
 
-if($data['status'] == '200'){
-
-    echo count($data['holidays']);
-
-    for($i = 0 ; $i < count($data['holidays'])- 1; $i++){
-        echo $data['holidays'][$i]['name'];
-    }
-    
-
-
-
-}
-
+ // Check if the response contains any holidays
+    // if (isset($data['response']['holidays']) && !empty($data['response']['holidays'])) {
+    //     // Loop through each holiday and display its details
+    //     foreach ($data['response']['holidays'] as $holiday) {
+    //         echo "Name: " . $holiday['name'] . "<br>";
+    //         echo "Date: " . $holiday['date']['iso'] . "<br>";
+    //         echo "Type: " . $holiday['type'] . "<br>";
+    //         echo "Description: " . $holiday['description'] . "<br>";
+    //         echo "------------------------<br>";
+    //     }
+    // } else {
+    //     echo "No holidays found for the specified country and year.";
+    // }
 ?>
+
+

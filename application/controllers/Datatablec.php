@@ -13,12 +13,12 @@ class Datatablec extends CI_Controller
 
     public function calendar_get()
     {
-        $query = $this->db->query('SELECT * FROM `sys_holidays`');
+        $query = $this->db->query('SELECT * FROM `sys_events`');
 
         foreach ($query->result() as $row) {
           echo '{';
           echo "id : '$row->id',";
-          echo "title : '$row->holiday_name',";
+          echo "title : '$row->event_name',";
           echo "start : '$row->date_start',";
           echo "end : '$row->date_end'";
           echo '},';
@@ -41,7 +41,7 @@ class Datatablec extends CI_Controller
 
         $data = array(
             /*column name*/
-            'holiday_name' => $event,
+            'event_name' => $event,
             'date_start' => $date_start,
             'date_end' => $date_end
 
@@ -50,7 +50,7 @@ class Datatablec extends CI_Controller
 
         print_r($data);
 
-        $sql = $this->db->insert('sys_holidays', $data);
+        $sql = $this->db->insert('sys_events', $data);
         if ($sql) {
             $response['status'] = 1;
             $response['msg'] = 'Done';
@@ -77,14 +77,14 @@ class Datatablec extends CI_Controller
         // Define data to be updated
         $data = array(
             /*column name*/
-            'holiday_name' => $event,
+            'event_name' => $event,
             'date_start' => $date_start,
             'date_end' => $date_end
         );
 
         // Update the employee record
         $this->db->where('id', $id);
-        $sql = $this->db->update('sys_holidays', $data);
+        $sql = $this->db->update('sys_events', $data);
 
         // Prepare response
         $response = array();

@@ -1,0 +1,859 @@
+[
+    {
+        "name": "New Year's Day",
+        "description": "New Year\u2019s Day on January 1 in the Gregorian calendar is a public holiday in the Philippines.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-01-01",
+            "datetime": {
+                "year": 2024,
+                "month": 1,
+                "day": 1
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Regular Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/new-year-day",
+        "urlid": "philippines\/new-year-day",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "First Philippine Republic Day",
+        "description": "First Philippine Republic Day is a special working day in Philippines",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-01-23",
+            "datetime": {
+                "year": 2024,
+                "month": 1,
+                "day": 23
+            }
+        },
+        "type": [
+            "Weekend"
+        ],
+        "primary_type": "Special Working Day",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/first-philippine-republic-day",
+        "urlid": "philippines\/first-philippine-republic-day",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Lailatul Isra Wal Mi Raj",
+        "description": "Isra and Mi'raj (Isra Me'raj, Israa and Mi'raaj, Laylat Al-Isra wa Al-Miraj, Lailat al Miraj, Night Journey and Ascension to Heaven) marks the night that the Prophet Mohammad traveled from Mecca to Jerusalem, ascended to heaven and returned.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-02-07",
+            "datetime": {
+                "year": 2024,
+                "month": 2,
+                "day": 7
+            }
+        },
+        "type": [
+            "Common local holiday"
+        ],
+        "primary_type": "Common local holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/lailatul-isra-wal-mi-raj",
+        "urlid": "philippines\/lailatul-isra-wal-mi-raj",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Lunar New Year's Day",
+        "description": "Lunar New Year is not considered an official holiday in the Philippines but it is widely celebrated, particularly in Chinese communities.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-02-10",
+            "datetime": {
+                "year": 2024,
+                "month": 2,
+                "day": 10
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Special Non-working Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/lunar-new-year-day",
+        "urlid": "philippines\/lunar-new-year-day",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "People Power Anniversary",
+        "description": "People Power Anniversary in the Philippines commemorates the successful non-violent demonstration in Manila in 1986 that saw a change of government for the nation.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-02-25",
+            "datetime": {
+                "year": 2024,
+                "month": 2,
+                "day": 25
+            }
+        },
+        "type": [
+            "Observance"
+        ],
+        "primary_type": "Observance",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/people-power-anniversary",
+        "urlid": "philippines\/people-power-anniversary",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Ramadan Start",
+        "description": "Ramadan is a period of prayer, reflection and fasting for many Muslims worldwide. It is the ninth month in the Islamic calendar.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-03-11",
+            "datetime": {
+                "year": 2024,
+                "month": 3,
+                "day": 11
+            }
+        },
+        "type": [
+            "Observance"
+        ],
+        "primary_type": "Observance",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/ramadan-begins",
+        "urlid": "philippines\/ramadan-begins",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "March Equinox",
+        "description": "March Equinox in Philippines (Manila)",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-03-20T11:06:28+08:00",
+            "datetime": {
+                "year": 2024,
+                "month": 3,
+                "day": 20,
+                "hour": 11,
+                "minute": 6,
+                "second": 28
+            },
+            "timezone": {
+                "offset": "+08:00",
+                "zoneabb": "PHST",
+                "zoneoffset": 28800,
+                "zonedst": 0,
+                "zonetotaloffset": 28800
+            }
+        },
+        "type": [
+            "Season"
+        ],
+        "primary_type": "Season",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/seasons\/vernal-equinox",
+        "urlid": "seasons\/vernal-equinox",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Maundy Thursday",
+        "description": "Maundy Thursday is part of the Holy Week tradition observed by most Filipinos.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-03-28",
+            "datetime": {
+                "year": 2024,
+                "month": 3,
+                "day": 28
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Regular Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/maundy-thursday",
+        "urlid": "philippines\/maundy-thursday",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Good Friday",
+        "description": "Good Friday is part of the Holy Week holiday in the Philippines.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-03-29",
+            "datetime": {
+                "year": 2024,
+                "month": 3,
+                "day": 29
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Regular Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/good-friday",
+        "urlid": "philippines\/good-friday",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Black Saturday",
+        "description": "Holy Saturday is the day before Easter Sunday.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-03-30",
+            "datetime": {
+                "year": 2024,
+                "month": 3,
+                "day": 30
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Special Non-working Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/easter-saturday",
+        "urlid": "philippines\/easter-saturday",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Easter Sunday",
+        "description": "Easter Sunday commemorates Jesus Christ\u2019s resurrection, according to Christian belief.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-03-31",
+            "datetime": {
+                "year": 2024,
+                "month": 3,
+                "day": 31
+            }
+        },
+        "type": [
+            "Observance"
+        ],
+        "primary_type": "Observance",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/easter-sunday",
+        "urlid": "philippines\/easter-sunday",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "The Day of Valor",
+        "description": "Araw ng Kagitingan, also known as the Day of Valor, annually falls on or around April 9 in the Philippines.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-04-09",
+            "datetime": {
+                "year": 2024,
+                "month": 4,
+                "day": 9
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Regular Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/araw-ng-kagitingan",
+        "urlid": "philippines\/araw-ng-kagitingan",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Eidul-Fitar",
+        "description": "Eid al-Fitr is a holiday to mark the end of the Islamic month of Ramadan, during which Muslims fast during the hours of daylight.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-04-10",
+            "datetime": {
+                "year": 2024,
+                "month": 4,
+                "day": 10
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Regular Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/eidul-fitar",
+        "urlid": "philippines\/eidul-fitar",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Labor Day",
+        "description": "Labor Day, International Workers' Day, and May Day, is a day off for workers in many countries around the world.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-05-01",
+            "datetime": {
+                "year": 2024,
+                "month": 5,
+                "day": 1
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Regular Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/labor-day",
+        "urlid": "philippines\/labor-day",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Independence Day",
+        "description": "The Philippine\u2019s Independence day is a large celebratory event held across the country on June 12 each year.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-06-12",
+            "datetime": {
+                "year": 2024,
+                "month": 6,
+                "day": 12
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Regular Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/independence-day",
+        "urlid": "philippines\/independence-day",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Eid al-Adha (Feast of the Sacrifice)",
+        "description": "Eid al-Adha (Id ul-Adha) is an Islamic festival falling on the 10th day of the month of Dhul Hijja (Thou al-Hijja) to commemorate the willingness of Ibrahim (Abraham) to sacrifice his son.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-06-17",
+            "datetime": {
+                "year": 2024,
+                "month": 6,
+                "day": 17
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Regular Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/id-ul-adha",
+        "urlid": "philippines\/id-ul-adha",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Eid al-Adha Day 2",
+        "description": "Eid al-Adha Day 2 is a common local holiday in Philippines",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-06-18",
+            "datetime": {
+                "year": 2024,
+                "month": 6,
+                "day": 18
+            }
+        },
+        "type": [
+            "Common local holiday"
+        ],
+        "primary_type": "Common local holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/id-ul-adha-2",
+        "urlid": "philippines\/id-ul-adha-2",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "June Solstice",
+        "description": "June Solstice in Philippines (Manila)",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-06-21T04:50:59+08:00",
+            "datetime": {
+                "year": 2024,
+                "month": 6,
+                "day": 21,
+                "hour": 4,
+                "minute": 50,
+                "second": 59
+            },
+            "timezone": {
+                "offset": "+08:00",
+                "zoneabb": "PHST",
+                "zoneoffset": 28800,
+                "zonedst": 0,
+                "zonetotaloffset": 28800
+            }
+        },
+        "type": [
+            "Season"
+        ],
+        "primary_type": "Season",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/seasons\/june-solstice",
+        "urlid": "seasons\/june-solstice",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Amun Jadid",
+        "description": "Muharram is the first month of the Islamic calendar and a time of remembrance or mourning.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-07-08",
+            "datetime": {
+                "year": 2024,
+                "month": 7,
+                "day": 8
+            }
+        },
+        "type": [
+            "Muslim",
+            "Common local holiday"
+        ],
+        "primary_type": "Common local holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/amun-jadid",
+        "urlid": "philippines\/amun-jadid",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Ninoy Aquino Day",
+        "description": "Ninoy Aquino Day is a special non-working holiday in Philippines",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-08-21",
+            "datetime": {
+                "year": 2024,
+                "month": 8,
+                "day": 21
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Special Non-working Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/ninoy-aquino-day",
+        "urlid": "philippines\/ninoy-aquino-day",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "National Heroes Day",
+        "description": "National Heroes Day is a regular holiday in Philippines",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-08-26",
+            "datetime": {
+                "year": 2024,
+                "month": 8,
+                "day": 26
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Regular Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/national-heroes-day",
+        "urlid": "philippines\/national-heroes-day",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Yamashita Surrender Day",
+        "description": "Yamashita Surrender Day is a special working day in Philippines",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-09-03",
+            "datetime": {
+                "year": 2024,
+                "month": 9,
+                "day": 3
+            }
+        },
+        "type": [
+            "Weekend"
+        ],
+        "primary_type": "Special Working Day",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/yamashita-surrender-day",
+        "urlid": "philippines\/yamashita-surrender-day",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Feast of the Nativity of Mary",
+        "description": "Feast of the Nativity of Mary is a special working day in Philippines",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-09-08",
+            "datetime": {
+                "year": 2024,
+                "month": 9,
+                "day": 8
+            }
+        },
+        "type": [
+            "Weekend"
+        ],
+        "primary_type": "Special Working Day",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/nativity-of-mary",
+        "urlid": "philippines\/nativity-of-mary",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Maulid un-Nabi",
+        "description": "Mawlid, or Milad, marks the birth of the Islamic prophet Muhammed, or Mohamed, in the year 570 of the Gregorian calendar.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-09-16",
+            "datetime": {
+                "year": 2024,
+                "month": 9,
+                "day": 16
+            }
+        },
+        "type": [
+            "Common local holiday"
+        ],
+        "primary_type": "Common local holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/maulid-un-nabi",
+        "urlid": "philippines\/maulid-un-nabi",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "September Equinox",
+        "description": "September Equinox in Philippines (Manila)",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-09-22T20:43:33+08:00",
+            "datetime": {
+                "year": 2024,
+                "month": 9,
+                "day": 22,
+                "hour": 20,
+                "minute": 43,
+                "second": 33
+            },
+            "timezone": {
+                "offset": "+08:00",
+                "zoneabb": "PHST",
+                "zoneoffset": 28800,
+                "zonedst": 0,
+                "zonetotaloffset": 28800
+            }
+        },
+        "type": [
+            "Season"
+        ],
+        "primary_type": "Season",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/seasons\/autumnal-equniox",
+        "urlid": "seasons\/autumnal-equniox",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "All Saints' Day",
+        "description": "Many churches honor all their saints on All Saints' Day, also known as All Hallows' Day.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-11-01",
+            "datetime": {
+                "year": 2024,
+                "month": 11,
+                "day": 1
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Special Non-working Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/all-saints-day",
+        "urlid": "philippines\/all-saints-day",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "All Souls' Day",
+        "description": "All Souls\u2019 Day falls on November 2 each year. It is a day of alms giving and prayers for the dead.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-11-02",
+            "datetime": {
+                "year": 2024,
+                "month": 11,
+                "day": 2
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Special Non-working Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/all-souls-day",
+        "urlid": "philippines\/all-souls-day",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Bonifacio Day",
+        "description": "Bonifacio Day is a regular holiday in Philippines",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-11-30",
+            "datetime": {
+                "year": 2024,
+                "month": 11,
+                "day": 30
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Regular Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/bonifacio-day",
+        "urlid": "philippines\/bonifacio-day",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Feast of the Immaculate Conception",
+        "description": "The Feast of the Immaculate Conception is a Christian observance on December 8 each year.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-12-08",
+            "datetime": {
+                "year": 2024,
+                "month": 12,
+                "day": 8
+            }
+        },
+        "type": [
+            "Observance"
+        ],
+        "primary_type": "Special Non-working Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/immaculate-conception",
+        "urlid": "philippines\/immaculate-conception",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "December Solstice",
+        "description": "December Solstice in Philippines (Manila)",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-12-21T17:20:34+08:00",
+            "datetime": {
+                "year": 2024,
+                "month": 12,
+                "day": 21,
+                "hour": 17,
+                "minute": 20,
+                "second": 34
+            },
+            "timezone": {
+                "offset": "+08:00",
+                "zoneabb": "PHST",
+                "zoneoffset": 28800,
+                "zonedst": 0,
+                "zonetotaloffset": 28800
+            }
+        },
+        "type": [
+            "Season"
+        ],
+        "primary_type": "Season",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/seasons\/december-solstice",
+        "urlid": "seasons\/december-solstice",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Christmas Eve",
+        "description": "Christmas Eve is the day before Christmas Day and falls on December 24 in the Gregorian calendar.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-12-24",
+            "datetime": {
+                "year": 2024,
+                "month": 12,
+                "day": 24
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Special Non-working Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/christmas-eve",
+        "urlid": "philippines\/christmas-eve",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Christmas Day",
+        "description": "Christmas Day is one of the biggest Christian celebrations and falls on December 25 in the Gregorian calendar.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-12-25",
+            "datetime": {
+                "year": 2024,
+                "month": 12,
+                "day": 25
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Regular Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/christmas-day",
+        "urlid": "philippines\/christmas-day",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "Rizal Day",
+        "description": "Rizal Day is a regular holiday in Philippines",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-12-30",
+            "datetime": {
+                "year": 2024,
+                "month": 12,
+                "day": 30
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Regular Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/rizal-day",
+        "urlid": "philippines\/rizal-day",
+        "locations": "All",
+        "states": "All"
+    },
+    {
+        "name": "New Year's Eve",
+        "description": "New Year\u2019s Eve is the last day of the year, December 31, in the Gregorian calendar.",
+        "country": {
+            "id": "ph",
+            "name": "Philippines"
+        },
+        "date": {
+            "iso": "2024-12-31",
+            "datetime": {
+                "year": 2024,
+                "month": 12,
+                "day": 31
+            }
+        },
+        "type": [
+            "National holiday"
+        ],
+        "primary_type": "Special Non-working Holiday",
+        "canonical_url": "https:\/\/calendarific.com\/holiday\/philippines\/new-year-eve",
+        "urlid": "philippines\/new-year-eve",
+        "locations": "All",
+        "states": "All"
+    }
+]

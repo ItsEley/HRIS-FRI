@@ -38,23 +38,48 @@ class Humanr extends CI_Controller
 	
 	
 
-	public function headapprove() {
-		// Get the row ID sent via AJAX
+	public function headapprovez() {
+	
 		$rowId = $this->input->post('row_id');
 	
-		// Get the current user's ID from the session
 		$session_emp_id = $this->session->userdata('emp_id');
 	
-		// Update the row status and insert the session ID directly in the controller
 		$this->db->set('head_status', 'approved');
 		$this->db->set('head_id', $session_emp_id);
 		$this->db->where('id', $rowId);
 		$this->db->update('f_leaves');
 	
-		// Send a response indicating success
 		echo 'Leave approved successfully';
 	}
 	
+	public function headapprove() {
+		$rowId = $this->input->post('row_id');
+		$empId = $this->input->post('emp_id');
+		$source = $this->input->post('source');
+		
+		$validSources = array(
+			'og_approveButton' => 'f_outgoing',
+			'leave_approveButton' => 'f_leaves',
+			'ot_approveButton' => 'f_overtime',
+			'ut_approveButton' => 'f_undertime',
+			'ob_approveButton' => 'f_off_bussiness'
+		
+		);
+	
+		if (isset($validSources[$source])) {
+			$tableName = $validSources[$source];
+	
+			$this->db->set('head_status', 'approved');
+			$this->db->set('head_id', $empId);
+			$this->db->where('id', $rowId);
+			$this->db->update($tableName);
+			
+			echo 'Leave approved successfully';
+		} else {
+			// Invalid source
+			echo 'Failed to approve leave: Invalid source';
+		}
+	}
 	
 
 	public function barchart() {
@@ -703,33 +728,66 @@ class Humanr extends CI_Controller
 	}
 
 	public function add_announce()
-	{
-		$datetime = date('Y-m-d H:i:s', time());
-		$response = array();
+{
+    $datetime = date('Y-m-d H:i:s', time());
+    $response = array();
 
-		// print_r($this->input->post);
+    // Retrieve selected departments
+    $selected_departments = explode(',', $this->input->post('selected_dept'));
 
-		$data = array(
-			/*column name*/
-			'author' => $this->input->post('author'),
-			'title' => $this->input->post('title'),
-			'to_all' => $this->input->post('department'),
-			'content' => $this->input->post('editor_content'),
-			'date_created' => $this->input->post('postdate')
-		);
+    // Check if "all" is selected
+    $to_all = (in_array('all', $selected_departments)) ? 1 : 0;
 
-		$sql = $this->db->insert('announcement', $data);
+    // Prepare data for announcement table
+    $announcement_data = array(
+        'author' => $this->input->post('author'),
+        'title' => $this->input->post('title'),
+        'to_all' => $to_all,
+        'content' => $this->input->post('editor_content'),
+        'date_created' => $this->input->post('postdate')
+    );
 
-		if ($sql) {
-			$response['status'] = 1;
-			$response['msg'] = json_encode($data);
-		} else {
-			$response['status'] = 0;
-			$response['msg'] = 'Error';
-		}
+    // Insert data into announcement table
+    $announcement_insert = $this->db->insert('announcement', $announcement_data);
 
-		echo json_encode($response);
-	}
+    if ($announcement_insert) {
+        // Get the ID of the inserted announcement
+        $announcement_id = $this->db->insert_id();
+
+        if (!$to_all) {
+            // Prepare data for announce_to table only if "all" is not selected
+            $announce_to_data = array();
+            foreach ($selected_departments as $dept_id) {
+                $announce_to_data[] = array(
+                    'ann_id' => $announcement_id,
+                    'dept_id' => $dept_id
+                );
+            }
+
+            // Insert data into announce_to table
+            $announce_to_insert = $this->db->insert_batch('announce_to', $announce_to_data);
+
+            if (!$announce_to_insert) {
+                // Rollback if insert into announce_to fails
+                $this->db->delete('announcement', array('id' => $announcement_id));
+                $response['status'] = 0;
+                $response['msg'] = 'Error inserting departments.';
+                echo json_encode($response);
+                return;
+            }
+        }
+
+        $response['status'] = 1;
+        $response['inserted_id'] = $announcement_id;
+        $response['msg'] = 'Announcement inserted successfully.';
+    } else {
+        $response['status'] = 0;
+        $response['msg'] = 'Error inserting announcement.';
+    }
+
+    echo json_encode($response);
+}
+
 
 
 
@@ -811,8 +869,6 @@ class Humanr extends CI_Controller
 
 
 		$data = array(
-			/*column name*/
-
 
 			'asset_name' => $asset_name,
 			'purchase_date' => $purchase_date,
@@ -835,11 +891,6 @@ class Humanr extends CI_Controller
 
 		echo json_encode($response);
 	}
-
-
-
-
-
 
 	public function getUserCount()
 	{
@@ -875,10 +926,6 @@ class Humanr extends CI_Controller
 		$this->load->view('modal_view');
 		$this->load->view('templates/footer');
 	}
-
-
-
-
 
 	public function update_leave_status()
 	{

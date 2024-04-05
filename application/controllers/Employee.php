@@ -64,7 +64,7 @@ class Employee extends CI_Controller
     $to_date = $this->input->post('to_date');
     $leaveType = $this->input->post('leaveType');
     $reason = $this->input->post('reason');
-    $status = 'pending';
+   
     $empid = $this->input->post('emp_id');
 
     // Get the department name from session
@@ -85,7 +85,7 @@ class Employee extends CI_Controller
             'date_to' => $to_date,
             'type_of_leave' => $leaveType,
             'reason' => $reason,
-            'status' => $status,
+         
             'date_filled' => $date_filled,
             'emp_id' => $empid,
             'department' => $department_id, // Use the department ID obtained from the query

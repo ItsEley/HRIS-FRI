@@ -6,7 +6,7 @@
     <?php $this->load->view('templates/sidebar') ?>
 
 
-    <div class="page-wrapper w-100">
+    <div class="page-wrapper">
 
         <!-- Page Content -->
         <div class="content container-fluid">

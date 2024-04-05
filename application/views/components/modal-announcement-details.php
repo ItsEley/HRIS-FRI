@@ -33,7 +33,7 @@ $(document).on("click", ".announcement-open", function(e) {
     e.preventDefault();
 
     var ann_id = $(this).data("ann-id"); // Use data() instead of attr() for data attributes
-    console.log('Employee ID:', ann_id);
+   //  console.log('Employee ID:', ann_id);
 
     // Use shorthand $.ajax method for cleaner code
     $.ajax({
@@ -46,7 +46,7 @@ $(document).on("click", ".announcement-open", function(e) {
 
             if (response.status === "success") {
                 var announcement_details = response.data;
-                console.error('Success:', response); // Log error message
+               //  console.error('Success:', response); // Log error message
 
                $("#modal_ann_title").html(response.data.title);
                $("#modal_ann_content").html(response.data.content);

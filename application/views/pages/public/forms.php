@@ -23,7 +23,7 @@
 
 
 	<!-- Page Wrapper -->
-	<div class="page-wrapper" style="margin-left:0px;">
+	<div class="page-wrapper" >
 		<!-- Page Content -->
 		<div class="content container-fluid">
 			<!-- Page Header -->

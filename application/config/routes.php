@@ -112,3 +112,8 @@ $route['calendar/event/add'] = 'datatablec/calendar_set';
 $route['calendar/event/update'] = 'datatablec/calendar_update';
 
 
+
+
+//DataAPI
+
+$route['data/api/holiday/insert'] = 'dataapi/insert_holiday';

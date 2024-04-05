@@ -4,18 +4,18 @@
 
 
    <?php
- 
+
    $this->load->view('templates/nav_bar');
 
    $this->load->view('templates/sidebar');
 
    ?>
 
-   <div class="page-wrapper w-100">
+   <div class="page-wrapper">
 
-  
+
       <div class="content container-fluid">
-     
+
          <div class="page-header">
             <div class="row">
                <div class="col-sm-12">
@@ -28,7 +28,7 @@
             </div>
          </div>
 
-         <div class="row"> 
+         <div class="row">
             <div class="col-lg-3 col-6">
 
                <?php
@@ -81,68 +81,71 @@
                ?>
             </div>
          </div>
-               <div class="page-header">
-                  <div class="content-page-header">
-                     <h5>Analytics</h5>
+         <div class="page-header">
+            <div class="content-page-header">
+               <h5>Analytics</h5>
+            </div>
+         </div>
+
+         <div class="row">
+            <div class="col-md-8">
+               <div class="card">
+                  <div class="card-header">
+                     <h5 class="card-title">Attendance Status Per Month</h5>
+                  </div>
+                  <div class="card-body">
+                     <div class="chartjs-wrapper-demo">
+                        <canvas id="chartStacked1" class="h-300"></canvas>
+                     </div>
                   </div>
                </div>
-               
-               <div class="row">
-               <div class="col-md-8">
-                    <div class="card">
-                      <div class="card-header">
-                        <h5 class="card-title">Attendance Status Per Month</h5>
-                      </div>
-                      <div class="card-body">
-                        <div class="chartjs-wrapper-demo">
-                          <canvas id="chartStacked1" class="h-300"></canvas>
-                        </div>
-                      </div>
-                    </div>
+            </div>
+            <!-- new added -->
+            <div class="col-md-4">
+               <div class="card">
+                  <div class="card-header">
+                     <h5 class="card-title">Employee Per Department</h5>
                   </div>
-               <!-- new added -->
-                  <div class="col-md-4">
-                    <div class="card">
-                      <div class="card-header">
-                        <h5 class="card-title">Employee Per Department</h5>
-                      </div>
-                      <div class="card-body">
-                        <div>
-                          <canvas id="empPerdept" class="h-300"></canvas>
-                        </div>
-                      </div>
-                    </div>
+                  <div class="card-body">
+                     <div>
+                        <canvas id="empPerdept" class="h-300"></canvas>
+                     </div>
                   </div>
-
                </div>
+            </div>
 
-               
-            
+         </div>
+
+
+
 
          <div class="row">
             <div class="col">
                <h2 class="page-title">
 
-                  <a href="../pages/hr_announcement.php" style="color:black">Announcements</a>
+                  <a href="<?= base_url('hr/announcement') ?>" style="color:black">Announcements</a>
                </h2>
 
                <div class="timeline-panel">
                   <?php
                   $query = $this->db->get('announcement');
-                  foreach ($query->result() as $row) {
-
-                     $data['id'] = $row->id;
-                     $data['title'] = $row->title;
-                     $data['content'] =  $row->content;
-                     $data['author'] =  $row->author;
-                     $data['department'] = $row->to_all;
-                     $data['date'] =  $row->date_created;
-
-                     $this->load->view('components/card-announcement', $data);
+                  if ($query->num_rows() > 0) {
+                     foreach ($query->result() as $row) {
+                        $data = array(
+                           'id' => $row->id,
+                           'title' => $row->title,
+                           'content' => $row->content,
+                           'author' => $row->author,
+                           'department' => $row->to_all,
+                           'date' => $row->date_created
+                        );
+                        $this->load->view('components/card-announcement', $data);
+                     }
+                  } else {
+                     echo "No announcement available.";
                   }
-
-                
                   ?>
+
 
                </div>
             </div>
@@ -184,76 +187,7 @@
                </div>
             </div>
          </div>
-         <div id="con-close-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-            <div class="modal-dialog modal-lg">
-               <div class="modal-content">
-                  <div class="modal-header">
-                     <h4 class="modal-title">Create Announcement</h4>
-                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <form method="post" id="add_announcement">
-                     <div class="modal-body p-4">
 
-                        <div class="input-block mb-3 row">
-                           <label class="col-form-label col-md-2">Title</label>
-
-                           <div class="col-md-10">
-                              <input type="text" class="form-control" name="title" placeholder="Title">
-                           </div>
-
-                        </div>
-
-                        <div class="input-block mb-3 row">
-                           <label class="col-form-label col-md-2">Department</label>
-                           <div class="col-md-10">
-
-
-
-                              <?php
-
-                              echo ' <input type="checkbox" class="btn-check" id="select_all" group="dept_multi" autocomplete="off">
-                                <label class="btn btn-light btn-rounded d-inline-flex w-auto" for="select_all" style = "font-size:12px;margin:2px">All</label>';
-
-                              //get select-options
-                              $query =  $this->db->get('department');
-                              $data['query'] = $query;
-                              // Check if query executed successfully
-                              if ($query->num_rows() > 0) {
-                                 foreach ($query->result() as $row) {
-
-                                    // Output each department as an option
-                                    echo '
-                                        <input type="checkbox" class="btn-check" id="' . $row->id . '" group="dept_multi" autocomplete="off">
-                                        <label class="btn btn-light btn-rounded d-inline-flex w-auto" for="' . $row->id . '" style = "font-size:12px;margin:2px">' . $row->department . '</label>';
-
-                                    // echo '<option value="' . $row->id . '">' .  $row->department . '</option>';
-                                 }
-                              } else {
-                                 // Handle no results from the database
-                                 echo '<option value="">No departments found</option>';
-                              }
-                              ?>
-                           </div>
-                        </div>
-
-
-
-
-
-                        <div class="row">
-                           <textarea id="froala-editor" name="content"></textarea>
-                        </div>
-
-                     </div>
-                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
-
-                        <button type="submit" class="btn btn-info waves-effect waves-light">Submit</button>
-                     </div>
-               </div>
-               </form>
-            </div>
-         </div>
 
 
 
@@ -278,7 +212,7 @@
       $("li > a[href='<?= base_url('hr/dashboard') ?>']").parent().addClass("active");
 
 
-      
+
 
    })
 </script>

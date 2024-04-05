@@ -112,3 +112,11 @@ li>a:hover>img.my-img-icon {
   color:#ffbb5b !important;
  
 }
+
+
+.page-wrapper{
+  top:0;
+  position:absolute !important;
+  width:-webkit-fill-available !important;
+  /* min-height: -webkit-fill-available !important; */
+}

@@ -24,8 +24,7 @@
     <script src=<?= base_url("assets/js/app.js") ?>></script>
     <script src=<?= base_url("assets/js/ajax.js") ?>></script>
     <script src="<?= base_url("assets/plugins/toastr/toastr.min.js"); ?>"></script>
-    <script src="<?= base_url("assets/plugins/toastr/toastr.js"); ?>"></script>
-
+   
     <!-- data tables -->
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
     
@@ -36,6 +35,9 @@
     <script src="<?= base_url('assets/js/greedynav.js') ?>"></script>
 
 
+    <script>
+
+    </script>
 
 
     </body>
