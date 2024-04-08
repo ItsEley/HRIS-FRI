@@ -52,10 +52,9 @@
                             </thead>
                             <tbody>
                                 <?php
-                                // Initialize the row array
+                    
                                 $row_arr = array();
 
-                                // Map table names to request types
                                 $table_request_map = array(
                                     'f_leaves' => "LEAVE REQUEST",
                                     'f_worksched_adj' => "WORK SCHED ADJ REQUEST",
@@ -64,13 +63,19 @@
                                     'f_outgoing' => "OUTGOING REQUEST",
                                     'f_off_bussiness' => "OFFICIAL BUSINESS REQUEST"
                                 );
-                                $session_emp_id = $this->session->userdata('emp_id');
-                                // Query the forms pending view to retrieve relevant rows
+
+                                $session_emp_id = $this->session->userdata('id');
+
                                 $query_forms_pending = $this->db
-                                    ->select('emp_id, id, date_filled, status, table_name')
-                                    ->from('vw_forms_pending')
-                                    ->where_in('head_status', array('approved', 'denied', 'expired'))
-                                    ->where('head_id', $session_emp_id)
+                                    ->select('f_leaves.emp_id, f_leaves.id, f_leaves.date_filled, f_leaves.status')
+                                    ->from('f_leaves')
+                                    ->join('f_worksched_adj', 'f_worksched_adj.emp_id = f_leaves.emp_id', 'left')
+                                    ->join('f_undertime', 'f_undertime.emp_id = f_leaves.emp_id', 'left')
+                                    ->join('f_overtime', 'f_overtime.emp_id = f_leaves.emp_id', 'left')
+                                    ->join('f_outgoing', 'f_outgoing.emp_id = f_leaves.emp_id', 'left')
+                                    ->join('f_off_bussiness', 'f_off_bussiness.emp_id = f_leaves.emp_id', 'left')
+                                    ->where_in('f_leaves.head_status', array('approved', 'denied', 'expired'))
+                                    ->where('f_leaves.head_id', $session_emp_id)
                                     ->get();
 
                                 // Iterate through the query results
@@ -83,97 +88,96 @@
                                         $request_type = $table_request_map[$row->table_name];
                                     }
 
-                                    // Fetch additional data based on employee ID
-                                    $employee_query = $this->db->get_where('employee', array('id' => $row->emp_id));
-                                    $employee_row = $employee_query->row();
-
                                     // Initialize row data array
                                     $row_data = array();
 
-                                    if ($employee_row) {
-                                        // Add employee-related data to the row data
-                                        $row_data['fname'] = $employee_row->fname;
-                                        $row_data['lname'] = $employee_row->lname;
-                                        $row_data['mname'] = $employee_row->mname;
-                                        $row_data['pfp'] = $employee_row->pfp;
-                                        $row_data['full_name'] = $employee_row->fname . ' ' . $employee_row->lname;
-                                    }
-
-                                    // Construct row data array
+                                    // Add employee-related data to the row data
+                                    $row_data['emp_id'] = $row->emp_id;
                                     $row_data['id'] = $row->id;
-                                    $row_data['name'] = isset($row_data['full_name']) ? $row_data['full_name'] : '';
-                                    $row_data['request_type'] = $request_type;
                                     $row_data['date_filled'] = $row->date_filled;
                                     $row_data['status'] = $row->status;
-
+                                    $row_data['request_type'] = $request_type;
 
                                     // Fetch additional data based on table name
-                                    $query_table = $this->db->get_where($row->table_name, array('id' => $row->id));
-                                    $table_row = $query_table->row();
+                                    switch ($row->table_name) {
+                                        case 'f_leaves':
+                                            $query_table = $this->db->get_where('f_leaves', array('id' => $row->id));
+                                            $table_row = $query_table->row();
 
-                                    if ($table_row) {
-                                        // Add relevant data to the row data
-
-                                        // Add relevant data to the row data
-                                        switch ($row->table_name) {
-                                            case 'f_leaves':
-
-                                                $row_data['emp_id'] = $table_row->emp_id;
+                                            if ($table_row) {
                                                 $row_data['date_from'] = $table_row->date_from;
                                                 $row_data['date_to'] = $table_row->date_to;
                                                 $row_data['type_of_leave'] = $table_row->type_of_leave;
                                                 $row_data['reason'] = $table_row->reason;
                                                 $row_data['comment'] = $table_row->comment;
                                                 $row_data['date_ans'] = $table_row->date_ans;
+                                            }
+                                            break;
+                                        case 'f_overtime':
+                                            $query_table = $this->db->get_where('f_overtime', array('id' => $row->id));
+                                            $table_row = $query_table->row();
 
-                                                break;
-                                            case 'f_overtime':
-                                                $row_data['emp_id'] = $table_row->emp_id;
+                                            if ($table_row) {
                                                 $row_data['date_ot'] = $table_row->date_ot;
                                                 $row_data['time_in'] = $table_row->time_in;
                                                 $row_data['time_out'] = $table_row->time_out;
                                                 $row_data['total_duty_hours'] = $table_row->total_duty_hours;
                                                 $row_data['reason'] = $table_row->reason;
-                                                break;
-                                            case 'f_off_bussiness':
-                                                $row_data['emp_id'] = $table_row->emp_id;
+                                            }
+                                            break;
+                                        case 'f_off_bussiness':
+                                            $query_table = $this->db->get_where('f_off_bussiness', array('id' => $row->id));
+                                            $table_row = $query_table->row();
+
+                                            if ($table_row) {
                                                 $row_data['date'] = $table_row->date;
                                                 $row_data['destin_from'] = $table_row->destin_from;
                                                 $row_data['destin_to'] = $table_row->destin_to;
                                                 $row_data['time_from'] = $table_row->time_from;
                                                 $row_data['time_to'] = $table_row->time_to;
                                                 $row_data['reason'] = $table_row->reason;
-                                                break;
-                                            case 'f_outgoing':
-                                                $row_data['emp_id'] = $table_row->emp_id;
+                                            }
+                                            break;
+                                        case 'f_outgoing':
+                                            $query_table = $this->db->get_where('f_outgoing', array('id' => $row->id));
+                                            $table_row = $query_table->row();
+
+                                            if ($table_row) {
                                                 $row_data['going_to'] = $table_row->going_to;
                                                 $row_data['time_from'] = $table_row->time_from;
                                                 $row_data['time_to'] = $table_row->time_to;
                                                 $row_data['reason'] = $table_row->reason;
-                                                break;
-                                            case 'f_undertime':
-                                                $row_data['emp_id'] = $table_row->emp_id;
+                                            }
+                                            break;
+                                        case 'f_undertime':
+                                            $query_table = $this->db->get_where('f_undertime', array('id' => $row->id));
+                                            $table_row = $query_table->row();
+
+                                            if ($table_row) {
                                                 $row_data['date_of_undertime'] = $table_row->date_of_undertime;
                                                 $row_data['time_in'] = $table_row->time_in;
                                                 $row_data['time_out'] = $table_row->time_out;
                                                 $row_data['reason'] = $table_row->reason;
-                                                break;
-                                        }
+                                            }
+                                            break;
                                     }
+
+                                    // Add employee-related data to the row data
                                     $employee_query = $this->db->get_where('employee', array('id' => $row->emp_id));
                                     $employee_row = $employee_query->row();
 
                                     if ($employee_row) {
-                                        // Add employee-related data to the row data
                                         $row_data['fname'] = $employee_row->fname;
                                         $row_data['lname'] = $employee_row->lname;
                                         $row_data['mname'] = $employee_row->mname;
                                         $row_data['pfp'] = $employee_row->pfp;
                                         $row_data['full_name'] = $employee_row->fname . ' ' . $employee_row->lname;
                                     }
+
                                     // Add the row data to the row array
                                     $row_arr[] = $row_data;
                                 }
+
                                 ?>
                                 <?php foreach ($row_arr as $row) : ?>
                                     <!-- Modal for displaying row details -->
@@ -372,7 +376,7 @@
                                                                     <div class="col-md-4 mb-2">
                                                                         <div class="form-group">
                                                                             <label for="date_filled" class="form-label">Date</label>
-                                                                            <input type="text" class="form-control" id="date_filled" value="<?php echo date('F j, Y', strtotime($row['date_filled']));?>" readonly>
+                                                                            <input type="text" class="form-control" id="date_filled" value="<?php echo date('F j, Y', strtotime($row['date_filled'])); ?>" readonly>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-4 mb-2">

@@ -1,10 +1,10 @@
 <!-- FullCalendar JS -->
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
 
- <!-- FullCalendar core CSS -->
- <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.css" rel="stylesheet">
-  <!-- FullCalendar Sandstone theme CSS -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/themes/sandstone.min.css" rel="stylesheet">
+<!-- FullCalendar core CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.css" rel="stylesheet">
+<!-- FullCalendar Sandstone theme CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/themes/sandstone.min.css" rel="stylesheet">
 
 
 <!-- Main Wrapper -->
@@ -31,7 +31,7 @@
             </ul>
           </div>
           <div class="col-auto float-end ms-auto">
-            <button class="btn add-btn" id = "btn_holiday_update">
+            <button class="btn add-btn" id="btn_holiday_update">
               <i class="fa-solid fa-plus"></i>Update Holidays</button>
             <div class="view-icons">
 
@@ -69,24 +69,44 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="addEventModalLabel">Add Event</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
       </div>
       <div class="modal-body">
         <form id="addEventForm">
-          <div class="mb-3">
-            <label for="eventTitle" class="form-label">Title</label>
-            <input type="text" class="form-control" id="eventTitle" name="title">
+
+          <div class="row">
+            <div class="mb-3">
+              <label for="eventTitle" class="form-label input-required">Title</label>
+              <input type="text" class="form-control" id="eventTitle" name="event_title" placeholder="Event title" required>
+            </div>
+            <div class="mb-3">
+              <label for="eventTitle" class="form-label input-required">Description</label>
+              <textarea type="text" class="form-control" id="event_description" 
+              name="event_description" cols="30" rows="2" placeholder="Event description"></textarea>
+            </div>
+          </div>
+  
+          <div class="row">
+            <h3>Date</h3>
+            <div class="mb-3 col">
+              <label for="eventTitle" class="form-label input-required">From</label>
+              <input type="date" class="form-control" id="eventStartDate" name="event_date_start" required>
+            </div>
+            <div class="mb-3 col">
+              <label for="eventTitle" class="form-label input-required">To</label>
+              <input type="date" class="form-control" id="eventEndDate" name="event_date_end" required>
+            </div>
           </div>
 
           <div class="row">
-            <h3>Date</h3>
-            <div class="mb-3">
-              <label for="eventTitle" class="form-label">From</label>
-              <input type="date" class="form-control" id="eventStartDate" name="eventStartDate">
+            <h3>Time</h3>
+            <div class="mb-3 col">
+              <label for="eventTitle" class="form-label input-required">From</label>
+              <input type="time" class="form-control" id="eventStartDate" name="event_time_start" required>
             </div>
-            <div class="mb-3">
-              <label for="eventTitle" class="form-label">To</label>
-              <input type="date" class="form-control" id="eventEndDate" name="eventEndDate">
+            <div class="mb-3 col">
+              <label for="eventTitle" class="form-label input-required">To</label>
+              <input type="time" class="form-control" id="eventEndDate" name="event_time_end" required>
             </div>
           </div>
 
@@ -110,7 +130,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="editEventModalLabel">Edit Event</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
       </div>
       <div class="modal-body">
         <form id="editEventForm">
@@ -174,13 +194,15 @@
         calendar.unselect();
       },
       eventAdd: function(info) {
-        console.log("orig 1")
+        console.log(info.event)
         handleEventAction(info.event, 'add');
       },
       eventDrop: function(info) {
+        console.log(info.event)
         handleEventAction(info.event, 'update');
       },
       eventResize: function(info) {
+        console.log(info.event)
         handleEventAction(info.event, 'update');
       },
       events: [
@@ -207,15 +229,25 @@
     FROM 
         `sys_holidays`;
     ");
-foreach ($query->result() as $row) {
-  echo '{';
-  echo "id: '$row->id',";
-  // Enclose title in double quotes and escape any double quotes within the value
-  echo "title: \"" . str_replace('"', '\"', $row->name) . "\",";
-  echo "start: '$row->date_start',";
-  echo "end: '$row->date_end'";
-  echo '},';
-}
+        foreach ($query->result() as $row) {
+          echo '{';
+          echo "type: 'event',"; // Assuming 'event' is the type for all rowss
+          echo "title: \"" . str_replace('"', '\"', $row->name) . "\",";
+          echo "start: '$row->date_start $row->time_start',"; // Date start
+          echo "end: '$row->date_end $row->time_end',"; // Date start
+
+          if ($row->type == "holiday") {
+            echo "allDay: 'true',";
+            echo "editable:'false',";
+            echo "description: \"" . str_replace('"', '\"', $row->description) . "\",";
+            echo "className:'calendar-event holiday'";
+          }
+
+          // echo "end: '$row->date_end',"; // Date end
+          // echo "timeStart: '".formatTimeOnly($row->time_start)."',"; // Time start
+          // echo "timeEnd: '".formatTimeOnly($row->time_end)."'"; // Time end
+          echo '},';
+        }
 
         ?>
       ]
@@ -247,10 +279,14 @@ foreach ($query->result() as $row) {
 
     // Show the modal when the user clicks on a day to add an event
     calendar.setOption('select', function(arg) {
+      console.log(arg);
       $('#addEventModal').modal('show');
       $('#eventTitle').val(arg.title)
-      $('#eventStartDate').val(arg.start);
-      $('#eventEndDate').val(arg.end);
+      $('#eventStartDate').val(arg.startStr);
+      $('#eventEndDate').val(arg.endStr);
+
+
+
     });
 
     // Handle form submission for adding events
@@ -317,7 +353,7 @@ foreach ($query->result() as $row) {
     calendar.render();
 
 
-    $("#btn_holiday_update").on('click',function(){
+    $("#btn_holiday_update").on('click', function() {
 
       $.ajax({
         type: 'GET',
@@ -332,7 +368,7 @@ foreach ($query->result() as $row) {
       });
     })
 
-  
+
 
 
   });

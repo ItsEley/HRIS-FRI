@@ -120,3 +120,16 @@ li>a:hover>img.my-img-icon {
   width:-webkit-fill-available !important;
   /* min-height: -webkit-fill-available !important; */
 }
+
+
+.my-link{
+    color:black !important;
+
+}
+
+
+.input-required::after{
+  color: red;
+  content: "*";
+
+}

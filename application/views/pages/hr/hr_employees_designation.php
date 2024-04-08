@@ -36,194 +36,55 @@
             </div>
             <!-- /Page Header -->
 
-            <div class="row">
-                <?php
-                $query_departments = $this->db->query('
-                SELECT 
-                d.id AS department_id,
-                d.department AS department,
-                COUNT(dr.roles) AS role_count
-            FROM 
-                department d
-            LEFT JOIN 
-                department_roles dr ON d.id = dr.department
-            GROUP BY 
-                d.id, d.department
-            ORDER BY 
-                role_count DESC, department ASC;
-            
-                                ');
 
-                // Check if query executed successfully
-                if ($query_departments->num_rows() > 0) {
-                    foreach ($query_departments->result() as $row_department) {
-                ?>
-                        <div class="col mb-2">
-                            <div class="card dep-card-cont h-100 mb-0">
-                                <div class="card-header bg-info bg-opacity-25 p-2">
-                                    <div class="row align-center">
-                                        <div class="col text-ellipsis" style = "white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ">
-                                            <h4 class="card-title mb-0" title = "<?= $row_department->department ?>" style = "max-height:20px;"><?= $row_department->department ?></h4>
-                                        </div>
-                                        <div class="col text-end">
-                                            <div class="btn btn-square btn-success addrole-btn" href="#" data-bs-toggle="modal" data-bs-target="#add_role" data-dept-id="<?= $row_department->department_id ?>">
-                                                <i class="fa-solid fa-plus"></i> Add role
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="card-body p-0">
-                                    <div class="table-responsive">
-                                        <table class="table">
-
-                                            <?php
-                                            $query_roles = $this->db->query("SELECT 
-                                            e.employee_id,
-                                            e.id,
-                                          CONCAT(e.fname, ' ', e.mname, ' ', e.lname) AS full_name,
-                                            e.department AS department_id,
-                                            d.department,
-                                            e.role AS role_id,
-                                            dr.roles AS role,
-                                            dr.salary,
-                                            dr.salary_type,
-                                            e.shift
-                                        FROM 
-                                            employee e
-                                        JOIN 
-                                            department d ON e.department = d.id
-                                        JOIN 
-                                            department_roles dr ON e.role = dr.id;");
-
-                                            // Check if query executed successfully
-                                            if ($query_roles->num_rows() > 0) {
-
-                                                echo '
-                                                    <thead>
-                                                    <tr>
-                                                        <th>Employee ID</th>
-                                                        <th>Name</th>
-                                                        <th>Role</th>
-                                                        <th>Salary</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="p-4">
-                                                    ';
-
-                                                foreach ($query_roles->result() as $row_role) {
-
-                                                    if ($row_role->employee_id == null || $row_role->employee_id == 'null') {
-                                                        $emp_id = 'Open';
-                                                        $emp_name = 'Open';
-                                                    } else {
-                                                        $emp_id = $row_role->employee_id;
-                                                        $emp_name = $row_role->full_name;
-                                                    }
+            <!-- data table -->
+            <div class="row timeline-panel">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table id="dt_announcements" class="datatable table-striped custom-table mb-0 datatable">
+                            <thead>
+                                <tr>
+                                    <th>Employee Name</th>
+                                    <th>Department</th>
+                                    <th>Position</th>
+                                    <th>Rate</th>
+                                    <th>Salary Type</th>
 
 
 
-                                                    echo "<tr class= ''>";
-                                                    echo "<td>$emp_id</td>";
-                                                    echo "<td>$emp_name</td>";
-                                                    echo "<td>$row_role->role</td>";
-                                                    echo "<td>$row_role->salary" . "/" . $row_role->salary_type . " </td>";
-                                                    echo '<td>
-                                                        <div class="dropdown dropdown-action">
-                                                        <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                                        <div class="dropdown-menu dropdown-menu-right" style="">
-                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_leave"><i class="fa-solid fa-pencil m-r-5"></i> Edit</a>
-                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit_leave"><i class="fa-solid fa-user m-r-5"></i> Assign</a>
-                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve"><i class="fa-regular fa-trash-can m-r-5"></i> Delete</a>
-                                                        </div>
-                                                    </div>
-                                                        </td>';
+                                </tr>
+                            </thead>
+                            <tbody>
 
 
-                                                    echo "</tr>";
-                                                }
+                                <tr class="hoverable-row" data-dept-id="">
+                                    <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    </td>
 
-                                                echo '</tbody>';
-                                            } else {
-                                                // echo "<tr><td colspan='5' class ='text-center'>No roles specified</td></tr>";
-                                                echo "<p class ='text-center m-auto'>No roles specified</p>";
-                                            }
-                                            ?>
+                                    <td>
 
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                <?php
-                    }
-                } else {
-                    // Handle no departments found
-                    echo '<option value="">No departments found</option>';
-                }
-                ?>
-            </div>
+                                    </td>
 
-            <div class="row">
-                <div class="col">
-                    <div class="card" id = "emp_no_roles">
-                        <div class="card-header">
-                            <h4 class="card-title mb-0">No Roles <span class="pill nav-pill bg-danger text-light" style="border-radius:4px"></span></h4>
-                        </div>
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th>Employee ID</th>
-                                            <th>Name</th>
-                                            <th>Department</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        // Querying employees with null roles
-                                        $query_null_roles = $this->db->query("SELECT 
-                                        e.employee_id,
-                                        e.id AS employee_id,
-                                        CONCAT(e.fname, ' ', e.mname, ' ', e.lname) AS full_name,
-                                        e.department AS department_id,
-                                        d.department AS department,
-                                        e.role AS role_id,
-                                        dr.roles AS role
-                                    FROM 
-                                        employee e
-                                    JOIN 
-                                        department d ON e.department = d.id
-                                    JOIN 
-                                        department_roles dr ON e.role = dr.id;");
+                                    <td>
+
+                                    </td>
 
 
-                                        // Check if query executed successfully
-                                        if ($query_null_roles->num_rows() > 0) {
-                                            foreach ($query_null_roles->result() as $row_role) {
-                                                echo "<tr>";
-                                                echo "<td>$row_role->department_id</td>";
-                                                echo "<td>$row_role->full_name</td>";
-                                                echo "<td>$row_role->department</td>";
-                                                echo "<td>Assign</td>";
+                                    <td>
 
-                                                echo "</tr>";
-                                            }
-                                        } else {
-                                            echo "<tr><td colspan='4' class= 'text-center'>No employees with null roles found</td></tr>";
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+
+
+                                    </td>
+                                </tr>
+
+
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-
+            <!-- /data table -->
 
 
 

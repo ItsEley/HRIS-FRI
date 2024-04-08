@@ -1,58 +1,46 @@
 <style>
     #performance_eval_table {
-      border-collapse: collapse;
-      margin: auto;
+        border-collapse: collapse;
+        margin: auto;
     }
 
-    #performance_eval_table th, #performance_eval_table td {
-      border: 1px solid black;
-      padding: 8px;
-      text-align: left;
+    #performance_eval_table th,
+    #performance_eval_table td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
     }
 
-    .fa-star {
-      color: #ccc;
-      transition: color 0.3s;
-      cursor: pointer;
-      font-size: 22px; /* Change the size of the stars */
-     
+    .star span {
+        color: #ccc; /* Default star color */
+        cursor: pointer;
     }
 
-    .fa-star.checked,
-    .fa-star:hover {
-      color: gold;
+    .star span.active,
+    .star span.hovered,
+    .star span:hover {
+        color: gold; /* Active/star on hover color */
     }
-    .star {
-      display: flex;
-      justify-content: center;
-    }
-    .card-header{
-      width: auto;
-      justify-content: center;
-    }
-    .eval-points{
-        text-align: start;
-    }
-
-  </style>
+</style>
 
 <!-- Modal -->
-<div class="modal fade" id="modal_evaluate_emp" tabindex="-1" aria-labelledby="modal_evaluate_empLabel" aria-hidden="true">
+<div class="modal fade" id="modal_evaluate_emp" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+aria-labelledby="modal_evaluate_empLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modal_evaluate_empLabel">Modal title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body p-1">
                 <div class="container text-center">
                     <div class="card">
                         <div class="card-header text-center">
                             The table below contains the description of the rating of each performance with corresponding points.
                             Select the appropriate score in the evaluation form intended for the employee who desires to be evaluated.
                         </div>
-                        <div class="card-body">
-                            <table id = "performance_eval_table">
+                        <div class="card-body p-0">
+                            <table id="performance_eval_table">
                                 <tr>
                                     <th>PERFORMANCE FACTOR</th>
                                     <th>RATING SCALE</th>
@@ -66,16 +54,16 @@
                                             necessary to the position.
                                         </p>
                                         <div class="star" id="rating1">
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star star-1"></span>
+                                            <span class="fa fa-star star-2"></span>
+                                            <span class="fa fa-star star-3"></span>
+                                            <span class="fa fa-star star-4"></span>
+                                            <span class="fa fa-star star-5"></span>
                                         </div>
                                     </td>
 
                                     <td>
-                                        <ul style="list-style-type: none; padding: 0;" class = "eval_points">
+                                        <ul style="list-style-type: none; padding: 0;" class="eval_points">
                                             <li><b>5 points</b> - Manifested a highly developed and relevant skills and abilities and would perform
                                                 consistently well against the criterion.</li>
                                             <li><b>4 points</b> - Acquired relevant skills, abilities and persnonal qualities, and
@@ -95,16 +83,16 @@
                                             Ability to work under pressure and learn from previous mistakes.
                                         </p>
                                         <div class="star" id="rating2">
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star star-1"></span>
+                                            <span class="fa fa-star star-2"></span>
+                                            <span class="fa fa-star star-3"></span>
+                                            <span class="fa fa-star star-4"></span>
+                                            <span class="fa fa-star star-5"></span>
                                         </div>
                                     </td>
 
                                     <td>
-                                        <ul style="list-style-type: none; padding: 0;" class = "eval_points">
+                                        <ul style="list-style-type: none; padding: 0;" class="eval_points">
                                             <li><b>5 points</b> - Quality of work is outstanding and beyond expectation. No repetition of failed tasks.</li>
                                             <li><b>4 points</b> - Trait of work is frequently above standards expected for position.</li>
                                             <li><b>3 points</b> - Work characteristics are as expected standard for position. May repeat failed tasks.</li>
@@ -120,15 +108,15 @@
 
                                         </p>
                                         <div class="star" id="rating3">
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star star-1"></span>
+                                            <span class="fa fa-star star-2"></span>
+                                            <span class="fa fa-star star-3"></span>
+                                            <span class="fa fa-star star-4"></span>
+                                            <span class="fa fa-star star-5"></span>
                                         </div>
                                     </td>
                                     <td>
-                                        <ul style="list-style-type: none; padding: 0;" class = "eval_points">
+                                        <ul style="list-style-type: none; padding: 0;" class="eval_points">
                                             <li><b>5 points</b> - Frequently accomplishes an exceptional amount of work on a consistent basis.</li>
                                             <li><b>4 points</b> - Very efficient; accomplishes an above average amount of work.</li>
                                             <li><b>3 points</b> - Good work producttion and effiency; accomplishes an expected amount of work on a consistent basis.</li>
@@ -144,15 +132,15 @@
                                                 and timely manner.</u>
                                         </p>
                                         <div class="star" id="rating4">
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star star-1"></span>
+                                            <span class="fa fa-star star-2"></span>
+                                            <span class="fa fa-star star-3"></span>
+                                            <span class="fa fa-star star-4"></span>
+                                            <span class="fa fa-star star-5"></span>
                                         </div>
                                     </td>
                                     <td>
-                                        <ul style="list-style-type: none; padding: 0;" class = "eval_points">
+                                        <ul style="list-style-type: none; padding: 0;" class="eval_points">
                                             <li><b>5 points</b> - Steers up the tsak with exceptional degree of independence and effiency.</li>
                                             <li><b>4 points</b> - Handle assignments with expected degree of independence and effiency.</li>
                                             <li><b>3 points</b> - Carries out instructions and responsibilities with close supervision.</li>
@@ -167,15 +155,15 @@
                                             Work towards improving effiencies, and quality. Often thinks outside the box when <u>solving problems or making improvements.</u>
                                         </p>
                                         <div class="star" id="rating5">
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star star-1"></span>
+                                            <span class="fa fa-star star-2"></span>
+                                            <span class="fa fa-star star-3"></span>
+                                            <span class="fa fa-star star-4"></span>
+                                            <span class="fa fa-star star-5"></span>
                                         </div>
                                     </td>
                                     <td>
-                                        <ul style="list-style-type: none; padding: 0;" class = "eval_points">
+                                        <ul style="list-style-type: none; padding: 0;" class="eval_points">
                                             <li><b>5 points</b> - Always exhibit original thought; always suggest needed action and pursues problem without
                                                 supervison. Assertive and initiates progress.</li>
                                             <li><b>4 points</b> - Almost always contributes to or develops new processes and method;
@@ -194,15 +182,15 @@
 
                                         </p>
                                         <div class="star" id="rating6">
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star star-1"></span>
+                                            <span class="fa fa-star star-2"></span>
+                                            <span class="fa fa-star star-3"></span>
+                                            <span class="fa fa-star star-4"></span>
+                                            <span class="fa fa-star star-5"></span>
                                         </div>
                                     </td>
                                     <td>
-                                        <ul style="list-style-type: none; padding: 0;" class = "eval_points">
+                                        <ul style="list-style-type: none; padding: 0;" class="eval_points">
                                             <li><b>5 points</b> - Independently accomplishes an idea ahead of time using resources aside from the available
                                                 surrounds him/her and manifests significant leadership. Plans a week or more ahead of time.</li>
                                             <li><b>4 points</b> - Starting a new idea after the discussion of idea; a work is done before the superior checks it. Plans with days of allowance.</li>
@@ -217,15 +205,15 @@
                                     <td><b>7. ATTENDANCE AND PUNCTUALITY</b> <br>
                                         <p> - overall attendance, adherence to work schedules, office hours, time limits for lunches, gives prompt notice of absence.</p>
                                         <div class="star" id="rating7">
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star star-1"></span>
+                                            <span class="fa fa-star star-2"></span>
+                                            <span class="fa fa-star star-3"></span>
+                                            <span class="fa fa-star star-4"></span>
+                                            <span class="fa fa-star star-5"></span>
                                         </div>
                                     </td>
                                     <td>
-                                        <ul style="list-style-type: none; padding: 0;" class = "eval_points">
+                                        <ul style="list-style-type: none; padding: 0;" class="eval_points">
                                             <li><b>5 points</b> - Consistently present and on time. Never in a hurry to start the work.</li>
                                             <li><b>4 points</b> - Demonstrates adequate attendance and punctuality. Has a little allowance of early time</li>
                                             <li><b>3 points</b> - Has a difficulty in attendance and punctuality. With enough preparation time for work.</li>
@@ -240,15 +228,15 @@
                                             of relations with co-employees, subordinates, supervisor and manager in handling of position responsibilities.
                                             The <u>cooperativeness,tact and courtesy</u>.</p>
                                         <div class="star" id="rating8">
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star star-1"></span>
+                                            <span class="fa fa-star star-2"></span>
+                                            <span class="fa fa-star star-3"></span>
+                                            <span class="fa fa-star star-4"></span>
+                                            <span class="fa fa-star star-5"></span>
                                         </div>
                                     </td>
                                     <td>
-                                        <ul style="list-style-type: none; padding: 0;" class = "eval_points">
+                                        <ul style="list-style-type: none; padding: 0;" class="eval_points">
                                             <li><b>5 points</b> - Has a very effective interpersonally; work extremely well with others; able to
                                                 express his/her thoughts in a courteous manner.</li>
                                             <li><b>4 points</b> - Works well with others; facilitates cooperation. Does not involve in quarrel.</li>
@@ -267,15 +255,15 @@
                                         </p>
 
                                         <div class="star" id="rating9">
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star star-1"></span>
+                                            <span class="fa fa-star star-2"></span>
+                                            <span class="fa fa-star star-3"></span>
+                                            <span class="fa fa-star star-4"></span>
+                                            <span class="fa fa-star star-5"></span>
                                         </div>
                                     </td>
                                     <td>
-                                        <ul style="list-style-type: none; padding: 0;" class = "eval_points">
+                                        <ul style="list-style-type: none; padding: 0;" class="eval_points">
                                             <li><b>5 points</b> - Contributes significantly into the team's performance; Influences co-employees to exert efforts
                                                 according to their roles; shows good inter-team relationships.</li>
                                             <li><b>4 points</b> - Almost always willing to help others when need; always cooperative always considers the impact
@@ -295,15 +283,15 @@
                                             <i>(may refer from the reports)</i>
                                         </p>
                                         <div class="star" id="rating10">
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
-                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star star-1"></span>
+                                            <span class="fa fa-star star-2"></span>
+                                            <span class="fa fa-star star-3"></span>
+                                            <span class="fa fa-star star-4"></span>
+                                            <span class="fa fa-star star-5"></span>
                                         </div>
                                     </td>
                                     <td>
-                                        <ul style="list-style-type: none; padding: 0;" class = "eval_points">
+                                        <ul style="list-style-type: none; padding: 0;" class="eval_points">
                                             <li><b>5 points</b> - Established a consistent successfull achievement of target in monthly basis.</li>
                                             <li><b>4 points</b> - Achieves the target but not consecutive timeable.</li>
                                             <li><b>3 points</b> - Successfully execute the goals that does not provide significant impact.</li>
@@ -328,29 +316,44 @@
 
 <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script> -->
 <script>
-    // JavaScript for star ratings
-    const ratings = document.querySelectorAll('[id^="rating"]');
+     // Get all star containers
+     const starContainers = document.querySelectorAll('.star');
 
-    ratings.forEach((rating, index) => {
-        const stars = rating.querySelectorAll('.fa-star');
+// Add event listeners for each star container
+starContainers.forEach((starContainer) => {
+    // Get all star elements within the container
+    const stars = starContainer.querySelectorAll('span');
 
-        stars.forEach((star, starIndex) => {
-            star.addEventListener('click', () => {
-                resetStars(stars);
-                highlightStars(stars, starIndex);
+    // Add event listeners for each star
+    stars.forEach((star, index) => {
+        // Add event listener for mouseover
+        star.addEventListener('mouseover', () => {
+            // Loop through all stars up to the current index
+            for (let i = 0; i <= index; i++) {
+                stars[i].classList.add('hovered'); // Add hovered class to stars up to the current index
+            }
+        });
+
+        // Add event listener for mouseout
+        star.addEventListener('mouseout', () => {
+            // Remove hovered class from all stars
+            stars.forEach((star) => {
+                star.classList.remove('hovered');
+            });
+        });
+
+        // Add event listener for click
+        star.addEventListener('click', () => {
+            // Loop through all stars
+            stars.forEach((star, i) => {
+                // Toggle active class for stars up to the clicked star
+                if (i <= index) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
             });
         });
     });
-
-    function resetStars(stars) {
-        stars.forEach(star => {
-            star.classList.remove('checked');
-        });
-    }
-
-    function highlightStars(stars, starIndex) {
-        for (let i = 0; i <= starIndex; i++) {
-            stars[i].classList.add('checked');
-        }
-    }
+});
 </script>

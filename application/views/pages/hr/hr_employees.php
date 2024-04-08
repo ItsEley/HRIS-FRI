@@ -593,6 +593,8 @@
                     // Set video element dimensions to maintain 1x1 aspect ratio
                     video.width = newWidth;
                     video.height = newHeight;
+
+                    video.style.transform = 'scaleX(-1)';
                 });
             } catch (err) {
                 console.error('Error accessing camera:', err);

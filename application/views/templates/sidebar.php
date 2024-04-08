@@ -101,6 +101,8 @@
                     
                     ";
                     if (strtolower($this->session->userdata('role')) == 'head') {
+                      
+                        echo "<li><a href='" . base_url('hr/announcement') . "'><i class='la la-bullhorn'></i><span>Announcements</span></a></li>";
                         echo "
                             <li class='submenu forms'>
                             <a href='#' class=''><i class='la la-object-group'></i><span>Requests for Approval</span><span class='menu-arrow'></span></a>

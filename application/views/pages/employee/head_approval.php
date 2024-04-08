@@ -11,56 +11,38 @@
 <div class="main-wrapper">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
     <?php
-
     if (isset($_POST['request_type']) && !empty($_POST['request_type']) && isset($_POST['id']) && !empty($_POST['id'])) {
-        // Extract the request_type and id
+    
         $request_type = $_POST['request_type'];
         $id = $_POST['id'];
 
-        // Perform database query based on request_type and id
-        // Here you need to replace this with your actual database query to fetch the necessary data
-        // Sample code to demonstrate
-        $data = array(); // This will hold the data to be returned
+        $data = array(); 
         if ($request_type == 'LEAVE REQUEST') {
-            // Query to fetch data from leave_request table
+         
             $sql = "SELECT * FROM f_leaves WHERE id = $id";
-            // Execute your query
             $result = $conn->query($sql);
 
-            // Check if query executed successfully and fetch data
             if ($result && $result->num_rows > 0) {
                 $row = $result->fetch_assoc();
-                // Populate $data array with fetched data
-                $data['emp_id'] = $row['emp_id']; // Assuming emp_id is a column in f_leaves table
-                // Add other data to $data array as needed
+                $data['emp_id'] = $row['emp_id'];
             }
-        } elseif ($request_type == 'OUTGOING REQUEST') {
-            // Query to fetch data from outgoing_request table
-            $sql = "SELECT * FROM f_outgoing WHERE id = $id";
-            // Execute your query
-            $result = $conn->query($sql);
 
-            // Check if query executed successfully and fetch data
+        } elseif ($request_type == 'OUTGOING REQUEST') {
+            $sql = "SELECT * FROM f_outgoing WHERE id = $id";
+            $result = $conn->query($sql);
             if ($result && $result->num_rows > 0) {
                 $row = $result->fetch_assoc();
-                // Populate $data array with fetched data
-                $data['emp_id'] = $row['emp_id']; // Assuming emp_id is a column in f_outgoing table
-                // Add other data to $data array as needed
+                $data['emp_id'] = $row['emp_id'];
             }
         }
-        // Add more conditions for other request types if needed
-
-        // Return modal content as HTML
         echo json_encode($data);
     } else {
-        // Handle invalid or missing request_type or id parameter
+       
         echo json_encode(array('error' => 'Invalid request'));
     }
 
     ?>
     <?php $this->load->view('templates/nav_bar'); ?>
-    <!-- /Header -->
-    <!-- Sidebar -->
     <?php $this->load->view('templates/sidebar') ?>
     <div class="page-wrapper">
         <!-- Page Content -->
@@ -574,6 +556,7 @@
                                         text-overflow: ellipsis; white-space: nowrap;" name="og_name">
 
                                                                 <?php echo $fullname ?>
+                                                                <?php echo $row->id; ?>
 
                                                             </td>
                                                             <td><?php echo formatDateOnly($row->date_filled); ?></td>
@@ -1680,6 +1663,7 @@
             let time_to = $(this).closest('tr').find('td[name="og_date_to"]').text();
             let outgoing_reason = $(this).closest('tr').find('td[name="og_reason"]').text();
 
+            $("#og_id").val(og_id);
             $("#og_emp_name").val(emp_name);
             $("#og_date_filled").val(date_filled);
             $("#destin").val(destin);

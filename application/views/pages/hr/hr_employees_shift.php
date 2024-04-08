@@ -1,4 +1,3 @@
-
 <!-- Main Wrapper -->
 <div class="main-wrapper">
     <?php $this->load->view('templates/nav_bar'); ?>
@@ -12,8 +11,8 @@
         <!-- Page Content -->
         <div class="content container-fluid">
 
-              <!-- Page Header -->
-              <div class="page-header">
+            <!-- Page Header -->
+            <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
                         <h3 class="page-title">Employee</h3>
@@ -33,19 +32,41 @@
             </div>
             <!-- /Page Header -->
             <div class="row legend timeline-panel" id="emp_att_legend">
-                <div class="d-inline-flex justify-content-between">
+                <div class="d-inline-flex row">
                     <!-- <h3>Legend</h3> -->
-                    <p class="m-0"><span class="group_">Group A</span> - <span class= "shift">8:00 AM - 5:00 PM</span> <span class = "description"></span>(Regular)</p>
-                    <p class="m-0"><span class="">Group B</span> - 6:00 AM - 6:00 PM (Dayshift)</p>
-                    <p class="m-0"><span class="">Group C</span> - 6:00 PM - 6:00 AM (Nightshift)</p>
+
+                    <?php
+
+                    $query = $this->db->query('SELECT * FROM `sys_shifts`');
+
+
+                    // Check if the query was successful
+                    if ($query) {
+                        // Check if there are rows returned
+                        if ($query->num_rows() > 0) {
+                            // Fetch the result rows as an array of objects
+                            $shifts = $query->result();
+
+                            // Process the result rows
+                            foreach ($shifts as $shift) {
+                                // Access properties of each shift object as needed
+                                echo "<p class='m-0 col-lg-3 col'><span class='group_'>Group $shift->group_</span> - 
+            <span class= 'shift'>" . formatTimeOnly($shift->time_from) . " - " . formatTimeOnly($shift->time_to) . "</span> 
+            <span class = 'description'></span>($shift->description)</p>";
+                            }
+                        }
+                    }
+                    ?>
+
+
+                 
                 </div>
-                <div class="col-4"></div>
             </div>
 
-            
 
-        <!-- data table -->
-        <div class="row timeline-panel">
+
+            <!-- data table -->
+            <div class="row timeline-panel">
                 <div class="col-md-12">
                     <div class="table-responsive">
                         <table id="dt_emp_shift" class="datatable table-striped custom-table mb-0">
@@ -53,7 +74,7 @@
                                 <tr>
                                     <th hidden>ID</th>
                                     <th>Name</th>
-                                   
+
                                     <th>Shift Group</th>
                                     <th>Action</th>
 
@@ -84,7 +105,7 @@
                                         <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                             <?php echo $row->full_name; ?>
                                         </td>
-                                
+
                                         <td><?php echo $row->shift_group; ?></td>
                                         <td>
 
@@ -107,7 +128,7 @@
             </div>
             <!-- /data table -->
 
-            
+
 
 
 
@@ -193,28 +214,28 @@
 
 
 
-    $('#dt_emp_shift').DataTable();
+        $('#dt_emp_shift').DataTable();
 
 
         $('#approveButton').click(function() {
-        var rowId = $(this).data('row-id');
-        $.ajax({
-            type: 'POST',
-            url: base_url+'humanr/headapprove',
-            data: {
-                row_id: rowId
-            },
-            success: function(response) {
-                // Handle the response, maybe show a success message
-                console.log('Leave approved successfully');
-                $('#approve_employee').modal('hide');
-            },
-            error: function(xhr, status, error) {
-                // Handle any errors
-                console.error('Error approving leave');
-            }
+            var rowId = $(this).data('row-id');
+            $.ajax({
+                type: 'POST',
+                url: base_url + 'humanr/headapprove',
+                data: {
+                    row_id: rowId
+                },
+                success: function(response) {
+                    // Handle the response, maybe show a success message
+                    console.log('Leave approved successfully');
+                    $('#approve_employee').modal('hide');
+                },
+                error: function(xhr, status, error) {
+                    // Handle any errors
+                    console.error('Error approving leave');
+                }
+            });
         });
-    });
 
 
     });

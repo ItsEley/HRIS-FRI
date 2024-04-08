@@ -49,6 +49,7 @@ $("#login-form").submit(function(e) {
         });
     }
 });
+
 $(document).ready(function() {
     $('#og_approveButton').click(function(event) {
         event.preventDefault();
@@ -86,7 +87,7 @@ $(document).ready(function() {
         var source = $(this).attr('data-source'); // Get the source value
 
         if (source === 'og_approveButton') {
-            rowId = $('#og_emp_name').val();
+            rowId = $('#og_id').val();
             empId = $('#employee_id').val();
         } else if (source === 'leave_approveButton') {
             rowId = $('#leave_emp_name').val();
@@ -103,7 +104,6 @@ $(document).ready(function() {
         }
 
         console.log('Row ID:', rowId);
-        console.log('Employee ID:', empId);
         console.log('Source:', source);
 
         $.ajax({

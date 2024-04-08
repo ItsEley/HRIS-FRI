@@ -21,6 +21,7 @@
                 <div class="row align-items-center">
                     <div class="col">
                         <h3 class="page-title">Pending Requests</h3>
+                        <?php    $emp_id = $this->session->userdata('id'); echo $emp_id;?>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
                             <li class="breadcrumb-item active">Pending Requests</li>
@@ -38,7 +39,7 @@
                         <h6>Paid Leaves Left</h6>
                         <?php
                         // Retrieve the user ID from the session
-                        $user_id = $this->session->userdata('emp_id');
+                        $user_id = $this->session->userdata('id');
 
                         // Get the current year
                         $current_year = date('Y');
@@ -83,7 +84,7 @@
                         <h4>
                             <?php
                             // Get the session user ID
-                            $user_id = $this->session->userdata('emp_id');
+                            $user_id = $this->session->userdata('id');
 
                             // Count pending leaves where the employee ID matches the session ID
                             $this->db->where('id', $user_id);
@@ -135,139 +136,107 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
+    <?php
+    $row_arr = array();
+    $emp_id = $this->session->userdata('id');
 
+    // Query employee data to get the profile picture (pfp) and name
+    $query_employee = $this->db->query("SELECT pfp, fname, lname FROM employee WHERE id = ?", array($emp_id));
+    if ($query_employee->num_rows() > 0) {
+        $row_employee = $query_employee->row();
+        $pfp = $row_employee->pfp;
+        $name = $row_employee->fname;
+    }
 
-                                $row_arr = array();
+    // Query leave data
+    $query_leaves = $this->db->where('emp_id', $emp_id)
+        ->where('status', 'pending')
+        ->get('f_leaves');
 
-                                $emp_id = $this->session->userdata('emp_id');
+    foreach ($query_leaves->result() as $row) {
+        $leave_id = $row->id;
+        $date_filled = $row->date_filled;
+        $leave_type = $row->type_of_leave;
+        $status = $row->status;
+        $request_type = "LEAVE REQUEST"; // Define request type
 
-                                // Query employee data to get the profile picture (pfp) and name
-                                $query_employee = $this->db->query("SELECT * FROM employee WHERE id = '$emp_id'");
-                                if ($query_employee->num_rows() > 0) {
-                                    $row_employee = $query_employee->row();
-                                    $pfp = $row_employee->pfp;
-                                }
+        // Construct row data
+        $row_arr[] = array(
+            'pfp' => $pfp,
+            'id' => $leave_id,
+            'name' => $name,
+            'request_type' => $request_type,
+            'date_filled' => $date_filled,
+            'status' => $status
+        );
+    }
 
-                                // Query leave data
-                                $name = ($_SESSION['name']);
-                                $query_leaves = $this->db->where('emp_id', $emp_id)->where('status', 'pending')->get('f_leaves');
+    foreach ($row_arr as $row) {
+        // Output each row
+    ?>
+        <tr>
+            <td>
+                <h2 class="table-avatar">
+                    <a href="profile.html" class="avatar">
+                        <img src="<?php echo !empty($row['pfp']) ? "data:image/jpeg;base64," . base64_encode($row['pfp']) : base_url('path/to/placeholder_image.jpg'); ?>" alt="User Image">
+                    </a>
+                    <a href="<?= base_url('hr_profile') ?>" style="font-size: 0.6em;"><?php echo $row['name']; ?></a>
+                </h2>
+            </td>
+            <td><?php echo $row['request_type']; ?></td>
+            <td><?php echo $row['date_filled']; ?></td>
+            <td class="text-center">
+                <?php
+                // Set the color of the dot icon, the text color, and the border color based on the status
+                $dot_color = $text_color = $border_color = '';
+                switch ($row['status']) {
+                    case 'new':
+                        $dot_color = $text_color = 'text-purple';
+                        $border_color = 'border-purple';
+                        break;
+                    case 'pending':
+                        $dot_color = $text_color = 'text-info';
+                        $border_color = 'border-info';
+                        break;
+                    case 'approved':
+                        $dot_color = $text_color = 'text-success';
+                        $border_color = 'border-success';
+                        break;
+                    case 'declined':
+                        $dot_color = $text_color = 'text-danger';
+                        $border_color = 'border-danger';
+                        break;
+                    default:
+                        $dot_color = 'text-purple';
+                        $text_color = 'text-dark';
+                        $border_color = 'border-dark';
+                }
+                ?>
+                <span class="badge rounded-pill <?php echo $text_color; ?> <?php echo $border_color; ?>">
+                    <i class="fa-regular fa-circle-dot <?php echo $dot_color; ?>"></i> <?php echo ucfirst($row['status']); ?>
+                </span>
+            </td>
+            <td class="text-center">
+                <div class="dropdown dropdown-action">
+                    <button class="btn btn-sm btn-rounded dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="material-icons">more_vert</i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item update-req" href="#" data-bs-toggle="modal" data-bs-target="#edit_leave" data-target-id="<?php echo $row['id']; ?>">
+                            <i class="fa-solid fa-pencil-alt"></i> Edit
+                        </a>
+                        <a class="dropdown-item delete-req" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve" data-target-id="<?php echo $row['id']; ?>">
+                            <i class="fa-regular fa-trash-alt"></i> Delete
+                        </a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    <?php
+    }
+    ?>
+</tbody>
 
-                                foreach ($query_leaves->result() as $row) {
-                                    $leave_id =  $row->id;
-                                    $date_filled = $row->date_filled;
-                                    $leave_type = $row->type_of_leave;
-                                    $status = $row->status;
-                                    $request_type = "LEAVE REQUEST"; // Define request type
-
-                                    // Construct row data including pfp and name
-                                    $row_arr[] = array(
-                                        'pfp' => $pfp,
-                                        'id' => $leave_id,
-                                        'name' => $name,
-                                        'request_type' => $request_type,
-                                        'date_filled' => $date_filled,
-                                        'status' => $status
-                                    );
-                                }
-
-                                foreach ($row_arr as $row) {
-                                    // Output or process each row as needed
-
-                                ?>
-                                    <tr>
-                                        <td>
-                                            <h2 class="table-avatar">
-                                                <a href="profile.html" class="avatar">
-                                                    <img src="<?php
-                                                                // Retrieve base64-encoded image data from session
-                                                                if ($this->session->userdata('pfp')) {
-                                                                    $pfp = $this->session->userdata('pfp');
-                                                                }
-
-                                                                // Check if $pfp is set and not empty
-                                                                if (!empty($pfp)) {
-                                                                    // Embed the base64-encoded image data in the 'src' attribute of the <img> tag
-                                                                    echo "data:image/jpeg;base64," . base64_encode($pfp);
-                                                                } else {
-                                                                    // If $pfp is empty or not set, display a placeholder image or handle it as per your requirement
-                                                                    echo base_url('path/to/placeholder_image.jpg');
-                                                                }
-                                                                ?>" alt="User Image">
-                                                </a>
-                                                <a href="<?= base_url('hr_profile') ?>" style="font-size: 0.6em;"><?php echo $row['name']; ?></a>
-                                            </h2>
-                                        </td>
-
-                                        <td><?php echo $row['request_type']; ?></td>
-                                        <td><?php echo $row['date_filled']; ?></td>
-
-                                        <td class="text-center">
-                                            <?php
-                                            // Set the color of the dot icon, the text color, and the border color based on the status
-                                            switch ($row['status']) {
-                                                case 'new':
-                                                    $dot_color = 'text-purple';
-                                                    $text_color = 'text-purple'; // Text color for 'New' status
-                                                    $border_color = 'border-purple'; // Border color for 'New' status
-                                                    $status_text = 'New';
-                                                    break;
-                                                case 'pending':
-                                                    $dot_color = 'text-info';
-                                                    $text_color = 'text-info'; // Text color for 'Pending' status
-                                                    $border_color = 'border-info'; // Border color for 'Pending' status
-                                                    $status_text = 'Pending';
-                                                    break;
-                                                case 'approved':
-                                                    $dot_color = 'text-success';
-                                                    $text_color = 'text-success'; // Text color for 'Approved' status
-                                                    $border_color = 'border-success'; // Border color for 'Approved' status
-                                                    $status_text = 'Approved';
-                                                    break;
-                                                case 'declined':
-                                                    $dot_color = 'text-danger';
-                                                    $text_color = 'text-danger'; // Text color for 'Declined' status
-                                                    $border_color = 'border-danger'; // Border color for 'Declined' status
-                                                    $status_text = 'Declined';
-                                                    break;
-                                                default:
-                                                    $dot_color = 'text-purple'; // Default dot color
-                                                    $text_color = 'text-dark'; // Default text color
-                                                    $border_color = 'border-dark'; // Default border color
-                                                    $status_text = 'Unknown'; // Default status text
-                                            }
-                                            ?>
-                                            <span class="badge rounded-pill <?php echo $text_color; ?> <?php echo $border_color; ?>">
-                                                <i class="fa-regular fa-circle-dot <?php echo $dot_color; ?>"></i> <?php echo $status_text; ?>
-                                            </span>
-                                        </td>
-
-
-                                        <td class="text-center">
-                                            <div class="dropdown dropdown-action">
-                                                <button class="btn btn-sm btn-rounded dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="material-icons">more_vert</i>
-                                                </button>
-                                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                                    <a class="dropdown-item update-req" href="#" data-bs-toggle="modal" data-bs-target="#edit_leave" data-target-id="<?php echo $row['id']; ?>">
-                                                        <i class="fa-solid fa-pencil-alt"></i> Edit
-                                                    </a>
-                                                    <a class="dropdown-item delete-req" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve" data-target-id="<?php echo $row['id']; ?>">
-                                                        <i class="fa-regular fa-trash-alt"></i> Delete
-                                                    </a>
-                                                </div>
-                                            </div>
-
-                                        </td>
-
-                                    </tr>
-
-                                <?php
-                                }
-                                ?>
-
-
-                            </tbody>
                         </table>
                     </div>
                 </div>

@@ -9,9 +9,9 @@
      
     </a>
 
-    <p class="text-muted text-small"><span class="date"><?= date('F j Y', strtotime($date)) ?></span>
-            by <span class="author" <?= $author ?>></span>
-            <span class="department">{Department}</span>
+    <p class="text-muted text-small"><span class="date"><?=formatDateTime($date) ?></span>
+            by <span class="author" ><?= $author ?></span>
+            for <span class="department"><?= $department ?></span>
         </p>
 
 

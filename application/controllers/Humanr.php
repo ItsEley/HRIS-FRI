@@ -14,34 +14,23 @@ class Humanr extends CI_Controller
 	}
 
 	public function hrapprove() {
-		// Get the row ID sent via AJAX
 		$rowId = $this->input->post('row_id');
-	
-		// Get the current user's ID from the session
 		$session_emp_id = $this->session->userdata('emp_id');
 	
-		// Update the row status and insert the session ID directly in the controller
 		$this->db->set('status', 'approved');
 		$this->db->set('hr_id', $session_emp_id);
 		$this->db->where('id', $rowId);
 		$this->db->update('f_leaves');
-	
-		// Check if the update was successful
 		if ($this->db->affected_rows() > 0) {
-			// Send a response indicating success
 			echo 'Leave approved successfully';
 		} else {
-			// Send a response indicating failure
 			echo 'Error: Leave not approved';
 		}
 	}
 	
-	
-
 	public function headapprovez() {
 	
 		$rowId = $this->input->post('row_id');
-	
 		$session_emp_id = $this->session->userdata('emp_id');
 	
 		$this->db->set('head_status', 'approved');
@@ -76,14 +65,13 @@ class Humanr extends CI_Controller
 			
 			echo 'Leave approved successfully';
 		} else {
-			// Invalid source
 			echo 'Failed to approve leave: Invalid source';
 		}
 	}
 	
 
 	public function barchart() {
-		// updated code for graph
+		
 		$query = $this->db->query("SELECT d.acro_dept as dept, COUNT(dr.department) as count FROM department_roles dr inner join department d on dr.department = d.id GROUP BY d.department");
 		$result = $query->result();
 	
@@ -436,6 +424,18 @@ class Humanr extends CI_Controller
 		}
 	}
 
+	public function C_hr_shifts()
+	{
+		if ($this->session->userdata('logged_in')) {
+			$data['title'] = 'HR | Shifts';
+			$this->load->view('templates/header', $data);
+			$this->load->view('pages/hr/hr_shifts');
+			$this->load->view('templates/footer');
+		} else {
+			redirect('');
+		}
+	}
+
 
 
 
@@ -511,11 +511,6 @@ class Humanr extends CI_Controller
 			redirect('');
 		}
 	}
-
-
-
-
-
 
 	public function C_formshistory()
 	{

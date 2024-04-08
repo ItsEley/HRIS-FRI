@@ -81,20 +81,20 @@
                ?>
             </div>
          </div>
-         <div class="page-header">
+         <div class="page-header mb-2">
             <div class="content-page-header">
                <h5>Analytics</h5>
             </div>
          </div>
 
-         <div class="row">
+         <div class="row mb-3">
             <div class="col-md-8">
-               <div class="card">
+               <div class="timeline-panel h-100">
                   <div class="card-header">
                      <h5 class="card-title">Attendance Status Per Month</h5>
                   </div>
                   <div class="card-body">
-                     <div class="chartjs-wrapper-demo">
+                     <div class="chartjs-wrapper-demo" style="height:180px">
                         <canvas id="chartStacked1" class="h-300"></canvas>
                      </div>
                   </div>
@@ -102,12 +102,12 @@
             </div>
             <!-- new added -->
             <div class="col-md-4">
-               <div class="card">
+               <div class="timeline-panel h-100">
                   <div class="card-header">
                      <h5 class="card-title">Employee Per Department</h5>
                   </div>
                   <div class="card-body">
-                     <div>
+                     <div class="chartjs-wrapper-demo" style="height:180px">
                         <canvas id="empPerdept" class="h-300"></canvas>
                      </div>
                   </div>
@@ -122,69 +122,199 @@
          <div class="row">
             <div class="col">
                <h2 class="page-title">
-
-                  <a href="<?= base_url('hr/announcement') ?>" style="color:black">Announcements</a>
+                  <a href="<?= base_url('hr/announcement') ?>" class="my-link my-hover">Announcements</a>
                </h2>
-
                <div class="timeline-panel">
                   <?php
-                  $query = $this->db->get('announcement');
-                  if ($query->num_rows() > 0) {
-                     foreach ($query->result() as $row) {
-                        $data = array(
-                           'id' => $row->id,
-                           'title' => $row->title,
-                           'content' => $row->content,
-                           'author' => $row->author,
-                           'department' => $row->to_all,
-                           'date' => $row->date_created
-                        );
-                        $this->load->view('components/card-announcement', $data);
+                  $query = $this->db->query("SELECT 
+                        a.id, 
+                        a.type, 
+                        a.title, 
+                        a.content, 
+                        CONCAT(e.fname, ' ', COALESCE(e.mname, ''), ' ', e.lname) AS author,
+                        a.to_all, 
+                        a.date_created, 
+                        GROUP_CONCAT(d.acro_dept ORDER BY d.acro_dept SEPARATOR ', ') AS departments,
+                        GROUP_CONCAT(d.department ORDER BY d.acro_dept SEPARATOR ', ') AS full_departments
+                    FROM 
+                        announcement a
+                    LEFT JOIN 
+                        announce_to t ON a.id = t.ann_id
+                    LEFT JOIN 
+                        department d ON t.dept_id = d.id
+                    LEFT JOIN 
+                        employee e ON a.author = e.id
+                    GROUP BY 
+                        a.id
+                    ORDER BY 
+                        a.date_created DESC
+                    
+                                                ");
+
+                  // Check if the query was successful
+                  if ($query) {
+                     // Check if there are rows returned
+                     if ($query->num_rows() > 0) {
+                        // Fetch the result rows as an array of objects
+                        $announcement = $query->result();
+
+                        // Process the result rows
+                        foreach ($announcement as $row) {
+                           // Access properties of each shift object as needed
+                           $data['id'] = $row->id;
+                           $data['title'] = $row->title;
+                           $data['content'] =  $row->content;
+                           $data['author']  = ($row->author === NULL) ? "N/A" : $row->author;
+                           $data['department'] = ($row->to_all == "1") ? "All" : $row->departments;
+                           $data['date'] =  $row->date_created;
+
+                           $this->load->view('components/card-announcement', $data);
+                        }
+                     } else {
+                        // Handle case when no rows are returned
+                        echo "No announcements yet.";
                      }
                   } else {
-                     echo "No announcement available.";
+                     // Handle case when query fails
+                     echo "Error executing query: " . $this->db->error()['message'];
                   }
+
+
                   ?>
 
-
                </div>
+
             </div>
-            <div class="col-lg-4 col-md-12">
+            <div class="col-lg-5 col-md-12">
                <h2 class="page-title">Upcoming Events</h2>
 
-               <div class="row timeline-panel " style="background-color: white; ">
-                  <h3>It's John Leo Bayani's Birthday!</h3>
-                  <p>Today • March 26, 2023</p>
-                  <p class="text-overflow-ellipsis" style="height:120px;" onclick="$(this).css('height','auto')">Happy Birthday! 🎉🎂 Wishing you a day filled with joy, laughter,
-                     and all the things that make you smile. May this special day be as
-                     wonderful as you are, and may the year ahead bring you countless blessings,
-                     love, and unforgettable memories. Here's to celebrating you today and always!
-                     Have an amazing birthday Mr. Leo!</p>
-                  <img src="../assets/img/birthday-GIF.gif" alt="User Image" loop="infinite">
+               <?php
+               $query = $this->db->query("SELECT 
+               'event' AS type,
+               `id`, 
+               `event_name` AS name, 
+               `event_description` AS description, 
+               `date_start`, 
+               `date_end`, 
+               `time_start`, 
+               `time_end`, 
+               `is_workday`, 
+               `date_created` 
+           FROM 
+               `sys_events`
+           WHERE 
+               MONTH(`date_start`) = MONTH(CURDATE()) AND YEAR(`date_start`) = YEAR(CURDATE())
+           
+           UNION
+           
+           SELECT 
+               'holiday' AS type,
+               `id`, 
+               `holiday_name` AS name, 
+               `holiday_description`, 
+               `date_start`, 
+               `date_end`, 
+               `time_start`, 
+               `time_end`, 
+               `is_workday`, 
+               `date_created` 
+           FROM 
+               `sys_holidays`
+           WHERE 
+               MONTH(`date_start`) = MONTH(CURDATE()) AND YEAR(`date_start`) = YEAR(CURDATE())
+           
+           UNION
+           
+           SELECT 
+               'birthday' AS type,
+               NULL AS id, -- No ID for birthday event
+               CONCAT(`fname`, ' ', COALESCE(`mname`, ''), ' ', `lname`) AS name, -- Concatenate first, middle, and last name
+               'Employee Birthday' AS description, -- Set a default description
+               DATE_FORMAT(CONCAT(YEAR(CURDATE()), '-', MONTH(`dob`), '-', DAY(`dob`)), '%Y-%m-%d') AS date_start, -- Use current year's birthday as the start date
+               DATE_FORMAT(CONCAT(YEAR(CURDATE()), '-', MONTH(`dob`), '-', DAY(`dob`)), '%Y-%m-%d') AS date_end, -- Use current year's birthday as the end date
+               NULL AS time_start, -- No specific time for birthdays
+               NULL AS time_end, -- No specific time for birthdays
+               0 AS is_workday, -- Assuming birthdays are not workdays
+               `date_created` 
+           FROM 
+               `employee`
+           WHERE 
+               MONTH(`dob`) = MONTH(CURDATE()) -- Filter birthdays occurring in the current month
+           ");
 
-               </div>
+               // Check if the query was successful
+               if ($query) {
+                  // Check if there are rows returned
+                  if ($query->num_rows() > 0) {
+                     // Fetch the result rows as an array of objects
+                     $announcement = $query->result();
 
-               <div class="row timeline-panel " style="background-color: white;">
-                  <h3>Innovate 2024: Unleashing Creativity in the Digital Era</h3>
-                  <p>April 15, 2024, 9:00 AM - 5:00 PM</p>
-                  <p class="text-overflow-ellipsis" style="height:120px;" onclick="$(this).css('height','auto')">Join us for a day of exploration and inspiration as we delve into the world of digital
-                     innovation. From cutting-edge technologies to groundbreaking strategies, this event will
-                     ignite your creativity and empower you to shape the future. Engage with industry experts,
-                     participate in interactive workshops, and network with like-minded innovators. Don't miss
-                     this opportunity to unlock your potential and drive change in the digital landscape.
-                  </p>
-               </div>
+                     // Process the result rows
+                     foreach ($announcement as $row) {
+                        // Access properties of each shift object as needed
+                        // $data['id'] = $row->id;
+                        // $data['title'] = $row->title;
+                        // $data['content'] =  $row->content;
+                        // $data['author']  = ($row->author === NULL) ? "N/A" : $row->author;
+                        // $data['department'] = ($row->to_all == "1") ? "All" : $row->departments;
+                        // $data['date'] =  $row->date_created;
 
-               <div class="row timeline-panel " style="background-color: white; ">
-                  <h3>Wellness Week: Mind, Body, and Soul</h3>
-                  <p>May 20-24, 2024, All Day</p>
-                  <p class="text-overflow-ellipsis" style="height:200px;" onclick="$(this).css('height','auto')">Take a break from the hustle and bustle of work and prioritize your well-being during Wellness Week.
-                     Join us for a series of activities designed to rejuvenate your mind, energize your body,
-                     and nourish your soul. From yoga sessions and meditation workshops to nutritious cooking
-                     classes and stress-relief seminars, this week-long event offers something for everyone.
-                     Invest in yourself and discover the power of holistic wellness.
-                  </p>
-               </div>
+                        $isToday = strtotime($row->date_start) === strtotime(date('Y-m-d'));
+
+
+               ?>
+
+
+                        <div class="timeline-panel type-<?= $row->type ?>" style="background-color: white; ">
+                           <h3 class="event-name">
+
+                              <?php if ($row->type == "birthday") {
+                                 echo "Happy Birthday $row->name !";
+                              } else {
+                                 echo $row->name;
+                              }
+                              ?>
+                           </h3>
+                           <p class="event-date"><?= $isToday ? "<span class = 'badge badge-soft-info'>Today</span> • " : ""; ?> 
+                            <?= formatDateOnly($row->date_start); ?></p>
+                           <p class="text-overflow-ellipsis event-description" onclick="$(this).css('height','auto')">
+                              <?php
+                              if ($row->description == NULL || $row->description == '') {
+                                 echo "No description available";
+                              } else {
+                                 echo $row->description;
+                              }
+                              ?></p>
+
+                           <?php
+                           if ($row->type == "birthday") {
+                              echo '<img src="../assets/img/birthday-GIF.gif" alt="User Image" loop="infinite">';
+                           }
+                           ?>
+
+
+
+                        </div>
+
+               <?php
+
+                     }
+                  } else {
+                     // Handle case when no rows are returned
+                     echo "No announcements yet.";
+                  }
+               } else {
+                  // Handle case when query fails
+                  echo "Error executing query: " . $this->db->error()['message'];
+               }
+
+
+               ?>
+
+
+
+
+
             </div>
          </div>
 

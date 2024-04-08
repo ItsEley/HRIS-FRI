@@ -68,7 +68,7 @@
                                 }
                                 
                                 // Query leave data
-                                $name = ($_SESSION['name']);
+                                $name = ($_SESSION['fullname']);
                                 $this->db->where('emp_id', $emp_id);
                                 $query_leaves = $this->db->get('f_leaves');
                                 foreach ($query_leaves->result() as $row) {
@@ -76,10 +76,11 @@
                                     $date_filled = $row->date_filled;
                                     $leave_type = $row->type_of_leave;
                                     $status = $row->status;
+                                    $head_status = $row->head_status;
                                     $request_type = "LEAVE REQUEST"; // Define request type
                                 
                                     // Only include rows where status is "approved" or "declined"
-                                    if ($status == 'approved' || $status == 'declined') {
+                                    if ($status == 'approved' || $status == 'denied' || $head_status == 'denied') {
                                         // Construct row data including pfp and name
                                         $row_arr[] = array(
                                             'pfp' => $pfp,
@@ -87,17 +88,14 @@
                                             'name' => $name,
                                             'request_type' => $request_type,
                                             'date_filled' => $date_filled,
-                                            'status' => $status
+                                            'status' => $status,
+                                            'head_status' => $head_status
                                         );
                                     }
-                                }
-                                
+                                }         
                                 foreach ($row_arr as $row) {
-                                    // Process or output each filtered row as needed
-                                
-                                
-                                ?>
 
+                                ?>
                                     <tr>
                                         <td>
                                             <h2 class="table-avatar">
