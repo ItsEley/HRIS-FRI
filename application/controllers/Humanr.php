@@ -14,7 +14,7 @@ class Humanr extends CI_Controller
 	}
 
 	public function hrapprove() {
-		$rowId = $this->input->post('row_id');
+		$rowId = $this->input->post('rowId');
 		$session_emp_id = $this->session->userdata('emp_id');
 	
 		$this->db->set('status', 'approved');
@@ -30,8 +30,8 @@ class Humanr extends CI_Controller
 	
 	public function headapprovez() {
 	
-		$rowId = $this->input->post('row_id');
-		$session_emp_id = $this->session->userdata('emp_id');
+		$rowId = $this->input->post('rowId');
+		$session_emp_id = $this->session->userdata('id');
 	
 		$this->db->set('head_status', 'approved');
 		$this->db->set('head_id', $session_emp_id);
@@ -51,23 +51,35 @@ class Humanr extends CI_Controller
 			'leave_approveButton' => 'f_leaves',
 			'ot_approveButton' => 'f_overtime',
 			'ut_approveButton' => 'f_undertime',
-			'ob_approveButton' => 'f_off_bussiness'
-		
+			'ob_approveButton' => 'f_off_bussiness',
+			'og_denyButton' => 'f_outgoing',
+			'leave_denyButton' => 'f_leaves',
+			'ot_denyButton' => 'f_overtime',
+			'ut_denyButton' => 'f_undertime',
+			'ob_denyButton' => 'f_off_bussiness'
 		);
 	
 		if (isset($validSources[$source])) {
 			$tableName = $validSources[$source];
 	
-			$this->db->set('head_status', 'approved');
+			if (strpos($source, '_denyButton') !== false) {
+				// Handle denial
+				$this->db->set('head_status', 'denied');
+			} else {
+				// Handle approval
+				$this->db->set('head_status', 'approved');
+			}
+	
 			$this->db->set('head_id', $empId);
 			$this->db->where('id', $rowId);
 			$this->db->update($tableName);
-			
-			echo 'Leave approved successfully';
+	
+			echo 'Operation successful. Row ID: ' . $rowId . ', Table Name: ' . $tableName . ', Employee ID: ' . $empId;
 		} else {
-			echo 'Failed to approve leave: Invalid source';
+			echo 'Failed: Invalid source';
 		}
 	}
+	
 	
 
 	public function barchart() {
@@ -436,9 +448,17 @@ class Humanr extends CI_Controller
 		}
 	}
 
-
-
-
+	public function C_hr_leaves()
+	{
+		if ($this->session->userdata('logged_in')) {
+			$data['title'] = 'HR | Leaves';
+			$this->load->view('templates/header', $data);
+			$this->load->view('pages/hr/hr_leaves');
+			$this->load->view('templates/footer');
+		} else {
+			redirect('');
+		}
+	}
 
 	public function C_hr_report_timesheet()
 	{
@@ -572,10 +592,8 @@ class Humanr extends CI_Controller
 
 		);
 
-		// Insert data into the database
 		$sql = $this->db->insert('employee', $data);
 
-		// Check if insertion was successful
 		if ($sql) {
 			$response['status'] = 1;
 			$response['msg'] = 'User added successfully';
@@ -583,19 +601,13 @@ class Humanr extends CI_Controller
 			$response['status'] = 0;
 			$response['msg'] = 'Failed to add user';
 		}
-
-		// Return response as JSON
 		echo json_encode($response);
 	}
 
 	public function delete()
 	{
 		$emp_id = $this->input->post('emp_id');
-
-		// Load the database library
 		$this->load->database();
-
-		// Execute the SQL query to delete the employee
 		$this->db->where('emp_id', $emp_id);
 		$result = $this->db->delete('employee');
 
@@ -606,28 +618,18 @@ class Humanr extends CI_Controller
 		}
 	}
 
-
 	public function showUserdetails()
 	{
-
 		try {
-			// Retrieve emp_id from the query parameter using CodeIgniter's input library
 			$emp_id = $this->input->post('emp_id');
-
-			// Log emp_id to ensure it's correctly retrieved
 			log_message('debug', 'Employee ID: ' . $emp_id);
-
-			// Fetch employee details based on emp_id using the loaded model
-			// array('department' => $row_department->department)
 			$employee = $this->db->get_where('employee', array('id' => $emp_id));
 
 			if ($employee->num_rows() > 0) {
-				$data = array(); // Initialize an array to store all the data
-
+				$data = array();
 				$data['status'] = "success";
 
 				foreach ($employee->result() as $row) {
-					// Add each row data to the array
 					$row_data = array(
 						'id' => $row->id,
 						'fname' => $row->fname,
@@ -645,12 +647,9 @@ class Humanr extends CI_Controller
 						'contact_no' => $row->contact_no
 
 					);
-
-					// Add the row data array to the main data array
 					$data['data'] = $row_data;
 				}
 
-				// Encode the array to JSON and echo it
 				echo json_encode($data);
 			} else {
 				$data['status'] = "failed";
@@ -667,10 +666,7 @@ class Humanr extends CI_Controller
 
 	public function updateUser()
 	{
-		// Retrieve emp_id from POST data
 		$emp_id = $this->input->post('emp_id');
-
-		// Define data to be updated
 		$data = array(
 			'fname' => format_text($this->input->post('fname')),
 			'mname' => format_text($this->input->post('mname')),
@@ -687,15 +683,10 @@ class Humanr extends CI_Controller
 			'email' => $this->input->post('email'),
 			// 'password' => $this->input->post('password')
 		);
-
-		// Update the employee record
 		$this->db->where('id', $emp_id);
 		$sql = $this->db->update('employee', $data);
-
-		// Prepare response
 		$response = array();
 		if ($sql) {
-			// Update session data if necessary
 			foreach ($data as $key => $value) {
 				$_SESSION[$key] = $value;
 			}
@@ -705,11 +696,8 @@ class Humanr extends CI_Controller
 			$response['status'] = 0;
 			$response['msg'] = 'Failed to update employee data';
 		}
-
-		// Echo JSON response
 		echo json_encode($response);
 	}
-
 
 	public function dash()
 	{

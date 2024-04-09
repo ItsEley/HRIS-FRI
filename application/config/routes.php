@@ -32,6 +32,7 @@ $route['hr/profile'] = 'humanr/C_hr_profile';
 $route['hr/profile/settings'] = 'humanr/C_hr_profile';
 $route['hr/calendar'] = 'humanr/C_hr_calendar';
 $route['hr/shifts'] = 'humanr/C_hr_shifts';
+$route['hr/leaves'] = 'humanr/C_hr_leaves';
 $route['hr/departments'] = 'humanr/C_hr_departments';
 $route['hr/settings'] = 'humanr/C_hr_settings';
 // $route['hr/assets'] = 'humanr/C_hr_assets';
@@ -76,12 +77,17 @@ $route['hr/historyrequests'] = 'humanr/history_req';
 // employee/pages
 
 $route['employee/dashboard'] = 'employee/emphome';
+$route['employee/profile'] = 'employee/emp_profile';
+$route['employee/setting'] = 'employee/emp_setting';
+
 $route['employee/pendingrequests'] = 'employee/pendingrequest';
 
 
 // employee/head/pages
 $route['employee/approval'] = 'employee/head_approval';
 $route['employee/history'] = 'employee/head_history';
+$route['employee/head/announcement'] = 'employee/head_announcement';
+
 
 // $route['employee/forms'] = 'pages/emp_home';
 $route['forms/history'] = 'humanr/C_formshistory';

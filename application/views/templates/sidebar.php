@@ -11,7 +11,7 @@
                 <li class="menu-title">
                     <?php
                     if (strtolower($this->session->userdata('role')) == 'head') {
-                        echo "<span>Main | " . $this->session->userdata('acro') . " - <span class = 'badge bg-primary'>HEAD</span> " . "</span>";
+                        echo "<span>Main | " . ucwords(strtolower($this->session->userdata('acro'))) . " - <span class = 'badge bg-primary'>HEAD</span> " . "</span>";
                     }
                     ?>
                 </li>
@@ -27,7 +27,7 @@
                         <li><a href='" . base_url('hr/departments') . "'><img src = '" . base_url('assets/img/icons/department-2.png') . "' class = 'my-img-icon'>
                                             <span>Departments</span></a></li>
                         <li><a href='" . base_url('hr/shifts') . "'><i class='fa-regular fa-clock'></i><span>Shifts</span></a></li>
-                        <li><a href='" . base_url('hr/holidays') . "'><i class='la la-bullhorn'></i><span>Holidays</span></a></li>
+                        <li><a href='" . base_url('hr/leaves') . "'><i class='la la-bullhorn'></i><span>Leaves</span></a></li>
 
                         
 
@@ -102,7 +102,7 @@
                     ";
                     if (strtolower($this->session->userdata('role')) == 'head') {
                       
-                        echo "<li><a href='" . base_url('hr/announcement') . "'><i class='la la-bullhorn'></i><span>Announcements</span></a></li>";
+                        echo "<li><a href='" . base_url('employee/head/announcement') . "'><i class='la la-bullhorn'></i><span>Announcements</span></a></li>";
                         echo "
                             <li class='submenu forms'>
                             <a href='#' class=''><i class='la la-object-group'></i><span>Requests for Approval</span><span class='menu-arrow'></span></a>

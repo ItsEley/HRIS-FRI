@@ -18,6 +18,22 @@ class Employee extends CI_Controller
 		$this->load->view('templates/footer');
 	}
 
+	public function emp_profile()
+	{
+		$data['title'] = 'Employee | Profile';
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/employee/employee_profile');
+		$this->load->view('templates/footer');
+	}
+
+	public function emp_setting()
+	{
+		$data['title'] = 'Employee | Setting';
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/employee/employee_setting');
+		$this->load->view('templates/footer');
+	}
+
 	public function forms()
 	{
 		$data['title'] = 'Employee | Forms';
@@ -26,8 +42,7 @@ class Employee extends CI_Controller
 		$this->load->view('templates/footer');
 	}
 
-
-	public function head_announcment()
+	public function head_announcement()
 	{
 		$data['title'] = 'Head | Announcements';
 		$this->load->view('templates/header', $data);
@@ -52,7 +67,6 @@ class Employee extends CI_Controller
 	}
 
 
-
 	public function pendingrequest()
 	{
 		$data['title'] = 'Employee | Pendings';
@@ -64,19 +78,15 @@ class Employee extends CI_Controller
 	public function C_leave()
 	{
 		$response = array();
-
 		$date_filled = date('Y-m-d H:i:s', time());
 		$from_date = $this->input->post('from_date');
 		$to_date = $this->input->post('to_date');
 		$leaveType = $this->input->post('leaveType');
 		$reason = $this->input->post('reason');
 		$empid = $this->input->post('emp_id');
-
-		// Get the department name and role ID from session
 		$department = $_SESSION['department'];
 		$session_role = $_SESSION['role'];
 
-		// Query the department table to get the department ID
 		$this->db->select('id');
 		$this->db->where('department', $department);
 		$query_department = $this->db->get('department');
@@ -84,26 +94,24 @@ class Employee extends CI_Controller
 
 		if ($department_row) {
 			$department_id = $department_row->id;
-
-			// Query the department_roles table to get the roles associated with the role ID
 			$this->db->select('id, roles');
-			$this->db->where('roles', 'Head'); // Select rows where roles exactly equal to "Head"
+			$this->db->where('roles', 'Head');
 			$query_roles = $this->db->get('department_roles');
 			$roles_rows = $query_roles->result();
 
 			if ($roles_rows) {
-				// Loop through retrieved rows to handle multiple head roles if present
+				
 				foreach ($roles_rows as $roles_row) {
 					$roles = $roles_row->roles;
 					$role_id = $roles_row->id;
 
-					// Check if the retrieved role ID matches the session role ID
+					$session_role = $_SESSION['role'];
+					$session_emp = $_SESSION['id'];
 					$head_status = ($session_role == "Head") ? 'approved' : 'pending';
-
-					// Output logs to PHP error log
+					$head_id = ($session_role == "Head") ? $session_emp : null;
+	
 					error_log("Role ID: $role_id, Session Role: $session_role, Head Status: $head_status");
 
-					// Prepare data for insertion
 					$data = array(
 						'date_from' => $from_date,
 						'date_to' => $to_date,
@@ -112,25 +120,21 @@ class Employee extends CI_Controller
 						'date_filled' => $date_filled,
 						'emp_id' => $empid,
 						'department' => $department_id,
-						'head_status' => $head_status, // Assign head_status based on the role
+						'head_status' => $head_status, 
 					);
-
-					// Insert data into the f_leaves table
 					$sql = $this->db->insert('f_leaves', $data);
 					if ($sql) {
 						$response['status'] = 1;
 						$response['msg'] = 'Done';
 						$response['session_role'] = $session_role;
 						$response['role_id'] = $role_id;
-						break; // Break the loop after the first successful insertion
+						break;
 					} else {
 						$response['status'] = 0;
 						$response['msg'] = 'Error';
 						$response['session_role'] = $session_role;
 						$response['role_id'] = $role_id;
 					}
-
-					// Add role_id, session_role, and head_status to the response for logging
 					$response['role_id'] = $role_id;
 					$response['session_role'] = $session_role;
 					$response['role_id'] = $role_id;
@@ -143,8 +147,6 @@ class Employee extends CI_Controller
 			$response['status'] = 0;
 			$response['msg'] = 'Department not found';
 		}
-
-		// Output the response as JSON
 		echo json_encode($response);
 	}
 
@@ -162,11 +164,8 @@ class Employee extends CI_Controller
 		$reason = $this->input->post('reason');
 		$empid = $this->input->post('emp_id');
 		$status = $this->input->post('status');
-
-		// Get the department name from session
 		$department_name = $_SESSION['department'];
 
-		// Query the department table to get the department ID
 		$this->db->select('id');
 		$this->db->where('department', $department_name);
 		$query = $this->db->get('department');
@@ -175,9 +174,10 @@ class Employee extends CI_Controller
 		if ($department_row) {
 			$department_id = $department_row->id;
 			$session_role = $_SESSION['role'];
+			$session_emp = $_SESSION['id'];
 			$head_status = ($session_role == "Head") ? 'approved' : 'pending';
+			$head_id = ($session_role == "Head") ? $session_emp : null;
 
-			// Prepare data for insertion
 			$data = array(
 				'destin_from' => $destin_from,
 				'destin_to' => $destin_to,
@@ -187,11 +187,10 @@ class Employee extends CI_Controller
 				'date_filled' => $date_filled,
 				'reason' => $reason,
 				'emp_id' => $empid,
-				'department' => $department_id, 
-				'head_status' =>$head_status// Add department ID to the data array
+				'department' => $department_id,
+				'head_status' => $head_status
 			);
 
-			// Insert data into the f_off_bussiness table
 			$sql = $this->db->insert('f_off_bussiness', $data);
 
 			if ($sql) {
@@ -205,18 +204,13 @@ class Employee extends CI_Controller
 			$response['status'] = 0;
 			$response['msg'] = 'Department not found';
 		}
-
 		echo json_encode($response);
 	}
-
 
 	public function C_off_buss1()
 	{
 		$response = array();
-
 		$date_filled = date('Y-m-d H:i:s', time());
-		// $department = $this->input->post('department');
-
 		$outgoing_pass_date = $this->input->post('outgoing_pass_date');
 		$destin_from = $this->input->post('destin_from');
 		$destin_to = $this->input->post('destin_to');
@@ -226,9 +220,7 @@ class Employee extends CI_Controller
 		$empid = $this->input->post('emp_id');
 		$status = $this->input->post('status');
 
-
 		$data = array(
-			/*column name*/
 			'destin_from' => $destin_from,
 			'destin_to' => $destin_to,
 			'time_from' => $time_from,
@@ -241,7 +233,6 @@ class Employee extends CI_Controller
 		);
 
 		$sql = $this->db->insert('f_off_bussiness', $data);
-
 		if ($sql) {
 			$response['status'] = 1;
 			$response['msg'] = 'Done';
@@ -255,18 +246,14 @@ class Employee extends CI_Controller
 	public function C_outgoing()
 	{
 		$response = array();
-
 		$outgoing_date = $this->input->post('outgoing_date');
 		$time_from = $this->input->post('time_from');
 		$time_to = $this->input->post('time_to');
 		$destination = $this->input->post('destination');
 		$reason = $this->input->post('reason');
 		$empid = $this->input->post('emp_id');
-
-		// Get the department name from session
 		$department_name = $_SESSION['department'];
 
-		// Query the department table to get the department ID
 		$this->db->select('id');
 		$this->db->where('department', $department_name);
 		$query = $this->db->get('department');
@@ -275,20 +262,20 @@ class Employee extends CI_Controller
 		if ($department_row) {
 			$department_id = $department_row->id;
 			$session_role = $_SESSION['role'];
+			$session_emp = $_SESSION['id'];
 			$head_status = ($session_role == "Head") ? 'approved' : 'pending';
-			// Prepare data for insertion
+			$head_id = ($session_role == "Head") ? $session_emp : null;
+
 			$data = array(
 				'date_filled' => $outgoing_date,
 				'time_from' => $time_from,
 				'time_to' => $time_to,
 				'going_to' => $destination,
 				'reason' => $reason,
-				'department' => $department_id, // Use department ID instead of name
+				'department' => $department_id,
 				'emp_id' => $empid,
 				'head_status' => $head_status,
 			);
-
-			// Insert data into the f_outgoing table
 			$sql = $this->db->insert('f_outgoing', $data);
 
 			if ($sql) {
@@ -302,7 +289,6 @@ class Employee extends CI_Controller
 			$response['status'] = 0;
 			$response['msg'] = 'Department not found';
 		}
-
 		echo json_encode($response);
 	}
 
@@ -310,19 +296,13 @@ class Employee extends CI_Controller
 	public function C_undertime()
 	{
 		$response = array();
-
-		// Get input data
 		$undertime_date = $this->input->post('undertime_date');
 		$time_in = $this->input->post('time_in');
 		$time_out = $this->input->post('time_out');
 		$reason = $this->input->post('reason');
-		$status = "Pending"; // Set status to "Pending"
+		$status = "Pending";
 		$empid = $this->input->post('emp_id');
-
-		// Get the department name from session
 		$department_name = $_SESSION['department'];
-
-		// Query the department table to get the department ID
 		$this->db->select('id');
 		$this->db->where('department', $department_name);
 		$query = $this->db->get('department');
@@ -330,22 +310,22 @@ class Employee extends CI_Controller
 
 		if ($department_row) {
 			$department_id = $department_row->id;
+
 			$session_role = $_SESSION['role'];
+			$session_emp = $_SESSION['id'];
 			$head_status = ($session_role == "Head") ? 'approved' : 'pending';
-			// Prepare data array for insertion
+			$head_id = ($session_role == "Head") ? $session_emp : null;
 			$data = array(
 				'date_filled' => $undertime_date,
 				'date_of_undertime' => $undertime_date,
 				'time_in' => $time_in,
 				'time_out' => $time_out,
 				'reason' => $reason,
-				'status' => $status, // Use the status variable set above
+				'status' => $status, 
 				'emp_id' => $empid,
 				'department' => $department_id,
-				'head_status' => $head_status // Add department ID to the data array
+				'head_status' => $head_status 
 			);
-
-			// Insert data into the database
 			$sql = $this->db->insert('f_undertime', $data);
 			if ($sql) {
 				$response['status'] = 1;
@@ -359,7 +339,6 @@ class Employee extends CI_Controller
 			$response['msg'] = 'Department not found';
 		}
 
-		// Send JSON response
 		echo json_encode($response);
 	}
 
@@ -367,22 +346,15 @@ class Employee extends CI_Controller
 	public function C_overtime()
 	{
 		$response = array();
-
-		// Get current date and time
 		$date_filled = date('Y-m-d H:i:s', time());
-
-		// Get input data
 		$ot_date = $this->input->post('ot_date');
 		$time_in = $this->input->post('from_time');
 		$time_out = $this->input->post('to_time');
 		$reason = $this->input->post('reason');
-		$status = "Pending"; // Set status to "Pending"
+		$status = "Pending"; 
 		$empid = $this->input->post('emp_id');
-
-		// Get the department name from session
 		$department_name = $_SESSION['department'];
 
-		// Query the department table to get the department ID
 		$this->db->select('id');
 		$this->db->where('department', $department_name);
 		$query = $this->db->get('department');
@@ -392,20 +364,21 @@ class Employee extends CI_Controller
 			$department_id = $department_row->id;
 
 			$session_role = $_SESSION['role'];
+			$session_emp = $_SESSION['id'];
 			$head_status = ($session_role == "Head") ? 'approved' : 'pending';
+			$head_id = ($session_role == "Head") ? $session_emp : null;
+
 			$data = array(
 				'date_filled' => $date_filled,
 				'date_ot' => $ot_date,
 				'time_in' => $time_in,
 				'time_out' => $time_out,
 				'reason' => $reason,
-				'status' => $status, // Use the status variable set above
+				'status' => $status, 
 				'emp_id' => $empid,
 				'department' => $department_id,
-				'head_status' => $head_status // Add department ID to the data array
+				'head_status' => $head_status 
 			);
-
-			// Insert data into the database
 			$sql = $this->db->insert('f_overtime', $data);
 			if ($sql) {
 				$response['status'] = 1;
@@ -418,8 +391,6 @@ class Employee extends CI_Controller
 			$response['status'] = 0;
 			$response['msg'] = 'Department not found';
 		}
-
-		// Send JSON response
 		echo json_encode($response);
 	}
 
@@ -435,11 +406,8 @@ class Employee extends CI_Controller
 		$reason = $this->input->post('reason');
 		$status = $this->input->post('status');
 		$empid = $this->input->post('emp_id');
-
-		// Get the department name from session
 		$department_name = $_SESSION['department'];
 
-		// Query the department table to get the department ID
 		$this->db->select('id');
 		$this->db->where('department', $department_name);
 		$query = $this->db->get('department');
@@ -448,9 +416,11 @@ class Employee extends CI_Controller
 		if ($department_row) {
 			$department_id = $department_row->id;
 			$session_role = $_SESSION['role'];
+			$session_emp = $_SESSION['id'];
 			$head_status = ($session_role == "Head") ? 'approved' : 'pending';
+			$head_id = ($session_role == "Head") ? $session_emp : null;
+
 			$data = array(
-				/*column name*/
 				'date_filled' => $date_filled,
 				'change_day_from' => $change_day_from,
 				'change_day_to' => $change_day_to,
@@ -459,7 +429,7 @@ class Employee extends CI_Controller
 				'reason' => $reason,
 				'status' => $status,
 				'emp_id' => $empid,
-				'department' => $department_id // Add department ID to the data array
+				'department' => $department_id
 			);
 
 			$sql = $this->db->insert('f_worksched_adj', $data);

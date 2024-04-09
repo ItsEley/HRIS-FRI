@@ -103,6 +103,8 @@
                         }
 
                         // Prepare data for the view
+                        $data['icon_type'] = "1";
+
                         $data['icon'] = "fa fa-address-book";
                         $data['count'] = $total_count;
                         $data['label'] = "Request Pending";
@@ -126,7 +128,9 @@
                     $this->db->where('CURDATE() BETWEEN date_from AND date_to');
 
                     // Execute the query
+
                     $query = $this->db->get();
+                    $data['icon_type'] = "1";
                     $data['count'] = $query->row_array()['count'];
                     $data['label'] = "Active Leaves";
 
@@ -143,6 +147,7 @@
                     $this->db->from('f_overtime');
                     $this->db->where('status', 'approved');
                     $this->db->where('date_ot', date('Y-m-d'));
+                    $data['icon_type'] = "1";
                     $data['count'] = $count = $this->db->count_all_results();;
                     $data['label'] = "Active Overtime";
                     $this->load->view('components/card-dash-widget', $data)
@@ -156,6 +161,7 @@
                     $this->db->from('f_undertime');
                     $this->db->where('status', 'approved');
                     $this->db->where('date_of_undertime', date('Y-m-d'));
+                    $data['icon_type'] = "1";
                     $data['count'] = $count = $this->db->count_all_results();;
                     $data['label'] = "Active Undertime";
                     $this->load->view('components/card-dash-widget', $data)
@@ -334,7 +340,6 @@
                                 <div class="col">
                                     <h4 class="card-title mb-0">Pending Leave Request</h4>
                                 </div>
-
                             </div>
                         </div>
                         <div class="card-body">
@@ -360,7 +365,6 @@
                                          FROM department 
                                          WHERE department = ?
                                      ", array($current_department_name));
-
                                         if ($dept_query->num_rows() > 0) {
                                             $row = $dept_query->row();
                                             $current_department_id = $row->id;
@@ -379,11 +383,11 @@
                                             $lname = $row->lname;
                                             $fullname = $fname . ' ' . $lname;
                                         ?>
-
-                                            <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
+                                            <tr class="hoverable-row" id="<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
                                                     <?php echo $fullname; ?>
+                                                    <?php echo $row->id ?>
 
                                                 </td>
                                                 <td name="date_filled"><?php echo formatDateOnly($row->date_filled); ?></td>
@@ -400,7 +404,7 @@
                                                         </a>
                                                         <div class="dropdown-menu update-leave" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
 
-                                                            <a class="dropdown-item update-pending" href="#" data-bs-toggle="modal" data-bs-target="#view_request" data-target-id="<?php echo $row->id; ?>" data-request-type="LEAVE REQUEST">
+                                                            <a class="dropdown-item update-pending" href="#" data-bs-toggle="modal" data-bs-target="#view_request" data-target-id="<?php echo $row->id; ?>" >
                                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                                             </a>
                                                             <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
@@ -415,7 +419,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <!-- <h5 class="modal-title">Outgoing Pass</h5> -->
-                                                            <h3 class="m-0 text-center">Leave Request Details</h3>
+                                                            <h3 class="m-0 text-center">Leave Request Details </h3>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
@@ -427,6 +431,7 @@
                                                                 </div>
                                                             </div>
                                                             <form id="update_leave" method="posts">
+                                                            <input type="hidden" class="form-control text-left" id="leave_id" readonly>
                                                                 <div class="mb-3 row">
                                                                     <div class="col-md-6">
                                                                         <label for="emp_name" class="form-label">Employee Name</label>
@@ -469,7 +474,7 @@
                                                                             <div class="row">
                                                                                 <div class="mb-3 row">
                                                                                     <div class="col-sm-6">
-                                                                                        <button id="denyButton" class="btn text-danger btn-block bg-white border border-danger">Deny</button>
+                                                                                        <button id="leave_denyButton" class="btn text-danger btn-block bg-white border border-danger" data-row-id="<?php echo $row->id; ?>">Deny</button>
                                                                                     </div>
                                                                                     <div class="col-sm-6">
                                                                                         <button id="leave_approveButton" class="btn btn-primary btn-block" data-row-id="<?php echo $row->id; ?>">Approve</button>
@@ -575,7 +580,7 @@
                                                                         <!-- <a class="dropdown-item update-outgoing" href="#" data-bs-toggle="modal" data-bs-target="#edit_outgoing" data-emp-id="<?php echo $row->emp_id; ?>">
                                                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                                                             </a> -->
-                                                                        <a class="dropdown-item update-outgoing" href="#" data-bs-toggle="modal" data-bs-target="#edit_outgoing" data-og-id="<?php echo $row->id; ?>" data-request-type="OUTGOING REQUEST">
+                                                                        <a class="dropdown-item update-outgoing" href="#" data-bs-toggle="modal" data-bs-target="#edit_outgoing" data-og-id="<?php echo $row->id; ?>">
                                                                             <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                                                         </a>
 
@@ -603,6 +608,7 @@
                                                                             </div>
                                                                         </div>
                                                                         <form id="update_outgoing" method="post">
+                                                                        <input type="hidden" class="form-control text-left" id="og_id" readonly>
                                                                             <div class="mb-3 row">
                                                                                 <div class="col-md-6">
                                                                                     <label for="emp_name" class="form-label">Employee Name</label>
@@ -762,6 +768,7 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <form id="update_employee" method="post">
+                                                            <input type="hidden" class="form-control text-left" id="ot_id" readonly>
                                                                 <div class="mb-3 row">
                                                                     <div class="col-md-6">
                                                                         <label for="emp_name" class="form-label">Employee Name</label>
@@ -884,10 +891,9 @@
                                                 </td>
                                                 <td><?php echo formatDateOnly($row->date_filled); ?></td>
                                                 <td name="ut_date"><?php echo formatDateOnly($row->date_of_undertime); ?></td>
-                                                <td name="time_in"><?php echo date("h:i A", strtotime($row->time_in)); ?></td>
-                                                <td name="time_out"><?php echo date("h:i A", strtotime($row->time_out)); ?></td>
-
-                                                <td name="leave_reason" style="max-width: 200px; overflow: hidden; 
+                                                <td name="ut_time_in"><?php echo date("h:i A", strtotime($row->time_in)); ?></td>
+                                                <td name="ut_time_out"><?php echo date("h:i A", strtotime($row->time_out)); ?></td>
+                                                <td name="ut_reason" style="max-width: 200px; overflow: hidden; 
                     text-overflow: ellipsis; white-space: nowrap;cursor: pointer;user-select:none" title="Double click to expand"><?php echo $row->reason; ?></td>
                                                 <td name="status"><?php echo ucwords($row->head_status); ?></td>
                                                 <td>
@@ -924,6 +930,7 @@
                                                                 </div>
                                                             </div>
                                                             <form id="update_undertime" method="post">
+                                                            <input type="hidden" class="form-control text-left" id="ut_id" readonly>
                                                                 <div class="mb-3 row">
                                                                     <div class="col-md-6">
                                                                         <label for="ut_emp_name" class="form-label">Employee Name</label>
@@ -1096,6 +1103,7 @@
                                                                 </div>
                                                             </div>
                                                             <form id="update_ob" method="post">
+                                                            <input type="hidden" class="form-control text-left" id="ob_id" readonly>
                                                                 <div class="mb-3 row">
                                                                     <div class="col-md-6">
                                                                         <label for="emp_name" class="form-label">Employee Name</label>
@@ -1633,6 +1641,7 @@
             let leave_id = $(this).attr("data-target-id");
             let emp_id = $(this).attr("data-emp-id");
             let emp_name = $(this).closest('tr').find('td[name="emp_name"]').text().trim();
+            let leave_type = $(this).closest('tr').find('td[name="leave_type"]').text();
             let date_filled = $(this).closest('tr').find('td[name="date_filled"]').text();
             let date_from = $(this).closest('tr').find('td[name="date_from"]').text();
             let date_to = $(this).closest('tr').find('td[name="date_to"]').text();
@@ -1705,16 +1714,17 @@
             let ut_emp_name = $(this).closest('tr').find('td[name="ut_emp_name"]').text().trim();
             let ut_date_filled = $(this).closest('tr').find('td:eq(1)').text().trim();
             let ut_date = $(this).closest('tr').find('td[name="ut_date"]').text().trim();
-            let time_from = $(this).closest('tr').find('td[name="time_in"]').text().trim();
-            let time_to = $(this).closest('tr').find('td[name="time_out"]').text().trim();
-            let ot_reason = $(this).closest('tr').find('td[name="leave_reason"]').text().trim();
+            let ut_time_from = $(this).closest('tr').find('td[name="ut_time_in"]').text().trim();
+            let ut_time_to = $(this).closest('tr').find('td[name="ut_time_out"]').text().trim();
+            let ut_reason = $(this).closest('tr').find('td[name="ut_reason"]').text().trim();
 
+            $("#ut_id").val(ut_id);
             $("#ut_emp_name").val(ut_emp_name);
             $("#ut_date_filled").val(ut_date_filled);
             $("#ut_date").val(ut_date);
-            $("#ut_time_from").val(time_from);
-            $("#ut_time_to").val(time_to);
-            $("#ut_reason").val(ot_reason);
+            $("#ut_time_from").val(ut_time_from);
+            $("#ut_time_to").val(ut_time_to);
+            $("#ut_reason").val(ut_reason);
 
             $('#edit_undertime').modal('show');
         });
@@ -1731,6 +1741,7 @@
             let time_to = $(this).closest('tr').find('td[name="time_to"]').text().trim();
             let ob_reason = $(this).closest('tr').find('td[name="leave_reason"]').text().trim();
 
+            $("#ob_id").val(ob_id);
             $("#ob_emp_name").val(ob_emp_name);
             $("#ob_date_filled").val(ob_date_filled);
             $("#destin_from").val(destin_from);

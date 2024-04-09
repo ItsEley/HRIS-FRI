@@ -253,8 +253,8 @@
                            ';
             } else { //emp
                echo '
-                        <a class="dropdown-item" href="' . base_url('emp_profile') . '">My Profile</a> 
-                        <a class="dropdown-item" href="' . base_url('emp/profile') . '">Settings</a>  
+                        <a class="dropdown-item" href="' . base_url('employee/profile') . '">My Profile</a> 
+                        <a class="dropdown-item" href="' . base_url('employee/setting') . '">Settings</a>  
                          
                            ';
             }

@@ -44,9 +44,9 @@
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
 
                     <?php
-                    $data['icon'] = "fa fa-address-book";
+                    $data['icon_type'] = "1";
+                    $data['icon'] = "fa-solid fa-clipboard";
                     $data['count'] = rand(0,10);
-
                     $data['label'] = "Pending Evaluation";
                     $this->load->view('components/card-dash-widget', $data)
 
@@ -56,7 +56,8 @@
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
 
                     <?php
-                    $data['icon'] = "fa fa-address-book";
+                    $data['icon_type'] = "1";
+                    $data['icon'] = "fa-solid fa-thumbs-down";
                     $data['count'] = rand(0,20);
                     $data['label'] = "Lowest Rating";
                     $this->load->view('components/card-dash-widget', $data)
@@ -68,7 +69,8 @@
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
 
                     <?php
-                    $data['icon'] = "fa fa-address-book";
+                    $data['icon_type'] = "1";
+                    $data['icon'] = "fa-solid fa-thumbs-up";
                     $data['count'] = rand(60,80);
                     $data['label'] = "Average Rating";
                     $this->load->view('components/card-dash-widget', $data)
@@ -80,7 +82,8 @@
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
 
                     <?php
-                    $data['icon'] = "fa fa-address-book";
+                    $data['icon_type'] = "1";
+                    $data['icon'] = "fa-solid fa-star";
                     $data['count'] = rand(80,100);
                     $data['label'] = "Highest Rating";
                     $this->load->view('components/card-dash-widget', $data)

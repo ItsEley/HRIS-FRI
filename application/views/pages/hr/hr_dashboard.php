@@ -34,9 +34,9 @@
                <?php
 
                $total_emp = $this->db->count_all('employee');
+               $data['icon_type'] = "1";
                $data['icon'] = "fa-solid fa-user";
                $data['count'] = $total_emp;
-
                $data['label'] = "Employees";
                $this->load->view('components/card-dash-widget', $data)
                ?>
@@ -45,6 +45,7 @@
             <div class="col-lg-3 col-6">
 
                <?php
+               $data['icon_type'] = "1";
                $data['icon'] = "fa fa-address-book";
                $data['count'] = rand(0, 200);
                $data['label'] = "Applicant";
@@ -55,6 +56,7 @@
             </div>
             <div class="col-lg-3 col-6">
                <?php
+               $data['icon_type'] = "1";
                $data['icon'] = "fa fa-check-circle";
                $data['count'] = rand(0, 200);
                $data['label'] = "Overtime";
@@ -73,6 +75,9 @@
                $pending_wsa = $this->db->count_all('f_worksched_adj');
 
                $total = $pending_leave + $pending_ob + $pending_og + $pending_ot + $pending_ut + $pending_wsa;
+
+               $data['icon_type'] = "2";
+               $data['img_name'] = "business-leave-2.png";
                $data['icon'] = "fa fa-rocket";
                $data['count'] = $total;
                $data['label'] = "Leaves";

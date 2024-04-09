@@ -86,22 +86,23 @@ $(document).ready(function() {
         var empId;
         var source = $(this).attr('data-source'); // Get the source value
 
-        if (source === 'og_approveButton') {
+        if (source === 'og_approveButton' || source === 'og_denyButton') {
             rowId = $('#og_id').val();
             empId = $('#employee_id').val();
-        } else if (source === 'leave_approveButton') {
-            rowId = $('#leave_emp_name').val();
+        } else if (source === 'leave_approveButton' || source === 'leave_denyButton') {
+            rowId = $('#leave_id').val();
             empId = $('#leave_employee_id').val();
-        } else if (source === 'ot_approveButton') {
-            rowId = $('#ot_emp_name').val();
+        } else if (source === 'ot_approveButton' || source === 'ot_denyButton') {
+            rowId = $('#ot_id').val();
             empId = $('#ot_employee_id').val();
-        } else if (source === 'ut_approveButton') {
-            rowId = $('#ut_emp_name').val();
+        } else if (source === 'ut_approveButton' || source === 'ut_denyButton') {
+            rowId = $('#ut_id').val();
             empId = $('#ut_employee_id').val();
-        } else if (source === 'ob_approveButton') {
-            rowId = $('#ob_emp_name').val();
+        } else if (source === 'ob_approveButton' || source === 'ob_denyButton') {
+            rowId = $('#ob_id').val();
             empId = $('#ob_employee_id').val();
         }
+
 
         console.log('Row ID:', rowId);
         console.log('Source:', source);

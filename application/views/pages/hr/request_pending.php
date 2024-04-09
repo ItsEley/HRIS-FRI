@@ -109,6 +109,8 @@
                     $this->db->where('status', 'pending');
                     $this->db->where('head_status', 'approved');
                     $total_count += $this->db->count_all_results();
+                    $data['icon_type'] = "1";
+
                     $data['icon'] = "fa fa-address-book";
                     $data['count'] = $total_count;
                     $data['label'] = "Requests Pending";
@@ -119,6 +121,8 @@
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
 
                     <?php
+                    $data['icon_type'] = "1";
+
                     $data['icon'] = "fa fa-address-book";
 
                     $this->db->select('COUNT(*) as count');
@@ -139,6 +143,8 @@
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
 
                     <?php
+                    $data['icon_type'] = "1";
+
                     $data['icon'] = "fa fa-address-book";
 
                     $this->db->from('f_overtime');
@@ -152,6 +158,8 @@
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
 
                     <?php
+                    $data['icon_type'] = "1";
+
                     $data['icon'] = "fa fa-address-book";
 
                     $this->db->from('f_undertime');
@@ -168,6 +176,8 @@
 
                         Pending Leaves
                         <?php
+                        $data['icon_type'] = "1";
+
                         $this->db->from('f_leaves');
                         $this->db->where('head_status', 'approved');
                         $this->db->where('status', 'pending');
@@ -271,15 +281,19 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                       $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_leaves f 
-                                       LEFT JOIN employee e ON f.emp_id = e.id 
-                                       WHERE f.head_status = 'approved' AND f.status = 'pending'");
-            
+                                        $session_emp = $_SESSION['id'];
+                                        $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_leaves f 
+                           LEFT JOIN employee e ON f.emp_id = e.id 
+                           WHERE f.head_status = 'approved' AND f.status = 'pending' AND f.emp_id != $session_emp");
+
                                         foreach ($query->result() as $row) {
                                             $fname = $row->fname;
                                             $lname = $row->lname;
                                             $fullname = $fname . ' ' . $lname;
+                                            // Do something with $fullname
+
                                         ?>
+
                                             <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
@@ -373,7 +387,7 @@
                                                                                         <button id="denyButton" class="btn text-danger btn-block bg-white border border-danger">Deny</button>
                                                                                     </div>
                                                                                     <div class="col-sm-6">
-                                                                                    <button id="approveButtonhr" class="btn btn-primary btn-block" data-row-id="<?php echo $row->id; ?>">Approve</button>
+                                                                                        <button id="approveButtonhr" class="btn btn-primary btn-block" data-row-id="<?php echo $row->id; ?>">Approve</button>
 
                                                                                     </div>
                                                                                 </div>
@@ -434,16 +448,16 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                <?php
-                                       $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_outgoing f 
+                                                    <?php
+                                                    $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_outgoing f 
                                        LEFT JOIN employee e ON f.emp_id = e.id 
                                        WHERE f.head_status = 'approved' AND f.status = 'pending'");
-            
-                                        foreach ($query->result() as $row) {
-                                            $fname = $row->fname;
-                                            $lname = $row->lname;
-                                            $fullname = $fname . ' ' . $lname;
-                                        ?>
+
+                                                    foreach ($query->result() as $row) {
+                                                        $fname = $row->fname;
+                                                        $lname = $row->lname;
+                                                        $fullname = $fname . ' ' . $lname;
+                                                    ?>
                                                         <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
                                                             <td style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
@@ -602,11 +616,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php
-                                       $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_overtime f 
+                                        <?php
+                                        $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_overtime f 
                                        LEFT JOIN employee e ON f.emp_id = e.id 
                                        WHERE f.head_status = 'approved' AND f.status = 'pending'");
-            
+
                                         foreach ($query->result() as $row) {
                                             $fname = $row->fname;
                                             $lname = $row->lname;
@@ -767,11 +781,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php
-                                       $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_undertime f 
+                                        <?php
+                                        $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_undertime f 
                                        LEFT JOIN employee e ON f.emp_id = e.id 
                                        WHERE f.head_status = 'approved' AND f.status = 'pending'");
-            
+
                                         foreach ($query->result() as $row) {
                                             $fname = $row->fname;
                                             $lname = $row->lname;
@@ -929,11 +943,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php
-                                       $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_off_bussiness f 
+                                        <?php
+                                        $query = $this->db->query("SELECT f.*, e.fname, e.lname FROM f_off_bussiness f 
                                        LEFT JOIN employee e ON f.emp_id = e.id 
                                        WHERE f.head_status = 'approved' AND f.status = 'pending'");
-            
+
                                         foreach ($query->result() as $row) {
                                             $fname = $row->fname;
                                             $lname = $row->lname;
@@ -1124,7 +1138,7 @@
                                     ?>
                                 </select>
                             </div>
-                         
+
                         </div>
 
                         <div class="row mb-3">
@@ -1516,8 +1530,8 @@
         });
 
 
- 
-       
+
+
 
         $(document).ready(function() {
             $('.update-outgoing').click(function(e) {

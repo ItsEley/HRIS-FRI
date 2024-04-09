@@ -56,7 +56,9 @@
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
 
                     <?php
-                    $data['icon'] = "fa-solid fa-user";
+                    $data['icon_type'] = "2";
+                    // $data['icon'] = "fa-solid fa-user";
+                    $data['img_name'] = 'absent.png';
                     $data['count'] = rand(0, 200);
                     $data['label'] = "Absent this year";
                     $this->load->view('components/card-dash-widget', $data)
@@ -67,6 +69,8 @@
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
 
                     <?php
+                                        $data['icon_type'] = "1";
+
                     $data['icon'] = "fa fa-address-book";
                     $data['count'] = rand(0, 200);
                     $data['label'] = "Remaining Leaves";
@@ -78,6 +82,8 @@
                 </div>
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                     <?php
+                                        $data['icon_type'] = "1";
+
                     $data['icon'] = "fa fa-check-circle";
                     $data['count'] = rand(0, 200);
                     $data['label'] = "Overtime";
@@ -88,6 +94,8 @@
                 </div>
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                     <?php
+                                        $data['icon_type'] = "1";
+
                     $data['icon'] = "fa fa-rocket";
                     $data['count'] = rand(0, 200);
                     $data['label'] = "Undertime";
@@ -174,46 +182,137 @@
 
 
 
-                <div class="col-4">
-                    <h2 class="text-center">Upcoming Events</h2>
+                <div class="col-lg-5 col-md-12">
+               <h2 class="page-title">Upcoming Events</h2>
 
-                    <div class="row timeline-panel " style="background-color: white; ">
-                        <h3>It's John Leo Bayani's Birthday!</h3>
-                        <p>Today • March 26, 2023</p>
-                        <p class="text-overflow-ellipsis" style="height:120px;" onclick="$(this).css('height','auto')">Happy Birthday! 🎉🎂 Wishing you a day filled with joy, laughter,
-                            and all the things that make you smile. May this special day be as
-                            wonderful as you are, and may the year ahead bring you countless blessings,
-                            love, and unforgettable memories. Here's to celebrating you today and always!
-                            Have an amazing birthday Mr. Leo!</p>
-                        <img src="../assets/img/birthday-GIF.gif" alt="User Image" loop="infinite">
+               <?php
+               $query = $this->db->query("SELECT 
+               'event' AS type,
+               `id`, 
+               `event_name` AS name, 
+               `event_description` AS description, 
+               `date_start`, 
+               `date_end`, 
+               `time_start`, 
+               `time_end`, 
+               `is_workday`, 
+               `date_created` 
+           FROM 
+               `sys_events`
+           WHERE 
+               MONTH(`date_start`) = MONTH(CURDATE()) AND YEAR(`date_start`) = YEAR(CURDATE())
+           
+           UNION
+           
+           SELECT 
+               'holiday' AS type,
+               `id`, 
+               `holiday_name` AS name, 
+               `holiday_description`, 
+               `date_start`, 
+               `date_end`, 
+               `time_start`, 
+               `time_end`, 
+               `is_workday`, 
+               `date_created` 
+           FROM 
+               `sys_holidays`
+           WHERE 
+               MONTH(`date_start`) = MONTH(CURDATE()) AND YEAR(`date_start`) = YEAR(CURDATE())
+           
+           UNION
+           
+           SELECT 
+               'birthday' AS type,
+               NULL AS id, -- No ID for birthday event
+               CONCAT(`fname`, ' ', COALESCE(`mname`, ''), ' ', `lname`) AS name, -- Concatenate first, middle, and last name
+               'Employee Birthday' AS description, -- Set a default description
+               DATE_FORMAT(CONCAT(YEAR(CURDATE()), '-', MONTH(`dob`), '-', DAY(`dob`)), '%Y-%m-%d') AS date_start, -- Use current year's birthday as the start date
+               DATE_FORMAT(CONCAT(YEAR(CURDATE()), '-', MONTH(`dob`), '-', DAY(`dob`)), '%Y-%m-%d') AS date_end, -- Use current year's birthday as the end date
+               NULL AS time_start, -- No specific time for birthdays
+               NULL AS time_end, -- No specific time for birthdays
+               0 AS is_workday, -- Assuming birthdays are not workdays
+               `date_created` 
+           FROM 
+               `employee`
+           WHERE 
+               MONTH(`dob`) = MONTH(CURDATE()) -- Filter birthdays occurring in the current month
+           ");
 
-                    </div>
+               // Check if the query was successful
+               if ($query) {
+                  // Check if there are rows returned
+                  if ($query->num_rows() > 0) {
+                     // Fetch the result rows as an array of objects
+                     $announcement = $query->result();
 
-                    <div class="row timeline-panel " style="background-color: white;">
-                        <h3>Innovate 2024: Unleashing Creativity in the Digital Era</h3>
-                        <p>April 15, 2024, 9:00 AM - 5:00 PM</p>
-                        <p class="text-overflow-ellipsis" style="height:120px;" onclick="$(this).css('height','auto')">Join us for a day of exploration and inspiration as we delve into the world of digital
-                            innovation. From cutting-edge technologies to groundbreaking strategies, this event will
-                            ignite your creativity and empower you to shape the future. Engage with industry experts,
-                            participate in interactive workshops, and network with like-minded innovators. Don't miss
-                            this opportunity to unlock your potential and drive change in the digital landscape.
-                        </p>
-                    </div>
+                     // Process the result rows
+                     foreach ($announcement as $row) {
+                        // Access properties of each shift object as needed
+                        // $data['id'] = $row->id;
+                        // $data['title'] = $row->title;
+                        // $data['content'] =  $row->content;
+                        // $data['author']  = ($row->author === NULL) ? "N/A" : $row->author;
+                        // $data['department'] = ($row->to_all == "1") ? "All" : $row->departments;
+                        // $data['date'] =  $row->date_created;
 
-                    <div class="row timeline-panel " style="background-color: white; ">
-                        <h3>Wellness Week: Mind, Body, and Soul</h3>
-                        <p>May 20-24, 2024, All Day</p>
-                        <p class="text-overflow-ellipsis" style="height:200px;" onclick="$(this).css('height','auto')">Take a break from the hustle and bustle of work and prioritize your well-being during Wellness Week.
-                            Join us for a series of activities designed to rejuvenate your mind, energize your body,
-                            and nourish your soul. From yoga sessions and meditation workshops to nutritious cooking
-                            classes and stress-relief seminars, this week-long event offers something for everyone.
-                            Invest in yourself and discover the power of holistic wellness.
-                        </p>
-                    </div>
+                        $isToday = strtotime($row->date_start) === strtotime(date('Y-m-d'));
 
 
+               ?>
 
-                </div>
+
+                        <div class="timeline-panel type-<?= $row->type ?>" style="background-color: white; ">
+                           <h3 class="event-name">
+
+                              <?php if ($row->type == "birthday") {
+                                 echo "Happy Birthday $row->name !";
+                              } else {
+                                 echo $row->name;
+                              }
+                              ?>
+                           </h3>
+                           <p class="event-date"><?= $isToday ? "<span class = 'badge badge-soft-info'>Today</span> • " : ""; ?> 
+                            <?= formatDateOnly($row->date_start); ?></p>
+                           <p class="text-overflow-ellipsis event-description" onclick="$(this).css('height','auto')">
+                              <?php
+                              if ($row->description == NULL || $row->description == '') {
+                                 echo "No description available";
+                              } else {
+                                 echo $row->description;
+                              }
+                              ?></p>
+
+                           <?php
+                           if ($row->type == "birthday") {
+                              echo '<img src="../assets/img/birthday-GIF.gif" alt="User Image" loop="infinite">';
+                           }
+                           ?>
+
+
+
+                        </div>
+
+               <?php
+
+                     }
+                  } else {
+                     // Handle case when no rows are returned
+                     echo "No announcements yet.";
+                  }
+               } else {
+                  // Handle case when query fails
+                  echo "Error executing query: " . $this->db->error()['message'];
+               }
+
+
+               ?>
+
+
+
+
+
+            </div>
             </div>
 
         </div>
