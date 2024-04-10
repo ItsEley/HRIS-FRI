@@ -95,10 +95,17 @@
 
                                                 <td><?= formatTimeOnly($shift->time_to) ?></td>
                                                 <td>
-                                                    <a class="dropdown-item edit-shift" href="#" data-shift-id="<?= $shift->id ?>" data-bs-toggle="modal" data-bs-target="#modal_edit_shift">
-                                                        <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                                    </a>
+                                                <button type = "button" class="edit-shift modal-trigger btn btn-rounded btn-primary p-1 px-2"
+                                                     style = "margin-right:10px; font-size:10px" data-bs-toggle="modal" data-bs-target="#modal_edit_shift"
+                                                     data-shift-id = "<?= $shift->id ?>">
+                                                        <i class="fas fa-pencil m-r-5"></i>Edit
+                                                    </button>
 
+                                                    <button type = "button" class="delete-shift modal-trigger btn btn-rounded btn-danger p-1 px-2"
+                                                     style = "margin-right:10px; font-size:10px" data-bs-toggle="modal" data-bs-target="#modal_delete_shift"
+                                                     data-shift-id = "<?= $shift->id ?>" data-shift-label = "<?= $shift->group_ ?>">
+                                                        <i class="fas fa-trash m-r-5"></i>Delete
+                                                    </button>
 
                                                 </td>
 
@@ -140,43 +147,13 @@
 
 
 
-<!-- Edit Event Modal -->
-<div class="modal fade" id="modal_create_shift" tabindex="-1" aria-labelledby="modal_create_shiftLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modal_create_shiftLabel">Create Shift</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editEventForm">
 
-                    <div class="mb-3">
-                        <label for="editEventTitle" class="form-label">Group label</label>
-                        <input type="text" class="form-control" id="editEventTitle" name="shift_label" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="editEventTitle" class="form-label">Short description</label>
-                        <input type="text" class="form-control" id="editEventTitle" name="shift_description"
-                        placeholder="e.g 'Regular','Dayshift','Nightshift' (Optional)">
-                    </div>
-                    <div class="mb-3">
-                        <label for="editEventStart" class="form-label">Time from</label>
-                        <input type="time" class="form-control" id="editEventStart" name="shift_start" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editEventEnd" class="form-label">Time to</label>
-                        <input type="time" class="form-control" id="editEventEnd" name="shift_start" required>
-                    </div>
-                    <!-- Add more fields for editing event details -->
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /Edit Event Modal -->
+
+
+<?php $this->load->view('templates\modals\shift_edit.php'); ?>
+<?php $this->load->view('templates\modals\shift_create.php'); ?>
+<?php $this->load->view('templates\modals\shift_delete.php'); ?>
+
 
 
 <script>
@@ -191,6 +168,8 @@
             // You can add more options as needed
         });
 
+
+        
 
     });
 </script>

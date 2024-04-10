@@ -164,24 +164,12 @@
 
                                                 <td>
 
-                                                <a class="" href="#" data-bs-toggle="modal" data-bs-target="#modal_evaluate_emp"
-                                                 data-emp-id="<?php echo $row->id; ?>" style = "color:black">
-                                                        <i class="fa-solid fa-pencil m-r-5"></i> Evaluate
-                                                    </a>
-                                                    <!-- <div class="dropdown">
-                                                        <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <i class="material-icons">more_vert</i>
-                                                        </a>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
-                                                    <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?php echo $row->id; ?>">
-                                                        <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                                    </a>
-                                                    <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
-                                                        <i class="fa-regular fa-trash-can m-r-5"></i> Delete
-                                                    </a>
-                                                </div>
-                                                    </div> -->
-
+                                                <button type = "button" class="dropdown-item delete-employee modal-trigger btn btn-rounded btn-primary p-1 px-2 w-auto"
+                                                     style = "margin-right:10px; font-size:10px" data-bs-toggle="modal" data-bs-target="#modal_evaluate_emp"
+                                                      >
+                                                      <i class="fa-solid fa-star"></i> Evaluate
+                                                    </button>
+                                                    
                                                 </td>
 
 

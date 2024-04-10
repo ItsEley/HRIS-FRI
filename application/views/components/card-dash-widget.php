@@ -1,5 +1,12 @@
 
 
+<?php
+
+if(!isset($size)){
+   $size = "32px";
+}
+?>
+
 
 <div class="card dash-widget" style = "min-height:130px;min-width:180px;">
     <div class="card-body">
@@ -10,7 +17,7 @@
          }else if($icon_type == "2"){
             echo "<img src='" . base_url('assets/img/icons/' . $img_name) . "' 
             alt='$img_name' style='filter: invert(81%) sepia(35%) saturate(4291%) hue-rotate(327deg) brightness(103%)
-             contrast(101%); height:32px'>";
+             contrast(101%); height:$size'>";
 
          }
       

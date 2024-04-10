@@ -51,79 +51,108 @@ $("#login-form").submit(function(e) {
 });
 
 $(document).ready(function() {
-    $('#og_approveButton').click(function(event) {
-        event.preventDefault();
-        $('#approveModal').modal('show');
-        $('#confirmApprove').attr('data-source', 'og_approveButton');
-    });
-
-    $('#leave_approveButton').click(function(event) {
-        event.preventDefault();
-        $('#approveModal').modal('show');
-        $('#confirmApprove').attr('data-source', 'leave_approveButton');
-    });
-
-    $('#ot_approveButton').click(function(event) {
-        event.preventDefault();
-        $('#approveModal').modal('show');
-        $('#confirmApprove').attr('data-source', 'ot_approveButton');
-    });
-
-    $('#ut_approveButton').click(function(event) {
-        event.preventDefault();
-        $('#approveModal').modal('show');
-        $('#confirmApprove').attr('data-source', 'ut_approveButton');
-    });
-
-    $('#ob_approveButton').click(function(event) {
-        event.preventDefault();
-        $('#approveModal').modal('show');
-        $('#confirmApprove').attr('data-source', 'ob_approveButton');
-    });
-
-    $('#confirmApprove').click(function() {
-        var rowId;
-        var empId;
-        var source = $(this).attr('data-source'); // Get the source value
-
-        if (source === 'og_approveButton' || source === 'og_denyButton') {
-            rowId = $('#og_id').val();
-            empId = $('#employee_id').val();
-        } else if (source === 'leave_approveButton' || source === 'leave_denyButton') {
-            rowId = $('#leave_id').val();
-            empId = $('#leave_employee_id').val();
-        } else if (source === 'ot_approveButton' || source === 'ot_denyButton') {
-            rowId = $('#ot_id').val();
-            empId = $('#ot_employee_id').val();
-        } else if (source === 'ut_approveButton' || source === 'ut_denyButton') {
-            rowId = $('#ut_id').val();
-            empId = $('#ut_employee_id').val();
-        } else if (source === 'ob_approveButton' || source === 'ob_denyButton') {
-            rowId = $('#ob_id').val();
-            empId = $('#ob_employee_id').val();
-        }
-
-
-        console.log('Row ID:', rowId);
-        console.log('Source:', source);
-
-        $.ajax({
-            type: "POST",
-            url: base_url + 'humanr/headapprove',
-            data: {
-                row_id: rowId,
-                emp_id: empId,
-                source: source
-            },
-            success: function(response) {
-                alert(response);
-            }
+    // Function to handle approve button clicks
+    function handleApproveButtonClick(buttonId, rowIdFieldId, empIdFieldId) {
+        $(buttonId).click(function(event) {
+            event.preventDefault();
+            $('#approveModal').modal('show');
+            $('#confirmApprove').attr('data-source', buttonId.substring(1));
         });
+    }
 
-        $('#approveModal').modal('hide');
-    });
+    // Handle approve button clicks for different actions
+    handleApproveButtonClick('#og_approveButton', '#og_id', '#employee_id');
+    handleApproveButtonClick('#leave_approveButton', '#leave_id', '#leave_employee_id');
+    handleApproveButtonClick('#ot_approveButton', '#ot_id', '#ot_employee_id');
+    handleApproveButtonClick('#ut_approveButton', '#ut_id', '#ut_employee_id');
+    handleApproveButtonClick('#ob_approveButton', '#ob_id', '#ob_employee_id');
+
+    // Function to handle deny button clicks
+    function handleDenyButtonClick(buttonId, rowIdFieldId, empIdFieldId) {
+        $(buttonId).click(function(event) {
+            event.preventDefault();
+            $('#denyModal').modal('show');
+            $('#confirmDeny').attr('data-source', buttonId.substring(1) + 'Button'); // differentiate between approve and deny
+        });
+    }
+
+    // Handle deny button clicks for different actions
+    handleDenyButtonClick('#og_denyButton', '#og_id', '#employee_id');
+    handleDenyButtonClick('#leave_denyButton', '#leave_id', '#leave_employee_id');
+    handleDenyButtonClick('#ot_denyButton', '#ot_id', '#ot_employee_id');
+    handleDenyButtonClick('#ut_denyButton', '#ut_id', '#ut_employee_id');
+    handleDenyButtonClick('#ob_denyButton', '#ob_id', '#ob_employee_id');
+
+    // Function to handle confirmation of approve or deny action
+    function handleConfirmationClick(confirmButtonId, modalId) {
+        $(confirmButtonId).click(function() {
+            var rowId;
+            var empId;
+            var source = $(this).attr('data-source'); // Get the source value
+
+            // Determine rowId and empId based on the source
+            if (source.includes('approveButton')) {
+                rowId = $(modalId).find('.row-id').val();
+                empId = $(modalId).find('.employee-id').val();
+            } else if (source.includes('denyButton')) {
+                rowId = $(modalId).find('.row-id').val();
+                empId = $(modalId).find('.employee-id').val();
+            }
+
+            console.log('Row ID:', rowId);
+            console.log('Source:', source);
+
+            // Perform AJAX request
+            $.ajax({
+                type: "POST",
+                url: base_url + 'humanr/headapprove',
+                data: {
+                    row_id: rowId,
+                    emp_id: empId,
+                    source: source
+                },
+                success: function(response) {
+                    alert(response);
+                }
+            });
+
+            $(modalId).modal('hide');
+        });
+    }
+
+    // Handle confirmation of approve action
+    handleConfirmationClick('#confirmApprove', '#approveModal');
+    // Handle confirmation of deny action
+    handleConfirmationClick('#confirmDeny', '#denyModal');
 });
 
+
+// Assuming you're using jQuery for AJAX
+$.ajax({
+    // Your AJAX settings...
+    success: function(response) {
+        try {
+            response = JSON.parse(response);
+            if (response.status === 0 && response.modal) {
+                // Show the appropriate modal based on the response
+                $('#' + response.modal).modal('show');
+            } else if (response.status === 1) {
+                // Handle success case or any other logic
+                // You can optionally show a success message or redirect the user
+            } else {
+                // Handle other status codes or unexpected responses
+                console.error('Unexpected response:', response);
+            }
+        } catch (error) {
+            // Handle JSON parsing errors
+            console.error('Error parsing JSON:', error);
+        }
+    },
+    error: function(xhr, status, error) {
+        // Handle AJAX errors
+        console.error('AJAX Error:', status, error);
+    }
+});
 
 
 // $(document).ready(function() {

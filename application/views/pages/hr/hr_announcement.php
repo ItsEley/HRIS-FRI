@@ -25,9 +25,7 @@
        <!-- Sidebar -->
        <?php $this->load->view('templates/sidebar') ?>
        <!-- /Sidebar -->
-       <!-- Two Col Sidebar -->
 
-       <!-- /Two Col Sidebar -->
        <!-- Page Wrapper -->
        <div class="page-wrapper">
 
@@ -56,6 +54,7 @@
                <!-- /Page Header -->
 
 
+
                <!-- data table -->
                <div class="row timeline-panel m-0">
                    <div class="col-md-12">
@@ -78,7 +77,7 @@
                                     a.id, 
                                     a.type, 
                                     a.title, 
-                                    a.content, 
+                                    a.content, e.id as `emp_id`,
                                     CONCAT(e.fname, ' ', COALESCE(e.mname, ''), ' ', e.lname) AS author,
                                     a.to_all, 
                                     a.date_created, 
@@ -94,14 +93,14 @@
                                 GROUP BY 
                                     a.id
                                 ORDER BY 
-                                    a.date_created DESC
+                                    a.id DESC
                                 
                                 ");
                                     foreach ($query->result() as $row) {
                                         $ann_id = $row->id;
                                         $title = $row->title;
                                         $content = $row->content;
-                                        $author =($row->author === NULL) ? "N/A" : $row->author;
+                                        $author = ($row->author === NULL) ? "N/A" : $row->author;
                                         $department = ($row->to_all == "1") ? "All" : $row->departments;
                                         $date = $row->date_created;
                                     ?>
@@ -109,21 +108,43 @@
                                            <td><?= $title ?></td>
                                            <td style="max-width: 200px; overflow: hidden;">
                                                <div style="max-height: 50px; overflow: hidden;">
-                                                   <a class="ellipsis announcement-open my-hover" style="text-decoration:none;color:black" href="#" data-bs-toggle="modal" data-bs-target="#modal_announcement_detail" data-ann-id="<?= $ann_id ?>">
+                                                   <a class="ellipsis announcement-open my-hover" style="text-decoration:none;color:black" href="#" 
+                                                   data-bs-toggle="modal" data-bs-target="#modal_announcement_detail" data-ann-id="<?= $ann_id ?>"
+                                                   id = "ann_content_<?= $ann_id ?>">
                                                        <?= $content ?>
                                                    </a>
                                                </div>
                                            </td>
                                            <td><?= $author ?></td>
-                                           <td><?= $department?></td>
+                                           <td><?= $department ?></td>
                                            <td><?= formatDateTime($date) ?></td>
-                                           <td>
-                                               <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" data-emp-id="<?= $ann_id ?>">
-                                                   <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                               </a>
-                                               <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?= $ann_id ?>">
-                                                   <i class="fa-regular fa-trash-can m-r-5"></i> Delete
-                                               </a>
+                                           <td class = "text-center">
+                                            <?php
+                                            if($row->emp_id == $this->session->userdata('id')){
+                                                echo '
+                                                <button type = "button" class="edit-announcement modal-trigger btn btn-rounded btn-primary p-1 px-2"
+                                                 style = "margin-right:10px; font-size:10px" data-bs-toggle="modal" data-bs-target="#modal_announcement_edit"
+                                                  data-ann-id="'. $ann_id .'">
+                                                    <i class="fas fa-pencil m-r-5"></i>Edit
+                                                </button>
+
+                                               <button type = "button" class="delete-announcement modal-trigger btn btn-rounded btn-danger p-1 px-2"
+                                               style = "font-size:10px"  data-bs-toggle="modal" data-bs-target="#modal_announcement_delete"
+                                               data-ann-id="'. $ann_id .'">
+                                                <i class="fa-regular fa-trash-can m-r-5"></i>Delete
+                                               </button>
+                                                ';
+                                            }else{
+                                                echo '
+                                                <button type = "button" class="delete-announcement modal-trigger btn btn-rounded btn-info p-1 px-2" 
+                                                style = "font-size:10px" 
+                                                data-ann-id="<?= $ann_id ?>" onclick = "$(\'#ann_content_'.$ann_id.'\')[0].click()" >
+                                                <i class="fa-solid fa-eye"></i> View
+                                            </button>
+                                                ';
+                                            }
+                                            ?>
+                                         
                                            </td>
                                        </tr>
 
@@ -152,80 +173,12 @@
 
 
 
-   <div id="modal_announcement_create" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
-       <div class="modal-dialog modal-lg">
-           <div class="modal-content">
-               <div class="modal-header">
-                   <h4 class="modal-title">Create Announcement</h4>
-                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-               </div>
-               <form method="post" id="add_announcement">
-                   <div class="modal-body p-4">
-
-                       <div class="input-block mb-3 row">
-                           <label class="col-form-label col-md-2">Title</label>
-
-                           <div class="col-md-10">
-                               <input type="text" class="form-control" name="title" placeholder="Title" required>
-                           </div>
-
-                           <input type="text" name="selected_dept" id="selected_dept" hidden required>
-                           <input type="text" name="author" id="author" value = "<?= $_SESSION['id']?>" hidden>
-
-
-                       </div>
-
-                       <div class="input-block mb-3 row">
-                           <label class="col-form-label col-md-2">Department</label>
-                           <div class="col-md-10">
+   <!-- modal create -->
+   <?php $this->load->view('templates\modals\announcement_create.php'); ?>
+   <?php $this->load->view('templates\modals\announcement_edit.php'); ?>
 
 
 
-                               <?php
-
-                                echo ' <input type="checkbox" class="btn-check" id="select_all" group="dept_multi" autocomplete="off">
-                                <label class="btn btn-light btn-rounded d-inline-flex w-auto" for="select_all" style = "font-size:12px;margin:2px">All</label>';
-
-                                //get select-options
-                                $query =  $this->db->get('department');
-                                $data['query'] = $query;
-                                // Check if query executed successfully
-                                if ($query->num_rows() > 0) {
-                                    foreach ($query->result() as $row) {
-
-                                        // Output each department as an option
-                                        echo '
-                                        <input type="checkbox" class="btn-check" id="dept_' . $row->id . '" value = "' . $row->id . '" group="dept_multi" autocomplete="off">
-                                        <label class="btn btn-light btn-rounded d-inline-flex w-auto" for="dept_' . $row->id . '" style = "font-size:12px;margin:2px">' . $row->department . '</label>';
-
-                                        // echo '<option value="' . $row->id . '">' .  $row->department . '</option>';
-                                    }
-                                } else {
-                                    // Handle no results from the database
-                                    echo '<option value="">No departments found</option>';
-                                }
-                                ?>
-                           </div>
-                       </div>
-
-
-                       <!-- Hidden input field to store Summernote content -->
-                       <input type="hidden" name="editor_content" id="editor_content" required>
-                       <!-- Editor container -->
-                       <div id="editor" name="content"></div>
-
-
-
-                   </div>
-                   <div class="modal-footer">
-                       <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
-
-                       <button type="submit" class="btn btn-info waves-effect waves-light">Submit</button>
-                   </div>
-           </div>
-           </form>
-       </div>
-   </div><!-- /.modal -->
 
    <?php $this->load->view('components\modal-announcement-details.php'); ?>
 
@@ -236,9 +189,7 @@
            $("li > a[href='<?= base_url('hr/announcement') ?>']").parent().addClass("active");
 
            $('#dt_announcements').DataTable({
-               order: [
-                   [4, 'desc']
-               ] // Sort the  column in ascending order initially
+               "order": [] // Disable initial sorting
            });
 
            // Initialize Summernote when modal is shown
@@ -259,7 +210,7 @@
                            ['view', ['fullscreen', ]],
                        ],
                        fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New']
-                       
+
                    });
                    window.summernoteInitialized = true;
                }

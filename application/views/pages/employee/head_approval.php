@@ -12,13 +12,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
     <?php
     if (isset($_POST['request_type']) && !empty($_POST['request_type']) && isset($_POST['id']) && !empty($_POST['id'])) {
-    
+
         $request_type = $_POST['request_type'];
         $id = $_POST['id'];
 
-        $data = array(); 
+        $data = array();
         if ($request_type == 'LEAVE REQUEST') {
-         
+
             $sql = "SELECT * FROM f_leaves WHERE id = $id";
             $result = $conn->query($sql);
 
@@ -26,7 +26,6 @@
                 $row = $result->fetch_assoc();
                 $data['emp_id'] = $row['emp_id'];
             }
-
         } elseif ($request_type == 'OUTGOING REQUEST') {
             $sql = "SELECT * FROM f_outgoing WHERE id = $id";
             $result = $conn->query($sql);
@@ -37,7 +36,7 @@
         }
         echo json_encode($data);
     } else {
-       
+
         echo json_encode(array('error' => 'Invalid request'));
     }
 
@@ -404,7 +403,7 @@
                                                         </a>
                                                         <div class="dropdown-menu update-leave" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
 
-                                                            <a class="dropdown-item update-pending" href="#" data-bs-toggle="modal" data-bs-target="#view_request" data-target-id="<?php echo $row->id; ?>" >
+                                                            <a class="dropdown-item update-pending" href="#" data-bs-toggle="modal" data-bs-target="#view_request" data-target-id="<?php echo $row->id; ?>">
                                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                                             </a>
                                                             <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
@@ -431,7 +430,7 @@
                                                                 </div>
                                                             </div>
                                                             <form id="update_leave" method="posts">
-                                                            <input type="hidden" class="form-control text-left" id="leave_id" readonly>
+                                                                <input type="hidden" class="form-control text-left" id="leave_id" readonly>
                                                                 <div class="mb-3 row">
                                                                     <div class="col-md-6">
                                                                         <label for="emp_name" class="form-label">Employee Name</label>
@@ -608,7 +607,7 @@
                                                                             </div>
                                                                         </div>
                                                                         <form id="update_outgoing" method="post">
-                                                                        <input type="hidden" class="form-control text-left" id="og_id" readonly>
+                                                                            <input type="hidden" class="form-control text-left" id="og_id" readonly>
                                                                             <div class="mb-3 row">
                                                                                 <div class="col-md-6">
                                                                                     <label for="emp_name" class="form-label">Employee Name</label>
@@ -768,7 +767,7 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <form id="update_employee" method="post">
-                                                            <input type="hidden" class="form-control text-left" id="ot_id" readonly>
+                                                                <input type="hidden" class="form-control text-left" id="ot_id" readonly>
                                                                 <div class="mb-3 row">
                                                                     <div class="col-md-6">
                                                                         <label for="emp_name" class="form-label">Employee Name</label>
@@ -799,7 +798,7 @@
                                                                         <textarea class="form-control" id="ot_reason" rows="3" readonly></textarea>
                                                                     </div>
                                                                 </div>
-                                                              
+
                                                                 <div class="mb-3 row">
                                                                     <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                         <div class="input-block mb-3 form-focus select-focus text-center">
@@ -874,7 +873,7 @@
                                         $query = $this->db->query("
                                          SELECT f.*, e.fname, e.lname 
                                          FROM f_undertime f 
-                                         LEFT JOIN employee e ON f.emp_id = e.employee_id 
+                                         LEFT JOIN employee e ON f.emp_id = e.id 
                                          WHERE f.head_status = 'pending'
                                          AND f.department = ?
                                      ", array($current_department_id));
@@ -930,7 +929,7 @@
                                                                 </div>
                                                             </div>
                                                             <form id="update_undertime" method="post">
-                                                            <input type="hidden" class="form-control text-left" id="ut_id" readonly>
+                                                                <input type="hidden" class="form-control text-left" id="ut_id" readonly>
                                                                 <div class="mb-3 row">
                                                                     <div class="col-md-6">
                                                                         <label for="ut_emp_name" class="form-label">Employee Name</label>
@@ -1103,7 +1102,7 @@
                                                                 </div>
                                                             </div>
                                                             <form id="update_ob" method="post">
-                                                            <input type="hidden" class="form-control text-left" id="ob_id" readonly>
+                                                                <input type="hidden" class="form-control text-left" id="ob_id" readonly>
                                                                 <div class="mb-3 row">
                                                                     <div class="col-md-6">
                                                                         <label for="emp_name" class="form-label">Employee Name</label>
@@ -1582,20 +1581,69 @@
     </div>
 </div>
 
-<div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+<div class="modal custom-modal fade" id="approveModal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-header">
+                    <h3>Approve Request Confirmation</h3>
+                    <p style="font-size: 14px;">Are you really sure to Approve?</p>
+                </div>
+
+                <div class="modal-btn delete-action">
+                    <div class="row">
+                        <div class="col-6 text-end"> <!-- Align Cancel button to the right -->
+                            <button type="button" class="btn btn-secondary cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                        <div class="col-6 text-start"> <!-- Align Confirm Approve button to the left -->
+                            <button type="button" class="btn btn-outline-success continue-btn" id="confirmApprove">Confirm Approve</button>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="approveModalLabel">Confirm Action</h5>
+                <h5 class="modal-title" id="approveModalLabel">Confirm Approve Action</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to perform this action?
+                Are you sure to Approve the request?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success" id="confirmApprove">Approve</button>
-                <button type="button" class="btn btn-danger" id="confirmDeny">Deny</button>
+                <button type="button" class="btn btn-success" id="confirmApprove">Confirm Approve</button>
+
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="modal fade" id="denyModal" tabindex="-1" aria-labelledby="denyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-header">
+                    <h3>Deny Request Confirmation</h3>
+                    <p style="font-size: 14px;">Are you sure to Deny the request?</p>
+                </div>
+                <div class="modal-btn delete-action">
+                    <div class="row">
+                        <div class="col-6 text-end">
+                            <button type="button" class="btn btn-secondary cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                        <div class="col-6 text-start">
+                            <button type="button" class="btn btn-danger continue-btn" id="confirmDeny">Confirm Deny</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

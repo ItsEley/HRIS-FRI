@@ -59,7 +59,7 @@
                     ?>
 
 
-                 
+
                 </div>
             </div>
 
@@ -109,9 +109,10 @@
                                         <td><?php echo $row->shift_group; ?></td>
                                         <td>
 
-                                            <a class="" href="#" data-bs-toggle="modal" data-bs-target="#modal_edit_emp_shift" data-emp-id="<?= $row->employee_id ?>">
-                                                <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                            </a>
+                                            <button type="button" class="edit-announcement modal-trigger btn btn-rounded btn-primary p-1 px-2" 
+                                            style="margin-right:10px; font-size:10px" data-bs-toggle="modal" data-bs-target="#modal_announcement_edit">
+                                                <i class="fas fa-pencil m-r-5"></i>Edit
+                                            </button>
 
 
                                         </td>

@@ -74,7 +74,6 @@ class Employee extends CI_Controller
 		$this->load->view('pages/employee/request_pending');
 		$this->load->view('templates/footer');
 	}
-
 	public function C_leave()
 	{
 		$response = array();
@@ -86,70 +85,83 @@ class Employee extends CI_Controller
 		$empid = $this->input->post('emp_id');
 		$department = $_SESSION['department'];
 		$session_role = $_SESSION['role'];
-
-		$this->db->select('id');
-		$this->db->where('department', $department);
-		$query_department = $this->db->get('department');
-		$department_row = $query_department->row();
-
-		if ($department_row) {
-			$department_id = $department_row->id;
-			$this->db->select('id, roles');
-			$this->db->where('roles', 'Head');
-			$query_roles = $this->db->get('department_roles');
-			$roles_rows = $query_roles->result();
-
-			if ($roles_rows) {
-				
-				foreach ($roles_rows as $roles_row) {
-					$roles = $roles_row->roles;
-					$role_id = $roles_row->id;
-
-					$session_role = $_SESSION['role'];
-					$session_emp = $_SESSION['id'];
-					$head_status = ($session_role == "Head") ? 'approved' : 'pending';
-					$head_id = ($session_role == "Head") ? $session_emp : null;
 	
-					error_log("Role ID: $role_id, Session Role: $session_role, Head Status: $head_status");
-
-					$data = array(
-						'date_from' => $from_date,
-						'date_to' => $to_date,
-						'type_of_leave' => $leaveType,
-						'reason' => $reason,
-						'date_filled' => $date_filled,
-						'emp_id' => $empid,
-						'department' => $department_id,
-						'head_status' => $head_status, 
-					);
-					$sql = $this->db->insert('f_leaves', $data);
-					if ($sql) {
-						$response['status'] = 1;
-						$response['msg'] = 'Done';
-						$response['session_role'] = $session_role;
+		// Check if there are any pending leave requests for the employee
+		$this->db->where('emp_id', $empid);
+		$this->db->where('head_status', 'pending');
+		$query_pending_leave = $this->db->get('f_leaves');
+	
+		if ($query_pending_leave->num_rows() > 0) {
+			// There are pending leave requests for the employee
+			$response['status'] = 0;
+			$response['msg'] = 'You have a pending leave request. Please wait for approval before submitting a new request.';
+		} else {
+			// No pending leave requests, proceed with inserting the new leave request
+	
+			$this->db->select('id');
+			$this->db->where('department', $department);
+			$query_department = $this->db->get('department');
+			$department_row = $query_department->row();
+	
+			if ($department_row) {
+				$department_id = $department_row->id;
+				$this->db->select('id, roles');
+				$this->db->where('roles', 'Head');
+				$query_roles = $this->db->get('department_roles');
+				$roles_rows = $query_roles->result();
+	
+				if ($roles_rows) {
+					foreach ($roles_rows as $roles_row) {
+						$roles = $roles_row->roles;
+						$role_id = $roles_row->id;
+	
+						$session_role = $_SESSION['role'];
+						$session_emp = $_SESSION['id'];
+						$head_status = ($session_role == "Head") ? 'approved' : 'pending';
+						$head_id = ($session_role == "Head") ? $session_emp : null;
+	
+						error_log("Role ID: $role_id, Session Role: $session_role, Head Status: $head_status");
+	
+						$data = array(
+							'date_from' => $from_date,
+							'date_to' => $to_date,
+							'type_of_leave' => $leaveType,
+							'reason' => $reason,
+							'date_filled' => $date_filled,
+							'emp_id' => $empid,
+							'department' => $department_id,
+							'head_status' => $head_status,
+						);
+						$sql = $this->db->insert('f_leaves', $data);
+						if ($sql) {
+							$response['status'] = 1;
+							$response['msg'] = 'Leave request submitted successfully.';
+							$response['session_role'] = $session_role;
+							$response['role_id'] = $role_id;
+							break;
+						} else {
+							$response['status'] = 0;
+							$response['msg'] = 'Error';
+							$response['session_role'] = $session_role;
+							$response['role_id'] = $role_id;
+						}
 						$response['role_id'] = $role_id;
-						break;
-					} else {
-						$response['status'] = 0;
-						$response['msg'] = 'Error';
 						$response['session_role'] = $session_role;
 						$response['role_id'] = $role_id;
 					}
-					$response['role_id'] = $role_id;
-					$response['session_role'] = $session_role;
-					$response['role_id'] = $role_id;
+				} else {
+					$response['status'] = 0;
+					$response['msg'] = 'Role not found';
 				}
 			} else {
 				$response['status'] = 0;
-				$response['msg'] = 'Role not found';
+				$response['msg'] = 'Department not found';
 			}
-		} else {
-			$response['status'] = 0;
-			$response['msg'] = 'Department not found';
 		}
+	
 		echo json_encode($response);
 	}
-
+	
 
 	public function C_off_buss()
 	{
@@ -165,47 +177,61 @@ class Employee extends CI_Controller
 		$empid = $this->input->post('emp_id');
 		$status = $this->input->post('status');
 		$department_name = $_SESSION['department'];
-
-		$this->db->select('id');
-		$this->db->where('department', $department_name);
-		$query = $this->db->get('department');
-		$department_row = $query->row();
-
-		if ($department_row) {
-			$department_id = $department_row->id;
-			$session_role = $_SESSION['role'];
-			$session_emp = $_SESSION['id'];
-			$head_status = ($session_role == "Head") ? 'approved' : 'pending';
-			$head_id = ($session_role == "Head") ? $session_emp : null;
-
-			$data = array(
-				'destin_from' => $destin_from,
-				'destin_to' => $destin_to,
-				'time_from' => $time_from,
-				'time_to' => $time_to,
-				'date' => $outgoing_pass_date,
-				'date_filled' => $date_filled,
-				'reason' => $reason,
-				'emp_id' => $empid,
-				'department' => $department_id,
-				'head_status' => $head_status
-			);
-
-			$sql = $this->db->insert('f_off_bussiness', $data);
-
-			if ($sql) {
-				$response['status'] = 1;
-				$response['msg'] = 'Done';
+	
+		// Check if there are any pending off business requests for the employee
+		$this->db->where('emp_id', $empid);
+		$this->db->where('head_status', 'pending');
+		$query_pending_off_buss = $this->db->get('f_off_bussiness');
+	
+		if ($query_pending_off_buss->num_rows() > 0) {
+			// There are pending off business requests for the employee
+			$response['status'] = 0;
+			$response['msg'] = 'You have a pending off business request. Please wait for approval before submitting a new request.';
+		} else {
+			// No pending off business requests, proceed with inserting the new off business request
+	
+			$this->db->select('id');
+			$this->db->where('department', $department_name);
+			$query = $this->db->get('department');
+			$department_row = $query->row();
+	
+			if ($department_row) {
+				$department_id = $department_row->id;
+				$session_role = $_SESSION['role'];
+				$session_emp = $_SESSION['id'];
+				$head_status = ($session_role == "Head") ? 'approved' : 'pending';
+				$head_id = ($session_role == "Head") ? $session_emp : null;
+	
+				$data = array(
+					'destin_from' => $destin_from,
+					'destin_to' => $destin_to,
+					'time_from' => $time_from,
+					'time_to' => $time_to,
+					'date' => $outgoing_pass_date,
+					'date_filled' => $date_filled,
+					'reason' => $reason,
+					'emp_id' => $empid,
+					'department' => $department_id,
+					'head_status' => $head_status
+				);
+	
+				$sql = $this->db->insert('f_off_bussiness', $data);
+	
+				if ($sql) {
+					$response['status'] = 1;
+					$response['msg'] = 'Off business request submitted successfully.';
+				} else {
+					$response['status'] = 0;
+					$response['msg'] = 'Error';
+				}
 			} else {
 				$response['status'] = 0;
-				$response['msg'] = 'Error';
+				$response['msg'] = 'Department not found';
 			}
-		} else {
-			$response['status'] = 0;
-			$response['msg'] = 'Department not found';
 		}
 		echo json_encode($response);
 	}
+	
 
 	public function C_off_buss1()
 	{
@@ -244,155 +270,195 @@ class Employee extends CI_Controller
 	}
 
 	public function C_outgoing()
-	{
-		$response = array();
-		$outgoing_date = $this->input->post('outgoing_date');
-		$time_from = $this->input->post('time_from');
-		$time_to = $this->input->post('time_to');
-		$destination = $this->input->post('destination');
-		$reason = $this->input->post('reason');
-		$empid = $this->input->post('emp_id');
-		$department_name = $_SESSION['department'];
+{
+    $response = array();
+    $outgoing_date = $this->input->post('outgoing_date');
+    $time_from = $this->input->post('time_from');
+    $time_to = $this->input->post('time_to');
+    $destination = $this->input->post('destination');
+    $reason = $this->input->post('reason');
+    $empid = $this->input->post('emp_id');
+    $department_name = $_SESSION['department'];
 
-		$this->db->select('id');
-		$this->db->where('department', $department_name);
-		$query = $this->db->get('department');
-		$department_row = $query->row();
+    // Check if there are any pending outgoing requests for the employee
+    $this->db->where('emp_id', $empid);
+    $this->db->where('head_status', 'pending');
+    $query_pending_outgoing = $this->db->get('f_outgoing');
 
-		if ($department_row) {
-			$department_id = $department_row->id;
-			$session_role = $_SESSION['role'];
-			$session_emp = $_SESSION['id'];
-			$head_status = ($session_role == "Head") ? 'approved' : 'pending';
-			$head_id = ($session_role == "Head") ? $session_emp : null;
+    if ($query_pending_outgoing->num_rows() > 0) {
+        // There are pending outgoing requests for the employee
+        $response['status'] = 0;
+        $response['msg'] = 'You have a pending outgoing request. Please wait for approval before submitting a new request.';
+    } else {
+        // No pending outgoing requests, proceed with inserting the new outgoing request
 
-			$data = array(
-				'date_filled' => $outgoing_date,
-				'time_from' => $time_from,
-				'time_to' => $time_to,
-				'going_to' => $destination,
-				'reason' => $reason,
-				'department' => $department_id,
-				'emp_id' => $empid,
-				'head_status' => $head_status,
-			);
-			$sql = $this->db->insert('f_outgoing', $data);
+        $this->db->select('id');
+        $this->db->where('department', $department_name);
+        $query = $this->db->get('department');
+        $department_row = $query->row();
 
-			if ($sql) {
-				$response['status'] = 1;
-				$response['msg'] = 'Done';
-			} else {
-				$response['status'] = 0;
-				$response['msg'] = 'Error';
-			}
-		} else {
-			$response['status'] = 0;
-			$response['msg'] = 'Department not found';
-		}
-		echo json_encode($response);
-	}
+        if ($department_row) {
+            $department_id = $department_row->id;
+            $session_role = $_SESSION['role'];
+            $session_emp = $_SESSION['id'];
+            $head_status = ($session_role == "Head") ? 'approved' : 'pending';
+            $head_id = ($session_role == "Head") ? $session_emp : null;
 
+            $data = array(
+                'date_filled' => $outgoing_date,
+                'time_from' => $time_from,
+                'time_to' => $time_to,
+                'going_to' => $destination,
+                'reason' => $reason,
+                'department' => $department_id,
+                'emp_id' => $empid,
+                'head_status' => $head_status,
+            );
+            $sql = $this->db->insert('f_outgoing', $data);
 
-	public function C_undertime()
-	{
-		$response = array();
-		$undertime_date = $this->input->post('undertime_date');
-		$time_in = $this->input->post('time_in');
-		$time_out = $this->input->post('time_out');
-		$reason = $this->input->post('reason');
-		$status = "Pending";
-		$empid = $this->input->post('emp_id');
-		$department_name = $_SESSION['department'];
-		$this->db->select('id');
-		$this->db->where('department', $department_name);
-		$query = $this->db->get('department');
-		$department_row = $query->row();
-
-		if ($department_row) {
-			$department_id = $department_row->id;
-
-			$session_role = $_SESSION['role'];
-			$session_emp = $_SESSION['id'];
-			$head_status = ($session_role == "Head") ? 'approved' : 'pending';
-			$head_id = ($session_role == "Head") ? $session_emp : null;
-			$data = array(
-				'date_filled' => $undertime_date,
-				'date_of_undertime' => $undertime_date,
-				'time_in' => $time_in,
-				'time_out' => $time_out,
-				'reason' => $reason,
-				'status' => $status, 
-				'emp_id' => $empid,
-				'department' => $department_id,
-				'head_status' => $head_status 
-			);
-			$sql = $this->db->insert('f_undertime', $data);
-			if ($sql) {
-				$response['status'] = 1;
-				$response['msg'] = 'Undertime request submitted successfully.';
-			} else {
-				$response['status'] = 0;
-				$response['msg'] = 'Error occurred while submitting the undertime request.';
-			}
-		} else {
-			$response['status'] = 0;
-			$response['msg'] = 'Department not found';
-		}
-
-		echo json_encode($response);
-	}
+            if ($sql) {
+                $response['status'] = 1;
+                $response['msg'] = 'Outgoing request submitted successfully.';
+            } else {
+                $response['status'] = 0;
+                $response['msg'] = 'Error';
+            }
+        } else {
+            $response['status'] = 0;
+            $response['msg'] = 'Department not found';
+        }
+    }
+    echo json_encode($response);
+}
 
 
-	public function C_overtime()
-	{
-		$response = array();
-		$date_filled = date('Y-m-d H:i:s', time());
-		$ot_date = $this->input->post('ot_date');
-		$time_in = $this->input->post('from_time');
-		$time_out = $this->input->post('to_time');
-		$reason = $this->input->post('reason');
-		$status = "Pending"; 
-		$empid = $this->input->post('emp_id');
-		$department_name = $_SESSION['department'];
 
-		$this->db->select('id');
-		$this->db->where('department', $department_name);
-		$query = $this->db->get('department');
-		$department_row = $query->row();
+public function C_undertime()
+{
+    $response = array();
+    $undertime_date = $this->input->post('undertime_date');
+    $time_in = $this->input->post('time_in');
+    $time_out = $this->input->post('time_out');
+    $reason = $this->input->post('reason');
+    $empid = $this->input->post('emp_id');
+    $department_name = $_SESSION['department'];
 
-		if ($department_row) {
-			$department_id = $department_row->id;
+    // Check if there are any pending undertime requests for the employee
+    $this->db->where('emp_id', $empid);
+    $this->db->where('head_status', 'pending');
+    $query_pending_undertime = $this->db->get('f_undertime');
 
-			$session_role = $_SESSION['role'];
-			$session_emp = $_SESSION['id'];
-			$head_status = ($session_role == "Head") ? 'approved' : 'pending';
-			$head_id = ($session_role == "Head") ? $session_emp : null;
+    if ($query_pending_undertime->num_rows() > 0) {
+        // There are pending undertime requests for the employee
+        $response['status'] = 0;
+        $response['msg'] = 'You have a pending undertime request. Please wait for approval before submitting a new request.';
+    } else {
+        // No pending undertime requests, proceed with inserting the new undertime request
 
-			$data = array(
-				'date_filled' => $date_filled,
-				'date_ot' => $ot_date,
-				'time_in' => $time_in,
-				'time_out' => $time_out,
-				'reason' => $reason,
-				'status' => $status, 
-				'emp_id' => $empid,
-				'department' => $department_id,
-				'head_status' => $head_status 
-			);
-			$sql = $this->db->insert('f_overtime', $data);
-			if ($sql) {
-				$response['status'] = 1;
-				$response['msg'] = 'Overtime request submitted successfully.';
-			} else {
-				$response['status'] = 0;
-				$response['msg'] = 'Error occurred while submitting the overtime request.';
-			}
-		} else {
-			$response['status'] = 0;
-			$response['msg'] = 'Department not found';
-		}
-		echo json_encode($response);
-	}
+        $this->db->select('id');
+        $this->db->where('department', $department_name);
+        $query = $this->db->get('department');
+        $department_row = $query->row();
+
+        if ($department_row) {
+            $department_id = $department_row->id;
+            $session_role = $_SESSION['role'];
+            $session_emp = $_SESSION['id'];
+            $head_status = ($session_role == "Head") ? 'approved' : 'pending';
+            $head_id = ($session_role == "Head") ? $session_emp : null;
+
+            $data = array(
+                'date_filled' => $undertime_date,
+                'date_of_undertime' => $undertime_date,
+                'time_in' => $time_in,
+                'time_out' => $time_out,
+                'reason' => $reason,
+                'emp_id' => $empid,
+                'department' => $department_id,
+                'head_status' => $head_status,
+            );
+            $sql = $this->db->insert('f_undertime', $data);
+
+            if ($sql) {
+                $response['status'] = 1;
+                $response['msg'] = 'Undertime request submitted successfully.';
+            } else {
+                $response['status'] = 0;
+                $response['msg'] = 'Error occurred while submitting the undertime request.';
+            }
+        } else {
+            $response['status'] = 0;
+            $response['msg'] = 'Department not found';
+        }
+    }
+
+    echo json_encode($response);
+}
+
+
+public function C_overtime()
+{
+    $response = array();
+    $date_filled = date('Y-m-d H:i:s', time());
+    $ot_date = $this->input->post('ot_date');
+    $time_in = $this->input->post('from_time');
+    $time_out = $this->input->post('to_time');
+    $reason = $this->input->post('reason');
+    $empid = $this->input->post('emp_id');
+    $department_name = $_SESSION['department'];
+
+    // Check if there are any pending overtime requests for the employee
+    $this->db->where('emp_id', $empid);
+    $this->db->where('head_status', 'pending');
+    $query_pending_overtime = $this->db->get('f_overtime');
+
+    if ($query_pending_overtime->num_rows() > 0) {
+        // There are pending overtime requests for the employee
+        $response['status'] = 0;
+        $response['msg'] = 'You have a pending overtime request. Please wait for approval before submitting a new request.';
+    } else {
+        // No pending overtime requests, proceed with inserting the new overtime request
+
+        $this->db->select('id');
+        $this->db->where('department', $department_name);
+        $query = $this->db->get('department');
+        $department_row = $query->row();
+
+        if ($department_row) {
+            $department_id = $department_row->id;
+
+            $session_role = $_SESSION['role'];
+            $session_emp = $_SESSION['id'];
+            $head_status = ($session_role == "Head") ? 'approved' : 'pending';
+            $head_id = ($session_role == "Head") ? $session_emp : null;
+
+            $data = array(
+                'date_filled' => $date_filled,
+                'date_ot' => $ot_date,
+                'time_in' => $time_in,
+                'time_out' => $time_out,
+                'reason' => $reason,
+                'emp_id' => $empid,
+                'department' => $department_id,
+                'head_status' => $head_status,
+            );
+            $sql = $this->db->insert('f_overtime', $data);
+
+            if ($sql) {
+                $response['status'] = 1;
+                $response['msg'] = 'Overtime request submitted successfully.';
+            } else {
+                $response['status'] = 0;
+                $response['msg'] = 'Error occurred while submitting the overtime request.';
+            }
+        } else {
+            $response['status'] = 0;
+            $response['msg'] = 'Department not found';
+        }
+    }
+
+    echo json_encode($response);
+}
 
 
 	public function C_sched_adjust()
@@ -447,4 +513,19 @@ class Employee extends CI_Controller
 
 		echo json_encode($response);
 	}
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 }

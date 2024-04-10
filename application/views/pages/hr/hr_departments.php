@@ -3,13 +3,10 @@
         /* background-color: red !important; */
         background-color: #26c769 !important;
         /* color: #fff !important; */
-
-
     }
 
     input[type='checkbox']:checked+label.btn.btn-light.btn-rounded {
         /* Your styles here */
-
         background-color: #26c769 !important;
         color: #fff !important;
 
@@ -110,27 +107,24 @@
 
 
                                             <td>
-                                                <div class = "d-inline-flex">
-                                                <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" 
-                                                data-bs-target="#edit_employee" data-emp-id="" title = "Edit">
-                                                    <i class="fa-solid fa-pencil m-r-5"></i>
-                                                </a>
-
-                                                <?php
+                                            <?php
                                                 if($staff_count == 0){
                                                     echo '
-
-                                                    <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal"
-                                                    data-bs-target="#delete_approve_" title = "Delete">
-                                                       <i class="fa-regular fa-trash-can m-r-5"></i> 
-                                                   </a>
+                                                    <button type = "button" class="edit-announcement modal-trigger btn btn-rounded btn-primary p-1 px-2"
+                                                     style = "margin-right:10px; font-size:10px" data-bs-toggle="modal" data-bs-target="#modal_announcement_edit"
+                                                      >
+                                                        <i class="fas fa-pencil m-r-5"></i>Edit
+                                                    </button>
+    
+                                                   <button type = "button" class="delete-announcement modal-trigger btn btn-rounded btn-danger p-1 px-2"
+                                                   style = "font-size:10px"  data-bs-toggle="modal" data-bs-target="#modal_announcement_delete"
+                                                   >
+                                                    <i class="fa-regular fa-trash-can m-r-5"></i>Delete
+                                                   </button>
                                                     ';
                                                 }
                                                 
                                                 ?>
-                                              
-
-                                                </div>
                                               
 
 
