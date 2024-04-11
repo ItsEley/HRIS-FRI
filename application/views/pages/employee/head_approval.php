@@ -476,7 +476,7 @@
                                                                                         <button id="leave_denyButton" class="btn text-danger btn-block bg-white border border-danger" data-row-id="<?php echo $row->id; ?>">Deny</button>
                                                                                     </div>
                                                                                     <div class="col-sm-6">
-                                                                                        <button id="leave_approveButton" class="btn btn-primary btn-block" data-row-id="<?php echo $row->id; ?>">Approve</button>
+                                                                                        <button id="leave_approveButton" class="btn btn-primary btn-block" data-row-idd="<?php echo $row->id; ?>">Approve</button>
 
                                                                                     </div>
                                                                                 </div>
@@ -650,7 +650,7 @@
                                                                                 <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                                     <div class="input-block mb-3 form-focus select-focus text-center">
                                                                                         <button id="og_approveButton" class="btn btn-primary">Approve</button>
-                                                                                        <button id="denyButton" class="btn btn-danger">Deny</button>
+                                                                                        <button id="og_denyButton" class="btn btn-danger">Deny</button>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -755,9 +755,7 @@
                                                         </ul>
                                                     </div>
                                                 </td>
-
                                             </tr>
-
                                             <div class="modal fade" id="edit_employee" tabindex="-1" aria-labelledby="edit_employee_label" aria-hidden="true">
                                                 <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
@@ -767,7 +765,7 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <form id="update_employee" method="post">
-                                                                <input type="hidden" class="form-control text-left" id="ot_id" readonly>
+                                                                <input type="text" class="form-control text-left" id="ot_id" readonly>
                                                                 <div class="mb-3 row">
                                                                     <div class="col-md-6">
                                                                         <label for="emp_name" class="form-label">Employee Name</label>
@@ -803,7 +801,7 @@
                                                                     <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                         <div class="input-block mb-3 form-focus select-focus text-center">
                                                                             <button id="ot_approveButton" class="btn btn-primary">Approve</button>
-                                                                            <button id="denyButton" class="btn btn-danger">Deny</button>
+                                                                            <button id="ot_denyButton" class="btn btn-danger">Deny</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -815,7 +813,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
                                         <?php
                                         }
                                         ?>
@@ -824,10 +821,8 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="tab-pane" id="solid-tab4">
-
                     <div class="card mb-0">
                         <div class="card-header">
                             <div class="row align-items-center">
@@ -844,7 +839,6 @@
                                 <table id="undertime_dt" class="datatable table-striped custom-table mb-0">
                                     <thead>
                                         <tr>
-
                                             <th class="text-center">Name</th>
                                             <th class="text-center">Date Filled</th>
                                             <th class="text-center">Undertime Date</th>
@@ -853,7 +847,6 @@
                                             <th class="text-center">Reason</th>
                                             <th class="text-center">Status</th>
                                             <th class="text-center">Action</th>
-
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -911,7 +904,6 @@
                                                     </div>
                                                 </td>
                                             </tr>
-
                                             <div class="modal fade" id="edit_undertime" tabindex="-1" aria-labelledby="edit_undertime_label" aria-hidden="true">
                                                 <div class="modal-dialog modal-lg ">
                                                     <div class="modal-content">
@@ -973,13 +965,10 @@
                                                                     <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                         <div class="input-block mb-3 form-focus select-focus text-center">
                                                                             <button id="ut_approveButton" class="btn btn-primary">Approve</button>
-                                                                            <button id="denyButton" class="btn btn-danger">Deny</button>
+                                                                            <button id="ut_denyButton" class="btn btn-danger">Deny</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-
-
-
                                                             </form>
                                                         </div>
                                                         <div class="modal-footer">
@@ -988,8 +977,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-
                                         <?php
                                         }
                                         ?>
@@ -1006,7 +993,6 @@
                                 <div class="col">
                                     <h4 class="card-title mb-0">Pending Official Business Request</h4>
                                 </div>
-
                             </div>
                         </div>
                         <div class="card-body">
@@ -1052,7 +1038,7 @@
                                             $lname = $row->lname;
                                             $fullname = $fname . ' ' . $lname;
                                         ?>
-                                            <tr class="hoverable-row" id="double-click-row_<?php echo $row->id ?>">
+                                            <tr class="hoverable-row" id="<?php echo $row->id ?>">
                                                 <td style="max-width: 200px; overflow: hidden; 
                     text-overflow: ellipsis; white-space: nowrap;" name="emp_name">
                                                     <?php echo $fullname; ?>
@@ -1151,7 +1137,7 @@
                                                                     <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                         <div class="input-block mb-3 form-focus select-focus text-center">
                                                                             <button id="ob_approveButton" class="btn btn-primary">Approve</button>
-                                                                            <button id="denyButton" class="btn btn-danger">Deny</button>
+                                                                            <button id="ob_denyButton" class="btn btn-danger">Deny</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1589,23 +1575,22 @@
                     <h3>Approve Request Confirmation</h3>
                     <p style="font-size: 14px;">Are you really sure to Approve?</p>
                 </div>
-
+                <input type="hidden" id="approveModalRowId" value="">
                 <div class="modal-btn delete-action">
                     <div class="row">
-                        <div class="col-6 text-end"> <!-- Align Cancel button to the right -->
+                        <div class="col-6 text-end">
                             <button type="button" class="btn btn-secondary cancel-btn" data-bs-dismiss="modal">Cancel</button>
                         </div>
-                        <div class="col-6 text-start"> <!-- Align Confirm Approve button to the left -->
+                        <div class="col-6 text-start"> 
                             <button type="button" class="btn btn-outline-success continue-btn" id="confirmApprove">Confirm Approve</button>
-
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- <div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -1625,7 +1610,6 @@
         </div>
     </div>
 </div> -->
-
 <div class="modal fade" id="denyModal" tabindex="-1" aria-labelledby="denyModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -1634,13 +1618,17 @@
                     <h3>Deny Request Confirmation</h3>
                     <p style="font-size: 14px;">Are you sure to Deny the request?</p>
                 </div>
+                <!-- Display the rowId here -->
+                <input type="hidden" id="denyModalRowId" value="">
                 <div class="modal-btn delete-action">
-                    <div class="row">
-                        <div class="col-6 text-end">
-                            <button type="button" class="btn btn-secondary cancel-btn" data-bs-dismiss="modal">Cancel</button>
-                        </div>
-                        <div class="col-6 text-start">
-                            <button type="button" class="btn btn-danger continue-btn" id="confirmDeny">Confirm Deny</button>
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-6 bg-primary">
+                                <button type="button" class="btn btn-secondary cancel-btn" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                            <div class="col-6 text-start">
+                                <button type="button" class="btn btn-danger continue-btn" id="confirmDeny">Confirm Deny</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1733,7 +1721,7 @@
 
         $(".update-ot").click(function(event) {
             event.preventDefault();
-            let leave_id = $(this).attr("data-ot-id");
+            let ot_id = $(this).attr("data-ot-id");
             let ot_emp_id = $(this).attr("data-emp-id");
             let ot_emp_name = $(this).closest('tr').find('td[name="emp_name"]').text().trim();
             let ot_date_filled = $(this).closest('tr').find('td[name="date_ot"]').text();
@@ -1742,7 +1730,7 @@
             let ot_reason = $(this).closest('tr').find('td[name="ot_reason"]').text();
             let ot_status = $(this).closest('tr').find('td[name="status"]').text();
 
-            $("#ot_id").val(leave_id);
+            $("#ot_id").val(ot_id);
             $("#ot_emp_id").val(ot_emp_id);
             $("#ot_emp_name").val(ot_emp_name);
             $("#ot_date_filled").val(ot_date_filled);

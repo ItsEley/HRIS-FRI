@@ -44,7 +44,7 @@
                            </ul>
                        </div>
                        <div class="col text-end">
-                           <button type="button" class="btn btn-primary waves-effect waves-light mt-1" data-bs-toggle="modal" data-bs-target="#modal_announcement_create" id="btn_create_ann">
+                           <button type="button" class="btn btn-primary btn-rounded waves-effect waves-light mt-1" data-bs-toggle="modal" data-bs-target="#modal_announcement_create" id="btn_create_ann">
                                <span class="fa-solid fa-plus"></span> Create Announcement</button>
 
                        </div>

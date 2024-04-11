@@ -49,30 +49,156 @@ $("#login-form").submit(function(e) {
         });
     }
 });
+// $(document).ready(function () {
+//     function handleApproveButtonClick(buttonId, rowIdFieldId, empIdFieldId, approvalEndpoint) {
+//         $(buttonId).click(function (event) {
+//             event.preventDefault();
+//             var rowId = $(rowIdFieldId).val();
+//             $('#approveModalRowId').text(rowId);
+//             $('#approveModalRowIdTable').text(rowId); 
+//             $('#approveModal').modal('show'); 
+//             $('#confirmApproveHr').data('row-id', rowId); 
+//             $('#confirmApproveHr').data('approval-endpoint', approvalEndpoint);
+//         });
+//     }
+//     function handleConfirmationClick(confirmButtonId, modalId) {
+//         $(confirmButtonId).click(function () {
+//             var rowId = $('#confirmApproveHr').data('row-id');
+//             var approvalEndpoint = $('#confirmApproveHr').data('approval-endpoint');
+//             $.ajax({
+//                 type: "POST",
+//                 url: base_url + approvalEndpoint,
+//                 data: {
+//                     row_id: rowId
+//                 },
+//                 success: function (response) {
+//                     alert(response);
+//                 }
+//             });
 
-$(document).ready(function() {
+//             $(modalId).modal('hide');
+//         });
+//     }
+//     handleApproveButtonClick('#og_approveButtonHr', '#og_id', '#employee_id', 'humanr/hrapprove');
+//     handleApproveButtonClick('#ot_approveButtonHr', '#ot_id', '#employee_id', 'humanr/hrapprove');
+//     handleConfirmationClick('#confirmApproveHr', '#approveModal');
+
+//     handleConfirmationClick('#confirmDenyHr', '#denyModal');
+// });
+
+$(document).ready(function () {
     // Function to handle approve button clicks
     function handleApproveButtonClick(buttonId, rowIdFieldId, empIdFieldId) {
-        $(buttonId).click(function(event) {
+        $(buttonId).click(function (event) {
             event.preventDefault();
             $('#approveModal').modal('show');
-            $('#confirmApprove').attr('data-source', buttonId.substring(1));
+            var rowId = $(rowIdFieldId).val();
+            $('#approveModalRowId').val(rowId); // Update the input value with rowId
+            $('#confirmApproveHr').attr('data-source', buttonId.substring(1));
+            $('#confirmApproveHr').attr('data-row-id', rowId); // Assign rowId to data attribute
+        });
+    }
+    
+
+    handleApproveButtonClick('#og_approveButtonHr', '#og_id', '#employee_id');
+    handleApproveButtonClick('#leave_approveButtonHr', '#leave_id', '#leave_employee_id');
+    handleApproveButtonClick('#ot_approveButtonHr', '#ot_id', '#ot_employee_id');
+    handleApproveButtonClick('#ut_approveButtonHr', '#ut_id', '#ut_employee_id');
+    handleApproveButtonClick('#ob_approveButtonHr', '#ob_id', '#ob_employee_id');
+
+    function handleDenyButtonClick(buttonId, rowIdFieldId, empIdFieldId) {
+        $(buttonId).click(function (event) {
+            event.preventDefault();
+            $('#denyModal').modal('show');
+        
+           
+            var rowId = $(rowIdFieldId).val();
+            $('#denyModalRowId').text(rowId); // Update the content of the span with rowId
+            $('#confirmDeny').attr('data-source', buttonId.substring(1));
+            $('#confirmDeny').attr('data-row-id', rowId); // Assign rowId to data attribute
         });
     }
 
-    // Handle approve button clicks for different actions
+    // Handle deny button clicks for different actions
+    handleDenyButtonClick('#og_denyButtonHr', '#og_id', '#employee_id');
+    handleDenyButtonClick('#leave_denyButtonHr', '#leave_id', '#leave_employee_id');
+    handleDenyButtonClick('#ot_denyButtonHr', '#ot_id', '#ot_employee_id');
+    handleDenyButtonClick('#ut_denyButtonHr', '#ut_id', '#ut_employee_id');
+    handleDenyButtonClick('#ob_denyButtonHr', '#ob_id', '#ob_employee_id');
+
+    // Function to handle confirmation of approve or deny action
+    function handleConfirmationClick(confirmButtonId, modalId) {
+        $(confirmButtonId).click(function () {
+            var rowId;
+            var empId;
+            var source = $(this).attr('data-source'); // Get the source value
+            rowId = $(this).attr('data-row-id'); // Get the rowId from the data attribute
+    
+            // Determine empId based on the source
+            if (source.includes('approveButton')) {
+                empId = $(modalId).find('.employee-id').val();
+            } else if (source.includes('denyButton')) {
+                empId = $(modalId).find('.employee-id').val();
+            }
+    
+            console.log('Row ID:', rowId);
+            console.log('Source:', source);
+    
+            // Perform AJAX request
+            $.ajax({
+                type: "POST",
+                url: base_url + 'humanr/hrapprove',
+                data: {
+                    row_id: rowId,
+                    emp_id: empId,
+                    source: source
+                },
+                success: function (response) {
+                    alert(response);
+                }
+            });
+    
+            $(modalId).modal('hide');
+        });
+    }
+    
+    // Handle confirmation of approve action
+    handleConfirmationClick('#confirmApproveHr', '#approveModal');
+    // Handle confirmation of deny action
+    handleConfirmationClick('#confirmDenyHr', '#denyModal');
+});
+/// HEAD APPROVAL START
+
+$(document).ready(function () {
+    // Function to handle approve button clicks
+    function handleApproveButtonClick(buttonId, rowIdFieldId, empIdFieldId) {
+        $(buttonId).click(function (event) {
+            event.preventDefault();
+            $('#approveModal').modal('show');
+            var rowId = $(rowIdFieldId).val();
+            $('#approveModalRowId').text(rowId); // Update the content of the span with rowId
+            $('#confirmApprove').attr('data-source', buttonId.substring(1));
+            $('#confirmApprove').attr('data-row-id', rowId); // Assign rowId to data attribute
+        });
+    }
+    
+
     handleApproveButtonClick('#og_approveButton', '#og_id', '#employee_id');
     handleApproveButtonClick('#leave_approveButton', '#leave_id', '#leave_employee_id');
     handleApproveButtonClick('#ot_approveButton', '#ot_id', '#ot_employee_id');
     handleApproveButtonClick('#ut_approveButton', '#ut_id', '#ut_employee_id');
     handleApproveButtonClick('#ob_approveButton', '#ob_id', '#ob_employee_id');
 
-    // Function to handle deny button clicks
     function handleDenyButtonClick(buttonId, rowIdFieldId, empIdFieldId) {
-        $(buttonId).click(function(event) {
+        $(buttonId).click(function (event) {
             event.preventDefault();
             $('#denyModal').modal('show');
-            $('#confirmDeny').attr('data-source', buttonId.substring(1) + 'Button'); // differentiate between approve and deny
+        
+           
+            var rowId = $(rowIdFieldId).val();
+            $('#denyModalRowId').text(rowId); // Update the content of the span with rowId
+            $('#confirmDeny').attr('data-source', buttonId.substring(1));
+            $('#confirmDeny').attr('data-row-id', rowId); // Assign rowId to data attribute
         });
     }
 
@@ -85,23 +211,22 @@ $(document).ready(function() {
 
     // Function to handle confirmation of approve or deny action
     function handleConfirmationClick(confirmButtonId, modalId) {
-        $(confirmButtonId).click(function() {
+        $(confirmButtonId).click(function () {
             var rowId;
             var empId;
             var source = $(this).attr('data-source'); // Get the source value
-
-            // Determine rowId and empId based on the source
+            rowId = $(this).attr('data-row-id'); // Get the rowId from the data attribute
+    
+            // Determine empId based on the source
             if (source.includes('approveButton')) {
-                rowId = $(modalId).find('.row-id').val();
                 empId = $(modalId).find('.employee-id').val();
             } else if (source.includes('denyButton')) {
-                rowId = $(modalId).find('.row-id').val();
                 empId = $(modalId).find('.employee-id').val();
             }
-
+    
             console.log('Row ID:', rowId);
             console.log('Source:', source);
-
+    
             // Perform AJAX request
             $.ajax({
                 type: "POST",
@@ -111,75 +236,21 @@ $(document).ready(function() {
                     emp_id: empId,
                     source: source
                 },
-                success: function(response) {
+                success: function (response) {
                     alert(response);
                 }
             });
-
+    
             $(modalId).modal('hide');
         });
     }
-
+    
     // Handle confirmation of approve action
     handleConfirmationClick('#confirmApprove', '#approveModal');
     // Handle confirmation of deny action
     handleConfirmationClick('#confirmDeny', '#denyModal');
 });
-
-
-// Assuming you're using jQuery for AJAX
-$.ajax({
-    // Your AJAX settings...
-    success: function(response) {
-        try {
-            response = JSON.parse(response);
-            if (response.status === 0 && response.modal) {
-                // Show the appropriate modal based on the response
-                $('#' + response.modal).modal('show');
-            } else if (response.status === 1) {
-                // Handle success case or any other logic
-                // You can optionally show a success message or redirect the user
-            } else {
-                // Handle other status codes or unexpected responses
-                console.error('Unexpected response:', response);
-            }
-        } catch (error) {
-            // Handle JSON parsing errors
-            console.error('Error parsing JSON:', error);
-        }
-    },
-    error: function(xhr, status, error) {
-        // Handle AJAX errors
-        console.error('AJAX Error:', status, error);
-    }
-});
-
-
-// $(document).ready(function() {
-//     $('#approveButton').click(function() {
-//         var rowId = $(this).data('row-id');
-//         $.ajax({
-//             type: 'POST',
-//             url: base_url+'humanr/headapprove',
-//             data: {
-//                 row_id: rowId
-//             },
-//             success: function(response) {
-            
-//                 console.log('Leave approved successfully');
-//                 $('#approve_employee').modal('hide');
-//             },
-//             error: function(xhr, status, error) {
-             
-//                 console.error('Error approving leave');
-//             }
-//         });
-//     });
-// });
-
-// Assuming each modal has a unique ID and you want to distinguish between them
-
-
+/// HEAD APPROVAL END
 
 
 $("#import_csv").submit(function(e) {
@@ -294,7 +365,7 @@ $(document).ready(function() {
 
 
 // Use delegated event handler for form submission
-$(document).on("submit", "#edit_employee", function(e) {
+$(document).on("submit", "#leave_req_det", function(e) {
     e.preventDefault();
 
     // Serialize form data

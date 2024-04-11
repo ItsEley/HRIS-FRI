@@ -45,7 +45,7 @@
                         </ul>
                     </div>
                     <div class="col text-end">
-                        <button type="button" class="btn btn-primary waves-effect waves-light mt-1" data-bs-toggle="modal" data-bs-target="#con-close-modal">
+                        <button type="button" class="btn btn-primary btn-rounded waves-effect waves-light mt-1" data-bs-toggle="modal" data-bs-target="#modal_create_department">
                             <span class="fa-solid fa-plus"></span> Add Department</button>
 
                     </div>
@@ -107,25 +107,26 @@
 
 
                                             <td>
-                                            <?php
-                                                if($staff_count == 0){
+
+                                                <button type="button" class="edit-announcement modal-trigger btn btn-rounded btn-primary p-1 px-2" 
+                                                style="margin-right:10px; font-size:10px" data-bs-toggle="modal" data-bs-target="#modal_edit_department"
+                                                data-dept-id="<?= $row->id?>">
+                                                    <i class="fas fa-pencil m-r-5"></i>Edit
+                                                </button>
+                                                <?php
+                                                if ($staff_count == 0) {
                                                     echo '
-                                                    <button type = "button" class="edit-announcement modal-trigger btn btn-rounded btn-primary p-1 px-2"
-                                                     style = "margin-right:10px; font-size:10px" data-bs-toggle="modal" data-bs-target="#modal_announcement_edit"
-                                                      >
-                                                        <i class="fas fa-pencil m-r-5"></i>Edit
-                                                    </button>
-    
+                                                
                                                    <button type = "button" class="delete-announcement modal-trigger btn btn-rounded btn-danger p-1 px-2"
-                                                   style = "font-size:10px"  data-bs-toggle="modal" data-bs-target="#modal_announcement_delete"
+                                                   style = "font-size:10px"  data-bs-toggle="modal" data-bs-target="#modal_delete_department"
                                                    >
                                                     <i class="fa-regular fa-trash-can m-r-5"></i>Delete
                                                    </button>
                                                     ';
                                                 }
-                                                
+
                                                 ?>
-                                              
+
 
 
                                             </td>
@@ -160,6 +161,9 @@
 <!-- jQuery -->
 
 
+<?php $this->load->view('templates\modals\department_create.php'); ?>
+<?php $this->load->view('templates\modals\department_edit.php'); ?>
+<?php $this->load->view('templates\modals\department_delete.php'); ?>
 
 
 

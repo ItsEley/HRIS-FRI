@@ -56,16 +56,16 @@
             dataType: 'json',
             success: function(response) {
                 // Handle the response from the server
-                if (response.status == 'success') {
-                    alert(response.message); // Show success message
+                if (response.status == '1') {
+                    // alert(response.msg); // Show success message
                     // Optionally, you can perform additional actions here
-                    toastr.success('Success! Shift ' + group + ' has been updated.');
+                    toastr.success('Success! Shift ' + $("#create_shift_label").val() + ' has been updated.');
                     setTimeout(function() {
                         location.reload();
                     }, 5000);
                 } else {
-                    alert(response.message); // Show error message
-                    toastr.error('Error! Shift ' + group + '  has failed to update due to an error.');
+                    // alert(response.msg); // Show error message
+                    toastr.error('Error! Shift ' + $("#create_shift_label").val() + '  has failed to update due to an error.');
 
 
                 }

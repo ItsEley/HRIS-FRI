@@ -52,18 +52,24 @@
                             <tbody>
                                 <?php
 
-                                $query = $this->db->query('
-                                SELECT employee.id,vw_emp_designation.full_name,employee.current_add,employee.contact_no,vw_emp_designation.roles
-                                FROM vw_emp_designation
-                                JOIN employee
-                                ON employee.id = vw_emp_designation.emp_id
-                                WHERE
-                                    vw_emp_designation.emp_id IS NOT NULL
-                                ORDER BY
-                                    vw_emp_designation.emp_id ASC,
-                                    vw_emp_designation.full_name;
+                                $query = $this->db->query("
+                                SELECT 
+                                e.employee_id,
+                                e.id ,
+                                CONCAT(e.fname, ' ', e.mname, ' ', e.lname) AS full_name,
+                                e.pfp,e.current_add,e.contact_no,
+                                e.department AS department_id,
+                                d.department AS department,
+                                e.role AS role_id,
+                                dr.roles AS role
+                            FROM 
+                                employee e
+                            LEFT JOIN 
+                                department d ON e.department = d.id
+                            LEFT JOIN 
+                                department_roles dr ON e.role = dr.id;
                             
-                                ');
+                                ");
 
                                 foreach ($query->result() as $row) {
 
@@ -72,7 +78,7 @@
                                 ?>
                                     <tr class="hoverable-row">
                                         <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                            <?php echo $row->id; ?>
+                                            <?php echo $row->employee_id; ?>
                                         </td>
                                         <td style="max-width: 200px; max-height: 100px; overflow: hidden;">
                                             <div class="ellipsis" style="max-height: 1.2em; overflow: hidden;">
@@ -83,7 +89,7 @@
                                         <td><?php echo $row->current_add;?></td>
 
                                         <td><?php echo $row->contact_no; ?></td>
-                                        <td><?php echo $row->roles; ?></td>
+                                        <td><?php echo $row->role; ?></td>
                                         <td>
                                             <div class="dropdown">
                                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">

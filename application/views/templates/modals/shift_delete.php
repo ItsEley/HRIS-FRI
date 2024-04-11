@@ -3,7 +3,6 @@
 
 
 
-<!-- Edit Event Modal -->
 <div class="modal fade" id="modal_delete_shift" tabindex="-1" aria-labelledby="modal_delete_shiftLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -35,7 +34,7 @@
         </div>
     </div>
 </div>
-<!-- /Edit Event Modal -->
+
 
 
 <script>
@@ -73,10 +72,12 @@ let shift_label;
                 if (response.status == 'success') {
                     //alert(response.message); // Show success message
                     // Optionally, you can perform additional actions here
+                    $("#modal_delete_shift").modal('toggle');
                     toastr.success('Success! Shift &ldquo;' + shift_label + ' &rdquo; has been deleted.');
                     setTimeout(function() {
                         location.reload();
                     }, 5000);
+                    
                 } else {
                     //alert(response.message); // Show error message
                     toastr.error('Error! Shift &ldquo;' + shift_label + '&rdquo; has failed to delete due to an error.');

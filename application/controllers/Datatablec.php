@@ -259,7 +259,7 @@ class Datatablec extends CI_Controller
 
         );
 
-        print_r($data);
+        // print_r($data);
 
         $sql = $this->db->insert('sys_shifts', $data);
         if ($sql) {
@@ -274,7 +274,6 @@ class Datatablec extends CI_Controller
     }
 
     
-
 
     public function shift_delete(){
         try {
@@ -293,6 +292,36 @@ class Datatablec extends CI_Controller
     }
 
 
+
+
+    public function department_insert()
+    {
+        $response = array();
+        $event = $this->input->post('department_name');
+        $description = $this->input->post('dept_acronym');
+
+
+        $data = array(
+            /*column name*/
+            'department' => $event,
+            'acro_dept' => $description
+
+
+        );
+
+        print_r($data);
+
+        $sql = $this->db->insert('department', $data);
+        if ($sql) {
+            $response['status'] = 1;
+            $response['msg'] = 'Done';
+        } else {
+            $response['status'] = 0;
+            $response['msg'] = 'Error';
+        }
+
+        echo json_encode($response);
+    }
 
 
 

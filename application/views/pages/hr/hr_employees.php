@@ -94,9 +94,9 @@
                 dr.roles AS role
             FROM 
                 employee e
-            JOIN 
+            LEFT JOIN 
                 department d ON e.department = d.id
-            JOIN 
+            LEFT JOIN 
                 department_roles dr ON e.role = dr.id;
             
                     ");

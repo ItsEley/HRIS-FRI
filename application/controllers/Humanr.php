@@ -13,25 +13,63 @@ class Humanr extends CI_Controller
 		// $this->load->helper('url');
 	}
 
-	public function hrapprove() {
-		$rowId = $this->input->post('rowId');
-		$session_emp_id = $this->session->userdata('emp_id');
+	// public function hrapprove() {
+	// 	$rowId = $this->input->post('rowId');
+	// 	$session_emp_id = $this->session->userdata('id2');
 	
-		$this->db->set('status', 'approved');
-		$this->db->set('hr_id', $session_emp_id);
-		$this->db->where('id', $rowId);
-		$this->db->update('f_leaves');
-		if ($this->db->affected_rows() > 0) {
-			echo 'Leave approved successfully';
+	// 	$this->db->set('status', 'approved');
+	// 	$this->db->set('hr_id', $session_emp_id);
+	// 	$this->db->where('id', $rowId);
+	// 	$this->db->update('f_leaves');
+	// 	if ($this->db->affected_rows() > 0) {
+	// 		echo 'Leave approved successfully';
+	// 	} else {
+	// 		echo 'Error: Leave not approved';
+	// 	}
+	// }
+	
+	public function hrapprove() {
+		$rowId = $this->input->post('row_id');
+		$hr_Id = $this->session->userdata('id2');
+		
+		$source = $this->input->post('source');
+		
+		$validSources = array(
+			'og_approveButtonHr' => 'f_outgoing',
+			'leave_approveButtonHr' => 'f_leaves',
+			'ot_approveButtonHr' => 'f_overtime',
+			'ut_approveButtonHr' => 'f_undertime',
+			'ob_approveButtonHr' => 'f_off_bussiness',
+			'og_denyButtonHr' => 'f_outgoing',
+			'leave_denyButtonHr' => 'f_leaves',
+			'ot_denyButtonHr' => 'f_overtime',
+			'ut_denyButtonHr' => 'f_undertime',
+			'ob_denyButtonHr' => 'f_off_bussiness'
+		);
+	
+		if (isset($validSources[$source])) {
+			$tableName = $validSources[$source];
+	
+			if (strpos($source, '_denyButtonHr') !== false) {
+				$this->db->set('status', 'denied');
+			} else {
+				$this->db->set('status', 'approved');
+			}
+	
+			$this->db->set('hr_id', $hr_Id);
+			$this->db->set('hr_status_date', 'CURDATE()', false);
+			$this->db->where('id', $rowId);
+			$this->db->update($tableName);
+	
+			echo 'Operation successful. Row ID: ' . $rowId . ', Table Name: ' . $tableName . ', Employee ID: ' . $hr_Id;
 		} else {
-			echo 'Error: Leave not approved';
+			echo 'Failed: Invalid source';
 		}
 	}
-	
 	public function headapprovez() {
 	
 		$rowId = $this->input->post('rowId');
-		$session_emp_id = $this->session->userdata('id');
+		$session_emp_id = $this->session->userdata('id2');
 	
 		$this->db->set('head_status', 'approved');
 		$this->db->set('head_id', $session_emp_id);
@@ -43,7 +81,8 @@ class Humanr extends CI_Controller
 	
 	public function headapprove() {
 		$rowId = $this->input->post('row_id');
-		$empId = $this->input->post('emp_id');
+		$head_Id = $this->session->userdata('id2');
+		
 		$source = $this->input->post('source');
 		
 		$validSources = array(
@@ -63,18 +102,17 @@ class Humanr extends CI_Controller
 			$tableName = $validSources[$source];
 	
 			if (strpos($source, '_denyButton') !== false) {
-				// Handle denial
 				$this->db->set('head_status', 'denied');
 			} else {
-				// Handle approval
 				$this->db->set('head_status', 'approved');
 			}
 	
-			$this->db->set('head_id', $empId);
+			$this->db->set('head_id', $head_Id);
+			$this->db->set('head_status_date', 'CURDATE()', false);
 			$this->db->where('id', $rowId);
 			$this->db->update($tableName);
 	
-			echo 'Operation successful. Row ID: ' . $rowId . ', Table Name: ' . $tableName . ', Employee ID: ' . $empId;
+			echo 'Operation successful. Row ID: ' . $rowId . ', Table Name: ' . $tableName . ', Employee ID: ' . $head_Id;
 		} else {
 			echo 'Failed: Invalid source';
 		}

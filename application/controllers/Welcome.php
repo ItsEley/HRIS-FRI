@@ -62,7 +62,8 @@ class Welcome extends CI_Controller
 
 	if ($validate->num_rows() > 0) {
     $data = $validate->row_array();
-    $emp_id = $data['id'];
+    $emp_id1 = $data['id'];
+	$emp_id2 = $data['employee_id'];
     $fullname = $data['fname'].' '.$data['lname'];
     $role = $data['emp_role'];
     $department = $data['department'];
@@ -76,7 +77,8 @@ class Welcome extends CI_Controller
 
 
     $session_data = array(
-      'id' => $emp_id,
+      'id' => $emp_id1,
+	  'id2' => $emp_id2,
       'fullname' => $fullname,
       'pfp' => $pfp,
       'role' => $role,

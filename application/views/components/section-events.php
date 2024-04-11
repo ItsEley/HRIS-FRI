@@ -81,9 +81,13 @@
                         
                ?>
 
+<!-- 
+
                //limit the result for this week
                //if the event is not on this week, hide them
                //add a see more section
+
+ -->
                
 
                         <div class="timeline-panel type-<?= $row->type ?>" style="background-color: white; ">

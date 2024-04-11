@@ -23,6 +23,8 @@
     <!-- Custom JS -->
     <script src=<?= base_url("assets/js/app.js") ?>></script>
     <script src=<?= base_url("assets/js/ajax.js") ?>></script>
+    <script src=<?= base_url("assets/js/dynamic-datatable.js") ?>></script>
+
     <script src="<?= base_url("assets/plugins/toastr/toastr.min.js"); ?>"></script>
    
     <!-- data tables -->
@@ -35,9 +37,6 @@
     <script src="<?= base_url('assets/js/greedynav.js') ?>"></script>
 
 
-    <script>
-
-    </script>
 
 
     </body>
