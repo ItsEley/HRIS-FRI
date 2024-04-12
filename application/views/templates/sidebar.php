@@ -26,7 +26,7 @@
                         <li><a href='" . base_url('hr/announcement') . "'><i class='la la-bullhorn'></i><span>Announcements</span></a></li>
                         <li><a href='" . base_url('hr/departments') . "'><img src = '" . base_url('assets/img/icons/department-2.png') . "' class = 'my-img-icon'>
                                             <span>Departments</span></a></li>
-                        <li><a href='" . base_url('hr/shifts') . "'><i class='fa-regular fa-clock'></i><span>Shifts</span></a></li>
+                        <li><a href='" . base_url('hr/shifts') . "'><i class='fa-regular fa-clock'></i><span>Schedules</span></a></li>
                         <li><a href='" . base_url('hr/leaves') . "'><i class='la la-bullhorn'></i><span>Leaves</span></a></li>
 
                         
@@ -51,7 +51,7 @@
                             <ul>
                                 <li><a href='" . base_url('hr/employees') . "'>Manage</a></li>
                                 <li><a href='" . base_url('hr/employees/designation') . "'>Designations</a></li>
-                                <li><a href='" . base_url('hr/employees/shifts') . "'>Shifts & Schedules</a></li>
+                                <li><a href='" . base_url('hr/employees/shifts') . "'>Schedules</a></li>
                                 <li><a href='" . base_url('hr/employees/evaluation') . "'>Performance Evaluation</a></li>
 
                             </ul>
@@ -74,6 +74,7 @@
                         </li>
                     ";
                 } else if (strtolower($this->session->userdata('acro')) == 'sys-at') {
+
                 } else {
 
                     echo "
@@ -81,15 +82,14 @@
                     <li><a href='" . base_url('employee/dashboard') . "'><i class='la la-dashboard'></i><span>My Leave Balance</span></a></li>
                     
                     <li class='submenu forms'>
-                    <a href='#' class=''><i class='la la-object-group'></i><span>Reports</span><span class='menu-arrow'></span></a>
+                    <a href='#' class=''><i class='la la-pie-chart'></i><span>Reports</span><span class='menu-arrow'></span></a>
                     <ul>
-                        <li><a href='" . base_url('forms') . "'>My Attendance</a></li>
-                        <li><a href='" . base_url('employee/pendingrequests') . "'>My Payslips</a></li>
-                        <li><a href='" . base_url('forms/history') . "'>My Leaves</a></li>
+                        <li><a href='" . base_url('employee/reports/attendance') . "'>My Attendance</a></li>
+                        <li><a href='" . base_url('employee/reports/payslip') . "'>My Payslips</a></li>
                     </ul>
                     </li>
                     <li class='submenu forms'>
-                          <a href='#' class=''><i class='la la-object-group'></i><span>Forms</span><span class='menu-arrow'></span></a>
+                          <a href='#' class=''><i class='la la-file-text'></i><span>Forms</span><span class='menu-arrow'></span></a>
                           <ul>
                               <li><a href='" . base_url('forms') . "'>Apply</a></li>
                               <li><a href='" . base_url('employee/pendingrequests') . "'>Pending</a></li>
@@ -105,7 +105,7 @@
                         echo "<li><a href='" . base_url('employee/head/announcement') . "'><i class='la la-bullhorn'></i><span>Announcements</span></a></li>";
                         echo "
                             <li class='submenu forms'>
-                            <a href='#' class=''><i class='la la-object-group'></i><span>Requests for Approval</span><span class='menu-arrow'></span></a>
+                            <a href='#' class=''><i class='la la-bell'></i><span>Requests for Approval</span><span class='menu-arrow'></span></a>
                             <ul>
                             
                                 <li><a href='" . base_url('employee/approval') . "'>Pending Requests</a></li>

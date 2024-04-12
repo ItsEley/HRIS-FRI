@@ -9,36 +9,6 @@
 
 <!-- Main Wrapper -->
 <div class="main-wrapper">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
-    <?php
-    if (isset($_POST['request_type']) && !empty($_POST['request_type']) && isset($_POST['id']) && !empty($_POST['id'])) {
-
-        $request_type = $_POST['request_type'];
-        $id = $_POST['id'];
-
-        $data = array();
-        if ($request_type == 'LEAVE REQUEST') {
-
-            $sql = "SELECT * FROM f_leaves WHERE id = $id";
-            $result = $conn->query($sql);
-
-            if ($result && $result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                $data['emp_id'] = $row['emp_id'];
-            }
-        } elseif ($request_type == 'OUTGOING REQUEST') {
-            $sql = "SELECT * FROM f_outgoing WHERE id = $id";
-            $result = $conn->query($sql);
-            if ($result && $result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                $data['emp_id'] = $row['emp_id'];
-            }
-        }
-        echo json_encode($data);
-    } else {
-
-        echo json_encode(array('error' => 'Invalid request'));
-    }
 
     ?>
     <?php $this->load->view('templates/nav_bar'); ?>
@@ -76,10 +46,10 @@
 
                     // Query to get the department ID based on the department name
                     $department_query = $this->db->query("
-    SELECT id 
-    FROM department 
-    WHERE department = ?
-", array($current_department_name));
+                                        SELECT id 
+                                        FROM department 
+                                        WHERE department = ?
+                                    ", array($current_department_name));
 
                     // Check if the department exists
                     if ($department_query->num_rows() > 0) {
@@ -167,6 +137,9 @@
                     ?>
                 </div>
             </div>
+
+
+            
             <ul class="nav nav-tabs nav-tabs-solid">
                 <li class="nav-item"><a class="nav-link active" href="#solid-tab1" data-bs-toggle="tab">
 
@@ -1581,7 +1554,7 @@
                         <div class="col-6 text-end">
                             <button type="button" class="btn btn-secondary cancel-btn" data-bs-dismiss="modal">Cancel</button>
                         </div>
-                        <div class="col-6 text-start"> 
+                        <div class="col-6 text-start">
                             <button type="button" class="btn btn-outline-success continue-btn" id="confirmApprove">Confirm Approve</button>
                         </div>
                     </div>

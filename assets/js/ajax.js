@@ -109,16 +109,17 @@ $(document).ready(function () {
     function handleDenyButtonClick(buttonId, rowIdFieldId, empIdFieldId) {
         $(buttonId).click(function (event) {
             event.preventDefault();
+            console.log("Deny button clicked"); // Check if the button click is registered
             $('#denyModal').modal('show');
-        
-           
             var rowId = $(rowIdFieldId).val();
-            $('#denyModalRowId').text(rowId); // Update the content of the span with rowId
-            $('#confirmDeny').attr('data-source', buttonId.substring(1));
-            $('#confirmDeny').attr('data-row-id', rowId); // Assign rowId to data attribute
+            console.log('Row ID:', rowId); // Check if rowId is correctly fetched
+            $('#denyModalRowId').val(rowId); // Update the value of the input with rowId
+            $('#confirmDenyHr').attr('data-source', buttonId.substring(1));
+            $('#confirmDenyHr').attr('data-row-id', rowId); // Assign rowId to data attribute
         });
     }
-
+    
+    
     // Handle deny button clicks for different actions
     handleDenyButtonClick('#og_denyButtonHr', '#og_id', '#employee_id');
     handleDenyButtonClick('#leave_denyButtonHr', '#leave_id', '#leave_employee_id');
@@ -154,13 +155,18 @@ $(document).ready(function () {
                     source: source
                 },
                 success: function (response) {
+                    console.log('Response:', response); // Log the response
                     alert(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error); // Log any errors
                 }
             });
     
             $(modalId).modal('hide');
         });
     }
+    
     
     // Handle confirmation of approve action
     handleConfirmationClick('#confirmApproveHr', '#approveModal');

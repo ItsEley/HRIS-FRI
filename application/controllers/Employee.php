@@ -26,6 +26,8 @@ class Employee extends CI_Controller
 		$this->load->view('templates/footer');
 	}
 
+
+	
 	public function emp_setting()
 	{
 		$data['title'] = 'Employee | Setting';
@@ -33,6 +35,27 @@ class Employee extends CI_Controller
 		$this->load->view('pages/employee/employee_setting');
 		$this->load->view('templates/footer');
 	}
+
+
+
+	public function emp_report_attendance()
+	{
+		$data['title'] = 'Reports | Attendance';
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/employee/employee_report_attendance');
+		$this->load->view('templates/footer');
+	}
+
+
+	
+	public function emp_report_payslip()
+	{
+		$data['title'] = 'Reports | Payslip';
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/employee/employee_payslip');
+		$this->load->view('templates/footer');
+	}
+
 
 	public function forms()
 	{

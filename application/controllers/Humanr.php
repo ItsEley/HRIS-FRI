@@ -30,7 +30,7 @@ class Humanr extends CI_Controller
 	
 	public function hrapprove() {
 		$rowId = $this->input->post('row_id');
-		$hr_Id = $this->session->userdata('id2');
+		$hr_Id = $this->session->userdata('id');
 		
 		$source = $this->input->post('source');
 		
@@ -69,7 +69,7 @@ class Humanr extends CI_Controller
 	public function headapprovez() {
 	
 		$rowId = $this->input->post('rowId');
-		$session_emp_id = $this->session->userdata('id2');
+		$session_emp_id = $this->session->userdata('id');
 	
 		$this->db->set('head_status', 'approved');
 		$this->db->set('head_id', $session_emp_id);

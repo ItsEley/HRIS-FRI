@@ -32,3 +32,61 @@
         </div>
     </div>
 </div>
+
+
+
+<script>
+let department_label;
+
+    $(".delete-department.modal-trigger").on('click', function() {
+
+        let department_id = $(this).data('dept-id');
+         department_label = $(this).data('dept-label');
+
+        $("#delete_group_label").html(department_label);
+        $("#delete_department_id").val(department_id);
+        // console.log( $("#delete_department_id").val());
+
+       
+    });
+
+    // Assuming you have a button or form submission triggering this event
+    $('#delete_department_form').on('submit', function(e) {
+        e.preventDefault();
+
+        // Get the values from your form or wherever they are stored
+        // var id = $('#delete_department_id').val();
+        var formData = $(this).serialize(); // Serialize the form data
+
+        // Send the AJAX request
+        console.log(formData)
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo base_url('datatablec/department_delete'); ?>',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                // Handle the response from the server
+                if (response.status == 'success') {
+                    //alert(response.message); // Show success message
+                    // Optionally, you can perform additional actions here
+                    $("#modal_delete_department").modal('toggle');
+                    toastr.success('Success! department &ldquo;' + department_label + ' &rdquo; has been deleted.');
+                    setTimeout(function() {
+                        location.reload();
+                    }, 5000);
+                    
+                } else {
+                    //alert(response.message); // Show error message
+                    toastr.error('Error! department &ldquo;' + department_label + '&rdquo; has failed to delete due to an error.');
+
+
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText); // Log any errors to the console
+                alert('An error occurred while processing your request.'); // Show generic error message
+            }
+        });
+    });
+</script>

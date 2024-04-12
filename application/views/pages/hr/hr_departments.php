@@ -108,7 +108,7 @@
 
                                             <td>
 
-                                                <button type="button" class="edit-announcement modal-trigger btn btn-rounded btn-primary p-1 px-2" 
+                                                <button type="button" class="edit-department modal-trigger btn btn-rounded btn-primary p-1 px-2" 
                                                 style="margin-right:10px; font-size:10px" data-bs-toggle="modal" data-bs-target="#modal_edit_department"
                                                 data-dept-id="<?= $row->id?>">
                                                     <i class="fas fa-pencil m-r-5"></i>Edit
@@ -117,8 +117,9 @@
                                                 if ($staff_count == 0) {
                                                     echo '
                                                 
-                                                   <button type = "button" class="delete-announcement modal-trigger btn btn-rounded btn-danger p-1 px-2"
+                                                   <button type = "button" class="delete-department modal-trigger btn btn-rounded btn-danger p-1 px-2"
                                                    style = "font-size:10px"  data-bs-toggle="modal" data-bs-target="#modal_delete_department"
+                                                   data-dept-id="'.$row->id.'" data-dept-label = "'.$row->department.'"
                                                    >
                                                     <i class="fa-regular fa-trash-can m-r-5"></i>Delete
                                                    </button>

@@ -98,8 +98,12 @@
             </div>
           </div>
 
+  
+
           <div class="row">
-            <h3>Time</h3>
+            <h3>Time <span>
+            <label for="toggle_all_day" style = "font-size:12px">All day</label>  
+            <input type="checkbox" name="toggle_all_day" id="toggle_all_day"></span></h3>
             <div class="mb-3 col">
               <label for="eventTitle" class="form-label input-required">From</label>
               <input type="time" class="form-control" id="eventStartDate" name="event_time_start" required>
@@ -109,9 +113,6 @@
               <input type="time" class="form-control" id="eventEndDate" name="event_time_end" required>
             </div>
           </div>
-
-
-
 
           <!-- Add more fields for date, time, category, color, etc. -->
           <button type="submit" class="btn btn-primary">Add Event</button>

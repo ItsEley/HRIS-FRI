@@ -40,6 +40,7 @@
                                         </a>
                                     </div>
 
+
                                 </div>
                                 <div class="profile-basic">
                                     <div class="row">
@@ -309,6 +310,11 @@
             <!-- /Profile Info Tab -->
         </div>
         <!-- /Page Content -->
+
+        <div class="row">
+        <?php print_r($_SESSION)?>
+
+        </div>
 
         <!-- Profile Modal -->
         <div id="profile_info" class="modal custom-modal fade" role="dialog">

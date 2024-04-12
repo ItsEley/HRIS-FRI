@@ -5,7 +5,7 @@
     style = "color:black" data-ann-id = "<?= $id?>">
 
 
-        <h4 class="timeline-title fw-600 my-hover" style="font-weight:500"><?= $title ?></h4>
+        <h4 class="timeline-title my-hover" style="font-weight:500;font-size: 20px;"><?= $title ?></h4>
      
     </a>
 

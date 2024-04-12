@@ -309,19 +309,124 @@ class Datatablec extends CI_Controller
 
         );
 
-        print_r($data);
+        // print_r($data);
 
         $sql = $this->db->insert('department', $data);
         if ($sql) {
-            $response['status'] = 1;
-            $response['msg'] = 'Done';
+            $response['status'] = "success";
+            $response['message'] = 'Done';
         } else {
-            $response['status'] = 0;
-            $response['msg'] = 'Error';
+            $response['status'] = "fail";
+            $response['message'] = 'Error';
         }
 
         echo json_encode($response);
     }
+
+
+
+
+    public function department_select(){
+        try {
+            // Retrieve emp_id from the query parameter using CodeIgniter's input library
+            $department_id = $this->input->post('department_id');
+    
+            // Log emp_id to ensure it's correctly retrieved
+            log_message('debug', 'Department ID: ' . $department_id);
+    
+            // Fetch employee details based on emp_id using the loaded model
+            // array('department' => $row_department->department)
+            $shift = $this->db->query("SELECT * FROM department WHERE id = '$department_id'");
+    
+            if ($shift->num_rows() > 0) {
+                $data = array(); // Initialize an array to store all the data
+    
+                $data['status'] = "success";
+    
+                foreach ($shift->result() as $row) {
+                    // Add each row data to the array
+                 
+                    // Add the row data array to the main data array
+                    $data['data'] = $row;
+                }
+    
+                // Encode the array to JSON and echo it
+                echo json_encode($data);
+            } else {
+                $data['status'] = "failed";
+                $data['message'] = "Department details not found. : $department_id";
+                echo json_encode($data);
+            }
+        } catch (\Throwable $th) {
+            $data['status'] = "error";
+            $data['message'] = $th;
+            echo json_encode($data);
+            // throw $th;
+        }
+    }
+
+    public function department_update() {
+        try {
+          
+            $this->db->set('department', $this->input->post('department')); // Replace $group with the new value for 'group_'
+            $this->db->set('acro_dept', $this->input->post('acro_dept')); // Replace $description with the new value for 'description'
+            $this->db->where('id', $this->input->post('id')); // Assuming you want to update the row where 'id' is 1   
+            $this->db->update('department');
+    
+            // Check if the update was successful
+            if ($this->db->affected_rows() > 0) {
+                $data = array(
+                    'status' => 'success',
+                    'message' => 'Department updated successfully'
+                );
+            } else {
+                $data = array(
+                    'status' => 'failed',
+                    'message' => 'Department to update shift'
+                );
+            }
+    
+            // Encode the data array to JSON and echo it
+            echo json_encode($data);
+        } catch (Exception $e) {
+            $data = array(
+                'status' => 'error',
+                'message' => $e->getMessage()
+            );
+    
+            // Encode the data array to JSON and echo it
+            echo json_encode($data);
+        }
+    }
+
+
+
+
+    public function department_delete(){
+        try {
+            // Perform deletion
+            $this->db->where('id', $this->input->post('delete_department_id'));
+            $this->db->delete('department');
+    
+            $data['status'] = "success";
+            $data['message'] = "Department deleted successfully.";
+            echo json_encode($data);
+        } catch (Exception $e) {
+            $data['status'] = "error";
+            $data['message'] = "Error deleting department: " . $e->getMessage();
+            echo json_encode($data);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
 
 
 

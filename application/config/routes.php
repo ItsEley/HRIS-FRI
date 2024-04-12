@@ -80,7 +80,11 @@ $route['employee/dashboard'] = 'employee/emphome';
 $route['employee/profile'] = 'employee/emp_profile';
 $route['employee/setting'] = 'employee/emp_setting';
 
+$route['employee/reports/attendance'] = 'employee/emp_report_attendance';
+$route['employee/reports/payslip'] = 'employee/emp_report_payslip';
+
 $route['employee/pendingrequests'] = 'employee/pendingrequest';
+
 
 
 // employee/head/pages

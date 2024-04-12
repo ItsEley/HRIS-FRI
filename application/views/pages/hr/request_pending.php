@@ -9,51 +9,7 @@
 
 <!-- Main Wrapper -->
 <div class="main-wrapper">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
-    <?php
-
-    if (isset($_POST['request_type']) && !empty($_POST['request_type']) && isset($_POST['id']) && !empty($_POST['id'])) {
-        // Extract the request_type and id
-        $request_type = $_POST['request_type'];
-        $id = $_POST['id'];
-
-        // Perform database query based on request_type and id
-        // Here you need to replace this with your actual database query to fetch the necessary data
-        // Sample code to demonstrate
-        $data = array(); // This will hold the data to be returned
-        if ($request_type == 'LEAVE REQUEST') {
-            // Query to fetch data from leave_request table
-            $sql = "SELECT * FROM f_leaves WHERE id = $id";
-            // Execute your query
-            $result = $conn->query($sql);
-
-            // Check if query executed successfully and fetch data
-            if ($result && $result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                // Populate $data array with fetched data
-                $data['emp_id'] = $row['emp_id']; // Assuming emp_id is a column in f_leaves table
-                // Add other data to $data array as needed
-            }
-        } elseif ($request_type == 'OUTGOING REQUEST') {
-            // Query to fetch data from outgoing_request table
-            $sql = "SELECT * FROM f_outgoing WHERE id = $id";
-            // Execute your query
-            $result = $conn->query($sql);
-
-            // Check if query executed successfully and fetch data
-            if ($result && $result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                // Populate $data array with fetched data
-                $data['emp_id'] = $row['emp_id']; // Assuming emp_id is a column in f_outgoing table
-
-            }
-        }
-        echo json_encode($data);
-    } else {
-        echo json_encode(array('error' => 'Invalid request'));
-    }
-
-    ?>
+    
     <?php $this->load->view('templates/nav_bar'); ?>
     <?php $this->load->view('templates/sidebar') ?>
     <div class="page-wrapper">
@@ -536,7 +492,7 @@
                                                                                 <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                                     <div class="input-block mb-3 form-focus select-focus text-center">
                                                                                         <button id="og_approveButtonHr" data-row-id="<?php echo $row->id; ?>" class="btn btn-primary">Approve</button>
-                                                                                        <button id="og_denyButtonHr" class="btn btn-danger">Deny</button>
+                                                                                        <button id="og_denyButtonHr"data-row-id="<?php echo $row->id; ?>" class="btn btn-danger">Deny</button>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -696,7 +652,7 @@
                                                                     <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                         <div class="input-block mb-3 form-focus select-focus text-center">
                                                                             <button id="ot_approveButtonHr" class="btn btn-primary" data-row-id="<?php echo $row->id; ?>">Approve</button>
-                                                                            <button id="ot_denyButtonHr" class="btn btn-danger">Deny</button>
+                                                                            <button id="ot_denyButtonHr"data-row-id="<?php echo $row->id; ?>" class="btn btn-danger">Deny</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -857,7 +813,7 @@
                                                                     <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                         <div class="input-block mb-3 form-focus select-focus text-center">
                                                                             <button id="ut_approveButtonHr" data-row-id="<?php echo $row->id; ?>" class="btn btn-primary">Approve</button>
-                                                                            <button id="ut_denyButtonHr" class="btn btn-danger">Deny</button>
+                                                                            <button id="ut_denyButtonHr"data-row-id="<?php echo $row->id; ?>" class="btn btn-danger">Deny</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1026,7 +982,7 @@
                                                                     <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                         <div class="input-block mb-3 form-focus select-focus text-center">
                                                                             <button id="ob_approveButtonHr" data-row-id="<?php echo $row->id; ?>" class="btn btn-primary">Approve</button>
-                                                                            <button id="ob_denyButtonHr" class="btn btn-danger">Deny</button>
+                                                                            <button id="ob_denyButtonHr"data-row-id="<?php echo $row->id; ?>" class="btn btn-danger">Deny <?php echo $row->id; ?></button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1675,7 +1631,7 @@
 
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-success" id="confirmApproveHr">Approve</button>
-                <button type="button" class="btn btn-danger" id="confirmDenyHr">Deny</button>
+              
             </div>
         </div>
     </div>
