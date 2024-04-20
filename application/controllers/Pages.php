@@ -92,6 +92,18 @@ class Pages extends CI_Controller {
   }
 
 
+  public function public_chat()
+  {
+    $data['title'] = 'Chat';
+  $this->load->view('templates/header', $data);
+  $this->load->view('pages/public/chat');
+  $this->load->view('templates/footer');
+
+  }
+
+
+
+
 
 
 

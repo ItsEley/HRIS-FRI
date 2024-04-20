@@ -102,21 +102,43 @@ class Humanr extends CI_Controller
 			$tableName = $validSources[$source];
 	
 			if (strpos($source, '_denyButton') !== false) {
-				$this->db->set('head_status', 'denied');
+				$head_status = 'denied';
+				$message = 'Your request has been denied.';
 			} else {
-				$this->db->set('head_status', 'approved');
+				$head_status = 'approved';
+				$message = 'Your request has been approved.';
 			}
 	
+			$this->db->set('head_status', $head_status);
 			$this->db->set('head_id', $head_Id);
 			$this->db->set('head_status_date', 'CURDATE()', false);
 			$this->db->where('id', $rowId);
 			$this->db->update($tableName);
+	
+			// Insert message into notifications table
+			$request_type = ''; // Set this to the appropriate request type
+			$emp_id = ''; // Get the emp_id of the updated request
+			$current_datetime = date('Y-m-d H:i:s');
+	
+			$notification_data = array(
+				'user_id' => $emp_id,
+				'message' => $message,
+				'created_at' => $current_datetime,
+				'title' => $request_type
+			);
+	
+			$this->db->insert('notifications', $notification_data);
+	
+			// Show a message in the console
+			echo "<script>console.log('Inserted into notifications table');</script>";
 	
 			echo 'Operation successful. Row ID: ' . $rowId . ', Table Name: ' . $tableName . ', Employee ID: ' . $head_Id;
 		} else {
 			echo 'Failed: Invalid source';
 		}
 	}
+	
+	
 	
 	
 

@@ -14,6 +14,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['about'] = 'pages/public/about';
 $route['logout'] = 'welcome/logout';
 $route['forms'] = 'employee/forms';
+$route['chats'] = 'pages/public_chat';
 // $route['forms/history'] = 'pages/forms_history';
 
 

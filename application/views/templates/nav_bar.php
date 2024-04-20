@@ -1,5 +1,5 @@
-<div class="header" style = "background: linear-gradient(to right, #070f4d 40%, #5a6dff 100%);">
-   <!-- Logo --> 
+<div class="header" style="background: linear-gradient(to right, #070f4d 40%, #5a6dff 100%);">
+   <!-- Logo -->
    <div class="header-left">
       <a href="admin-dashboard.html" class="logo">
          <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" width="80" height="80" alt="Logo">
@@ -24,12 +24,7 @@
    <a id="mobile_btn" class="mobile_btn" href="#sidebar"><i class="fa-solid fa-bars"></i></a>
    <!-- Header Menu -->
    <ul class="nav user-menu">
-      <!-- Search -->
-
-
       <?php
-
-
       $query = $this->db->query("SELECT * FROM employee WHERE id = '" . $_SESSION['id'] . "'");
 
       foreach ($query->result() as $row) {
@@ -39,10 +34,23 @@
       }
       ?>
 
-      <!-- Notifications -->
+      <?php
+      $this->db->select('COUNT(*) as total_rows');
+      $query = $this->db->get('notifications');
+
+      // Check if query was successful
+      if ($query) {
+         // Fetch the total rows count
+         $row = $query->row();
+         $total_rows = $row->total_rows;
+      } else {
+         // Handle error if query fails
+         $total_rows = 0; // Set default value
+      }
+      ?>
       <li class="nav-item dropdown">
          <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-            <i class="fa-regular fa-bell"></i> <span class="badge rounded-pill">3</span>
+            <i class="fa-regular fa-bell"></i><span class="badge rounded-pill"><?php echo $total_rows; ?></span>
          </a>
          <div class="dropdown-menu notifications">
             <div class="topnav-dropdown-header">
@@ -51,78 +59,61 @@
             </div>
             <div class="noti-content">
                <ul class="notification-list">
-                  <li class="notification-message">
-                     <a href="activities.html">
-                        <div class="chat-block d-flex">
-                           <span class="avatar flex-shrink-0">
-                              <img src="../assets/img/profiles/avatar-02.jpg" alt="User Image">
-                           </span>
-                           <div class="media-body flex-grow-1">
-                              <p class="noti-details"><span class="noti-title">John Doe</span> added new task <span class="noti-title">Patient appointment booking</span></p>
-                              <p class="noti-time"><span class="notification-time">4 mins ago</span></p>
-                           </div>
-                        </div>
-                     </a>
-                  </li>
-                  <li class="notification-message">
-                     <a href="activities.html">
-                        <div class="chat-block d-flex">
-                           <span class="avatar flex-shrink-0">
-                              <img src="../assets/img/profiles/avatar-03.jpg" alt="User Image">
-                           </span>
-                           <div class="media-body flex-grow-1">
-                              <p class="noti-details"><span class="noti-title">Tarah Shropshire</span> changed the task name <span class="noti-title">Appointment booking with payment gateway</span></p>
-                              <p class="noti-time"><span class="notification-time">6 mins ago</span></p>
-                           </div>
-                        </div>
-                     </a>
-                  </li>
-                  <li class="notification-message">
-                     <a href="activities.html">
-                        <div class="chat-block d-flex">
-                           <span class="avatar flex-shrink-0">
-                              <img src="../assets/img/profiles/avatar-06.jpg" alt="User Image">
-                           </span>
-                           <div class="media-body flex-grow-1">
-                              <p class="noti-details"><span class="noti-title">Misty Tison</span> added <span class="noti-title">Domenic Houston</span> and <span class="noti-title">Claire Mapes</span> to project <span class="noti-title">Doctor available module</span></p>
-                              <p class="noti-time"><span class="notification-time">8 mins ago</span></p>
-                           </div>
-                        </div>
-                     </a>
-                  </li>
-                  <li class="notification-message">
-                     <a href="activities.html">
-                        <div class="chat-block d-flex">
-                           <span class="avatar flex-shrink-0">
-                              <img src="../assets/img/profiles/avatar-17.jpg" alt="User Image">
-                           </span>
-                           <div class="media-body flex-grow-1">
-                              <p class="noti-details"><span class="noti-title">Rolland Webber</span> completed task <span class="noti-title">Patient and Doctor video conferencing</span></p>
-                              <p class="noti-time"><span class="notification-time">12 mins ago</span></p>
-                           </div>
-                        </div>
-                     </a>
-                  </li>
-                  <li class="notification-message">
-                     <a href="activities.html">
-                        <div class="chat-block d-flex">
-                           <span class="avatar flex-shrink-0">
-                              <img src="../assets/img/profiles/avatar-13.jpg" alt="User Image">
-                           </span>
-                           <div class="media-body flex-grow-1">
-                              <p class="noti-details"><span class="noti-title">Bernardo Galaviz</span> added new task <span class="noti-title">Private chat module</span></p>
-                              <p class="noti-time"><span class="notification-time">2 days ago</span></p>
-                           </div>
-                        </div>
-                     </a>
-                  </li>
+                  <?php
+                  // Check if there are notifications
+                  if ($total_rows > 0) {
+                     // Retrieve the latest 5 notifications
+                     $this->db->select('*');
+                     $this->db->from('notifications');
+                     $this->db->order_by('created_at', 'desc');
+                     $this->db->limit(5);
+                     $latest_notifications_query = $this->db->get();
+
+                     if ($latest_notifications_query) {
+                        // Fetch and display the latest notifications
+                        foreach ($latest_notifications_query->result() as $notification) {
+                           $notif_time = date('F j, Y g:i A', strtotime($notification->created_at));
+                           // Define inline style for unread notifications
+                           $unread_style = $notification->status == "unread" ? 'style="background-color: #f2f2f2;"' : ''; // Check if status is 0 for unread
+                           echo '<li class="notification-message" ' . $unread_style . '>';
+                           echo '<a href="chat.html">';
+                           echo '<div class="list-item">';
+                           echo '<div class="list-left">';
+                           echo '<span class="avatar">';
+                           echo '<img src="../assets/img/profiles/avatar-08.jpg" alt="User Image">';
+                           echo '</span>';
+                           echo '</div>';
+                           echo '<div class="list-body">';
+                           // Display notification details
+                           echo '<span class="message-author">' . $notification->user_id . '</span>';
+                           echo '<span class="message-time">' . $notif_time . '</span>'; // Corrected line
+                           echo '<div class="clearfix"></div>';
+                           echo '<span class="message-content">' . $notification->message . '</span>';
+                           echo '</div>';
+                           echo '</div>';
+                           echo '</a>';
+                           echo '</li>';
+                       }
+                       
+                       
+                     } else {
+                        // Handle error if fetching latest notifications fails
+                        echo '<li>Error retrieving notifications.</li>';
+                     }
+                  } else {
+                     // Display a message if there are no notifications
+                     echo '<li>No notifications.</li>';
+                  }
+                  ?>
                </ul>
             </div>
             <div class="topnav-dropdown-footer">
-               <a href="activities.html">View all Notifications</a>
+               <a href="chat.html">View all Notifications</a>
             </div>
          </div>
       </li>
+
+
       <!-- /Notifications -->
       <!-- Message Notifications -->
       <li class="nav-item dropdown">

@@ -89,6 +89,14 @@ class Employee extends CI_Controller
 		$this->load->view('templates/footer');
 	}
 
+	
+	// public function get_notifications() {
+    //     // Fetch notifications from the database
+    //     $query = $this->db->get('notifications');
+    //     $notifications = $query->result_array();
+    //     echo json_encode($notifications);
+    // }
+	
 
 	public function pendingrequest()
 	{

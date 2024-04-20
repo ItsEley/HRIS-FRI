@@ -49,6 +49,26 @@ $("#login-form").submit(function(e) {
         });
     }
 });
+
+
+// $(document).ready(function () {
+//     fetchNotificationsCount();
+
+//     function fetchNotificationsCount() {
+//         $.ajax({
+//             url: '/get-notifications-count',
+//             type: 'GET',
+//             success: function (response) {
+//                 var unreadCount = response.unreadCount;
+//                 $('.badge').text(unreadCount);
+//             },
+//             error: function (xhr, status, error) {
+//                 console.error(xhr.responseText);
+//             }
+//         });
+//     }
+// });
+
 // $(document).ready(function () {
 //     function handleApproveButtonClick(buttonId, rowIdFieldId, empIdFieldId, approvalEndpoint) {
 //         $(buttonId).click(function (event) {

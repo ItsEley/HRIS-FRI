@@ -1,16 +1,3 @@
-<style>
-    .button-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        /* Adjust the number of columns as needed */
-        grid-gap: 10px;
-    }
-
-    .button-grid button {
-        width: 100%;
-        /* Set the width of each button to 100% */
-    }
-</style>
 
 
 

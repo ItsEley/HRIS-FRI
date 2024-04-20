@@ -16,12 +16,12 @@ class Datatablec extends CI_Controller
         $query = $this->db->query('SELECT * FROM `sys_events`');
 
         foreach ($query->result() as $row) {
-          echo '{';
-          echo "id : '$row->id',";
-          echo "title : '$row->event_name',";
-          echo "start : '$row->date_start',";
-          echo "end : '$row->date_end'";
-          echo '},';
+            echo '{';
+            echo "id : '$row->id',";
+            echo "title : '$row->event_name',";
+            echo "start : '$row->date_start',";
+            echo "end : '$row->date_end'";
+            echo '},';
         }
         // Return the result as JSON
         echo json_encode($query->result());
@@ -104,14 +104,14 @@ class Datatablec extends CI_Controller
 
     public function get_announcement_details()
     {
-    
+
         try {
             // Retrieve emp_id from the query parameter using CodeIgniter's input library
             $ann_id = $this->input->post('announcement_id');
-    
+
             // Log emp_id to ensure it's correctly retrieved
             log_message('debug', 'Announcement ID: ' . $ann_id);
-    
+
             // Fetch employee details based on emp_id using the loaded model
             // array('department' => $row_department->department)
             $announcement = $this->db->query("SELECT 
@@ -134,19 +134,19 @@ class Datatablec extends CI_Controller
         ORDER BY a.id DESC
    
         ");
-    
+
             if ($announcement->num_rows() > 0) {
                 $data = array(); // Initialize an array to store all the data
-    
+
                 $data['status'] = "success";
-    
+
                 foreach ($announcement->result() as $row) {
                     // Add each row data to the array
-                 
+
                     // Add the row data array to the main data array
                     $data['data'] = $row;
                 }
-    
+
                 // Encode the array to JSON and echo it
                 echo json_encode($data);
             } else {
@@ -163,30 +163,31 @@ class Datatablec extends CI_Controller
     }
 
 
-    public function shift_select(){
+    public function shift_select()
+    {
         try {
             // Retrieve emp_id from the query parameter using CodeIgniter's input library
             $shift_id = $this->input->post('shift_id');
-    
+
             // Log emp_id to ensure it's correctly retrieved
             log_message('debug', 'Shift ID: ' . $shift_id);
-    
+
             // Fetch employee details based on emp_id using the loaded model
             // array('department' => $row_department->department)
             $shift = $this->db->query("SELECT * FROM sys_shifts WHERE id = '$shift_id'");
-    
+
             if ($shift->num_rows() > 0) {
                 $data = array(); // Initialize an array to store all the data
-    
+
                 $data['status'] = "success";
-    
+
                 foreach ($shift->result() as $row) {
                     // Add each row data to the array
-                 
+
                     // Add the row data array to the main data array
                     $data['data'] = $row;
                 }
-    
+
                 // Encode the array to JSON and echo it
                 echo json_encode($data);
             } else {
@@ -202,7 +203,8 @@ class Datatablec extends CI_Controller
         }
     }
 
-    public function shift_update() {
+    public function shift_update()
+    {
         try {
             $this->db->set('id', $this->input->post('id')); // Replace $id with the new value for 'id'
             $this->db->set('group_', $this->input->post('group')); // Replace $group with the new value for 'group_'
@@ -210,9 +212,9 @@ class Datatablec extends CI_Controller
             $this->db->set('time_from', $this->input->post('time_from')); // Replace $time_from with the new value for 'time_from'
             $this->db->set('time_to', $this->input->post('time_to')); // Replace $time_to with the new value for 'time_to'
             $this->db->where('id', $this->input->post('id')); // Assuming you want to update the row where 'id' is 1
-    
+
             $this->db->update('sys_shifts');
-    
+
             // Check if the update was successful
             if ($this->db->affected_rows() > 0) {
                 $data = array(
@@ -225,7 +227,7 @@ class Datatablec extends CI_Controller
                     'message' => 'Failed to update shift'
                 );
             }
-    
+
             // Encode the data array to JSON and echo it
             echo json_encode($data);
         } catch (Exception $e) {
@@ -233,13 +235,13 @@ class Datatablec extends CI_Controller
                 'status' => 'error',
                 'message' => $e->getMessage()
             );
-    
+
             // Encode the data array to JSON and echo it
             echo json_encode($data);
         }
     }
 
-    
+
     public function shift_insert()
     {
         $response = array();
@@ -273,14 +275,15 @@ class Datatablec extends CI_Controller
         echo json_encode($response);
     }
 
-    
 
-    public function shift_delete(){
+
+    public function shift_delete()
+    {
         try {
             // Perform deletion
             $this->db->where('id', $this->input->post('delete_shift_id'));
             $this->db->delete('sys_shifts');
-    
+
             $data['status'] = "success";
             $data['message'] = "Shift deleted successfully.";
             echo json_encode($data);
@@ -326,30 +329,31 @@ class Datatablec extends CI_Controller
 
 
 
-    public function department_select(){
+    public function department_select()
+    {
         try {
             // Retrieve emp_id from the query parameter using CodeIgniter's input library
             $department_id = $this->input->post('department_id');
-    
+
             // Log emp_id to ensure it's correctly retrieved
             log_message('debug', 'Department ID: ' . $department_id);
-    
+
             // Fetch employee details based on emp_id using the loaded model
             // array('department' => $row_department->department)
             $shift = $this->db->query("SELECT * FROM department WHERE id = '$department_id'");
-    
+
             if ($shift->num_rows() > 0) {
                 $data = array(); // Initialize an array to store all the data
-    
+
                 $data['status'] = "success";
-    
+
                 foreach ($shift->result() as $row) {
                     // Add each row data to the array
-                 
+
                     // Add the row data array to the main data array
                     $data['data'] = $row;
                 }
-    
+
                 // Encode the array to JSON and echo it
                 echo json_encode($data);
             } else {
@@ -365,14 +369,15 @@ class Datatablec extends CI_Controller
         }
     }
 
-    public function department_update() {
+    public function department_update()
+    {
         try {
-          
+
             $this->db->set('department', $this->input->post('department')); // Replace $group with the new value for 'group_'
             $this->db->set('acro_dept', $this->input->post('acro_dept')); // Replace $description with the new value for 'description'
             $this->db->where('id', $this->input->post('id')); // Assuming you want to update the row where 'id' is 1   
             $this->db->update('department');
-    
+
             // Check if the update was successful
             if ($this->db->affected_rows() > 0) {
                 $data = array(
@@ -385,7 +390,7 @@ class Datatablec extends CI_Controller
                     'message' => 'Department to update shift'
                 );
             }
-    
+
             // Encode the data array to JSON and echo it
             echo json_encode($data);
         } catch (Exception $e) {
@@ -393,7 +398,7 @@ class Datatablec extends CI_Controller
                 'status' => 'error',
                 'message' => $e->getMessage()
             );
-    
+
             // Encode the data array to JSON and echo it
             echo json_encode($data);
         }
@@ -402,12 +407,13 @@ class Datatablec extends CI_Controller
 
 
 
-    public function department_delete(){
+    public function department_delete()
+    {
         try {
             // Perform deletion
             $this->db->where('id', $this->input->post('delete_department_id'));
             $this->db->delete('department');
-    
+
             $data['status'] = "success";
             $data['message'] = "Department deleted successfully.";
             echo json_encode($data);
@@ -420,24 +426,50 @@ class Datatablec extends CI_Controller
 
 
 
+    public function chat_fetch()
+    {
+        try {
+           // Fetch chat messages from the database (assuming your table name is chat_messages)
+        $query = $this->db->get('chat_messages');
+        $messages = $query->result_array();
+
+        // Return messages as JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($messages));
+        } catch (Exception $e) {
+            $data['status'] = "ERROR";
+            $data['message'] = "Cannot retrieve messages : " . $e->getMessage();
+            echo json_encode($data);
+        }
+    }
 
 
 
+    public function chat_send() {
+        // Check if the message data has been received via POST
+        if ($this->input->server('REQUEST_METHOD') == "POST" && $this->input->post('chat_message_input')) {
+            // Sanitize and escape the message to prevent SQL injection
+            $message = $this->db->escape_str($this->input->post('chat_message_input'));
+            $sender = $this->db->escape_str($this->input->post('sender_id'));
+            $receiver = $this->db->escape_str($this->input->post('receiver_id'));
 
+            // Insert the message into the database
+            $data = array(
+                'message' => $message,
+                'from_' => $sender,
+                'to_' => $receiver
+            );
+            $this->db->insert('chat_messages', $data);
 
-
-
-
-
-
-
-
-
-
-
-
+            if ($this->db->affected_rows() > 0) {
+                // If the message was successfully inserted, return a success message
+                echo json_encode(array('status' => 'success', 'message' => 'Message sent successfully.'));
+            } else {
+                // If an error occurred while inserting the message, return an error message
+                echo json_encode(array('status' => 'error', 'message' => 'Error sending message: ' . $this->db->error()));
+            }
+        } else {
+            // If the message data was not received or the request method is not POST, return an error message
+            echo json_encode(array('status' => 'error', 'message' => 'Invalid request.'));
+        }
+    }
 }
-
-
-
-
