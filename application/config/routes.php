@@ -76,7 +76,7 @@ $route['hr/historyrequests'] = 'humanr/history_req';
 
 
 // employee/pages
-
+$route['employee/notification'] = 'employee/emp_noti';
 $route['employee/dashboard'] = 'employee/emphome';
 $route['employee/profile'] = 'employee/emp_profile';
 $route['employee/setting'] = 'employee/emp_setting';

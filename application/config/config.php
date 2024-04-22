@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 
-$config['base_url'] = 'http://192.168.68.106/HRIS-FRI/'; //devops
+$config['base_url'] = 'http://192.168.254.159/HRIS-FRI/'; //devops
 // $config['base_url'] = 'http://192.168.1.13/HRIS-FRI/ci/'; //FORBES-5ghz
 
 // $config['base_url'] = 'http://localhost/HRIS-FRI/ci/';

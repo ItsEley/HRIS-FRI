@@ -18,6 +18,14 @@ class Employee extends CI_Controller
 		$this->load->view('templates/footer');
 	}
 
+	public function emp_noti()
+	{
+		$data['title'] = 'Employee | Notification';
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/employee/notification.php');
+		$this->load->view('templates/footer');
+	}
+
 	public function emp_profile()
 	{
 		$data['title'] = 'Employee | Profile';
