@@ -40,5 +40,47 @@ class Datatable_fetchers extends CI_Controller
             echo '<tr><td colspan="6">No shifts found.</td></tr>';
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// chatss
+
+public function fetch_messages() {
+    // Load the database library
+    $this->load->database();
+
+    // Fetch chat messages from the database
+    $query = $this->db->where('from_', $_POST['from_'])
+    ->where('to_', $_POST['to_'])
+    ->get('chat_messages');
+
+
+    // Store messages in an array
+    $messages = array();
+    if ($query->num_rows() > 0) {
+        $messages = $query->result_array();
+    }
+
+    // Return messages as JSON
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($messages));
+}
+
 }
 ?>

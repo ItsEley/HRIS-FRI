@@ -130,3 +130,12 @@ $route['calendar/event/update'] = 'datatablec/calendar_update';
 //DataAPI
 
 $route['data/api/holiday/insert'] = 'dataapi/insert_holiday';
+
+
+
+
+// chats
+$route['chat/get'] = 'datatable_fetchers/fetch_messages';
+
+
+

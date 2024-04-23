@@ -24,129 +24,39 @@
    <a id="mobile_btn" class="mobile_btn" href="#sidebar"><i class="fa-solid fa-bars"></i></a>
 
    <ul class="nav user-menu">
-      <?php
-      $query = $this->db->query("SELECT * FROM employee WHERE id = '" . $_SESSION['id'] . "'");
 
-      foreach ($query->result() as $row) {
 
-         $fname = $row->fname;
-         $pfp = $row->pfp;
-      }
-      ?>
 
-      <?php
-      $this->db->select('COUNT(*) as total_rows');
-      $id1 = $_SESSION['id'];
-      $this->db->where('user_id', $id1);
-      $query = $this->db->get('notifications');
-
-      // Check if query was successful
-      if ($query) {
-         // Fetch the total rows count
-         $row = $query->row();
-         $total_rows = $row->total_rows;
-      } else {
-         // Handle error if query fails
-         $total_rows = 0; // Set default value
-      }
-      ?>
       <li class="nav-item dropdown">
          <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-            <i class="fa-regular fa-bell"></i><span class="badge rounded-pill"><?php echo $total_rows; ?></span>
+            <i class="fa-regular fa-bell"></i><span class="badge rounded-pill" id="notification-count"></span>
          </a>
+
+
          <div class="dropdown-menu notifications">
             <div class="topnav-dropdown-header">
                <span class="notification-title">Notifications</span>
                <a href="javascript:void(0)" class="clear-noti"> Clear All </a>
             </div>
             <div class="noti-content">
-               <ul class="notification-list">
-                  <?php
-                  // Check if there are notifications
-                  if ($total_rows > 0) {
-                     // Retrieve the latest 5 notifications
-                     $id1 = $_SESSION['id']; // Corrected syntax for accessing session variable
-                     $this->db->select('*');
-                     $this->db->from('notifications');
-                     $this->db->where('user_id', $id1);
-                     $this->db->order_by('created_at', 'desc');
-                     $this->db->limit(5);
-                     $latest_notifications_query = $this->db->get();
-
-                     if ($latest_notifications_query->num_rows() > 0) { // Check if there are notifications
-                        foreach ($latest_notifications_query->result() as $notification) {
-                           $notif_time = date('F j, Y g:i A', strtotime($notification->created_at));
-
-                           $unread_style = $notification->status == "unread" ? 'style="background-color: #f2f2f2;"' : ''; // Check if status is 0 for unread
-                           echo '<li class="notification-message" ' . $unread_style . '>';
-                           echo '<a href="' . base_url('employee/notification') . '">';
-                           echo '<div class="list-item" style="position: relative;">'; // Add relative positioning
-                           echo '<div class="list-left">';
-                           echo '<span class="avatar">';
-                           echo '<img src="../assets/img/profiles/avatar-08.jpg" alt="User Image">';
-                           echo '</span>';
-                           echo '</div>';
-                           echo '<div class="list-body" style="display: flex; justify-content: space-between;">'; // Use flexbox
-                           echo '<div style="display: flex; flex-direction: column;">'; // Align items vertically
-                           echo '<span class="message-author">' . $notification->title . '</span>';
-                           echo '<div class="clearfix"></div>';
-                           echo '<span class="message-content">' . $notification->message . '</span>';
-                           echo '</div>';
-                           // Assuming $notif_time is in 'Y-m-d H:i:s' format
-                           $notif_timestamp = strtotime($notif_time); // Convert notif_time to a Unix timestamp
-                           $current_timestamp = time(); // Get current Unix timestamp
-                           
-                           // Calculate the time difference in seconds
-                           $time_diff = $current_timestamp - $notif_timestamp;
-                           
-                           // Define time intervals in seconds
-                           $minute = 60;
-                           $hour = 3600;
-                           $day = 86400;
-                           
-                           if ($time_diff < $minute) {
-                               $time_ago = $time_diff . 's ago'; // Seconds ago
-                           } elseif ($time_diff < $hour) {
-                               $time_ago = floor($time_diff / $minute) . 'm ago'; // Minutes ago
-                           } elseif ($time_diff < $day) {
-                               $time_ago = floor($time_diff / $hour) . 'h ago'; // Hours ago
-                           } elseif ($time_diff < 30 * $day) {
-                               $time_ago = floor($time_diff / $day) . 'd ago'; // Days ago
-                           } else {
-                               $time_ago = date('F j, Y', $notif_timestamp); // Display notif_date instead
-                           }
-                           
-                           echo '<span class="message-time">' . $time_ago . '</span>';
-                           // Show status
-                           echo '<span class="status" style="position: absolute; bottom: 0; right: 0;">' . $notification->status . '</span>';
-                           echo '</div>';
-                           echo '</div>';
-                           echo '</a>';
-                           echo '</li>';
-                           
-                        }
-                     } else {
-                        echo '<li>No notifications.</li>'; // Output if there are no notifications
-                     }
-                  } else {
-                     // Display a message if there are no notifications
-                     echo '<div style="text-align: center;">No notifications.</div>';
-                  }
-                  ?>
+               <ul class="notification-list" id="notification-list">
+                  <!-- Notification items will be dynamically added here -->
                </ul>
             </div>
             <div class="topnav-dropdown-footer">
-               <a href="base_url('employee/notification')">View all Notifications</a>
+               <a href="<?php echo base_url('employee/notification'); ?>">View all Notifications</a>
             </div>
          </div>
+
       </li>
 
 
       <!-- /Notifications -->
       <!-- Message Notifications -->
       <?php
-      $this->db->select('COUNT(*) as total_unread');
-
+      $this->db->select('SELECT COUNT(id) as `total_unread`, * FROM `chat_messages` WHERE from_ = 1 OR to_ = 1
+      GROUP BY from_, to_');
+      $this->db->where('to_', $_SESSION['id']); // Add condition to match session id
       $query = $this->db->get('chat_messages');
 
       // Check if query was successful

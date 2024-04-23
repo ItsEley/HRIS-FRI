@@ -293,13 +293,13 @@
 
 </div>
 <!-- /Main Wrapper -->
-<?php $this->load->view('components\modal-announcement-details.php'); ?>
 
 
 <script>
 	var current_user_id;
 	var current_conversation_id;
 	var conversation_type; // group or private
+	var fetch_active = false;
 
 
 	function update_windows() {
@@ -308,6 +308,19 @@
 		if (current_conversation_id != null && conversation_type != null) {
 			$("#chat-window").removeAttr("hidden");
 			$("#dialog-no-message").attr("hidden", "true");
+
+
+			if (fetch_active == false) { // Poll for new messages every 5 seconds
+				setInterval(fetchMessages, 5000);
+				// Initial fetch when the page loads
+				fetchMessages();
+				fetch_active = true;
+			}
+			console.log("Message Loaded");
+
+			scrollToBottom();
+
+
 		} else {
 			$("#chat-window").attr("hidden", "true");
 			$("#dialog-no-message").removeAttr("hidden");
@@ -343,13 +356,167 @@
 
 
 
-	document.addEventListener('DOMContentLoaded', function() {
+
+
+	// chat messagess
 
 
 
+	var audio = document.getElementById('audio_new_message');
+
+	function play_new_message() {
+		audio.play();
+		console.log("Playing audio")
+	}
+
+	// Function to scroll the chat container to the bottom
+
+	function scrollToBottom() {
+		var chatContainer = $('.chat-container')[0]; // Access the native DOM element
+		setTimeout(function() {
+			chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to the bottom
+		}, 100); // Adjust the delay as needed
+	}
+
+
+	// Call this function after appending new messages to scroll to the bottom
+	// Function to display messages in the chat container
+	function displayMessages(messages) {
+		// Loop through each message
+		messages.forEach(function(message) {
+			// Check if message already exists in the chat container
+			var existingMessage = $('.message-container').find('[data-message-id="' + message.id + '"]');
+			if (existingMessage.length > 0) {
+				// Message already exists, compare its content with fetched data
+				var existingContent = existingMessage.find('.message-content').text();
+				if (existingContent !== message.message) {
+					// Update the content of the existing message if there's a difference
+					existingMessage.find('.message-content').text(message.message);
+				}
+			} else {
+				// Message does not exist, append it to the chat container
+				// Append my messages
+				if (message.from_ == current_user_id && message.to_ != current_user_id) {
+					var messageHTML = '<div class="message my-message" data-message-id="' + message.id + '"' +
+						'data-sender-id="' + message.from_ + '" data-receiver-id="' + message.to_ + '">' +
+						'' +
+						'<p class="message-content">' + message.message + '</p>' +
+						'</div>';
+
+					let messageHTML = "<div class='chat chat-right'>" +
+						"<div class='chat-body'>" +
+						"<div class='chat-bubble'>" +
+						"<div class='chat-content'>" +
+						"<p>Hello. What can I do for you?</p>" +
+						"<span class='chat-time'>8:30 am</span>" +
+						"</div>" +
+						"</div>" +	
+						"</div>" +
+						"</div>";
+					$('.message-container').append(messageHTML);
+				} else {
+					// Append NOT my messages
+					var messageHTML = '<div class="message not-my-message" data-message-id="' + message.id + '"' +
+						'data-sender-id="' + message.from_ + '" data-receiver-id="' + message.to_ + '">' +
+						'<p class="message-content">' + message.message + '</p>' +
+						'</div>';
+					$('.message-container').append(messageHTML);
+				}
+				// play_new_message();
+				scrollToBottom();
+				// update_window();
 
 
 
+			}
+		});
+	}
 
-	})
+	// Function to handle updates and deletes in the chat container
+	function handleUpdates(messages) {
+		// Iterate through each message in the chat container
+		$('.message-container .message').each(function() {
+			var messageId = $(this).data('message-id');
+			var messageContent = $(this).find('.message-content').text();
+			var messageExists = false;
+
+			// Check if the message exists in the fetched data
+			messages.forEach(function(message) {
+				if (message.id == messageId) {
+					messageExists = true;
+					// Check if the content has changed
+					if (message.message != messageContent) {
+						// Update the message content
+						$(this).find('.message-content').text(message.message);
+
+					} else {
+						console.log("Doing nothing")
+					}
+				}
+			});
+
+			// If the message does not exist in the fetched data, delete it from the chat container
+			if (!messageExists) {
+				$(this).remove();
+			}
+		});
+
+	}
+
+	// Function to fetch chat messages via AJAX
+	function fetchMessages() {
+		$.ajax({
+			url: '<?= base_url('chat/get') ?>',
+			type: 'POST',
+			data: {
+				from_: <?= $this->session->userdata('id'); ?>,
+				to_: current_conversation_id
+			},
+			dataType: 'json',
+			success: function(data) {
+				// Display fetched messages in the chat container
+				displayMessages(data);
+				// Handle updates and deletes in the chat container
+				handleUpdates(data);
+			},
+			error: function(xhr, status, error) {
+				console.error('Error fetching messages:', error);
+			}
+		});
+	}
+
+
+	$('#chatForm').submit(function(event) {
+		event.preventDefault(); // Prevent the default form submission behavior
+		// Get the message entered by the user
+		var message = $('#chatForm').serialize();
+		// Send the message to the server using Ajax
+		$.ajax({
+			url: 'send_messages.php', // Specify the URL of the server-side script
+			method: 'POST', // Use POST method to send data
+			data: message,
+			success: function(response) {
+				// Handle the success response from the server
+				console.log('Message sent successfully');
+				// Optionally, you can clear the input field after sending the message
+				$('#chat_message_input').val('');
+				fetchMessages();
+			},
+			error: function(xhr, status, error) {
+				// Handle any errors that occur during the Ajax request
+				console.error('Error sending message:', error);
+			}
+		});
+	});
+
+
+	$(document).ready(function() {
+
+
+
+	});
+</script>
+
+<script>
+
 </script>

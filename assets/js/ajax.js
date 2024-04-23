@@ -50,6 +50,27 @@ $("#login-form").submit(function(e) {
     }
 });
 
+function fetchNotifications() {
+    $.ajax({
+        url: base_url + "humanr/fetch_notifications",
+        type: 'GET',
+        dataType: 'json', // Specify that the response should be treated as JSON
+        success: function(response) {
+            // Update the notification list HTML
+            $('#notification-list').html(response.html);
+            // Update the notification count badge with the total rows count
+            $('#notification-count').text(response.total_rows);
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText); // Log any errors to the console for debugging
+        }
+    });
+}
+
+
+
+// Call fetchNotifications function every 2 seconds
+setInterval(fetchNotifications, 2000); 
 
 // $(document).ready(function () {
 //     fetchNotificationsCount();

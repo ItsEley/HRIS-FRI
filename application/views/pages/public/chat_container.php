@@ -13,12 +13,16 @@
 										<span class="last-seen">Last seen today at 7:50 AM</span>
 									</div>
 								</div>
+
+
 								<div class="search-box" hidden>
 									<div class="input-group input-group-sm">
 										<input type="text" placeholder="Search" class="form-control">
 										<button type="button" class="btn"><i class="fa-solid fa-magnifying-glass"></i></button>
 									</div>
 								</div>
+
+
 								<ul class="nav custom-menu">
 									<li class="nav-item">
 										<a class="nav-link task-chat profile-rightbar float-end" id="task_chat" href="#task_window"><i class="fa-solid fa-user"></i></a>
@@ -39,11 +43,19 @@
 								</ul>
 							</div>
 						</div>
+
+
 						<div class="chat-contents">
 							<div class="chat-content-wrap">
 								<div class="chat-wrap-inner">
 									<div class="chat-box">
-										<div class="chats">
+										<div class="chats message-container">
+
+
+
+
+
+<!-- 
 											<div class="chat chat-right">
 												<div class="chat-body">
 													<div class="chat-bubble">
@@ -55,9 +67,16 @@
 													</div>
 												</div>
 											</div>
+
+
+
 											<div class="chat-line">
 												<span class="chat-date">October 8th, 2018</span>
 											</div>
+
+
+
+
 											<div class="chat chat-left">
 												<div class="chat-avatar">
 													<a href="profile.html" class="avatar">
@@ -83,7 +102,7 @@
 												</div>
 											</div>
 
-
+ -->
 
 
 
@@ -110,3 +129,7 @@
 							</div>
 						</div>
 					</div>
+
+
+
+					

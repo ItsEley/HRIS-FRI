@@ -239,6 +239,102 @@ class Humanr extends CI_Controller
 			redirect('');
 		}
 	}
+	public function fetch_notifications() {
+		// Start by loading the database library
+		$this->load->database();
+	
+		// Check if there are notifications
+		$total_rows = 0; // Initialize total_rows variable
+		$id1 = $_SESSION['id']; // Corrected syntax for accessing session variable
+		$notifications = array(); // Initialize notifications array
+		$html = ''; // Initialize HTML variable
+	
+		// Perform the database query
+		$this->db->select('*');
+		$this->db->from('notifications');
+		$this->db->where('user_id', $id1);
+		$this->db->order_by('created_at', 'desc');
+		$this->db->limit(5);
+		$latest_notifications_query = $this->db->get();
+	
+		// Check if there are notifications
+		if ($latest_notifications_query->num_rows() > 0) {
+			// Fetch notifications into an array
+			$notifications = $latest_notifications_query->result_array();
+			$total_rows = count($notifications);
+		}
+	
+		// Generate HTML for the notification list
+		if ($total_rows > 0) {
+			// Add notification sound
+			$html .= '<audio id="notification-sound" src="' . base_url('assets/audio/tink.mp3') . '" preload="auto"></audio>';
+	
+			foreach ($notifications as $notification) {
+				$notif_time = date('Y-m-d H:i:s', strtotime($notification['created_at']));
+	
+				$unread_style = $notification['status'] == "unread" ? 'style="background-color: #f2f2f2;"' : ''; // Check if status is 0 for unread
+				$html .= '<li class="notification-message" ' . $unread_style . '>';
+				$html .= '<a href="' . base_url('employee/notification') . '">';
+				$html .= '<div class="list-item" style="position: relative;">'; // Add relative positioning
+				$html .= '<div class="list-left">';
+				$html .= '<span class="avatar">';
+				$html .= '<img src="' . base_url('assets/img/profiles/avatar-08.jpg') . '" alt="User Image">'; // Use base_url for image src
+				$html .= '</span>';
+				$html .= '</div>';
+				$html .= '<div class="list-body" style="display: flex; justify-content: space-between;">'; // Use flexbox
+				$html .= '<div style="display: flex; flex-direction: column;">'; // Align items vertically
+				$html .= '<span class="message-author">' . $notification['title'] . '</span>';
+				$html .= '<div class="clearfix"></div>';
+				$html .= '<span class="message-content">' . $notification['message'] . '</span>';
+				$html .= '</div>';
+	
+				// Calculate the time difference
+				$notif_timestamp = strtotime($notif_time); // Convert notif_time to a Unix timestamp
+				$current_timestamp = time(); // Get current Unix timestamp
+				$time_diff = $current_timestamp - $notif_timestamp;
+	
+				// Define time intervals in seconds
+				$minute = 60;
+				$hour = 3600;
+				$day = 86400;
+	
+				if ($time_diff < $minute) {
+					$time_ago = 'Just now'; // Seconds ago
+				} elseif ($time_diff < $hour) {
+					$time_ago = floor($time_diff / $minute) . 'm ago'; // Minutes ago
+				} elseif ($time_diff < $day) {
+					$time_ago = floor($time_diff / $hour) . 'h ago'; // Hours ago
+				} elseif ($time_diff < 30 * $day) {
+					$time_ago = floor($time_diff / $day) . 'd ago'; // Days ago
+				} else {
+					$time_ago = date('F j, Y', $notif_timestamp); // Display notif_date instead
+				}
+	
+				$html .= '<span class="message-time">' . $time_ago . '</span>';
+				// Show status
+				$html .= '<span class="status" style="position: absolute; bottom: 0; right: 0;">' . $notification['status'] . '</span>';
+				$html .= '</div>';
+				$html .= '</div>';
+				$html .= '</a>';
+				$html .= '</li>';
+			}
+		} else {
+			$html = '<li>No notifications.</li>'; // Output if there are no notifications
+		}
+	
+		// Prepare the JSON response
+		$response = array(
+			'html' => $html,
+			'total_rows' => $total_rows
+		);
+	
+		// Output the JSON response
+		header('Content-Type: application/json');
+		echo json_encode($response);
+	}
+	
+
+	
 
 	public function C_hr_assets()
 	{
