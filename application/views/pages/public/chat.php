@@ -51,6 +51,7 @@
     margin-top: 20vh;padding:5rem;
 ">No messages selected. Select one conversation or initiate a new one to get started.</div>
 
+
 				</div>
 				<!-- /Chats View -->
 

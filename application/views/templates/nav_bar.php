@@ -1,10 +1,19 @@
 <div class="header" style="background: linear-gradient(to right, #070f4d 40%, #5a6dff 100%);">
    <!-- Logo -->
    <div class="header-left">
-      <a href="admin-dashboard.html" class="logo">
+
+   <?php
+   
+   if(strtolower($_SESSION['role']) == "head" && strtolower($_SESSION['acro']) == 'hr'){
+      $redirect_home = base_url('hr/dashboard');
+   }else{
+      $redirect_home = base_url('employee/dashboard');
+   }
+   ?>
+      <a href="<?= $redirect_home?>" class="logo">
          <img src="<?= base_url('assets/img/famco_logo_clear.png') ?>" width="80" height="80" alt="Logo">
       </a>
-      <a href="admin-dashboard.html" class="logo2">
+      <a href="<?= $redirect_home?>" class="logo2">
          <img src="../assets/img/logo2.png" width="40" height="40" alt="Logo">
       </a>
    </div>
@@ -51,27 +60,10 @@
       </li>
 
 
-      <!-- /Notifications -->
-      <!-- Message Notifications -->
-      <?php
-      $this->db->select('SELECT COUNT(id) as `total_unread`, * FROM `chat_messages` WHERE from_ = 1 OR to_ = 1
-      GROUP BY from_, to_');
-      $this->db->where('to_', $_SESSION['id']); // Add condition to match session id
-      $query = $this->db->get('chat_messages');
 
-      // Check if query was successful
-      if ($query) {
-         // Fetch the total rows count
-         $row = $query->row();
-         $total_unread = $row->total_unread;
-      } else {
-         // Handle error if query fails
-         $total_unread = 0; // Set default value
-      }
-      ?>
       <li class="nav-item dropdown">
          <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-            <i class="fa-regular fa-comment"></i><span class="badge rounded-pill"><?php echo $total_unread; ?></span>
+            <i class="fa-regular fa-comment"></i><span class="badge rounded-pill" id="message-count"></span>
          </a>
          <div class="dropdown-menu notifications">
             <div class="topnav-dropdown-header">
@@ -79,92 +71,8 @@
                <a href="javascript:void(0)" class="clear-noti"> Clear All </a>
             </div>
             <div class="noti-content">
-               <ul class="notification-list">
-                  <li class="notification-message">
-                     <a href="chat.html">
-                        <div class="list-item">
-                           <div class="list-left">
-                              <span class="avatar">
-                                 <img src="../assets/img/profiles/avatar-09.jpg" alt="User Image">
-                              </span>
-                           </div>
-                           <div class="list-body">
-                              <span class="message-author">Richard Miles </span>
-                              <span class="message-time">12:28 AM</span>
-                              <div class="clearfix"></div>
-                              <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
-                           </div>
-                        </div>
-                     </a>
-                  </li>
-                  <li class="notification-message">
-                     <a href="chat.html">
-                        <div class="list-item">
-                           <div class="list-left">
-                              <span class="avatar">
-                                 <img src="../assets/img/profiles/avatar-02.jpg" alt="User Image">
-                              </span>
-                           </div>
-                           <div class="list-body">
-                              <span class="message-author">John Doe</span>
-                              <span class="message-time">6 Mar</span>
-                              <div class="clearfix"></div>
-                              <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
-                           </div>
-                        </div>
-                     </a>
-                  </li>
-                  <li class="notification-message">
-                     <a href="chat.html">
-                        <div class="list-item">
-                           <div class="list-left">
-                              <span class="avatar">
-                                 <img src="../assets/img/profiles/avatar-03.jpg" alt="User Image">
-                              </span>
-                           </div>
-                           <div class="list-body">
-                              <span class="message-author"> Tarah Shropshire </span>
-                              <span class="message-time">5 Mar</span>
-                              <div class="clearfix"></div>
-                              <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
-                           </div>
-                        </div>
-                     </a>
-                  </li>
-                  <li class="notification-message">
-                     <a href="chat.html">
-                        <div class="list-item">
-                           <div class="list-left">
-                              <span class="avatar">
-                                 <img src="../assets/img/profiles/avatar-05.jpg" alt="User Image">
-                              </span>
-                           </div>
-                           <div class="list-body">
-                              <span class="message-author">Mike Litorus</span>
-                              <span class="message-time">3 Mar</span>
-                              <div class="clearfix"></div>
-                              <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
-                           </div>
-                        </div>
-                     </a>
-                  </li>
-                  <li class="notification-message">
-                     <a href="chat.html">
-                        <div class="list-item">
-                           <div class="list-left">
-                              <span class="avatar">
-                                 <img src="../assets/img/profiles/avatar-08.jpg" alt="User Image">
-                              </span>
-                           </div>
-                           <div class="list-body">
-                              <span class="message-author"> Catherine Manseau </span>
-                              <span class="message-time">27 Feb</span>
-                              <div class="clearfix"></div>
-                              <span class="message-content">Lorem ipsum dolor sit amet, consectetur adipiscing</span>
-                           </div>
-                        </div>
-                     </a>
-                  </li>
+               <ul class="notification-list" id="message-list">
+                  <!-- Message items will be dynamically added here -->
                </ul>
             </div>
             <div class="topnav-dropdown-footer">
@@ -172,6 +80,7 @@
             </div>
          </div>
       </li>
+
       <!-- /Message Notifications -->
       <li class="nav-item dropdown has-arrow main-drop">
          <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">

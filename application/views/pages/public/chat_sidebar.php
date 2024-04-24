@@ -5,8 +5,16 @@
 
                 <nav class="greedy">
                     <ul class="link-item">
+                    <?php
+   
+   if(strtolower($_SESSION['role']) == "head" && strtolower($_SESSION['acro']) == 'hr'){
+      $redirect_home = base_url('hr/dashboard');
+   }else{
+      $redirect_home = base_url('employee/dashboard');
+   }
+   ?>
                         <li>
-                            <a href="admin-dashboard.html"><i class="la la-home"></i> <span>Back to Home</span></a>
+                            <a href="<?= $redirect_home?>"><i class="la la-home"></i> <span>Back to Home</span></a>
                         </li>
                         <li class="menu-title"><span>Chat Groups</span> <a href="#" data-bs-toggle="modal" data-bs-target="#add_group" class="subdrop"><i class="fa-solid fa-plus"></i></a></li>
                         <?php

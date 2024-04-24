@@ -1,76 +1,171 @@
-$("#login-form").submit(function(e) {
-    e.preventDefault();
-    var email = $("#email").val(); 
-    var password = $("#password").val(); 
-    
-    var loginform = $(this).serialize();
-    if (email !== "" && password !== "") {
-        $.ajax({
-            url: base_url + 'welcome/login',
-            type: 'post',
-            data: loginform,
-            dataType: 'json',
-            beforeSend: function() {
-                $("#btn_login").attr('disabled', true);
-                $("#login-form").attr('disabled', true).html("<div class='text-center'>Logging in ....<span class='fa fa-spinner fa-1x fa-spin'></span></div>");
-            },
-            success: function(response) {
-                console.log("success : ", response);
+$("#login-form").submit(function (e) {
+	e.preventDefault();
+	var email = $("#email").val();
+	var password = $("#password").val();
 
-                if (response.status === 1) {
-                    let department = response.department;
+	var loginform = $(this).serialize();
+	if (email !== "" && password !== "") {
+		$.ajax({
+			url: base_url + "welcome/login",
+			type: "post",
+			data: loginform,
+			dataType: "json",
+			beforeSend: function () {
+				$("#btn_login").attr("disabled", true);
+				$("#login-form")
+					.attr("disabled", true)
+					.html(
+						"<div class='text-center'>Logging in ....<span class='fa fa-spinner fa-1x fa-spin'></span></div>"
+					);
+			},
+			success: function (response) {
+				console.log("success : ", response);
 
-                    if (response.acro_dept === 'HR') {
-                        console.log('Redirecting to HR dashboard');
-                        window.location.href = base_url + 'hr/dashboard';
-                    } else if (response.acro_dept === 'SALES') {
-                        console.log('Redirecting to Employee dashboard');
-                        window.location.href = base_url + 'employee/dashboard';
-                    } else {
-                        console.log('No matching department found for redirection');
-                    }
-                
-                } else if (response.status === 0 ) {
-                    $("#alert").html('<div class="alert alert-danger">' + response.message + '</div>');
-                    $("#login-form").attr("disabled", false).html("Login");
-                    console.log("error");
-                }
-            },
-            error: function(response) {
-                console.log("failed : ");
-                console.log("failed", response);
-            }
-        })
-    } else {
-        swal({
-            title: 'All Fields are REQUIRED !',
-            type: 'warning',
-            confirmButtonClass: 'btn btn-success',
-        });
-    }
+				if (response.status === 1) {
+					let department = response.department;
+
+					if (response.acro_dept === "HR") {
+						console.log("Redirecting to HR dashboard");
+						window.location.href = base_url + "hr/dashboard";
+					} else if (response.acro_dept === "SALES") {
+						console.log("Redirecting to Employee dashboard");
+						window.location.href = base_url + "employee/dashboard";
+					} else {
+						console.log("No matching department found for redirection");
+					}
+				} else if (response.status === 0) {
+					$("#alert").html(
+						'<div class="alert alert-danger">' + response.message + "</div>"
+					);
+					$("#login-form").attr("disabled", false).html("Login");
+					console.log("error");
+				}
+			},
+			error: function (response) {
+				console.log("failed : ");
+				console.log("failed", response);
+			},
+		});
+	} else {
+		swal({
+			title: "All Fields are REQUIRED !",
+			type: "warning",
+			confirmButtonClass: "btn btn-success",
+		});
+	}
 });
 
 function fetchNotifications() {
     $.ajax({
         url: base_url + "humanr/fetch_notifications",
-        type: 'GET',
-        dataType: 'json', // Specify that the response should be treated as JSON
-        success: function(response) {
+        type: "GET",
+        dataType: "json", // Specify that the response should be treated as JSON
+        success: function (response) {
             // Update the notification list HTML
-            $('#notification-list').html(response.html);
-            // Update the notification count badge with the total rows count
-            $('#notification-count').text(response.total_rows);
+            $("#notification-list").html(response.html);
+
+            // Check if total_rows is greater than zero
+            if (response.total_rows > 0) {
+                // Update the notification count badge with the total rows count
+                $("#notification-count").text(response.total_rows);
+                // Show the badge pill
+                $("#notification-count").show();
+            } else {
+                // If total_rows is zero or less than zero, hide the badge pill
+                $("#notification-count").hide();
+            }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error(xhr.responseText); // Log any errors to the console for debugging
-        }
+        },
     });
 }
 
 
-
 // Call fetchNotifications function every 2 seconds
-setInterval(fetchNotifications, 2000); 
+setInterval(fetchNotifications, 2000);
+var latestTimestamp = 0; // Variable to store the timestamp of the latest notification
+
+function fetchNotifications2() {
+    $.ajax({
+        url: base_url + "humanr/fetchnotifications2",
+        type: "GET",
+        dataType: "json",
+        data: { latestTimestamp: latestTimestamp }, // Send the latest timestamp as data
+        success: function (response) {
+            // Update the notification list HTML by appending new notifications
+            $(".activity-list").append(response.html);
+
+            // Update the latest timestamp
+            latestTimestamp = response.latestTimestamp;
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+        },
+    });
+}
+
+// Call the function initially to fetch notifications on page load
+fetchNotifications2();
+
+// Poll for new notifications every 2 seconds
+setInterval(fetchNotifications2, 2000);
+
+function fetchMessages() {
+    $.ajax({
+        url: base_url + "humanr/fetch_messages",
+        type: "GET",
+        dataType: "json",
+        success: function(response) {
+            var html = '';
+            // Check if there are messages
+            if (response.html) {
+                // Loop through messages and generate HTML
+                response.html.forEach(function(message) {
+                    html += '<li class="notification-message" data-message-id="' + message.id + '">';
+                    html += '<a href="chat.html">';
+                    html += '<div class="list-item">';
+                    html += '<div class="list-left">';
+                    html += '<span class="avatar">';
+                    html += '<img src="' + message.sender_profile_picture + '" alt="User Image">';
+                    html += '</span>';
+                    html += '</div>';
+                    html += '<div class="list-body">';
+                    html += '<span class="message-author">' + message.sender_name + '</span>';
+                    html += '<span class="message-time">' + message.timestamp + '</span>';
+                    html += '<div class="clearfix"></div>';
+                    html += '<span class="message-content">' + message.message + '</span>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</a>';
+                    html += '</li>';
+                });
+            } else {
+                html = '<li>No messages.</li>'; // Output if there are no messages
+            }
+            // Update the message list HTML
+            $("#message-list").html(html);
+
+            // Check if total_messages is greater than zero
+            if (response.total_messages > 0) {
+                // Show the message list
+                $("#message-list").show();
+            } else {
+                // If total_messages is zero or less than zero, hide the message list
+                $("#message-list").hide();
+            }
+            console.log(response);
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText); // Log any errors to the console for debugging
+        },
+    });
+}
+
+
+// Call fetchMessages function every 2 seconds
+setInterval(fetchMessages, 2000);
+
 
 // $(document).ready(function () {
 //     fetchNotificationsCount();
@@ -96,9 +191,9 @@ setInterval(fetchNotifications, 2000);
 //             event.preventDefault();
 //             var rowId = $(rowIdFieldId).val();
 //             $('#approveModalRowId').text(rowId);
-//             $('#approveModalRowIdTable').text(rowId); 
-//             $('#approveModal').modal('show'); 
-//             $('#confirmApproveHr').data('row-id', rowId); 
+//             $('#approveModalRowIdTable').text(rowId);
+//             $('#approveModal').modal('show');
+//             $('#confirmApproveHr').data('row-id', rowId);
 //             $('#confirmApproveHr').data('approval-endpoint', approvalEndpoint);
 //         });
 //     }
@@ -128,651 +223,646 @@ setInterval(fetchNotifications, 2000);
 // });
 
 $(document).ready(function () {
-    // Function to handle approve button clicks
-    function handleApproveButtonClick(buttonId, rowIdFieldId, empIdFieldId) {
-        $(buttonId).click(function (event) {
-            event.preventDefault();
-            $('#approveModal').modal('show');
-            var rowId = $(rowIdFieldId).val();
-            $('#approveModalRowId').val(rowId); // Update the input value with rowId
-            $('#confirmApproveHr').attr('data-source', buttonId.substring(1));
-            $('#confirmApproveHr').attr('data-row-id', rowId); // Assign rowId to data attribute
-        });
-    }
-    
+	// Function to handle approve button clicks
+	function handleApproveButtonClick(buttonId, rowIdFieldId, empIdFieldId) {
+		$(buttonId).click(function (event) {
+			event.preventDefault();
+			$("#approveModal").modal("show");
+			var rowId = $(rowIdFieldId).val();
+			$("#approveModalRowId").val(rowId); // Update the input value with rowId
+			$("#confirmApproveHr").attr("data-source", buttonId.substring(1));
+			$("#confirmApproveHr").attr("data-row-id", rowId); // Assign rowId to data attribute
+		});
+	}
 
-    handleApproveButtonClick('#og_approveButtonHr', '#og_id', '#employee_id');
-    handleApproveButtonClick('#leave_approveButtonHr', '#leave_id', '#leave_employee_id');
-    handleApproveButtonClick('#ot_approveButtonHr', '#ot_id', '#ot_employee_id');
-    handleApproveButtonClick('#ut_approveButtonHr', '#ut_id', '#ut_employee_id');
-    handleApproveButtonClick('#ob_approveButtonHr', '#ob_id', '#ob_employee_id');
+	handleApproveButtonClick("#og_approveButtonHr", "#og_id", "#employee_id");
+	handleApproveButtonClick(
+		"#leave_approveButtonHr",
+		"#leave_id",
+		"#leave_employee_id"
+	);
+	handleApproveButtonClick("#ot_approveButtonHr", "#ot_id", "#ot_employee_id");
+	handleApproveButtonClick("#ut_approveButtonHr", "#ut_id", "#ut_employee_id");
+	handleApproveButtonClick("#ob_approveButtonHr", "#ob_id", "#ob_employee_id");
 
-    function handleDenyButtonClick(buttonId, rowIdFieldId, empIdFieldId) {
-        $(buttonId).click(function (event) {
-            event.preventDefault();
-            console.log("Deny button clicked"); // Check if the button click is registered
-            $('#denyModal').modal('show');
-            var rowId = $(rowIdFieldId).val();
-            console.log('Row ID:', rowId); // Check if rowId is correctly fetched
-            $('#denyModalRowId').val(rowId); // Update the value of the input with rowId
-            $('#confirmDenyHr').attr('data-source', buttonId.substring(1));
-            $('#confirmDenyHr').attr('data-row-id', rowId); // Assign rowId to data attribute
-        });
-    }
-    
-    
-    // Handle deny button clicks for different actions
-    handleDenyButtonClick('#og_denyButtonHr', '#og_id', '#employee_id');
-    handleDenyButtonClick('#leave_denyButtonHr', '#leave_id', '#leave_employee_id');
-    handleDenyButtonClick('#ot_denyButtonHr', '#ot_id', '#ot_employee_id');
-    handleDenyButtonClick('#ut_denyButtonHr', '#ut_id', '#ut_employee_id');
-    handleDenyButtonClick('#ob_denyButtonHr', '#ob_id', '#ob_employee_id');
+	function handleDenyButtonClick(buttonId, rowIdFieldId, empIdFieldId) {
+		$(buttonId).click(function (event) {
+			event.preventDefault();
+			console.log("Deny button clicked"); // Check if the button click is registered
+			$("#denyModal").modal("show");
+			var rowId = $(rowIdFieldId).val();
+			console.log("Row ID:", rowId); // Check if rowId is correctly fetched
+			$("#denyModalRowId").val(rowId); // Update the value of the input with rowId
+			$("#confirmDenyHr").attr("data-source", buttonId.substring(1));
+			$("#confirmDenyHr").attr("data-row-id", rowId); // Assign rowId to data attribute
+		});
+	}
 
-    // Function to handle confirmation of approve or deny action
-    function handleConfirmationClick(confirmButtonId, modalId) {
-        $(confirmButtonId).click(function () {
-            var rowId;
-            var empId;
-            var source = $(this).attr('data-source'); // Get the source value
-            rowId = $(this).attr('data-row-id'); // Get the rowId from the data attribute
-    
-            // Determine empId based on the source
-            if (source.includes('approveButton')) {
-                empId = $(modalId).find('.employee-id').val();
-            } else if (source.includes('denyButton')) {
-                empId = $(modalId).find('.employee-id').val();
-            }
-    
-            console.log('Row ID:', rowId);
-            console.log('Source:', source);
-    
-            // Perform AJAX request
-            $.ajax({
-                type: "POST",
-                url: base_url + 'humanr/hrapprove',
-                data: {
-                    row_id: rowId,
-                    emp_id: empId,
-                    source: source
-                },
-                success: function (response) {
-                    console.log('Response:', response); // Log the response
-                    alert(response);
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error:', error); // Log any errors
-                }
-            });
-    
-            $(modalId).modal('hide');
-        });
-    }
-    
-    
-    // Handle confirmation of approve action
-    handleConfirmationClick('#confirmApproveHr', '#approveModal');
-    // Handle confirmation of deny action
-    handleConfirmationClick('#confirmDenyHr', '#denyModal');
+	// Handle deny button clicks for different actions
+	handleDenyButtonClick("#og_denyButtonHr", "#og_id", "#employee_id");
+	handleDenyButtonClick(
+		"#leave_denyButtonHr",
+		"#leave_id",
+		"#leave_employee_id"
+	);
+	handleDenyButtonClick("#ot_denyButtonHr", "#ot_id", "#ot_employee_id");
+	handleDenyButtonClick("#ut_denyButtonHr", "#ut_id", "#ut_employee_id");
+	handleDenyButtonClick("#ob_denyButtonHr", "#ob_id", "#ob_employee_id");
+
+	// Function to handle confirmation of approve or deny action
+	function handleConfirmationClick(confirmButtonId, modalId) {
+		$(confirmButtonId).click(function () {
+			var rowId;
+			var empId;
+			var source = $(this).attr("data-source"); // Get the source value
+			rowId = $(this).attr("data-row-id"); // Get the rowId from the data attribute
+
+			// Determine empId based on the source
+			if (source.includes("approveButton")) {
+				empId = $(modalId).find(".employee-id").val();
+			} else if (source.includes("denyButton")) {
+				empId = $(modalId).find(".employee-id").val();
+			}
+
+			console.log("Row ID:", rowId);
+			console.log("Source:", source);
+
+			// Perform AJAX request
+			$.ajax({
+				type: "POST",
+				url: base_url + "humanr/hrapprove",
+				data: {
+					row_id: rowId,
+					emp_id: empId,
+					source: source,
+				},
+				success: function (response) {
+					console.log("Response:", response); // Log the response
+					alert(response);
+				},
+				error: function (xhr, status, error) {
+					console.error("Error:", error); // Log any errors
+				},
+			});
+
+			$(modalId).modal("hide");
+		});
+	}
+
+	// Handle confirmation of approve action
+	handleConfirmationClick("#confirmApproveHr", "#approveModal");
+	// Handle confirmation of deny action
+	handleConfirmationClick("#confirmDenyHr", "#denyModal");
 });
 /// HEAD APPROVAL START
 
 $(document).ready(function () {
-    // Function to handle approve button clicks
-    function handleApproveButtonClick(buttonId, rowIdFieldId, empIdFieldId) {
-        $(buttonId).click(function (event) {
-            event.preventDefault();
-            $('#approveModal').modal('show');
-            var rowId = $(rowIdFieldId).val();
-            $('#approveModalRowId').text(rowId); // Update the content of the span with rowId
-            $('#confirmApprove').attr('data-source', buttonId.substring(1));
-            $('#confirmApprove').attr('data-row-id', rowId); // Assign rowId to data attribute
-        });
-    }
-    
+	// Function to handle approve button clicks
+	function handleApproveButtonClick(buttonId, rowIdFieldId, empIdFieldId) {
+		$(buttonId).click(function (event) {
+			event.preventDefault();
+			$("#approveModal").modal("show");
+			var rowId = $(rowIdFieldId).val();
+			$("#approveModalRowId").text(rowId); // Update the content of the span with rowId
+			$("#confirmApprove").attr("data-source", buttonId.substring(1));
+			$("#confirmApprove").attr("data-row-id", rowId); // Assign rowId to data attribute
+		});
+	}
 
-    handleApproveButtonClick('#og_approveButton', '#og_id', '#employee_id');
-    handleApproveButtonClick('#leave_approveButton', '#leave_id', '#leave_employee_id');
-    handleApproveButtonClick('#ot_approveButton', '#ot_id', '#ot_employee_id');
-    handleApproveButtonClick('#ut_approveButton', '#ut_id', '#ut_employee_id');
-    handleApproveButtonClick('#ob_approveButton', '#ob_id', '#ob_employee_id');
+	handleApproveButtonClick("#og_approveButton", "#og_id", "#employee_id");
+	handleApproveButtonClick(
+		"#leave_approveButton",
+		"#leave_id",
+		"#leave_employee_id"
+	);
+	handleApproveButtonClick("#ot_approveButton", "#ot_id", "#ot_employee_id");
+	handleApproveButtonClick("#ut_approveButton", "#ut_id", "#ut_employee_id");
+	handleApproveButtonClick("#ob_approveButton", "#ob_id", "#ob_employee_id");
 
-    function handleDenyButtonClick(buttonId, rowIdFieldId, empIdFieldId) {
-        $(buttonId).click(function (event) {
-            event.preventDefault();
-            $('#denyModal').modal('show');
-        
-           
-            var rowId = $(rowIdFieldId).val();
-            $('#denyModalRowId').text(rowId); // Update the content of the span with rowId
-            $('#confirmDeny').attr('data-source', buttonId.substring(1));
-            $('#confirmDeny').attr('data-row-id', rowId); // Assign rowId to data attribute
-        });
-    }
+	function handleDenyButtonClick(buttonId, rowIdFieldId, empIdFieldId) {
+		$(buttonId).click(function (event) {
+			event.preventDefault();
+			$("#denyModal").modal("show");
 
-    // Handle deny button clicks for different actions
-    handleDenyButtonClick('#og_denyButton', '#og_id', '#employee_id');
-    handleDenyButtonClick('#leave_denyButton', '#leave_id', '#leave_employee_id');
-    handleDenyButtonClick('#ot_denyButton', '#ot_id', '#ot_employee_id');
-    handleDenyButtonClick('#ut_denyButton', '#ut_id', '#ut_employee_id');
-    handleDenyButtonClick('#ob_denyButton', '#ob_id', '#ob_employee_id');
+			var rowId = $(rowIdFieldId).val();
+			$("#denyModalRowId").text(rowId); // Update the content of the span with rowId
+			$("#confirmDeny").attr("data-source", buttonId.substring(1));
+			$("#confirmDeny").attr("data-row-id", rowId); // Assign rowId to data attribute
+		});
+	}
 
-    // Function to handle confirmation of approve or deny action
-    function handleConfirmationClick(confirmButtonId, modalId) {
-        $(confirmButtonId).click(function () {
-            var rowId;
-            var empId;
-            var source = $(this).attr('data-source'); // Get the source value
-            rowId = $(this).attr('data-row-id'); // Get the rowId from the data attribute
-    
-            // Determine empId based on the source
-            if (source.includes('approveButton')) {
-                empId = $(modalId).find('.employee-id').val();
-            } else if (source.includes('denyButton')) {
-                empId = $(modalId).find('.employee-id').val();
-            }
-    
-            console.log('Row ID:', rowId);
-            console.log('Source:', source);
-    
-            // Perform AJAX request
-            $.ajax({
-                type: "POST",
-                url: base_url + 'humanr/headapprove',
-                data: {
-                    row_id: rowId,
-                    emp_id: empId,
-                    source: source
-                },
-                success: function (response) {
-                    alert(response);
-                }
-            });
-    
-            $(modalId).modal('hide');
-        });
-    }
-    
-    // Handle confirmation of approve action
-    handleConfirmationClick('#confirmApprove', '#approveModal');
-    // Handle confirmation of deny action
-    handleConfirmationClick('#confirmDeny', '#denyModal');
+	// Handle deny button clicks for different actions
+	handleDenyButtonClick("#og_denyButton", "#og_id", "#employee_id");
+	handleDenyButtonClick("#leave_denyButton", "#leave_id", "#leave_employee_id");
+	handleDenyButtonClick("#ot_denyButton", "#ot_id", "#ot_employee_id");
+	handleDenyButtonClick("#ut_denyButton", "#ut_id", "#ut_employee_id");
+	handleDenyButtonClick("#ob_denyButton", "#ob_id", "#ob_employee_id");
+
+	// Function to handle confirmation of approve or deny action
+	function handleConfirmationClick(confirmButtonId, modalId) {
+		$(confirmButtonId).click(function () {
+			var rowId;
+			var empId;
+			var source = $(this).attr("data-source"); // Get the source value
+			rowId = $(this).attr("data-row-id"); // Get the rowId from the data attribute
+
+			// Determine empId based on the source
+			if (source.includes("approveButton")) {
+				empId = $(modalId).find(".employee-id").val();
+			} else if (source.includes("denyButton")) {
+				empId = $(modalId).find(".employee-id").val();
+			}
+
+			console.log("Row ID:", rowId);
+			console.log("Source:", source);
+
+			// Perform AJAX request
+			$.ajax({
+				type: "POST",
+				url: base_url + "humanr/headapprove",
+				data: {
+					row_id: rowId,
+					emp_id: empId,
+					source: source,
+				},
+				success: function (response) {
+					alert(response);
+				},
+			});
+
+			$(modalId).modal("hide");
+		});
+	}
+
+	// Handle confirmation of approve action
+	handleConfirmationClick("#confirmApprove", "#approveModal");
+	// Handle confirmation of deny action
+	handleConfirmationClick("#confirmDeny", "#denyModal");
 });
 /// HEAD APPROVAL END
 
+$("#import_csv").submit(function (e) {
+	e.preventDefault();
 
-$("#import_csv").submit(function(e) {
-    e.preventDefault();
+	var form_data = new FormData($("#import_csv")[0]);
 
-        var form_data = new FormData($('#import_csv')[0]);
-
-        $.ajax({
-            type: 'POST',
-            url: base_url+'humanr/import', // Assuming your controller's method is named import()
-            data: form_data,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                alert(response);
-                // window.location.reload(); // Reload the page after successful import
-            },
-            error: function(xhr, status, error) {
-                alert('An error occurred while processing the request.');
-                console.error(xhr.responseText);
-            }
-        });
-    });
-
-	$(document).ready(function() {
-    $('#exportBtn').click(function(e) {
-        e.preventDefault(); // Prevent default anchor behavior
-
-        // Make AJAX request to export CSV
-        $.ajax({
-            type: 'GET',
-            url: base_url + 'humanr/export_csv',
-            success: function(response) {
-                // Create a Blob object from the CSV data
-                var blob = new Blob([response], { type: 'text/csv' });
-
-                // Create a temporary anchor element to trigger the download
-                var link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = 'employee_data.csv'; // Set the file name
-
-                // Append the anchor element to the document body and trigger the download
-                document.body.appendChild(link);
-                link.click();
-
-                // Clean up resources after download
-                window.URL.revokeObjectURL(link.href);
-                document.body.removeChild(link);
-            },
-            error: function(xhr, status, error) {
-                alert('An error occurred while processing the request.');
-                console.error(xhr.responseText);
-            }
-        });
-    });
+	$.ajax({
+		type: "POST",
+		url: base_url + "humanr/import", // Assuming your controller's method is named import()
+		data: form_data,
+		contentType: false,
+		processData: false,
+		success: function (response) {
+			alert(response);
+			// window.location.reload(); // Reload the page after successful import
+		},
+		error: function (xhr, status, error) {
+			alert("An error occurred while processing the request.");
+			console.error(xhr.responseText);
+		},
+	});
 });
 
-$(document).ready(function() {
-    $('#openSecondModalBtn').on('click', function() {
-        var formData = $('#adduser').serializeArray();
+$(document).ready(function () {
+	$("#exportBtn").click(function (e) {
+		e.preventDefault(); // Prevent default anchor behavior
 
-        $.each(formData, function(index, field) {
-            switch (field.name) {
-                case 'fname':
-                case 'mname':
-                case 'lname':
-                case 'email':
-                case 'password':
-                    $('#exampleModalToggle2').find('[name="' + field.name + '"]').val(field.value);
-                    break;
-                default:
-                    break;
-            }
-        });
+		// Make AJAX request to export CSV
+		$.ajax({
+			type: "GET",
+			url: base_url + "humanr/export_csv",
+			success: function (response) {
+				// Create a Blob object from the CSV data
+				var blob = new Blob([response], { type: "text/csv" });
 
-        $('#add_employee').modal('hide');
-        $('#exampleModalToggle2').modal('show');
-    });
+				// Create a temporary anchor element to trigger the download
+				var link = document.createElement("a");
+				link.href = window.URL.createObjectURL(blob);
+				link.download = "employee_data.csv"; // Set the file name
 
-    $('#add_employee_submit').on('click', function() {
-        var capturedImageSrc = $('#capturedImageContainer img').attr('src');
-        var byteString = atob(capturedImageSrc.split(',')[1]);
-        var mimeString = capturedImageSrc.split(',')[0].split(':')[1].split(';')[0];
-        var ab = new ArrayBuffer(byteString.length);
-        var ia = new Uint8Array(ab);
-        for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-        }
-        var blob = new Blob([ab], { type: mimeString });
+				// Append the anchor element to the document body and trigger the download
+				document.body.appendChild(link);
+				link.click();
 
-        var formData = new FormData($('#adduser')[0]);
-        formData.append('capturedImage', blob, 'capturedImage.png');
+				// Clean up resources after download
+				window.URL.revokeObjectURL(link.href);
+				document.body.removeChild(link);
+			},
+			error: function (xhr, status, error) {
+				alert("An error occurred while processing the request.");
+				console.error(xhr.responseText);
+			},
+		});
+	});
+});
 
-        $.ajax({
-            url: base_url + 'adduser',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                // Handle success if needed
+$(document).ready(function () {
+	$("#openSecondModalBtn").on("click", function () {
+		var formData = $("#adduser").serializeArray();
+
+		$.each(formData, function (index, field) {
+			switch (field.name) {
+				case "fname":
+				case "mname":
+				case "lname":
+				case "email":
+				case "password":
+					$("#exampleModalToggle2")
+						.find('[name="' + field.name + '"]')
+						.val(field.value);
+					break;
+				default:
+					break;
+			}
+		});
+
+		$("#add_employee").modal("hide");
+		$("#exampleModalToggle2").modal("show");
+	});
+
+	$("#add_employee_submit").on("click", function () {
+		var capturedImageSrc = $("#capturedImageContainer img").attr("src");
+		var byteString = atob(capturedImageSrc.split(",")[1]);
+		var mimeString = capturedImageSrc.split(",")[0].split(":")[1].split(";")[0];
+		var ab = new ArrayBuffer(byteString.length);
+		var ia = new Uint8Array(ab);
+		for (var i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i);
+		}
+		var blob = new Blob([ab], { type: mimeString });
+
+		var formData = new FormData($("#adduser")[0]);
+		formData.append("capturedImage", blob, "capturedImage.png");
+
+		$.ajax({
+			url: base_url + "adduser",
+			type: "POST",
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function (response) {
+				// Handle success if needed
 				alert("Done");
 				window.reload();
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-                // Handle errors more effectively, e.g., show an error message to the user
-            }
-        });
-    });
+			},
+			error: function (xhr, status, error) {
+				console.error(error);
+				// Handle errors more effectively, e.g., show an error message to the user
+			},
+		});
+	});
 });
-
 
 // Use delegated event handler for form submission
-$(document).on("submit", "#leave_req_det", function(e) {
-    e.preventDefault();
+$(document).on("submit", "#leave_req_det", function (e) {
+	e.preventDefault();
 
-    // Serialize form data
-    var editemployee = $(this).serialize();
+	// Serialize form data
+	var editemployee = $(this).serialize();
 
-    // Log serialized form data
-    console.log("Serialized Form Data:", editemployee);
+	// Log serialized form data
+	console.log("Serialized Form Data:", editemployee);
 
-    // Send AJAX request
-    $.ajax({
-        url: base_url + 'humanr/updateUser',
-        type: 'post',
-        data: editemployee,
-        dataType: 'json',
-        success: function(res) {
-            if (res.status === 1) {
-                alert(res.msg);
-            } else {
-                alert(res.msg);
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error("AJAX Error:", error);
-        }
-    });
+	// Send AJAX request
+	$.ajax({
+		url: base_url + "humanr/updateUser",
+		type: "post",
+		data: editemployee,
+		dataType: "json",
+		success: function (res) {
+			if (res.status === 1) {
+				alert(res.msg);
+			} else {
+				alert(res.msg);
+			}
+		},
+		error: function (xhr, status, error) {
+			console.error("AJAX Error:", error);
+		},
+	});
 });
 
-$(document).on("click", ".dropdown-item.edit-employee", function(e) {
-    e.preventDefault();
+$(document).on("click", ".dropdown-item.edit-employee", function (e) {
+	e.preventDefault();
 
-    var emp_id = $(this).data("emp-id"); // Use data() instead of attr() for data attributes
-    console.log('Employee ID:', emp_id);
+	var emp_id = $(this).data("emp-id"); // Use data() instead of attr() for data attributes
+	console.log("Employee ID:", emp_id);
 
-    // Use shorthand $.ajax method for cleaner code
-    $.ajax({
-        url: base_url + 'humanr/showUserdetails',
-        type: 'POST',
-        data: {'emp_id': emp_id },
-        dataType: 'json', // Specify JSON data type for automatic parsing
-        success: function(response) {
-            console.log('Response:', response);
+	// Use shorthand $.ajax method for cleaner code
+	$.ajax({
+		url: base_url + "humanr/showUserdetails",
+		type: "POST",
+		data: { emp_id: emp_id },
+		dataType: "json", // Specify JSON data type for automatic parsing
+		success: function (response) {
+			console.log("Response:", response);
 
-            if (response.status === "success") {
-                var employee = response.data;
+			if (response.status === "success") {
+				var employee = response.data;
 
-                // Populate form fields using object destructuring for cleaner code
-                $("form#edit_employee input[name='emp_id']").val(employee.id);
-                $("form#edit_employee input[name='fname']").val(employee.fname);
-                $("form#edit_employee input[name='mname']").val(employee.mname || ''); // Handle null or undefined values
-                $("form#edit_employee input[name='lname']").val(employee.lname);
-                $("form#edit_employee input[name='nickn']").val(employee.nickn);
-                $("form#edit_employee input[name='current_add']").val(employee.current_add);
-                $("form#edit_employee input[name='perm_add']").val(employee.perm_add);
-                $("form#edit_employee input[name='dob']").val(employee.dob);
-                $("form#edit_employee input[name='religion']").val(employee.religion);
-                $("form#edit_employee select[name='sex']").val(employee.sex);
-                $("form#edit_employee select[name='civil_status']").val(employee.civil_status);
+				// Populate form fields using object destructuring for cleaner code
+				$("form#edit_employee input[name='emp_id']").val(employee.id);
+				$("form#edit_employee input[name='fname']").val(employee.fname);
+				$("form#edit_employee input[name='mname']").val(employee.mname || ""); // Handle null or undefined values
+				$("form#edit_employee input[name='lname']").val(employee.lname);
+				$("form#edit_employee input[name='nickn']").val(employee.nickn);
+				$("form#edit_employee input[name='current_add']").val(
+					employee.current_add
+				);
+				$("form#edit_employee input[name='perm_add']").val(employee.perm_add);
+				$("form#edit_employee input[name='dob']").val(employee.dob);
+				$("form#edit_employee input[name='religion']").val(employee.religion);
+				$("form#edit_employee select[name='sex']").val(employee.sex);
+				$("form#edit_employee select[name='civil_status']").val(
+					employee.civil_status
+				);
 
-                // Handle select option for civil_status
-                var civilStatusSelect = $("form#edit_employee select[name='civil_status']");
-                civilStatusSelect.val(employee.civil_status);
-                if (!civilStatusSelect.val()) {
-                    civilStatusSelect.val('N/A');
-                }
+				// Handle select option for civil_status
+				var civilStatusSelect = $(
+					"form#edit_employee select[name='civil_status']"
+				);
+				civilStatusSelect.val(employee.civil_status);
+				if (!civilStatusSelect.val()) {
+					civilStatusSelect.val("N/A");
+				}
 
-                $("form#edit_employee input[name='pob']").val(employee.pob);
-                $("form#edit_employee input[name='email']").val(employee.email);
-                $("form#edit_employee input[name='contact_no']").val(employee.contact_no);
-
-            } else {
-                console.error('Error:', response.message); // Log error message
-                // Handle error if necessary
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('AJAX error:', status, error);
-            // Handle AJAX error if necessary
-        }
-    });
+				$("form#edit_employee input[name='pob']").val(employee.pob);
+				$("form#edit_employee input[name='email']").val(employee.email);
+				$("form#edit_employee input[name='contact_no']").val(
+					employee.contact_no
+				);
+			} else {
+				console.error("Error:", response.message); // Log error message
+				// Handle error if necessary
+			}
+		},
+		error: function (xhr, status, error) {
+			console.error("AJAX error:", status, error);
+			// Handle AJAX error if necessary
+		},
+	});
 });
-
-
-
 
 //leave request
-$("#leave_request1").submit(function(e){
+$("#leave_request1").submit(function (e) {
 	e.preventDefault();
 	var leaveRequest = $(this).serialize();
 	$.ajax({
-		url: base_url + 'leave_request',
-		type: 'post',
+		url: base_url + "leave_request",
+		type: "post",
 		data: leaveRequest,
-		dataType: 'json',
-		success: function(response){
-			if(response.status === 1){
+		dataType: "json",
+		success: function (response) {
+			if (response.status === 1) {
 				alert(response.msg);
-				
-			}else{
+			} else {
 				alert(response.msg);
 			}
-		}
-	})
-})
+		},
+	});
+});
 
-$("#leave_request").submit(function(e){
+$("#leave_request").submit(function (e) {
 	e.preventDefault();
 	var leaveRequest = $(this).serialize();
 	$.ajax({
-		url: base_url + 'leave_request',
-		type: 'post',
+		url: base_url + "leave_request",
+		type: "post",
 		data: leaveRequest,
-		dataType: 'json',
-		success: function(response){
-			if(response.status === 1){
+		dataType: "json",
+		success: function (response) {
+			if (response.status === 1) {
 				alert(response.msg);
-				
-			}else{
+			} else {
 				alert(response.msg);
 			}
-		}
-	})
-})
+		},
+	});
+});
 
-
-
-
-$("#ob_request").submit(function(e){
+$("#ob_request").submit(function (e) {
 	e.preventDefault();
 	var obRequest = $(this).serialize();
 	$.ajax({
-		url: base_url + 'ob_request',
-		type: 'post',
+		url: base_url + "ob_request",
+		type: "post",
 		data: obRequest,
-		dataType: 'json',
-		success: function(response){
-			if(response.status === 1){
+		dataType: "json",
+		success: function (response) {
+			if (response.status === 1) {
 				alert(response.msg);
-			}else{
+			} else {
 				alert(response.msg);
 			}
-		}
-	})
-})
+		},
+	});
+});
 
-$("#ob_request1").submit(function(e){
+$("#ob_request1").submit(function (e) {
 	e.preventDefault();
 	var obRequest = $(this).serialize();
 	$.ajax({
-		url: base_url + 'employee/C_off_buss1',
-		type: 'post',
+		url: base_url + "employee/C_off_buss1",
+		type: "post",
 		data: obRequest,
-		dataType: 'json',
-		success: function(response){
-			if(response.status === 1){
+		dataType: "json",
+		success: function (response) {
+			if (response.status === 1) {
 				alert(response.msg);
-			}else{
+			} else {
 				alert(response.msg);
 			}
-		}
-	})
-})
+		},
+	});
+});
 
-
-$("#outgoing_request").submit(function(e){
+$("#outgoing_request").submit(function (e) {
 	e.preventDefault();
 	var outgoingRequest = $(this).serialize();
 	$.ajax({
-		url: base_url + 'outgoing_request',
-		type: 'post',
+		url: base_url + "outgoing_request",
+		type: "post",
 		data: outgoingRequest,
-		dataType: 'json',
-		success: function(response){
-			if(response.status === 1){
+		dataType: "json",
+		success: function (response) {
+			if (response.status === 1) {
 				alert(response.msg);
-			}else{
+			} else {
 				alert(response.msg);
 			}
-		}
-	})
-})
+		},
+	});
+});
 
-$("#outgoing_request1").submit(function(e){
+$("#outgoing_request1").submit(function (e) {
 	e.preventDefault();
 	var outgoingRequest = $(this).serialize();
 	$.ajax({
-		url: base_url + 'outgoing_request',
-		type: 'post',
+		url: base_url + "outgoing_request",
+		type: "post",
 		data: outgoingRequest,
-		dataType: 'json',
-		success: function(response){
-			if(response.status === 1){
+		dataType: "json",
+		success: function (response) {
+			if (response.status === 1) {
 				alert(response.msg);
-			}else{
+			} else {
 				alert(response.msg);
 			}
-		}
-	})
-})
+		},
+	});
+});
 
-$("#undertime_request").submit(function(e){
+$("#undertime_request").submit(function (e) {
 	e.preventDefault();
 	var udtRequest = $(this).serialize();
 	$.ajax({
-		url: base_url + 'undertime_request',
-		type: 'post',
+		url: base_url + "undertime_request",
+		type: "post",
 		data: udtRequest,
-		dataType: 'json',
-		success: function(response){
-			if(response.status === 1){
+		dataType: "json",
+		success: function (response) {
+			if (response.status === 1) {
 				alert(response.msg);
-			}else{
+			} else {
 				alert(response.msg);
 			}
-		}
-	})
-})
+		},
+	});
+});
 
-
-$("#ot_request").submit(function(e){
+$("#ot_request").submit(function (e) {
 	e.preventDefault();
 	var overtimeRequest = $(this).serialize();
 	$.ajax({
-		url: base_url + 'overtime_request',
-		type: 'post',
+		url: base_url + "overtime_request",
+		type: "post",
 		data: overtimeRequest,
-		dataType: 'json',
-		success: function(response){
-			if(response.status === 1){
+		dataType: "json",
+		success: function (response) {
+			if (response.status === 1) {
 				alert(response.msg);
-			}else{
+			} else {
 				alert(response.msg);
 			}
-		}
-	})
-})
+		},
+	});
+});
 
-$("#ot_request1").submit(function(e){
+$("#ot_request1").submit(function (e) {
 	e.preventDefault();
 	var overtimeRequest = $(this).serialize();
 	$.ajax({
-		url: base_url + 'overtime_request',
-		type: 'post',
+		url: base_url + "overtime_request",
+		type: "post",
 		data: overtimeRequest,
-		dataType: 'json',
-		success: function(response){
-			if(response.status === 1){
+		dataType: "json",
+		success: function (response) {
+			if (response.status === 1) {
 				alert(response.msg);
-			}else{
+			} else {
 				alert(response.msg);
 			}
-		}
-	})
-})
+		},
+	});
+});
 
-
-$("#ws_adjustment").submit(function(e){
+$("#ws_adjustment").submit(function (e) {
 	e.preventDefault();
 	var worksched = $(this).serialize();
 	$.ajax({
-		url: base_url + 'worksched_adjust',
-		type: 'post',
+		url: base_url + "worksched_adjust",
+		type: "post",
 		data: worksched,
-		dataType: 'json',
-		success: function(response){
-			if(response.status === 1){
+		dataType: "json",
+		success: function (response) {
+			if (response.status === 1) {
 				alert(response.msg);
-			}else{
+			} else {
 				alert(response.msg);
 			}
-		}
-	})
-})
+		},
+	});
+});
 
-
-
-$("#adddepartment").submit(function(e){
+$("#adddepartment").submit(function (e) {
 	e.preventDefault();
 	var addDept = $(this).serialize();
 	$.ajax({
-		url: base_url + 'humanr/add_dept',
-		type: 'post',
+		url: base_url + "humanr/add_dept",
+		type: "post",
 		data: addDept,
-		dataType: 'json',
-		success: function(res){
-			if(res.status === 1){
+		dataType: "json",
+		success: function (res) {
+			if (res.status === 1) {
 				alert(res.msg);
-			}else{
+			} else {
 				alert(res.msg);
 			}
-		}
-	})
-})
+		},
+	});
+});
 
 //add roles
-$("#addroles_dept").submit(function(e){
+$("#addroles_dept").submit(function (e) {
 	e.preventDefault();
 	var addDept = $(this).serialize();
 	$.ajax({
-		url: base_url + 'humanr/addroles',
-		type: 'post',
+		url: base_url + "humanr/addroles",
+		type: "post",
 		data: addDept,
-		dataType: 'json',
-		success: function(res){
-			if(res.status === 1){
+		dataType: "json",
+		success: function (res) {
+			if (res.status === 1) {
 				alert(res.msg);
-			}else{
+			} else {
 				alert(res.msg);
 			}
-		}
-	})
-})
+		},
+	});
+});
 
-
-
-$("#addassets").submit(function(e){
+$("#addassets").submit(function (e) {
 	e.preventDefault();
 	var addAssets = $(this).serialize();
 	$.ajax({
-		url: base_url + 'add_assets',
-		type: 'post',
+		url: base_url + "add_assets",
+		type: "post",
 		data: addAssets,
-		dataType: 'json',
-		success: function(res){
-			if(res.status === 1){
+		dataType: "json",
+		success: function (res) {
+			if (res.status === 1) {
 				alert(res.msg);
-			}else{
+			} else {
 				alert(res.msg);
 			}
-		}
-	})
-})
-
-
-
-$(document).ready(function() {
-    // Handle click on initial delete confirmation button
-    $('.delete-employee-btn').on('click', function() {
-        var empId = $(this).data('emp-id');
-        $('#confirm_delete').data('emp-id', empId).modal('show');
-    });
-
-    // Handle click on final delete confirmation button
-    $('#confirmFinalDeleteBtn').on('click', function() {
-        // Proceed with deletion
-        var empId = $('#confirm_delete').data('emp-id');
-        $.ajax({
-            url: base_url+'humanr/deleteEmployee',
-            type: 'POST',
-            data: {emp_id: empId},
-            success: function(response) {
-                // Handle success response
-                $('#confirm_delete').modal('hide');
-                $('#delete_employee').modal('hide');
-                location.reload(); // Reload the page
-            },
-            error: function(xhr, status, error) {
-                // Handle error
-            }
-        });
-    });
+		},
+	});
 });
 
+$(document).ready(function () {
+	// Handle click on initial delete confirmation button
+	$(".delete-employee-btn").on("click", function () {
+		var empId = $(this).data("emp-id");
+		$("#confirm_delete").data("emp-id", empId).modal("show");
+	});
 
+	// Handle click on final delete confirmation button
+	$("#confirmFinalDeleteBtn").on("click", function () {
+		// Proceed with deletion
+		var empId = $("#confirm_delete").data("emp-id");
+		$.ajax({
+			url: base_url + "humanr/deleteEmployee",
+			type: "POST",
+			data: { emp_id: empId },
+			success: function (response) {
+				// Handle success response
+				$("#confirm_delete").modal("hide");
+				$("#delete_employee").modal("hide");
+				location.reload(); // Reload the page
+			},
+			error: function (xhr, status, error) {
+				// Handle error
+			},
+		});
+	});
+});

@@ -1,4 +1,4 @@
-<div class="sidebar" id="sidebar">
+<div class="sidebar" id="sidebar" style = "overflow-y:scroll;">
     <div class="sidebar-inner slimscroll">
         <div id="sidebar-menu" class="sidebar-menu">
 

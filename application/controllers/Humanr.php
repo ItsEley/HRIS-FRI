@@ -16,7 +16,7 @@ class Humanr extends CI_Controller
 	// public function hrapprove() {
 	// 	$rowId = $this->input->post('rowId');
 	// 	$session_emp_id = $this->session->userdata('id2');
-	
+
 	// 	$this->db->set('status', 'approved');
 	// 	$this->db->set('hr_id', $session_emp_id);
 	// 	$this->db->where('id', $rowId);
@@ -27,13 +27,14 @@ class Humanr extends CI_Controller
 	// 		echo 'Error: Leave not approved';
 	// 	}
 	// }
-	
-	public function hrapprove() {
+
+	public function hrapprove()
+	{
 		$rowId = $this->input->post('row_id');
 		$hr_Id = $this->session->userdata('id');
-		
+
 		$source = $this->input->post('source');
-		
+
 		$validSources = array(
 			'og_approveButtonHr' => 'f_outgoing',
 			'leave_approveButtonHr' => 'f_leaves',
@@ -46,157 +47,160 @@ class Humanr extends CI_Controller
 			'ut_denyButtonHr' => 'f_undertime',
 			'ob_denyButtonHr' => 'f_off_bussiness'
 		);
-	
+
 		if (isset($validSources[$source])) {
 			$tableName = $validSources[$source];
-	
+
 			if (strpos($source, '_denyButtonHr') !== false) {
 				$this->db->set('status', 'denied');
 			} else {
 				$this->db->set('status', 'approved');
 			}
-	
+
 			$this->db->set('hr_id', $hr_Id);
 			$this->db->set('hr_status_date', 'CURDATE()', false);
 			$this->db->where('id', $rowId);
 			$this->db->update($tableName);
-	
+
 			echo 'Operation successful. Row ID: ' . $rowId . ', Table Name: ' . $tableName . ', Employee ID: ' . $hr_Id;
 		} else {
 			echo 'Failed: Invalid source';
 		}
 	}
-	public function headapprovez() {
-	
+	public function headapprovez()
+	{
+
 		$rowId = $this->input->post('rowId');
 		$session_emp_id = $this->session->userdata('id');
-	
+
 		$this->db->set('head_status', 'approved');
 		$this->db->set('head_id', $session_emp_id);
 		$this->db->where('id', $rowId);
 		$this->db->update('f_leaves');
-	
+
 		echo 'Leave approved successfully';
 	}
-	
-	public function headapprove() {
+
+	public function headapprove()
+	{
 		$rowId = $this->input->post('row_id');
 		$head_Id = $this->session->userdata('id2');
-		
+
 		$source = $this->input->post('source');
-		
+
 		$validSources = array(
-			'og_approveButton' => 'f_outgoing',
-			'leave_approveButton' => 'f_leaves',
-			'ot_approveButton' => 'f_overtime',
-			'ut_approveButton' => 'f_undertime',
-			'ob_approveButton' => 'f_off_bussiness',
-			'og_denyButton' => 'f_outgoing',
-			'leave_denyButton' => 'f_leaves',
-			'ot_denyButton' => 'f_overtime',
-			'ut_denyButton' => 'f_undertime',
-			'ob_denyButton' => 'f_off_bussiness'
+			'og_approveButton' => array('f_outgoing', ' Department Head <strong>Approved</strong> your <strong>Outgoing Request</strong>. Please wait for the approval of Human Resource.'),
+			'leave_approveButton' => array('f_leaves', 'Department Head <strong>Approved</strong> your <strong>Leave Request</strong>. Please wait for the approval of Human Resource.'),
+			'ot_approveButton' => array('f_overtime', ' Department Head <strong>Approved</strong> your <strong>Overtime Request</strong>. Please wait for the approval of Human Resource.'),
+			'ut_approveButton' => array('f_undertime', 'Department Head <strong>Approved</strong> your <strong>Undertime Request</strong>. Please wait for the approval of Human Resource.'),
+			'ob_approveButton' => array('f_off_bussiness', 'Department Head <strong>Approved</strong> your <strong>Off Business Request</strong>. Please wait for the approval of Human Resource.'),
+			'og_denyButton' => array('f_outgoing', ' Department Head <strong>Denied</strong> your <strong>Outgoing Request</strong>. Please wait for the approval of Human Resource.'),
+			'leave_denyButton' => array('f_leaves', 'Department Head <strong>Denied</strong> your <strong>Leave Request</strong>. Please wait for the approval of Human Resource.'),
+			'ot_denyButton' => array('f_overtime', 'Department Head <strong>Denied</strong> your <strong>Overtime Request</strong>. Please wait for the approval of Human Resource.'),
+			'ut_denyButton' => array('f_undertime', 'Department Head <strong>Denied</strong> your <strong>Undertime Request</strong>. Please wait for the approval of Human Resource.'),
+			'ob_denyButton' => array('f_off_bussiness', 'Department Head <strong>Denied</strong> your <strong>Off Business Request</strong>. Please wait for the approval of Human Resource.')
 		);
-	
-		if (isset($validSources[$source])) {
-			$tableName = $validSources[$source];
 		
+
+		if (isset($validSources[$source])) {
+			$tableName = $validSources[$source][0];
+			$message = $validSources[$source][1];
+
 			if (strpos($source, '_denyButton') !== false) {
 				$head_status = 'denied';
-				$message = 'Your request has been denied.';
 			} else {
 				$head_status = 'approved';
-				$message = 'Your request has been approved.';
 			}
-		
+
 			// Fetch emp_id of the updated rows
 			$this->db->select('emp_id');
 			$this->db->from($tableName);
 			$this->db->where('id', $rowId);
 			$query = $this->db->get();
 			$updated_rows = $query->result();
-		
+
 			foreach ($updated_rows as $row) {
 				$emp_id = $row->emp_id;
-		
+
 				// Update row
 				$this->db->set('head_status', $head_status);
 				$this->db->set('head_id', $head_Id);
 				$this->db->set('head_status_date', 'CURDATE()', false);
 				$this->db->where('id', $rowId);
 				$this->db->update($tableName);
-		
+
 				// Insert message into notifications table
-				$request_type = ''; // Set this to the appropriate request type
+				$request_type = 'Update on request'; // Set this to the appropriate request type
 				$current_datetime = date('Y-m-d H:i:s');
-		
+
 				$notification_data = array(
 					'user_id' => $emp_id,
 					'message' => $message,
 					'created_at' => $current_datetime,
 					'title' => $request_type
 				);
-		
+
 				$this->db->insert('notifications', $notification_data);
 			}
 			// Show a message in the console
 			echo "<script>console.log('Inserted into notifications table');</script>";
-	
+
 			echo 'Operation successful. Row ID: ' . $rowId . ', Table Name: ' . $tableName . ', Employee ID: ' . $head_Id;
 		} else {
 			echo 'Failed: Invalid source';
 		}
 	}
-	
-	
-	
-	
 
-	public function barchart() {
-		
+
+
+
+
+
+	public function barchart()
+	{
+
 		$query = $this->db->query("SELECT d.acro_dept as dept, COUNT(dr.department) as count FROM department_roles dr inner join department d on dr.department = d.id GROUP BY d.department");
 		$result = $query->result();
-	
+
 		$data['labels'] = [];
 		$data['counts'] = [];
-	
+
 		foreach ($result as $row) {
 			$data['labels'][] = $row->dept;
 			$data['counts'][] = $row->count;
 		}
-	
+
 		echo json_encode($data);
-	  }
-	
-	
-	  // new code for attendance status
-	  public function attendance_status()
-	  {
+	}
+
+
+	// new code for attendance status
+	public function attendance_status()
+	{
 		$query = $this->db->query("SELECT MONTH(date) as month, 
 									   SUM(CASE WHEN status = '0' THEN 1 ELSE 0 END) as late_count,
 									   SUM(CASE WHEN status = '1' THEN 1 ELSE 0 END) as ontime_count
 									   FROM attendance
 									   GROUP BY MONTH(date)");
-	
-			$data['labels'] = [];
-			$data['lateCounts'] = [];
-			$data['ontimeCounts'] = [];
-	
-			for ($i = 1; $i <= 12; $i++) {
-				$data['labels'][] = date('M', mktime(0, 0, 0, $i, 1));
-				$data['lateCounts'][] = 0;
-				$data['ontimeCounts'][] = 0;
-			}
-	
-			foreach ($query->result() as $row) {
-				$month = $row->month;
-				$data['lateCounts'][$month - 1] = $row->late_count;
-				$data['ontimeCounts'][$month - 1] = $row->ontime_count;
-			}
-	
-			echo json_encode($data);
-	
-	  }
+
+		$data['labels'] = [];
+		$data['lateCounts'] = [];
+		$data['ontimeCounts'] = [];
+
+		for ($i = 1; $i <= 12; $i++) {
+			$data['labels'][] = date('M', mktime(0, 0, 0, $i, 1));
+			$data['lateCounts'][] = 0;
+			$data['ontimeCounts'][] = 0;
+		}
+
+		foreach ($query->result() as $row) {
+			$month = $row->month;
+			$data['lateCounts'][$month - 1] = $row->late_count;
+			$data['ontimeCounts'][$month - 1] = $row->ontime_count;
+		}
+
+		echo json_encode($data);
+	}
 
 	public function deleteEmployee()
 	{
@@ -239,65 +243,82 @@ class Humanr extends CI_Controller
 			redirect('');
 		}
 	}
-	public function fetch_notifications() {
+	public function fetch_notifications()
+	{
 		// Start by loading the database library
 		$this->load->database();
-	
+
 		// Check if there are notifications
 		$total_rows = 0; // Initialize total_rows variable
 		$id1 = $_SESSION['id']; // Corrected syntax for accessing session variable
 		$notifications = array(); // Initialize notifications array
 		$html = ''; // Initialize HTML variable
-	
+
 		// Perform the database query
 		$this->db->select('*');
 		$this->db->from('notifications');
 		$this->db->where('user_id', $id1);
 		$this->db->order_by('created_at', 'desc');
-		$this->db->limit(5);
+		$this->db->limit(10);
 		$latest_notifications_query = $this->db->get();
-	
+
 		// Check if there are notifications
 		if ($latest_notifications_query->num_rows() > 0) {
 			// Fetch notifications into an array
 			$notifications = $latest_notifications_query->result_array();
 			$total_rows = count($notifications);
 		}
-	
+
 		// Generate HTML for the notification list
 		if ($total_rows > 0) {
 			// Add notification sound
 			$html .= '<audio id="notification-sound" src="' . base_url('assets/audio/tink.mp3') . '" preload="auto"></audio>';
-	
+
 			foreach ($notifications as $notification) {
 				$notif_time = date('Y-m-d H:i:s', strtotime($notification['created_at']));
-	
+
 				$unread_style = $notification['status'] == "unread" ? 'style="background-color: #f2f2f2;"' : ''; // Check if status is 0 for unread
 				$html .= '<li class="notification-message" ' . $unread_style . '>';
 				$html .= '<a href="' . base_url('employee/notification') . '">';
 				$html .= '<div class="list-item" style="position: relative;">'; // Add relative positioning
 				$html .= '<div class="list-left">';
 				$html .= '<span class="avatar">';
-				$html .= '<img src="' . base_url('assets/img/profiles/avatar-08.jpg') . '" alt="User Image">'; // Use base_url for image src
+				// Remove the image tag
+				$html .= '<span class="message-author">';
+				
+				// Check if it's an "Update on request" or an "Event"
+				if ($notification['title'] === 'Update on request') {
+					// Add FontAwesome icon for request, adjust size
+					$html .= '<i class="fas fa-handshake fa-lg primary-color"></i>'; // "fa-lg" class makes the icon larger
+				} elseif ($notification['title'] === 'Event') {
+					// Add FontAwesome icon for event, adjust size
+					$html .= '<i class="fas fa-calendar-alt fa-lg primary-color"></i>'; // "fa-lg" class makes the icon larger
+				} else {
+					// Add FontAwesome icon for happy face, adjust size
+					$html .= '<i class="fas fa-file-export fa-xl" style="color: #ff9b44;"></i>'; // Adjust size and color for a file with sideways arrow icon
+
+				}
+				
+				// Add the title text
+				
+				
+				$html .= '</span>';
 				$html .= '</span>';
 				$html .= '</div>';
-				$html .= '<div class="list-body" style="display: flex; justify-content: space-between;">'; // Use flexbox
-				$html .= '<div style="display: flex; flex-direction: column;">'; // Align items vertically
-				$html .= '<span class="message-author">' . $notification['title'] . '</span>';
+				$html .= '<div class="list-body" style="display: flex; flex-direction: column;">'; // Change to column layout
+				$html .= '<div style="display: flex; flex-direction: column; align-items: flex-start;">'; // Align items vertically and to the left
+				
 				$html .= '<div class="clearfix"></div>';
 				$html .= '<span class="message-content">' . $notification['message'] . '</span>';
-				$html .= '</div>';
-	
-				// Calculate the time difference
 				$notif_timestamp = strtotime($notif_time); // Convert notif_time to a Unix timestamp
 				$current_timestamp = time(); // Get current Unix timestamp
 				$time_diff = $current_timestamp - $notif_timestamp;
-	
+				
 				// Define time intervals in seconds
 				$minute = 60;
 				$hour = 3600;
 				$day = 86400;
-	
+				
 				if ($time_diff < $minute) {
 					$time_ago = 'Just now'; // Seconds ago
 				} elseif ($time_diff < $hour) {
@@ -309,32 +330,137 @@ class Humanr extends CI_Controller
 				} else {
 					$time_ago = date('F j, Y', $notif_timestamp); // Display notif_date instead
 				}
-	
-				$html .= '<span class="message-time">' . $time_ago . '</span>';
-				// Show status
-				$html .= '<span class="status" style="position: absolute; bottom: 0; right: 0;">' . $notification['status'] . '</span>';
-				$html .= '</div>';
-				$html .= '</div>';
-				$html .= '</a>';
-				$html .= '</li>';
+				$html .= '<span class="message-time">' . $time_ago . '</span>'; // Display time ago below the message
+				$html .= '</div>'; // Close the div for message and time ago
+				$html .= '<span class="status" style="position: absolute; bottom: 0; right: 0;">'; // Keep status at bottom-right
+				
+				// Check status and choose appropriate icon with hover title and style
+				
+				$html .= '</span>'; // Close the span for status
+				$html .= '</div>'; // Close the list-body div
+				$html .= '</div>'; // Close the list-item div
+				$html .= '</a>'; // Close the anchor tag
+				$html .= '</li>'; // Close the list item
+				
+
 			}
 		} else {
 			$html = '<li>No notifications.</li>'; // Output if there are no notifications
 		}
-	
+
 		// Prepare the JSON response
 		$response = array(
 			'html' => $html,
 			'total_rows' => $total_rows
 		);
-	
+
 		// Output the JSON response
 		header('Content-Type: application/json');
 		echo json_encode($response);
 	}
+	public function fetchnotifications2() {
+		$id = $this->session->userdata('id');
+		$latestTimestamp = $this->input->get('latestTimestamp'); // Get the latest timestamp sent from AJAX
 	
+		// Fetch notifications newer than the latest timestamp
+		$this->db->select('*');
+		$this->db->from('notifications');
+		$this->db->where('user_id', $id);
+		$this->db->where('created_at >', date('Y-m-d H:i:s', $latestTimestamp)); // Fetch notifications newer than the latest timestamp
+		$this->db->order_by('created_at', 'desc');
+		$notifications_query = $this->db->get();
+	
+		if ($notifications_query->num_rows() > 0) {
+			$notifications = $notifications_query->result_array();
+			$html = '';
+	
+			foreach ($notifications as $notification) {
+				$notif_time = date('F j, Y g:i A', strtotime($notification['created_at']));
+				$html .= '<li>';
+				$html .= '<div class="activity-user">';
+				$html .= '<span class="avatar"> ';
+	
+				// Check if it's an "Update on request" or an "Event"
+				if ($notification['title'] === 'Update on request') {
+					$html .= '<i class="fas fa-handshake fa-lg primary-color"></i>';
+				} elseif ($notification['title'] === 'Event') {
+					$html .= '<i class="fas fa-calendar-alt fa-lg primary-color"></i>';
+				} else {
+					$html .= '<i class="fas fa-file-export fa-xl" style="color: #ff9b44;"></i>';
+				}
+	
+				$html .= '</span>';
+				$html .= '</div>';
+				$html .= '<div class="activity-content">';
+				$html .= '<div class="timeline-content">';
+				$html .= '<div class="name-and-action">';
+				$html .= '<span class="message-author">';
+				$html .= '<a href="#" class="message">' . $notification['message'] . '</a>';
+				$html .= '</div>';
+				$html .= '<div class="time-wrapper">';
+				$html .= '<span class="time">' . $notif_time . '</span>';
+				$html .= '</div>';
+				$html .= '</div>';
+				$html .= '</div>';
+				$html .= '</li>';
+			}
+	
+			// Get the timestamp of the latest notification
+			$latestNotificationTimestamp = strtotime($notifications[0]['created_at']);
+	
+			// Return JSON response with HTML and the timestamp of the latest notification
+			echo json_encode(array(
+				'html' => $html,
+				'latestTimestamp' => $latestNotificationTimestamp
+			));
+		} else {
+			// If there are no new notifications, return empty response
+			echo json_encode(array(
+				'html' => '',
+				'latestTimestamp' => $latestTimestamp // Send back the same latest timestamp
+			));
+		}
+	}
+	
+	
+	
+	public function fetch_messages() {
+        // Load the database library
+        $this->load->database();
 
-	
+        // Get the current user's session ID (assuming you're storing it in the session)
+        $session_id = $this->session->userdata('id');
+
+        // Query to fetch the latest chat messages for the current user
+        $query = $this->db->query("
+            SELECT * FROM chat_messages m
+            WHERE (m.from_ = ? OR m.to_ = ?)
+            AND m.timestamp = (
+                SELECT MAX(timestamp) FROM chat_messages 
+                WHERE (from_ = m.from_ AND to_ = m.to_) OR (from_ = m.to_ AND to_ = m.from_)
+            )
+        ", array($session_id, $session_id));
+
+        // Check if there are any messages
+        if ($query->num_rows() > 0) {
+            // Fetch the result as an array
+            $latest_messages = $query->result_array();
+        } else {
+            $latest_messages = array(); // No messages found
+        }
+
+        // Prepare the response data
+        $response = array(
+            'messages' => $latest_messages,
+            'total_messages' => count($latest_messages)
+        );
+
+        // Send the response as JSON
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($response));
+    }
+
 
 	public function C_hr_assets()
 	{
@@ -401,7 +527,7 @@ class Humanr extends CI_Controller
 		$this->load->view('templates/footer');
 	}
 
-	
+
 	public function C_hr_departments()
 	{
 
@@ -443,7 +569,7 @@ class Humanr extends CI_Controller
 						'civil_status' => $getData[11], // Civil status (assuming it's in column index 11)
 						'pob' => $getData[12], // Place of birth (assuming it's in column index 12)
 						'email' => $getData[13]
-						
+
 					);
 
 					// Insert data into the database
@@ -877,65 +1003,65 @@ class Humanr extends CI_Controller
 	}
 
 	public function add_announce()
-{
-    $datetime = date('Y-m-d H:i:s', time());
-    $response = array();
+	{
+		$datetime = date('Y-m-d H:i:s', time());
+		$response = array();
 
-    // Retrieve selected departments
-    $selected_departments = explode(',', $this->input->post('selected_dept'));
+		// Retrieve selected departments
+		$selected_departments = explode(',', $this->input->post('selected_dept'));
 
-    // Check if "all" is selected
-    $to_all = (in_array('all', $selected_departments)) ? 1 : 0;
+		// Check if "all" is selected
+		$to_all = (in_array('all', $selected_departments)) ? 1 : 0;
 
-    // Prepare data for announcement table
-    $announcement_data = array(
-        'author' => $this->input->post('author'),
-        'title' => $this->input->post('title'),
-        'to_all' => $to_all,
-        'content' => $this->input->post('editor_content'),
-        'date_created' => $this->input->post('postdate')
-    );
+		// Prepare data for announcement table
+		$announcement_data = array(
+			'author' => $this->input->post('author'),
+			'title' => $this->input->post('title'),
+			'to_all' => $to_all,
+			'content' => $this->input->post('editor_content'),
+			'date_created' => $this->input->post('postdate')
+		);
 
-    // Insert data into announcement table
-    $announcement_insert = $this->db->insert('announcement', $announcement_data);
+		// Insert data into announcement table
+		$announcement_insert = $this->db->insert('announcement', $announcement_data);
 
-    if ($announcement_insert) {
-        // Get the ID of the inserted announcement
-        $announcement_id = $this->db->insert_id();
+		if ($announcement_insert) {
+			// Get the ID of the inserted announcement
+			$announcement_id = $this->db->insert_id();
 
-        if (!$to_all) {
-            // Prepare data for announce_to table only if "all" is not selected
-            $announce_to_data = array();
-            foreach ($selected_departments as $dept_id) {
-                $announce_to_data[] = array(
-                    'ann_id' => $announcement_id,
-                    'dept_id' => $dept_id
-                );
-            }
+			if (!$to_all) {
+				// Prepare data for announce_to table only if "all" is not selected
+				$announce_to_data = array();
+				foreach ($selected_departments as $dept_id) {
+					$announce_to_data[] = array(
+						'ann_id' => $announcement_id,
+						'dept_id' => $dept_id
+					);
+				}
 
-            // Insert data into announce_to table
-            $announce_to_insert = $this->db->insert_batch('announce_to', $announce_to_data);
+				// Insert data into announce_to table
+				$announce_to_insert = $this->db->insert_batch('announce_to', $announce_to_data);
 
-            if (!$announce_to_insert) {
-                // Rollback if insert into announce_to fails
-                $this->db->delete('announcement', array('id' => $announcement_id));
-                $response['status'] = 0;
-                $response['msg'] = 'Error inserting departments.';
-                echo json_encode($response);
-                return;
-            }
-        }
+				if (!$announce_to_insert) {
+					// Rollback if insert into announce_to fails
+					$this->db->delete('announcement', array('id' => $announcement_id));
+					$response['status'] = 0;
+					$response['msg'] = 'Error inserting departments.';
+					echo json_encode($response);
+					return;
+				}
+			}
 
-        $response['status'] = 1;
-        $response['inserted_id'] = $announcement_id;
-        $response['msg'] = 'Announcement inserted successfully.';
-    } else {
-        $response['status'] = 0;
-        $response['msg'] = 'Error inserting announcement.';
-    }
+			$response['status'] = 1;
+			$response['inserted_id'] = $announcement_id;
+			$response['msg'] = 'Announcement inserted successfully.';
+		} else {
+			$response['status'] = 0;
+			$response['msg'] = 'Error inserting announcement.';
+		}
 
-    echo json_encode($response);
-}
+		echo json_encode($response);
+	}
 
 
 
