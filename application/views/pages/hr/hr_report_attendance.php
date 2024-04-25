@@ -25,28 +25,35 @@
         }
 
         #print-area {
-        visibility: visible;
-        position: absolute;
-        width: 120%;
-        top:0;
-        left: -200px;
-        /* transform: scale(1); */
-        
+            visibility: visible;
+            position: absolute;
+            width: 120%;
+            top: 0;
+            left: -200px;
+            /* transform: scale(1); */
+
+        }
+
+        #emp_attendance_table {
+            transform-origin: top left;
+            transform: scale(0.95);
+
+            width: max-content;
+
+        }
+
+
+
+
+
     }
 
-    #emp_attendance_table {
-        transform-origin: top left;
-        transform: scale(0.95);
+    
+    .late-highlight {
+            /* text-decoration: underline red; */
+            background-color: red !important;
+        }
 
-        width: max-content;
-
-    }
-
-
-
-
-
-    }
 </style>
 
 
@@ -79,49 +86,47 @@
                         </ul>
                     </div>
                     <div class="col">
-    <label for="month">Month:</label>
-    <select id="month">
-        <option value="1">January</option>
-        <option value="2">February</option>
-        <option value="3">March</option>
-        <option value="4">April</option>
-        <option value="5">May</option>
-        <option value="6">June</option>
-        <option value="7">July</option>
-        <option value="8">August</option>
-        <option value="9">September</option>
-        <option value="10">October</option>
-        <option value="11">November</option>
-        <option value="12">December</option>
-    </select>
-    
-    <label for="year">Year:</label>
-    <select id="year">
-        <!-- You can generate the options dynamically using JavaScript -->
-        <!-- For example, from the current year to 10 years in the future -->
-        <?php
-$current_year = date('Y');
-// Generate options for 10 years in the past
-for ($i = $current_year - 10; $i <= $current_year; $i++) {
-    echo "<option value='$i'>$i</option>";
-}
+                        <label for="month">Month:</label>
+                        <select id="month">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
 
-// Generate options for the current year and 10 years in the future
-for ($i = $current_year; $i <= $current_year + 10; $i++) {
-    if($i == $current_year){
-    echo "<option value='$i' selected>$i</option>";
+                        <label for="year">Year:</label>
+                        <select id="year">
+                            <!-- You can generate the options dynamically using JavaScript -->
+                            <!-- For example, from the current year to 10 years in the future -->
+                            <?php
+                            $current_year = date('Y');
+                            $current_month = date('Mm');
 
-    }else{
-        echo "<option value='$i'>$i</option>";
+                            // Generate options for 10 years in the past
+                            for ($i = $current_year - 10; $i <= $current_year; $i++) {
+                                echo "<option value='$i'>$i</option>";
+                            }
 
-    }
+                            // Generate options for the current year and 10 years in the future
+                            for ($i = $current_year; $i <= $current_year + 10; $i++) {
+                                if ($i == $current_year) {
+                                    echo "<option value='$i' selected>$i</option>";
+                                } else {
+                                    echo "<option value='$i'>$i</option>";
+                                }
+                            }
+                            ?>
 
-
-}
-?>
-
-    </select>
-</div>
+                        </select>
+                    </div>
                     <div class="col-auto float-end ms-auto">
                         <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print as PDF</button>
                         <!-- <div class="view-icons">
@@ -136,6 +141,8 @@ for ($i = $current_year; $i <= $current_year + 10; $i++) {
 
 
             <div id="print-area">
+
+                <?php echo "<h2>$current_month</h2>"; ?>
 
                 <h1 class="text-center" style="display:none" id="report_header">Employee Attendance Report - March 2024</h1>
 
@@ -230,17 +237,40 @@ for ($i = $current_year; $i <= $current_year + 10; $i++) {
                                                 // Get the result as an array of rows
                                                 $result1 = $query1->result_array();
 
+                                                $late_counter = 0;
+                                                $late_ids = array();
+
                                                 // Loop through the result
                                                 foreach ($result1 as $row1) {
-                                                    if (strtotime($row1['time_in']) < strtotime("8:00")) {
-                                                        echo "<td><p class='att-record m-0 p-0 att-o'></p></td>"; //on time
-                                                        // echo "<td><p class='att-record m-0 p-0 att-o'>".$row1['time_in']."</p></td>"; //on time
+                                                    if ($row1['status'] == '0') {
+                                                        echo "<td id='att_" . $row1['attendance_id'] . "'><p class='att-record m-0 p-0 att-o'></p></td>"; // on time
+                                                        $late_counter = 0; // Reset the late counter
+                                                        $late_ids = array();
+                                                        
+                                                    } elseif ($row1['status'] == '1') {
+                                                        echo "<td id='att_" . $row1['attendance_id'] . "' data-att-date='" . $row1['date'] . "'><p class='att-record m-0 p-0 att-l'></p></td>"; // late
+                                                        $late_counter++; // Increment the late counter
+                                                        $id = "att_" . $row1['attendance_id'];
+                                                        array_push($late_ids,$id);
+                                                        // Highlight the element if more than 2 consecutive late records
+                                                        if ($late_counter > 2) {
+                                                            echo "<script>";
+                                                            echo "    document.addEventListener('DOMContentLoaded', function() {";
 
-                                                    } elseif (strtotime($row1['time_in']) > strtotime("8:00")) {
-                                                        echo "<td><p class='att-record m-0 p-0 att-l'></p></td>"; //late
+                                                            foreach($late_ids as $l){
+                                                                // echo "document.getElementById('$l').classList.add('late-highlight');";
+                                                                echo "$('#$l').addClass('late-highlight')";
+
+
+                                                            }
+                                                            echo ")};";
+
+                                                            echo "</script>";
+                                                        }
                                                     }
                                                 }
                                             }
+
                                             echo "</tr>";
                                         }
                                     }
@@ -483,32 +513,32 @@ for ($i = $current_year; $i <= $current_year + 10; $i++) {
 
 
         $(window).on('beforeprint', function() {
-        $('.att-emp-img').hide();
-        $('.att-emp-name').style("font-size","10px");
-        $('#emp_attendance_table_container').get(0).scrollLeft = 0;
-    });
-
-
-    // Show elements with class "no-print" after printing
-    $(window).on('afterprint', function() {
-        $('.att-emp-img').hide();
-        $('.att-emp-name').style("font-size","");
-
-
-
-    });
-
-
-      // Detect the print event
-      var mediaQueryList = window.matchMedia('print');
-    mediaQueryList.addListener(function(mql) {
-        if (mql.matches) {
-            // Print event detected, reset scroll position
+            $('.att-emp-img').hide();
+            $('.att-emp-name').style("font-size", "10px");
             $('#emp_attendance_table_container').get(0).scrollLeft = 0;
+        });
 
-        }
-    });
 
+        // Show elements with class "no-print" after printing
+        $(window).on('afterprint', function() {
+            $('.att-emp-img').hide();
+            $('.att-emp-name').style("font-size", "");
+
+
+
+        });
+
+
+        // Detect the print event
+        var mediaQueryList = window.matchMedia('print');
+        mediaQueryList.addListener(function(mql) {
+            if (mql.matches) {
+                // Print event detected, reset scroll position
+                $('#emp_attendance_table_container').get(0).scrollLeft = 0;
+
+            }
+        });
+        
 
     })
 </script>

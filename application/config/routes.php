@@ -139,3 +139,6 @@ $route['chat/get'] = 'datatable_fetchers/fetch_messages';
 
 
 
+
+// new route HR payroll
+$route['hr/payroll/hr'] = 'payroll_hr/index';

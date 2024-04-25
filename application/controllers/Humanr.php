@@ -100,7 +100,7 @@ class Humanr extends CI_Controller
 			'ut_denyButton' => array('f_undertime', 'Department Head <strong>Denied</strong> your <strong>Undertime Request</strong>. Please wait for the approval of Human Resource.'),
 			'ob_denyButton' => array('f_off_bussiness', 'Department Head <strong>Denied</strong> your <strong>Off Business Request</strong>. Please wait for the approval of Human Resource.')
 		);
-		
+
 
 		if (isset($validSources[$source])) {
 			$tableName = $validSources[$source][0];
@@ -285,7 +285,7 @@ class Humanr extends CI_Controller
 				$html .= '<span class="avatar">';
 				// Remove the image tag
 				$html .= '<span class="message-author">';
-				
+
 				// Check if it's an "Update on request" or an "Event"
 				if ($notification['title'] === 'Update on request') {
 					// Add FontAwesome icon for request, adjust size
@@ -298,27 +298,27 @@ class Humanr extends CI_Controller
 					$html .= '<i class="fas fa-file-export fa-xl" style="color: #ff9b44;"></i>'; // Adjust size and color for a file with sideways arrow icon
 
 				}
-				
+
 				// Add the title text
-				
-				
+
+
 				$html .= '</span>';
 				$html .= '</span>';
 				$html .= '</div>';
 				$html .= '<div class="list-body" style="display: flex; flex-direction: column;">'; // Change to column layout
 				$html .= '<div style="display: flex; flex-direction: column; align-items: flex-start;">'; // Align items vertically and to the left
-				
+
 				$html .= '<div class="clearfix"></div>';
 				$html .= '<span class="message-content">' . $notification['message'] . '</span>';
 				$notif_timestamp = strtotime($notif_time); // Convert notif_time to a Unix timestamp
 				$current_timestamp = time(); // Get current Unix timestamp
 				$time_diff = $current_timestamp - $notif_timestamp;
-				
+
 				// Define time intervals in seconds
 				$minute = 60;
 				$hour = 3600;
 				$day = 86400;
-				
+
 				if ($time_diff < $minute) {
 					$time_ago = 'Just now'; // Seconds ago
 				} elseif ($time_diff < $hour) {
@@ -333,15 +333,15 @@ class Humanr extends CI_Controller
 				$html .= '<span class="message-time">' . $time_ago . '</span>'; // Display time ago below the message
 				$html .= '</div>'; // Close the div for message and time ago
 				$html .= '<span class="status" style="position: absolute; bottom: 0; right: 0;">'; // Keep status at bottom-right
-				
+
 				// Check status and choose appropriate icon with hover title and style
-				
+
 				$html .= '</span>'; // Close the span for status
 				$html .= '</div>'; // Close the list-body div
 				$html .= '</div>'; // Close the list-item div
 				$html .= '</a>'; // Close the anchor tag
 				$html .= '</li>'; // Close the list item
-				
+
 
 			}
 		} else {
@@ -358,10 +358,11 @@ class Humanr extends CI_Controller
 		header('Content-Type: application/json');
 		echo json_encode($response);
 	}
-	public function fetchnotifications2() {
+	public function fetchnotifications2()
+	{
 		$id = $this->session->userdata('id');
 		$latestTimestamp = $this->input->get('latestTimestamp'); // Get the latest timestamp sent from AJAX
-	
+
 		// Fetch notifications newer than the latest timestamp
 		$this->db->select('*');
 		$this->db->from('notifications');
@@ -369,17 +370,17 @@ class Humanr extends CI_Controller
 		$this->db->where('created_at >', date('Y-m-d H:i:s', $latestTimestamp)); // Fetch notifications newer than the latest timestamp
 		$this->db->order_by('created_at', 'desc');
 		$notifications_query = $this->db->get();
-	
+
 		if ($notifications_query->num_rows() > 0) {
 			$notifications = $notifications_query->result_array();
 			$html = '';
-	
+
 			foreach ($notifications as $notification) {
 				$notif_time = date('F j, Y g:i A', strtotime($notification['created_at']));
 				$html .= '<li>';
 				$html .= '<div class="activity-user">';
 				$html .= '<span class="avatar"> ';
-	
+
 				// Check if it's an "Update on request" or an "Event"
 				if ($notification['title'] === 'Update on request') {
 					$html .= '<i class="fas fa-handshake fa-lg primary-color"></i>';
@@ -388,7 +389,7 @@ class Humanr extends CI_Controller
 				} else {
 					$html .= '<i class="fas fa-file-export fa-xl" style="color: #ff9b44;"></i>';
 				}
-	
+
 				$html .= '</span>';
 				$html .= '</div>';
 				$html .= '<div class="activity-content">';
@@ -404,10 +405,10 @@ class Humanr extends CI_Controller
 				$html .= '</div>';
 				$html .= '</li>';
 			}
-	
+
 			// Get the timestamp of the latest notification
 			$latestNotificationTimestamp = strtotime($notifications[0]['created_at']);
-	
+
 			// Return JSON response with HTML and the timestamp of the latest notification
 			echo json_encode(array(
 				'html' => $html,
@@ -421,46 +422,67 @@ class Humanr extends CI_Controller
 			));
 		}
 	}
+	public function show_latest_messages() {
+		// Get the current user's ID from the session
+		$current_user_id = $this->session->userdata('id');
 	
+		// Execute the query with proper parameter binding
+		$result = $this->db->query("SELECT 
+		CASE WHEN cm.from_ = '".$this->session->userdata('id')."' THEN cm.to_ ELSE cm.from_ END AS employee_id,
+		CONCAT(e.fname, ' ', e.lname) AS emp_name,
+		-- CONVERT(e.pfp USING utf8) AS profile_picture,
+
+		(
+			SELECT MAX(cm.id) AS message_id
+			FROM chat_messages AS cm
+			WHERE (cm.from_ = e.id OR cm.to_ = e.id) AND cm.from_ IN ('".$this->session->userdata('id')."', '".$this->session->userdata('id')."')
+		) AS message_id,
+		(
+			SELECT cm.message
+			FROM chat_messages AS cm
+			WHERE (cm.from_ = e.id OR cm.to_ = e.id) AND cm.from_ IN ('".$this->session->userdata('id')."', '".$this->session->userdata('id')."')
+			ORDER BY cm.id DESC
+			LIMIT 1
+		) AS last_message,
+		(
+			SELECT cm.timestamp
+			FROM chat_messages AS cm
+			WHERE (cm.from_ = e.id OR cm.to_ = e.id) AND cm.from_ IN ('".$this->session->userdata('id')."', '".$this->session->userdata('id')."')
+			ORDER BY cm.id DESC
+			LIMIT 1
+		) AS last_timestamp
+	FROM 
+		chat_messages AS cm
+	JOIN 
+		employee AS e ON (cm.from_ = e.id OR cm.to_ = e.id) AND e.id != '".$this->session->userdata('id')."'
+	WHERE 
+		'".$this->session->userdata('id')."' IN (cm.from_, cm.to_)
+	GROUP BY 
+		employee_id, emp_name;");
 	
+		// Check if the query executed successfully
+		if ($result) {
+			// Fetch the result set
+			$messages = $result->result_array();
 	
-	public function fetch_messages() {
-        // Load the database library
-        $this->load->database();
-
-        // Get the current user's session ID (assuming you're storing it in the session)
-        $session_id = $this->session->userdata('id');
-
-        // Query to fetch the latest chat messages for the current user
-        $query = $this->db->query("
-            SELECT * FROM chat_messages m
-            WHERE (m.from_ = ? OR m.to_ = ?)
-            AND m.timestamp = (
-                SELECT MAX(timestamp) FROM chat_messages 
-                WHERE (from_ = m.from_ AND to_ = m.to_) OR (from_ = m.to_ AND to_ = m.from_)
-            )
-        ", array($session_id, $session_id));
-
-        // Check if there are any messages
-        if ($query->num_rows() > 0) {
-            // Fetch the result as an array
-            $latest_messages = $query->result_array();
-        } else {
-            $latest_messages = array(); // No messages found
-        }
-
-        // Prepare the response data
-        $response = array(
-            'messages' => $latest_messages,
-            'total_messages' => count($latest_messages)
-        );
-
-        // Send the response as JSON
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($response));
-    }
-
+			// Set the appropriate content type
+			$this->output->set_content_type('application/json');
+	
+			// Return the JSON response
+			$this->output->set_output(json_encode(array('success' => true, 'messages' => $messages)));
+		} else {
+			// Log the database error
+			$error = $this->db->error();
+			log_message('error', 'Database error: ' . $error['message']);
+	
+			// Set the appropriate content type
+			$this->output->set_content_type('application/json');
+	
+			// Return an error response
+			$this->output->set_output(json_encode(array('success' => false, 'error' => 'Database error')));
+		}
+	}
+	
 
 	public function C_hr_assets()
 	{

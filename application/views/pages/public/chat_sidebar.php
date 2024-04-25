@@ -73,22 +73,37 @@
                         <?php
 
                         $query = "SELECT 
-							CASE
-								WHEN cm.from_ = '" . $this->session->userdata('id') . "' THEN cm.to_
-								ELSE cm.from_
-							END AS employee_id,
-							CONCAT(e.fname, ' ', e.lname) AS emp_name,
-							e.pfp as 'profile_picture',
-							MAX(cm.timestamp) AS last_timestamp,
-							MAX(cm.message) AS last_message
-							FROM 
-							chat_messages AS cm
-							JOIN 
-							employee AS e ON (cm.from_ = e.id OR cm.to_ = e.id) AND e.id != '" . $this->session->userdata('id') . "'
-							WHERE 
-							'" . $this->session->userdata('id') . "' IN (cm.from_, cm.to_)
-							GROUP BY 
-							employee_id, emp_name;";
+                        CASE WHEN cm.from_ = '".$this->session->userdata('id')."' THEN cm.to_ ELSE cm.from_ END AS employee_id,
+                        CONCAT(e.fname, ' ', e.lname) AS emp_name,
+                        e.pfp AS profile_picture,
+                        (
+                            SELECT MAX(cm.id) AS message_id
+                            FROM chat_messages AS cm
+                            WHERE (cm.from_ = e.id OR cm.to_ = e.id) AND cm.from_ IN ('".$this->session->userdata('id')."', '".$this->session->userdata('id')."')
+                        ) AS message_id,
+                        (
+                            SELECT cm.message
+                            FROM chat_messages AS cm
+                            WHERE (cm.from_ = e.id OR cm.to_ = e.id) AND cm.from_ IN ('".$this->session->userdata('id')."', '".$this->session->userdata('id')."')
+                            ORDER BY cm.id DESC
+                            LIMIT 1
+                        ) AS last_message,
+                        (
+                            SELECT cm.timestamp
+                            FROM chat_messages AS cm
+                            WHERE (cm.from_ = e.id OR cm.to_ = e.id) AND cm.from_ IN ('".$this->session->userdata('id')."', '".$this->session->userdata('id')."')
+                            ORDER BY cm.id DESC
+                            LIMIT 1
+                        ) AS last_timestamp
+                    FROM 
+                        chat_messages AS cm
+                    JOIN 
+                        employee AS e ON (cm.from_ = e.id OR cm.to_ = e.id) AND e.id != '".$this->session->userdata('id')."'
+                    WHERE 
+                        '".$this->session->userdata('id')."' IN (cm.from_, cm.to_)
+                    GROUP BY 
+                        employee_id, emp_name;
+                    ";
 
                         $result = $this->db->query($query)->result_array();
 

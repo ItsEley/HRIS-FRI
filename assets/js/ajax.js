@@ -84,87 +84,62 @@ function fetchNotifications() {
 
 // Call fetchNotifications function every 2 seconds
 setInterval(fetchNotifications, 2000);
-var latestTimestamp = 0; // Variable to store the timestamp of the latest notification
+// var latestTimestamp = 0; // Variable to store the timestamp of the latest notification
 
-function fetchNotifications2() {
+// function fetchNotifications2() {
+//     $.ajax({
+//         url: base_url + "humanr/fetchnotifications2",
+//         type: "GET",
+//         dataType: "json",
+//         data: { latestTimestamp: latestTimestamp }, // Send the latest timestamp as data
+//         success: function (response) {
+//             // Update the notification list HTML by appending new notifications
+//             $(".activity-list").append(response.html);
+
+//             // Update the latest timestamp
+//             latestTimestamp = response.latestTimestamp;
+//         },
+//         error: function (xhr, status, error) {
+//             console.error(xhr.responseText);
+//         },
+//     });
+// }
+
+// // Call the function initially to fetch notifications on page load
+// fetchNotifications2();
+
+// // Poll for new notifications every 2 seconds
+// setInterval(fetchNotifications2, 2000);
+function fetchLatestMessages() {
     $.ajax({
-        url: base_url + "humanr/fetchnotifications2",
-        type: "GET",
-        dataType: "json",
-        data: { latestTimestamp: latestTimestamp }, // Send the latest timestamp as data
-        success: function (response) {
-            // Update the notification list HTML by appending new notifications
-            $(".activity-list").append(response.html);
-
-            // Update the latest timestamp
-            latestTimestamp = response.latestTimestamp;
-        },
-        error: function (xhr, status, error) {
-            console.error(xhr.responseText);
-        },
-    });
-}
-
-// Call the function initially to fetch notifications on page load
-fetchNotifications2();
-
-// Poll for new notifications every 2 seconds
-setInterval(fetchNotifications2, 2000);
-
-function fetchMessages() {
-    $.ajax({
-        url: base_url + "humanr/fetch_messages",
+        url: base_url + "humanr/show_latest_messages",
         type: "GET",
         dataType: "json",
         success: function(response) {
-            var html = '';
-            // Check if there are messages
-            if (response.html) {
-                // Loop through messages and generate HTML
-                response.html.forEach(function(message) {
-                    html += '<li class="notification-message" data-message-id="' + message.id + '">';
-                    html += '<a href="chat.html">';
-                    html += '<div class="list-item">';
-                    html += '<div class="list-left">';
-                    html += '<span class="avatar">';
-                    html += '<img src="' + message.sender_profile_picture + '" alt="User Image">';
-                    html += '</span>';
-                    html += '</div>';
-                    html += '<div class="list-body">';
-                    html += '<span class="message-author">' + message.sender_name + '</span>';
-                    html += '<span class="message-time">' + message.timestamp + '</span>';
-                    html += '<div class="clearfix"></div>';
-                    html += '<span class="message-content">' + message.message + '</span>';
-                    html += '</div>';
-                    html += '</div>';
-                    html += '</a>';
-                    html += '</li>';
-                });
+            console.log("Response:", response); // Log the raw response data
+            
+            if (response.success) {
+                // Handle the messages here
+                console.log("Messages:", response.messages);
             } else {
-                html = '<li>No messages.</li>'; // Output if there are no messages
+                console.error('Error fetching latest messages:', response.error);
             }
-            // Update the message list HTML
-            $("#message-list").html(html);
-
-            // Check if total_messages is greater than zero
-            if (response.total_messages > 0) {
-                // Show the message list
-                $("#message-list").show();
-            } else {
-                // If total_messages is zero or less than zero, hide the message list
-                $("#message-list").hide();
-            }
-            console.log(response);
         },
         error: function(xhr, status, error) {
-            console.error(xhr.responseText); // Log any errors to the console for debugging
-        },
+            console.error('Error fetching latest messages:', error);
+        }
     });
 }
 
 
-// Call fetchMessages function every 2 seconds
-setInterval(fetchMessages, 2000);
+// Call the function initially
+fetchLatestMessages();
+
+// Set interval to periodically fetch messages
+setInterval(fetchLatestMessages, 2000);
+// Fetch every 5 seconds (adjust as needed)
+
+ // Set the interval to periodically fetch messages
 
 
 // $(document).ready(function () {
