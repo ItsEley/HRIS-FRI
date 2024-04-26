@@ -33,6 +33,17 @@ body::-webkit-scrollbar {
   /* Rounded corners */
 }
 
+
+.form-control[readonly] {
+  /* CSS styles for elements with class .form-control and readonly attribute */
+  /* For example: */
+  border-top: none;
+  border-left: none;
+  border-right:none;
+  border-radius: 0;
+  cursor: not-allowed; /* Change cursor style */
+  /* Add more styles as needed */
+}
 /* handle text overflows */
 .text-overflow-ellipsis {
   /* white-space: nowrap; */

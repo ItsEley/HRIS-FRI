@@ -56,31 +56,30 @@ $("#login-form").submit(function (e) {
 });
 
 function fetchNotifications() {
-    $.ajax({
-        url: base_url + "humanr/fetch_notifications",
-        type: "GET",
-        dataType: "json", // Specify that the response should be treated as JSON
-        success: function (response) {
-            // Update the notification list HTML
-            $("#notification-list").html(response.html);
+	$.ajax({
+		url: base_url + "humanr/fetch_notifications",
+		type: "GET",
+		dataType: "json", // Specify that the response should be treated as JSON
+		success: function (response) {
+			// Update the notification list HTML
+			$("#notification-list").html(response.html);
 
-            // Check if total_rows is greater than zero
-            if (response.total_rows > 0) {
-                // Update the notification count badge with the total rows count
-                $("#notification-count").text(response.total_rows);
-                // Show the badge pill
-                $("#notification-count").show();
-            } else {
-                // If total_rows is zero or less than zero, hide the badge pill
-                $("#notification-count").hide();
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error(xhr.responseText); // Log any errors to the console for debugging
-        },
-    });
+			// Check if total_rows is greater than zero
+			if (response.total_rows > 0) {
+				// Update the notification count badge with the total rows count
+				$("#notification-count").text(response.total_rows);
+				// Show the badge pill
+				$("#notification-count").show();
+			} else {
+				// If total_rows is zero or less than zero, hide the badge pill
+				$("#notification-count").hide();
+			}
+		},
+		error: function (xhr, status, error) {
+			console.error(xhr.responseText); // Log any errors to the console for debugging
+		},
+	});
 }
-
 
 // Call fetchNotifications function every 2 seconds
 setInterval(fetchNotifications, 2000);
@@ -116,31 +115,74 @@ function fetchLatestMessages() {
         type: "GET",
         dataType: "json",
         success: function(response) {
-            console.log("Response:", response); // Log the raw response data
-            
             if (response.success) {
+                // Clear previous messages
+                $("#message-list").empty();
+
                 // Handle the messages here
-                console.log("Messages:", response.messages);
+                response.messages.forEach(function(message) {
+                    var unreadStyle =
+                        message.is_read === null ?
+                        'style="background-color: #f2f2f2;"' :
+                        "";
+                    var senderName = "";
+                    if (message.conversation_type === "group") {
+                        senderName = message.emp_name; // Sender name from 'from_' column in group conversation
+                    } else if (message.conversation_type === "individual") {
+                        senderName = message.emp_name;
+                    }
+
+                    var html =
+                        '<li class="notification-message" ' +
+                        unreadStyle +
+                        ' data-message-id="' +
+                        message.message_id +
+                        '">';
+                    html += '<a href="chat.html">';
+                    html += '<div class="list-item">'; // Apply unread style if status is unread
+                    html += '<div class="list-leftm">';
+                    html += '<span class="avatar">';
+                    // html += '<img src="' + message.profile_picture.text() + '" alt="User Image">';
+                    html += "</span>";
+                    html += "</div>";
+                    html += '<div class="list-body">';
+                    html += '<span class="message-author">' + senderName + "</span>";
+                    html +=
+                        '<span class="message-time">' + message.last_timestamp + "</span>";
+                    html += '<div class="clearfix"></div>';
+					html += '<span class="message-content">' + message.from_ + ": " + message.last_message + "</span>";
+
+                    html += "</div>";
+                    html += "</div>";
+                    html += "</a>";
+                    html += "</li>";
+
+                    // Append the message to the message list
+                    $("#message-list").append(html);
+                });
+
+                // Update the message count badge
+                $("#message-count").text(response.messages.length);
             } else {
-                console.error('Error fetching latest messages:', response.error);
+                console.error("Error fetching latest messages:", response.error);
             }
         },
         error: function(xhr, status, error) {
-            console.error('Error fetching latest messages:', error);
-        }
+            console.error("Error fetching latest messages:", error);
+        },
     });
 }
 
+fetchLatestMessages(); // Fetch chat data on page load
 
-// Call the function initially
-fetchLatestMessages();
+    // Fetch chat data every 2 seconds
+    setInterval(fetchLatestMessages, 2000);
 
-// Set interval to periodically fetch messages
-setInterval(fetchLatestMessages, 2000);
+
+
 // Fetch every 5 seconds (adjust as needed)
 
- // Set the interval to periodically fetch messages
-
+// Set the interval to periodically fetch messages
 
 // $(document).ready(function () {
 //     fetchNotificationsCount();

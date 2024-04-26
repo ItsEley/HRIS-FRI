@@ -58,29 +58,187 @@ class Datatable_fetchers extends CI_Controller
 
 
 
-// chatss
+    // chatss
 
-public function fetch_messages() {
-    // Load the database library
-    $this->load->database();
-
-    // Fetch chat messages from the database
-    $query = $this->db->where('from_', $_POST['from_'])
-    ->where('to_', $_POST['to_'])
-    ->get('chat_messages');
+    public function fetch_messages()
+    {
 
 
-    // Store messages in an array
-    $messages = array();
-    if ($query->num_rows() > 0) {
-        $messages = $query->result_array();
+        // Fetch chat messages from the database
+        $query = $this->db->where('from_', $_POST['from_'])
+            ->where('to_', $_POST['to_'])
+            ->get('chat_messages');
+
+
+        // Store messages in an array
+        $messages = array();
+        if ($query->num_rows() > 0) {
+            $messages = $query->result_array();
+        }
+
+        // Return messages as JSON
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($messages));
     }
 
-    // Return messages as JSON
-    $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($messages));
-}
+    
 
+
+
+
+
+
+
+
+    public function fetch_attendance()
+    {
+        // Retrieve month and year from POST data
+        $month = $this->input->post('month');
+        $year = $this->input->post('year');
+    
+        // Ensure month is two digits
+        $month = str_pad($month, 2, '0', STR_PAD_LEFT);
+    
+        // Prepare the SQL query with placeholders
+        $sql = "SELECT DISTINCT(a.emp_id), CONCAT(e.fname, ' ', COALESCE(e.mname, ''), ' ', e.lname) AS full_name, e.pfp
+                FROM attendance AS a
+                INNER JOIN employee AS e ON a.emp_id = e.id 
+                WHERE a.date LIKE ?";
+    
+        // Execute the query with placeholders
+        $query = $this->db->query($sql, array("$year-$month%"));
+    
+        // Initialize an array to store the result
+        $attendance_data = array();
+    
+        // Check if the query was successful
+        if ($query->num_rows() > 0) {
+            // Fetch the result rows as an array of objects
+            $result = $query->result();
+    
+            // Loop through the result
+            foreach ($result as $row) {
+                $emp_id = $row->emp_id;
+    
+                $emp_record = array(
+                    'emp_id' => $emp_id,
+                    'full_name' => $row->full_name,
+                    'pfp' => base64_encode($row->pfp),
+                    'attendance_records' => array()
+                );
+    
+                // Your original SQL query
+                $sql = "SELECT attendance_id, emp_id, date, time_in, status, time_out, num_hr
+                        FROM attendance
+                        WHERE emp_id = ? AND date LIKE ?
+                        ORDER BY date ASC";
+    
+                // Execute the query with placeholders
+                $query1 = $this->db->query($sql, array($emp_id, "$year-$month%"));
+    
+                // Check if the query was successful
+                if ($query1->num_rows() > 0) {
+                    // Get the result as an array of rows
+                    $result1 = $query1->result_array();
+    
+                    // Loop through the result
+                    foreach ($result1 as $row1) {
+                        $class = ($row1['status'] == '0') ? 'att-o' : 'att-l';
+    
+                        $emp_record['attendance_records'][] = array(
+                            'attendance_id' => $row1['attendance_id'],
+                            'emp_id' => $row1['emp_id'],
+                            'date' => $row1['date'],
+                            'time_in' => $row1['time_in'],
+                            'status' => $row1['status'],
+                            'time_out' => $row1['time_out'],
+                            'num_hr' => $row1['num_hr'],
+                            'class' => $class
+                        );
+                    }
+                }
+    
+                $attendance_data[] = $emp_record;
+            }
+        }
+    
+        // Add month and year to the response
+        $response = array(
+            'success' => true,
+            'attendance_data' => $attendance_data,
+            'month' => $month,
+            'year' => $year,
+            'table_row' => ''
+        );
+    
+        // Generate the table row for thead
+        $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        $response['table_row'] .= '<tr>';
+        $response['table_row'] .= '<th>Employee</th>';
+        for ($day = 1; $day <= $num_days; $day++) {
+            $day_of_week = date('l', strtotime("$year-$month-$day"));
+            if ($day_of_week == 'Sunday') {
+                $response['table_row'] .= "<th style='color:red'>$day</th>";
+            } else {
+                $response['table_row'] .= "<th>$day</th>";
+            }
+        }
+        $response['table_row'] .= '<th></th>';
+        $response['table_row'] .= '</tr>';
+    
+        // Return the result as JSON
+        echo json_encode($response);
+    }
+    
+
+
+
+
+
+
+
+    public function get_people_new_message()
+    {
+
+
+        // Execute the query with proper parameter binding
+        $result = $this->db->query("SELECT 
+        e.id AS employee_id,
+        CONCAT(e.fname, ' ', e.lname) AS emp_name
+    FROM 
+        employee AS e
+    WHERE 
+        e.id != " . $this->session->userdata('id') . " -- Exclude yourself
+        AND NOT EXISTS (
+            SELECT " . $this->session->userdata('id') . " 
+            FROM chat_messages AS cm 
+            WHERE (cm.from_ = " . $this->session->userdata('id') . " AND cm.to_ = e.id) 
+                OR (cm.from_ = e.id AND cm.to_ = " . $this->session->userdata('id') . ")
+        )
+    
+			");
+
+        // Check if the query executed successfully
+        if ($result) {
+            // Fetch the result set
+            $new_people = $result->result_array();
+
+            // Set the appropriate content type
+            $this->output->set_content_type('application/json');
+
+            // Return the JSON response
+            $this->output->set_output(json_encode(array('success' => true, 'search_people' => $new_people)));
+        } else {
+            // Log the database error
+            $error = $this->db->error();
+            log_message('error', 'Database error: ' . $error['message']);
+
+            // Set the appropriate content type
+            $this->output->set_content_type('application/json');
+
+            // Return an error response
+            $this->output->set_output(json_encode(array('success' => false, 'error' => 'Database error')));
+        }
+    }
 }
-?>

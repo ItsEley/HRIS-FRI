@@ -73,6 +73,15 @@
                              <li><a href='" . base_url('hr/historyrequests') . "'>History</a></li> 
                          </ul> 
                      </li> 
+
+                     <li class='submenu forms'>
+                        <a href='#' class=''><i class='la la-object-group'></i><span>Personal Vendetta</span><span class='menu-arrow'></span></a>
+                        <ul> 
+                             <li><a href='" . base_url('forms') . "'>Apply</a></li> 
+                             <li><a href='" . base_url('hr/pendingrequests') . "'>Pending</a></li> 
+                             <li><a href='" . base_url('hr/historyrequests') . "'>History</a></li> 
+                         </ul> 
+                     </li>
                  "; 
              } else if (strtolower($this->session->userdata('acro')) == 'sys-at') { 
              } else { 
@@ -97,6 +106,15 @@
                            <li><a href='" . base_url('forms/history') . "'>History</a></li> 
                        </ul> 
                 </li> 
+                <li class='submenu payroll'> 
+                <a href='#' class=''><i class='la la-money'></i><span>Payroll</span><span class='menu-arrow'></span></a> 
+                <ul>
+                    <li><a href='" . base_url('employee/payroll/emp') . "'>Payroll</a></li> 
+                    <li><a href='" . base_url('hr/payroll/salary_rate') . "'>Salary Rate </a></li> 
+                    <li><a href='" . base_url('hr/payroll/bonus') . "'>Bonuses & Commissions</a></li> 
+                    <li><a href='" . base_url('hr/payroll/deduction') . "'>Deductions</a></li> 
+                </ul> 
+            </li> 
                   
                   
                   

@@ -129,7 +129,7 @@
                         $data['count'] = $count = $this->db->count_all_results();
 
                         if ($count > 0) {
-                            echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
+                            echo '<span class="badge bg-danger rounded-pill ms-1" style="font-size: 10px;">' . $count . '</span>';
                         }
 
                         ?></a>
@@ -142,7 +142,7 @@
                         $data['count'] = $count = $this->db->count_all_results();
 
                         if ($count > 0) {
-                            echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
+                            echo '<span class="badge bg-danger rounded-pill ms-1" style="font-size: 10px;">' . $count . '</span>';
                         }
                         ?>
 
@@ -156,7 +156,7 @@
                         $data['count'] = $count = $this->db->count_all_results();
 
                         if ($count > 0) {
-                            echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
+                            echo '<span class="badge bg-danger rounded-pill ms-1" style="font-size: 10px;">' . $count . '</span>';
                         }
                         ?>
                     </a></li>
@@ -169,7 +169,7 @@
                         $data['count'] = $count = $this->db->count_all_results();
 
                         if ($count > 0) {
-                            echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
+                            echo '<span class="badge bg-danger rounded-pill ms-1" style="font-size: 10px;">' . $count . '</span>';
                         }
                         ?>
                     </a></li>
@@ -182,7 +182,7 @@
                         $data['count'] = $count = $this->db->count_all_results();
 
                         if ($count > 0) {
-                            echo '<span class="badge bg-primary rounded-pill ms-1" style="font-size: 1.0rem;">' . $count . '</span>';
+                            echo '<span class="badge bg-danger rounded-pill ms-1" style="font-size: 10px;">' . $count . '</span>';
                         }
                         ?>
                     </a></li>
@@ -246,23 +246,17 @@
                                                 <td name="leave_reason" style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;cursor: pointer;user-select:none" title="Double click to expand"><?php echo $row->reason; ?></td>
                                                 <td name="status"><?php echo ($row->status); ?></td>
-                                                <td>
-                                                    <div class="dropdown">
-                                                        <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <i class="material-icons">more_vert</i>
-                                                        </a>
-                                                        <div class="dropdown-menu update-leave" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
-                                                            <!-- <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee"data-leave-id="<?php echo $row->id; ?>" data-request-type="LEAVE REQUEST" data-emp-id="<?php echo $row->emp_id; ?>">
-                                                                <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                                            </a> -->
-                                                            <a class="dropdown-item leave_req" href="#" data-bs-toggle="modal" data-bs-target="#view_request" data-leave-id="<?php echo $row->id; ?>" data-request-type="LEAVE REQUEST">
-                                                                <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                                            </a>
+                                                <td class = "d-inline-flex justify-content-between w-75 text-end">
+
+                                                <a class="dropdown-item leave_req" href="#" data-bs-toggle="modal" data-bs-target="#view_request" data-leave-id="<?php echo $row->id; ?>" data-request-type="LEAVE REQUEST">
+                                                                <i class="fa-solid fa-pencil m-r-5" title = "Edit"></i> Edit   
+                                                            </a>  
+                                                
                                                             <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
-                                                                <i class="fa-regular fa-trash-can m-r-5"></i> Delete
+                                                                <i class="fa-regular fa-trash-can m-r-5" title = "Delete"></i>Delete 
                                                             </a>
-                                                        </div>
-                                                    </div>
+
+                                                    
                                                 </td>
                                             </tr>
                                             <div class="modal fade" id="leave_req_det" tabindex="-1" aria-labelledby="edit_employee_label" aria-hidden="true">
@@ -282,7 +276,7 @@
                                                                 </div>
                                                             </div>
                                                             <form id="update_leave" method="posts">
-                                                                <input type="text" class="form-control text-left" id="leave_id" readonly>
+                                                                <input type="text" class="form-control text-left" id="leave_id" readonly hidden>
                                                                 <div class="mb-3 row">
                                                                     <div class="col-md-6">
                                                                         <label for="emp_name" class="form-label">Employee Name</label>
@@ -320,28 +314,16 @@
                                                                         <textarea class="form-control" id="leave_reason" rows="3" readonly></textarea>
                                                                     </div>
                                                                 </div>
-                                                                <div class="mb-3 row">
-                                                                    <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-12 mx-auto">
-                                                                        <div class="input-block mb-3 form-focus select-focus text-center">
-                                                                            <div class="row">
-                                                                                <div class="mb-3 row">
-                                                                                    <div class="col-sm-6">
-                                                                                        <button id="leave_denyButtonHr" class="btn text-danger btn-block bg-white border border-danger">Deny</button>
-                                                                                    </div>
-                                                                                    <div class="col-sm-6">
-                                                                                        <button id="leave_approveButtonHr" class="btn btn-primary btn-block" data-row-id="<?php echo $row->id; ?>">Approve</button>
-
-                                                                                    </div>
-                                                                                </div>
-
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                            </form>
-                                                        </div>
+                                                                
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button id="leave_denyButtonHr" class="btn btn-danger btn-block ">Deny</button>
+                                                            <button id="leave_approveButtonHr" class="btn btn-primary btn-block" data-row-id="<?php echo $row->id; ?>">Approve</button>
+
+
                                                         </div>
+                                                        </form>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -412,24 +394,14 @@
                                                             <td name="leave_reason" style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;cursor: pointer;user-select:none" title="Double click to expand"><?php echo $row->reason; ?></td>
                                                             <td name="status"><?php echo ucwords($row->status); ?></td>
-                                                            <td>
-                                                                <div class="dropdown">
-                                                                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                        <i class="material-icons">more_vert</i>
-                                                                    </a>
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
-                                                                        <!-- <a class="dropdown-item update-outgoing" href="#" data-bs-toggle="modal" data-bs-target="#edit_outgoing" data-emp-id="<?php echo $row->emp_id; ?>">
-                                                                                <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                                                            </a> -->
-                                                                        <a class="dropdown-item og_req" href="#" data-bs-toggle="modal" data-bs-target="#edit_outgoing" data-og-id="<?php echo $row->id; ?>" data-request-type="OUTGOING REQUEST">
+                                                            <td class = "d-inline-flex justify-content-between w-75 text-end">
+                                                            <a class="dropdown-item og_req" href="#" data-bs-toggle="modal" data-bs-target="#edit_outgoing" data-og-id="<?php echo $row->id; ?>" data-request-type="OUTGOING REQUEST">
                                                                             <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                                                         </a>
 
                                                                         <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
                                                                             <i class="fa-regular fa-trash-can m-r-5"></i> Delete
                                                                         </a>
-                                                                    </div>
-                                                                </div>
                                                             </td>
                                                         </tr>
 
@@ -488,20 +460,17 @@
                                                                                     <textarea class="form-control" id="outgoing_reason" rows="3" readonly></textarea>
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="mb-3 row">
-                                                                                <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
-                                                                                    <div class="input-block mb-3 form-focus select-focus text-center">
-                                                                                        <button id="og_approveButtonHr" data-row-id="<?php echo $row->id; ?>" class="btn btn-primary">Approve</button>
-                                                                                        <button id="og_denyButtonHr"data-row-id="<?php echo $row->id; ?>" class="btn btn-danger">Deny</button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
+                                                                            
 
-                                                                        </form>
                                                                     </div>
                                                                     <div class="modal-footer">
                                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                        <button id="og_denyButtonHr"data-row-id="<?php echo $row->id; ?>" class="btn btn-danger">Deny</button>
+
+                                                                        <button id="og_approveButtonHr" data-row-id="<?php echo $row->id; ?>" class="btn btn-primary">Approve</button>
                                                                     </div>
+                                                                    </form>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -576,20 +545,13 @@
                                                 <td name="leave_reason" style="max-width: 200px; overflow: hidden; 
                                         text-overflow: ellipsis; white-space: nowrap;cursor: pointer;user-select:none" title="Double click to expand"><?php echo $row->reason; ?></td>
                                                 <td name="status"><?php echo ucwords($row->status); ?></td>
-                                                <td>
-                                                    <div class="dropdown">
-                                                        <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <i class="material-icons">more_vert</i>
-                                                        </a>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
-                                                            <a class="dropdown-item ot_req" href="#" data-bs-toggle="modal" data-bs-target="#edit_overtime" data-ot-id="<?php echo $row->id; ?>">
+                                                <td class = "d-inline-flex justify-content-between">
+                                                <a class="dropdown-item ot_req" href="#" data-bs-toggle="modal" data-bs-target="#edit_overtime" data-ot-id="<?php echo $row->id; ?>">
                                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                                             </a>
                                                             <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
                                                                 <i class="fa-regular fa-trash-can m-r-5"></i> Delete
                                                             </a>
-                                                        </div>
-                                                    </div>
                                                 </td>
                                             </tr>
                                             <div class="modal fade" id="ot_req_det" tabindex="-1" aria-labelledby="edit_overtime_label" aria-hidden="true">
@@ -651,18 +613,21 @@
                                                                 <div class="mb-3 row">
                                                                     <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
                                                                         <div class="input-block mb-3 form-focus select-focus text-center">
-                                                                            <button id="ot_approveButtonHr" class="btn btn-primary" data-row-id="<?php echo $row->id; ?>">Approve</button>
-                                                                            <button id="ot_denyButtonHr"data-row-id="<?php echo $row->id; ?>" class="btn btn-danger">Deny</button>
+                    
                                                                         </div>
                                                                     </div>
                                                                 </div>
 
 
-                                                            </form>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button id="ot_denyButtonHr"data-row-id="<?php echo $row->id; ?>" class="btn btn-danger">Deny</button>
+
+                                                            <button id="ot_approveButtonHr" class="btn btn-primary" data-row-id="<?php echo $row->id; ?>">Approve</button>
                                                         </div>
+                                                        </form>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -736,20 +701,16 @@
                                                 <td name="leave_reason" style="max-width: 200px; overflow: hidden; 
                     text-overflow: ellipsis; white-space: nowrap;cursor: pointer;user-select:none" title="Double click to expand"><?php echo $row->reason; ?></td>
                                                 <td name="status"><?php echo ucwords($row->status); ?></td>
-                                                <td>
-                                                    <div class="dropdown">
-                                                        <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <i class="material-icons">more_vert</i>
-                                                        </a>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
-                                                            <a class="dropdown-item ut_req" href="#" data-bs-toggle="modal" data-bs-target="#edit_undertime" data-ut-id="<?php echo $row->id; ?>">
-                                                                <i class="fa-solid fa-pencil m-r-5"></i> Edit
-                                                            </a>
-                                                            <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
+                                                <td class = "d-inline-flex justify-content-between w-75 text-end">
+                                                <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
                                                                 <i class="fa-regular fa-trash-can m-r-5"></i> Delete
                                                             </a>
-                                                        </div>
-                                                    </div>
+                                                <a class="dropdown-item ut_req" href="#" data-bs-toggle="modal" data-bs-target="#edit_undertime" data-ut-id="<?php echo $row->id; ?>">
+                                                                <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                                            </a>
+
+                                                          
+                                                    
                                                 </td>
                                             </tr>
 
@@ -770,7 +731,7 @@
                                                                 </div>
                                                             </div>
                                                             <form id="update_outgoing" method="post">
-                                                                <input type="text" class="form-control text-left" id="ut_id" readonly>
+                                                                <input type="text" class="form-control text-left" id="ut_id" readonly hidden>
                                                                 <div class="mb-3 row">
                                                                     <div class="col-md-6">
                                                                         <label for="emp_name" class="form-label">Employee Name</label>
@@ -809,21 +770,19 @@
                                                                         <textarea class="form-control" id="ut_reason" rows="3" readonly></textarea>
                                                                     </div>
                                                                 </div>
-                                                                <div class="mb-3 row">
-                                                                    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
-                                                                        <div class="input-block mb-3 form-focus select-focus text-center">
-                                                                            <button id="ut_approveButtonHr" data-row-id="<?php echo $row->id; ?>" class="btn btn-primary">Approve</button>
-                                                                            <button id="ut_denyButtonHr"data-row-id="<?php echo $row->id; ?>" class="btn btn-danger">Deny</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                                
 
 
-                                                            </form>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button id="ut_denyButtonHr"data-row-id="<?php echo $row->id; ?>" class="btn btn-danger">Deny</button>
+                                                            <button id="ut_approveButtonHr" data-row-id="<?php echo $row->id; ?>" class="btn btn-primary">Approve</button>
+
+
                                                         </div>
+                                                        </form>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -897,20 +856,13 @@
                                                 <td name="ob_reason" style="max-width: 200px; overflow: hidden; 
                     text-overflow: ellipsis; white-space: nowrap;cursor: pointer;user-select:none" title="Double click to expand"><?php echo $row->reason; ?></td>
                                                 <td name="status"><?php echo ucwords($row->status); ?></td>
-                                                <td>
-                                                    <div class="dropdown">
-                                                        <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <i class="material-icons">more_vert</i>
-                                                        </a>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton_<?php echo $row->emp_id; ?>">
-                                                            <a class="dropdown-item ob_req" href="#" data-bs-toggle="modal" data-bs-target="#edit_ob" data-ob-id="<?php echo $row->id; ?>">
+                                                <td class = "d-inline-flex justify-content-between">
+                                                <a class="dropdown-item ob_req" href="#" data-bs-toggle="modal" data-bs-target="#edit_ob" data-ob-id="<?php echo $row->id; ?>">
                                                                 <i class="fa-solid fa-pencil m-r-5"></i> Edit
                                                             </a>
                                                             <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
                                                                 <i class="fa-regular fa-trash-can m-r-5"></i> Delete
                                                             </a>
-                                                        </div>
-                                                    </div>
                                                 </td>
                                             </tr>
 
@@ -978,20 +930,16 @@
                                                                         <textarea class="form-control" id="ob_reason" rows="3" readonly></textarea>
                                                                     </div>
                                                                 </div>
-                                                                <div class="mb-3 row">
-                                                                    <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12 mx-auto">
-                                                                        <div class="input-block mb-3 form-focus select-focus text-center">
-                                                                            <button id="ob_approveButtonHr" data-row-id="<?php echo $row->id; ?>" class="btn btn-primary">Approve</button>
-                                                                            <button id="ob_denyButtonHr"data-row-id="<?php echo $row->id; ?>" class="btn btn-danger">Deny <?php echo $row->id; ?></button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                                
 
 
                                                             </form>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button id="ob_denyButtonHr"data-row-id="<?php echo $row->id; ?>" class="btn btn-danger">Deny <?php echo $row->id; ?></button>
+
+                                                            <button id="ob_approveButtonHr" data-row-id="<?php echo $row->id; ?>" class="btn btn-primary">Approve</button>
                                                         </div>
                                                     </div>
                                                 </div>

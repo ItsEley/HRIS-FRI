@@ -48,12 +48,11 @@
 
     }
 
-    
-    .late-highlight {
-            /* text-decoration: underline red; */
-            background-color: red !important;
-        }
 
+    .late-highlight {
+        /* text-decoration: underline red; */
+        background-color: red !important;
+    }
 </style>
 
 
@@ -73,7 +72,7 @@
                                     min-height: -webkit-fill-available;">
 
         <!-- Page Content -->
-        <div class="content container-fluid" data-select2-id="select2-data-23-5b7q">
+        <div class="content container-fluid">
 
             <!-- Page Header -->
             <div class="page-header">
@@ -85,9 +84,11 @@
                             <li class="breadcrumb-item active">Employee Attendance</li>
                         </ul>
                     </div>
-                    <div class="col">
+                    <div class="col" id="attendance_filters">
+
+
                         <label for="month">Month:</label>
-                        <select id="month">
+                        <select id="filter_month">
                             <option value="1">January</option>
                             <option value="2">February</option>
                             <option value="3">March</option>
@@ -102,21 +103,42 @@
                             <option value="12">December</option>
                         </select>
 
+
+                        <?php
+
+                        // Minimum year and month
+                        $query = $this->db->query("SELECT MIN(YEAR(`date`)) AS min_year, MIN(MONTH(`date`)) AS min_month FROM `attendance`");
+                        $min_result = $query->row();
+
+                        $min_year = $min_result->min_year;
+                        $min_month = $min_result->min_month;
+
+                        // Maximum year and month
+                        $query = $this->db->query("SELECT MAX(YEAR(`date`)) AS max_year, MAX(MONTH(`date`)) AS max_month FROM `attendance`");
+                        $max_result = $query->row();
+
+                        $max_year = $max_result->max_year;
+                        $max_month = $max_result->max_month;
+
+                        // Output the results
+                        // echo "Minimum Year: $min_year, Minimum Month: $min_month <br>";
+                        // echo "Maximum Year: $max_year, Maximum Month: $max_month";
+
+                        ?>
+
+
                         <label for="year">Year:</label>
-                        <select id="year">
+                        <select id="filter_year">
                             <!-- You can generate the options dynamically using JavaScript -->
                             <!-- For example, from the current year to 10 years in the future -->
                             <?php
                             $current_year = date('Y');
                             $current_month = date('Mm');
 
-                            // Generate options for 10 years in the past
-                            for ($i = $current_year - 10; $i <= $current_year; $i++) {
-                                echo "<option value='$i'>$i</option>";
-                            }
+
 
                             // Generate options for the current year and 10 years in the future
-                            for ($i = $current_year; $i <= $current_year + 10; $i++) {
+                            for ($i = $min_year; $i <= $max_year; $i++) {
                                 if ($i == $current_year) {
                                     echo "<option value='$i' selected>$i</option>";
                                 } else {
@@ -138,11 +160,8 @@
             </div>
             <!-- /Page Header -->
 
-
-
             <div id="print-area">
 
-                <?php echo "<h2>$current_month</h2>"; ?>
 
                 <h1 class="text-center" style="display:none" id="report_header">Employee Attendance Report - March 2024</h1>
 
@@ -167,7 +186,7 @@
                     <div class="col-lg-12">
                         <div class="table-responsive" id="emp_attendance_table_container">
                             <table class="table table-striped " id="emp_attendance_table">
-                                <h3><span id="title_attendance_month">{MONTH}</span><span id="title_attendance_month"> {YEAR}</span></h3>
+                                <h3><span id="title_attendance_month">{MONTH}</span> <span id="title_attendance_year"> {YEAR}</span></h3>
 
 
                                 <thead>
@@ -197,185 +216,8 @@
                                 </thead>
                                 <tbody>
 
-                                    <?php
-                                    $month = $month < 10 ? "0$month" : $month;
-                                    $query = $this->db->query("SELECT DISTINCT(a.emp_id), CONCAT(e.fname, ' ', COALESCE(e.mname, ''), ' ', e.lname) AS full_name, e.pfp
-    FROM attendance AS a
-    INNER JOIN employee AS e ON a.emp_id = e.id 
-    WHERE a.date LIKE '%$year-$month%'");
-
-                                    // Check if the query was successful
-                                    if ($query->num_rows() > 0) {
-                                        // Fetch the result rows as an array of objects
-                                        $result = $query->result();
-
-                                        foreach ($result as $row) {
-                                            $emp_id = $row->emp_id;
-
-                                            echo "<tr data-att-emp-id='" . $emp_id . "'> ";
-                                            echo "<td>
-                <h2 class='table-avatar'>
-                    <a class='avatar avatar-xs att-emp-img' href='#'>
-                    <img src='data:image/jpeg;base64," . base64_encode($row->pfp) . "' alt='User Image' >
-                    </a>
-                    <a href='#' att-emp-name>" . $row->full_name . "</a>
-                </h2>
-            </td>";
-
-                                            // Your original SQL query
-                                            $sql = "SELECT a.attendance_id, a.emp_id, a.date, a.time_in, a.status, a.time_out, a.num_hr, CONCAT(e.fname, ' ', COALESCE(e.mname, ''), ' ', e.lname) AS full_name, e.pfp
-                FROM attendance a
-                INNER JOIN employee e ON a.emp_id = e.id
-                WHERE a.emp_id = ? AND a.date LIKE ?
-                ORDER BY a.date ASC";
-
-                                            // Execute the query with placeholders
-                                            $query1 = $this->db->query($sql, array($emp_id, "$year-$month%"));
-
-                                            // Check if the query was successful
-                                            if ($query1) {
-                                                // Get the result as an array of rows
-                                                $result1 = $query1->result_array();
-
-                                                $late_counter = 0;
-                                                $late_ids = array();
-
-                                                // Loop through the result
-                                                foreach ($result1 as $row1) {
-                                                    if ($row1['status'] == '0') {
-                                                        echo "<td id='att_" . $row1['attendance_id'] . "'><p class='att-record m-0 p-0 att-o'></p></td>"; // on time
-                                                        $late_counter = 0; // Reset the late counter
-                                                        $late_ids = array();
-                                                        
-                                                    } elseif ($row1['status'] == '1') {
-                                                        echo "<td id='att_" . $row1['attendance_id'] . "' data-att-date='" . $row1['date'] . "'><p class='att-record m-0 p-0 att-l'></p></td>"; // late
-                                                        $late_counter++; // Increment the late counter
-                                                        $id = "att_" . $row1['attendance_id'];
-                                                        array_push($late_ids,$id);
-                                                        // Highlight the element if more than 2 consecutive late records
-                                                        if ($late_counter > 2) {
-                                                            echo "<script>";
-                                                            echo "    document.addEventListener('DOMContentLoaded', function() {";
-
-                                                            foreach($late_ids as $l){
-                                                                // echo "document.getElementById('$l').classList.add('late-highlight');";
-                                                                echo "$('#$l').addClass('late-highlight')";
 
 
-                                                            }
-                                                            echo ")};";
-
-                                                            echo "</script>";
-                                                        }
-                                                    }
-                                                }
-                                            }
-
-                                            echo "</tr>";
-                                        }
-                                    }
-                                    ?>
-
-
-                                    <tr id="emp_id" hidden>
-
-                                        <td>
-                                            <h2 class="table-avatar">
-                                                <a class="avatar avatar-xs" href="profile.html"><img src="<?php echo base_url('assets\img\user.jpg') ?>" alt="User Image"></a>
-                                                <a href="profile.html">John Doe</a>
-                                            </h2>
-                                        </td>
-                                        <td>
-                                            <p class="att-record m-0 p-0 "></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-a m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-l m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-l m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-b m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-e m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-p m-0 p-0"></p>
-                                        </td>
-                                        <td>
-                                            <p class="att-a m-0 p-0"></p>
-                                        </td>
-                                    </tr>
 
                                 </tbody>
                             </table>
@@ -506,39 +348,127 @@
 
 
 <script>
+    $(window).on('beforeprint', function() {
+        $('.att-emp-img').hide();
+        $('.att-emp-name').style("font-size", "10px");
+        $('#emp_attendance_table_container').get(0).scrollLeft = 0;
+    });
+
+
+    // Show elements with class "no-print" after printing
+    $(window).on('afterprint', function() {
+        $('.att-emp-img').hide();
+        $('.att-emp-name').style("font-size", "");
+
+
+
+    });
+
+
+    // Detect the print event
+    var mediaQueryList = window.matchMedia('print');
+    mediaQueryList.addListener(function(mql) {
+        if (mql.matches) {
+            // Print event detected, reset scroll position
+            $('#emp_attendance_table_container').get(0).scrollLeft = 0;
+
+        }
+    });
+
+
+
+
+    function fetch_attendance(year, month) {
+        $.ajax({
+            url: base_url + "datatable_fetchers/fetch_attendance",
+            type: "POST",
+            dataType: "json",
+            data: {
+                year: year,
+                month: month
+            },
+            success: function(response) {
+                // Check if the response indicates success and has the expected properties
+                if (response.success && response.attendance_data && response.month && response.year && response.table_row) {
+                    console.log(response);
+
+                    // Clear the existing table body and header
+                    $("#emp_attendance_table tbody").empty();
+                    $("#emp_attendance_table thead").empty();
+
+                    // Append the month and year to the table
+
+                    // Convert numeric month to full text
+                    var fullMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                    var monthText = fullMonths[parseInt(response.month) - 1]; // Subtract 1 since months are zero-indexed
+
+                    $("#title_attendance_month").text(monthText);
+                    $("#title_attendance_year").text(response.year);
+
+                    // Append the table row to the table header
+                    $("#emp_attendance_table thead").append(response.table_row);
+
+                    // Iterate through the response data
+                    $.each(response.attendance_data, function(index, empRecord) {
+                        var row = $("<tr data-att-emp-id='" + empRecord.emp_id + "'>");
+                        var cell = $("<td>").html("<h2 class='table-avatar'>" +
+                            "<a class='avatar avatar-xs att-emp-img' href='#'>" +
+                            "<img src='data:image/jpeg;base64," + empRecord.pfp + "' alt='User Image'>" +
+                            "</a>" +
+                            "<a href='#' att-emp-name>" + empRecord.full_name + "</a>" +
+                            "</h2>");
+                        row.append(cell);
+
+                        // Append attendance records
+                        $.each(empRecord.attendance_records, function(index, attendance) {
+                            var attClass = attendance.class;
+                            var attCell = $("<td id='att_" + attendance.attendance_id + "' data-att-date='" + attendance.date + "'>").html("<p class='att-record m-0 p-0 " + attClass + "'></p>");
+                            row.append(attCell);
+                        });
+
+                        // Append the row to the table body
+                        $("#emp_attendance_table tbody").append(row);
+                    });
+                }
+            }
+        });
+    }
+
+
+
+
+
+    // Create a new Date object
+    var currentDate = new Date();
+    var currentYear = currentDate.getFullYear();
+    var currentMonth = currentDate.getMonth() + 1; // Adding 1 to get the month in the range of 1 to 12
+
     document.addEventListener('DOMContentLoaded', function() {
         $("li > a[href='<?= base_url('hr/employees/attendance') ?>']").addClass("active");
         $("li > a[href='<?= base_url('hr/employees/attendance') ?>']").parent().parent().css("display", "block")
 
 
 
-        $(window).on('beforeprint', function() {
-            $('.att-emp-img').hide();
-            $('.att-emp-name').style("font-size", "10px");
-            $('#emp_attendance_table_container').get(0).scrollLeft = 0;
+
+
+        fetch_attendance(currentYear, currentMonth);
+        $("#filter_month").val(currentMonth);
+        $("#filter_year").val(currentYear);
+
+
+        $("#attendance_filters > select").on('change', function() {
+            console.log($(this).val());
+
+            let month = $("#filter_month").val();
+            let year = $("#filter_year").val();
+
+            fetch_attendance(year, month)
+
         });
 
 
-        // Show elements with class "no-print" after printing
-        $(window).on('afterprint', function() {
-            $('.att-emp-img').hide();
-            $('.att-emp-name').style("font-size", "");
 
 
-
-        });
-
-
-        // Detect the print event
-        var mediaQueryList = window.matchMedia('print');
-        mediaQueryList.addListener(function(mql) {
-            if (mql.matches) {
-                // Print event detected, reset scroll position
-                $('#emp_attendance_table_container').get(0).scrollLeft = 0;
-
-            }
-        });
-        
 
     })
 </script>

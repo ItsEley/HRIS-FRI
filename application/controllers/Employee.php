@@ -18,6 +18,32 @@ class Employee extends CI_Controller
 		$this->load->view('templates/footer');
 	}
 
+	public function payroll()
+	{
+		if ($this->session->userdata('logged_in')) {
+			$data['title'] = 'Employee | Payroll | List';
+			$this->load->view('templates/header', $data);
+			$this->load->view('pages/employee/employee_payroll');
+			$this->load->view('templates/modals/payroll_modal');
+			$this->load->view('templates/footer');
+		} else {
+			redirect('');
+		}
+	}
+	public function payslip()
+	{
+		if ($this->session->userdata('logged_in')) {
+			$data['title'] = 'Employee | Payslip | List';
+			$this->load->view('templates/header', $data);
+			$this->load->view('pages/employee/employee_payslip');
+			$this->load->view('templates/modals/payslip_view_modal');
+			$this->load->view('templates/footer');
+		} else {
+			redirect('');
+		}
+	}
+
+
 	public function emp_noti()
 	{
 		$data['title'] = 'Employee | Notification';

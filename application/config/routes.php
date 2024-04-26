@@ -72,10 +72,9 @@ $route['hr/historyrequests'] = 'humanr/history_req';
 
 
 
-
-
-
 // employee/pages
+$route['employee/payroll/emp'] = 'employee/payroll';
+$route['payroll_emp/payslip'] = 'employee/payslip';
 $route['employee/notification'] = 'employee/emp_noti';
 $route['employee/dashboard'] = 'employee/emphome';
 $route['employee/profile'] = 'employee/emp_profile';
@@ -135,7 +134,7 @@ $route['data/api/holiday/insert'] = 'dataapi/insert_holiday';
 
 
 // chats
-$route['chat/get'] = 'datatable_fetchers/fetch_messages';
+// $route['chat/get'] = 'datatable_fetchers/fetch_messages';
 
 
 

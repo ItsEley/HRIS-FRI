@@ -467,7 +467,7 @@
 	// Function to fetch chat messages via AJAX
 	function fetchMessages() {
 		$.ajax({
-			url: '<?= base_url('chat/get') ?>',
+			url: '<?= base_url('datatable_fetchers/fetch_messages') ?>',
 			type: 'POST',
 			data: {
 				from_: <?= $this->session->userdata('id'); ?>,

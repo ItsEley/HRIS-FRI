@@ -36,16 +36,16 @@ class Humanr extends CI_Controller
 		$source = $this->input->post('source');
 
 		$validSources = array(
-			'og_approveButtonHr' => 'f_outgoing',
-			'leave_approveButtonHr' => 'f_leaves',
-			'ot_approveButtonHr' => 'f_overtime',
-			'ut_approveButtonHr' => 'f_undertime',
-			'ob_approveButtonHr' => 'f_off_bussiness',
-			'og_denyButtonHr' => 'f_outgoing',
-			'leave_denyButtonHr' => 'f_leaves',
-			'ot_denyButtonHr' => 'f_overtime',
-			'ut_denyButtonHr' => 'f_undertime',
-			'ob_denyButtonHr' => 'f_off_bussiness'
+			'og_approveButton' => array('f_outgoing', ' Department Head <strong>Approved</strong> your <strong>Outgoing Request</strong>. Please wait for the approval of Human Resource.'),
+			'leave_approveButton' => array('f_leaves', 'Department Head <strong>Approved</strong> your <strong>Leave Request</strong>. Please wait for the approval of Human Resource.'),
+			'ot_approveButton' => array('f_overtime', ' Department Head <strong>Approved</strong> your <strong>Overtime Request</strong>. Please wait for the approval of Human Resource.'),
+			'ut_approveButton' => array('f_undertime', 'Department Head <strong>Approved</strong> your <strong>Undertime Request</strong>. Please wait for the approval of Human Resource.'),
+			'ob_approveButton' => array('f_off_bussiness', 'Department Head <strong>Approved</strong> your <strong>Off Business Request</strong>. Please wait for the approval of Human Resource.'),
+			'og_denyButton' => array('f_outgoing', ' Department Head <strong>Denied</strong> your <strong>Outgoing Request</strong>. Please wait for the approval of Human Resource.'),
+			'leave_denyButton' => array('f_leaves', 'Department Head <strong>Denied</strong> your <strong>Leave Request</strong>. Please wait for the approval of Human Resource.'),
+			'ot_denyButton' => array('f_overtime', 'Department Head <strong>Denied</strong> your <strong>Overtime Request</strong>. Please wait for the approval of Human Resource.'),
+			'ut_denyButton' => array('f_undertime', 'Department Head <strong>Denied</strong> your <strong>Undertime Request</strong>. Please wait for the approval of Human Resource.'),
+			'ob_denyButton' => array('f_off_bussiness', 'Department Head <strong>Denied</strong> your <strong>Off Business Request</strong>. Please wait for the approval of Human Resource.')
 		);
 
 		if (isset($validSources[$source])) {
@@ -422,53 +422,96 @@ class Humanr extends CI_Controller
 			));
 		}
 	}
+	
 	public function show_latest_messages() {
 		// Get the current user's ID from the session
 		$current_user_id = $this->session->userdata('id');
 	
 		// Execute the query with proper parameter binding
-		$result = $this->db->query("SELECT 
-		CASE WHEN cm.from_ = '".$this->session->userdata('id')."' THEN cm.to_ ELSE cm.from_ END AS employee_id,
-		CONCAT(e.fname, ' ', e.lname) AS emp_name,
-		-- CONVERT(e.pfp USING utf8) AS profile_picture,
-
+		$result = $this->db->query("(
+			-- Query for individual conversations
+			SELECT 
+				cm.id,
+				cm.message AS last_message,
+				cm.timestamp AS last_timestamp,
+				cm.is_read,
+				e.id AS emp_id,
+				CONCAT(e.fname, ' ', e.lname) AS emp_name,
+				'individual' AS conversation_type,
+				NULL AS group_id,
+				NULL AS group_name
+			FROM 
+				chat_messages AS cm
+			JOIN 
+				(
+					SELECT 
+						MAX(timestamp) AS max_timestamp,
+						CASE
+							WHEN from_ = ".$this->session->userdata('id')." THEN to_
+							ELSE from_
+						END AS other_employee_id
+					FROM 
+						chat_messages
+					WHERE 
+						from_ = ".$this->session->userdata('id')." OR to_ = ".$this->session->userdata('id')."
+					GROUP BY 
+						CASE
+							WHEN from_ = ".$this->session->userdata('id')." THEN to_
+							ELSE from_
+						END
+				) AS last_msg ON cm.timestamp = last_msg.max_timestamp
+			JOIN 
+				employee AS e ON last_msg.other_employee_id = e.id
+		)
+		UNION
 		(
-			SELECT MAX(cm.id) AS message_id
-			FROM chat_messages AS cm
-			WHERE (cm.from_ = e.id OR cm.to_ = e.id) AND cm.from_ IN ('".$this->session->userdata('id')."', '".$this->session->userdata('id')."')
-		) AS message_id,
-		(
-			SELECT cm.message
-			FROM chat_messages AS cm
-			WHERE (cm.from_ = e.id OR cm.to_ = e.id) AND cm.from_ IN ('".$this->session->userdata('id')."', '".$this->session->userdata('id')."')
-			ORDER BY cm.id DESC
-			LIMIT 1
-		) AS last_message,
-		(
-			SELECT cm.timestamp
-			FROM chat_messages AS cm
-			WHERE (cm.from_ = e.id OR cm.to_ = e.id) AND cm.from_ IN ('".$this->session->userdata('id')."', '".$this->session->userdata('id')."')
-			ORDER BY cm.id DESC
-			LIMIT 1
-		) AS last_timestamp
-	FROM 
-		chat_messages AS cm
-	JOIN 
-		employee AS e ON (cm.from_ = e.id OR cm.to_ = e.id) AND e.id != '".$this->session->userdata('id')."'
-	WHERE 
-		'".$this->session->userdata('id')."' IN (cm.from_, cm.to_)
-	GROUP BY 
-		employee_id, emp_name;");
+			-- Query for group conversations
+			SELECT 
+			
+				cm.id,
+				cm.message AS last_message,
+				cm.timestamp AS last_timestamp,
+				cm.is_read,
+				e.id AS emp_id,
+				CONCAT(e.fname, ' ', e.lname) AS emp_name,
+				'group' AS conversation_type,
+				cm.to_group AS group_id,
+				cg.group_name
+			FROM 
+				chat_messages AS cm
+			JOIN 
+				(
+					SELECT 
+						MAX(timestamp) AS max_timestamp,
+						to_group
+					FROM 
+						chat_messages
+					WHERE 
+						to_group IN (
+							SELECT group_id
+							FROM chat_group_members
+							WHERE member = ".$this->session->userdata('id')."
+						)
+					GROUP BY 
+						to_group
+				) AS last_group_msg ON cm.timestamp = last_group_msg.max_timestamp AND cm.to_group = last_group_msg.to_group
+			JOIN 
+				employee AS e ON cm.from_ = e.id
+			JOIN 
+				chat_group AS cg ON cm.to_group = cg.id
+		)
+		ORDER BY last_timestamp DESC;
+		
+		
+			");
 	
 		// Check if the query executed successfully
 		if ($result) {
 			// Fetch the result set
 			$messages = $result->result_array();
-	
-			// Set the appropriate content type
+		
 			$this->output->set_content_type('application/json');
 	
-			// Return the JSON response
 			$this->output->set_output(json_encode(array('success' => true, 'messages' => $messages)));
 		} else {
 			// Log the database error
@@ -481,9 +524,10 @@ class Humanr extends CI_Controller
 			// Return an error response
 			$this->output->set_output(json_encode(array('success' => false, 'error' => 'Database error')));
 		}
+
+
 	}
 	
-
 	public function C_hr_assets()
 	{
 

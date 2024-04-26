@@ -1,3 +1,31 @@
+<style>
+  /* Adjust margins and font size for printing */ 
+  /* Adjust margins and font size for printing */ 
+ /* Adjust margins and font size for printing */ 
+ @media print {
+    body {
+      margin: 1cm;
+      font-size: 12pt;
+    }
+
+    /* Ensure content wraps properly */
+    .print-area {
+      overflow-wrap: break-word;
+    }
+
+    /* Set table overflow to visible */
+    .print-area table {
+      overflow: visible !important;
+    }
+
+    /* Prevent table from breaking within a page */
+    .print-area table tr {
+      page-break-inside: avoid;
+    }
+  }
+</style>
+
+
 <div id="viewpayroll" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
  <div class="modal-dialog modal-fullscreen">
    <div class="modal-content">
@@ -5,8 +33,9 @@
        <h4 class="modal-title">Payroll list (<?=date("F j Y", strtotime($_GET['start_date'])).' - '.date("F j Y", strtotime($_GET['end_date']))?>)</h4>
        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
      </div>
-     <div class="modal-body">
-     	<table class="table table-bordered table-sm text-center">
+     <div class="modal-body print-area">
+		<h4 id = "report_title" hidden>Payroll list (<?=date("F j Y", strtotime($_GET['start_date'])).' - '.date("F j Y", strtotime($_GET['end_date']))?>)</h4>
+     	<table class="table table-bordered table-sm text-center table-responsive" id = "report_table">
  				<thead>
  					<tr>
  						<th style="background-color: #070e4c; color: white">Name</th>
@@ -198,3 +227,23 @@
    </div>
  </div>
 </div>
+
+<script>
+	  $(window).on('beforeprint', function() {
+
+        $('#report_title').hide();
+
+
+    });
+
+
+    // Show elements with class "no-print" after printing
+    $(window).on('afterprint', function() {
+        $('#report_title').show();
+
+
+
+
+    });
+</script>
+

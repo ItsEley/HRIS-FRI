@@ -12,9 +12,9 @@ class Payroll_hr extends CI_Controller
 	public function index()
 	{
 		if ($this->session->userdata('logged_in')) {
-			$data['title'] = 'HR | Payroll | List';
+			$data['title'] = 'Employee | Payroll | List';
 			$this->load->view('templates/header', $data);
-			$this->load->view('pages/hr/hr_payroll');
+			$this->load->view('pages/employee/employee_payroll');
 			$this->load->view('templates/modals/payroll_modal');
 			$this->load->view('templates/footer');
 		} else {
@@ -25,9 +25,9 @@ class Payroll_hr extends CI_Controller
 	public function payslip()
 	{
 		if ($this->session->userdata('logged_in')) {
-			$data['title'] = 'HR | Payslip | List';
+			$data['title'] = 'Employee | Payslip | List';
 			$this->load->view('templates/header', $data);
-			$this->load->view('pages/hr/hr_payslip');
+			$this->load->view('pages/employee/employee_payslip');
 			$this->load->view('templates/modals/payslip_view_modal');
 			$this->load->view('templates/footer');
 		} else {
