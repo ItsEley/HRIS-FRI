@@ -396,7 +396,7 @@
                                                             <td name="status"><?php echo ucwords($row->status); ?></td>
                                                             <td class = "d-inline-flex justify-content-between w-75 text-end">
                                                             <a class="dropdown-item og_req" href="#" data-bs-toggle="modal" data-bs-target="#edit_outgoing" data-og-id="<?php echo $row->id; ?>" data-request-type="OUTGOING REQUEST">
-                                                                            <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                                                            <i class="fa-solid fa-pencil m-r-5"></i> View
                                                                         </a>
 
                                                                         <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
@@ -547,11 +547,9 @@
                                                 <td name="status"><?php echo ucwords($row->status); ?></td>
                                                 <td class = "d-inline-flex justify-content-between">
                                                 <a class="dropdown-item ot_req" href="#" data-bs-toggle="modal" data-bs-target="#edit_overtime" data-ot-id="<?php echo $row->id; ?>">
-                                                                <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                                                <i class="fa-solid fa-pencil m-r-5"></i> View
                                                             </a>
-                                                            <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
-                                                                <i class="fa-regular fa-trash-can m-r-5"></i> Delete
-                                                            </a>
+                                                         
                                                 </td>
                                             </tr>
                                             <div class="modal fade" id="ot_req_det" tabindex="-1" aria-labelledby="edit_overtime_label" aria-hidden="true">
@@ -702,11 +700,9 @@
                     text-overflow: ellipsis; white-space: nowrap;cursor: pointer;user-select:none" title="Double click to expand"><?php echo $row->reason; ?></td>
                                                 <td name="status"><?php echo ucwords($row->status); ?></td>
                                                 <td class = "d-inline-flex justify-content-between w-75 text-end">
-                                                <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
-                                                                <i class="fa-regular fa-trash-can m-r-5"></i> Delete
-                                                            </a>
+                                             
                                                 <a class="dropdown-item ut_req" href="#" data-bs-toggle="modal" data-bs-target="#edit_undertime" data-ut-id="<?php echo $row->id; ?>">
-                                                                <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                                                <i class="fa-solid fa-pencil m-r-5"></i> View
                                                             </a>
 
                                                           
@@ -858,11 +854,9 @@
                                                 <td name="status"><?php echo ucwords($row->status); ?></td>
                                                 <td class = "d-inline-flex justify-content-between">
                                                 <a class="dropdown-item ob_req" href="#" data-bs-toggle="modal" data-bs-target="#edit_ob" data-ob-id="<?php echo $row->id; ?>">
-                                                                <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                                                <i class="fa-solid fa-pencil m-r-5"></i> View
                                                             </a>
-                                                            <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve_<?php echo $row->emp_id; ?>">
-                                                                <i class="fa-regular fa-trash-can m-r-5"></i> Delete
-                                                            </a>
+                                                         
                                                 </td>
                                             </tr>
 

@@ -73,6 +73,8 @@ $route['hr/historyrequests'] = 'humanr/history_req';
 
 
 // employee/pages
+
+$route['payroll_emp/show_emp_payslip'] = 'employee/show_emp_payslip';
 $route['employee/payroll/emp'] = 'employee/payroll';
 $route['payroll_emp/payslip'] = 'employee/payslip';
 $route['employee/notification'] = 'employee/emp_noti';

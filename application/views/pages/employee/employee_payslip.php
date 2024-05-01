@@ -8,7 +8,7 @@
 					<div class="col">
 						<h3 class="page-title">Payslip</h3>
 						<ul class="breadcrumb">
-							<li class="breadcrumb-item"><a href="admin-dashboard.html">HR</a></li>
+							<li class="breadcrumb-item"><a href="admin-dashboard.html">Employee</a></li>
 							<li class="breadcrumb-item active">Payslip List</li>
 						</ul>
 					</div>
@@ -32,31 +32,46 @@
 								</tr>
 							</thead>
 							<tbody>
-								<?php
-								$start_date = $_GET['start_date'];
-								$end_date = $_GET['end_date'];
-								$total_deductions = 0;
-								$sql = "SELECT *, p.employee_id as empID, e.employee_id as employeeID FROM payroll p inner join employee e on p.employee_id = e.id WHERE cutoff_start = '$start_date'";
-								$payroll_list = $this->db->query($sql)->result();
-								$caamt = '';
-
-								$n = 1;
-								foreach ($payroll_list as $row) {
-									$cashadvancesql = "SELECT * FROM cash_advance WHERE employee_id = '$row->empID'";
-									$cashresult = $this->db->query($cashadvancesql);
-
-									if ($cashresult->num_rows() > 0) {
-										$ca = $cashresult->row();
-										$caamt = $ca->amount;
-									} else {
-										$caamt = 0;
-									}
-
-									$fullname = $row->fname . ' ' . $row->lname;
-									$total_deductions = $row->pagibig + $caamt + $row->sss + $row->philhealth + $row->late_amount + $row->unworked_amount + $row->undertime_amt + $row->tax + $row->sss_loans + $row->den_deduction + $row->warehouse_sale;
-
-									$netpay = ($row->cutoff_salary + $row->allowance + $row->ot_pay + $row->night_differential + $row->special_holiday) - $total_deductions;
-								?>
+								
+							<?php
+							$start_date = $_GET['start_date'];
+							$end_date = $_GET['end_date'];
+							$total_deductions = 0;
+							
+							// Assuming the session ID is stored in $_SESSION['id2']
+							$session_id = $_SESSION['id2'];
+							
+							// Prepare the SQL query with a placeholder for the session ID
+							$sql = "SELECT *, p.employee_id AS empID, e.employee_id AS employeeID 
+									FROM payroll p 
+									INNER JOIN employee e ON p.employee_id = e.id 
+									WHERE cutoff_start = ? AND e.employee_id = ?";
+							
+							// Execute the query with the session ID
+							$payroll_list = $this->db->query($sql, array($start_date, $session_id))->result();
+							$caamt = '';
+							
+							$n = 1;
+							foreach ($payroll_list as $row) {
+								$cashadvancesql = "SELECT * FROM cash_advance WHERE employee_id = ?";
+								$cashresult = $this->db->query($cashadvancesql, array($row->empID));
+							
+								if ($cashresult->num_rows() > 0) {
+									$ca = $cashresult->row();
+									$caamt = $ca->amount;
+								} else {
+									$caamt = 0;
+								}
+							
+								$fullname = $row->fname . ' ' . $row->lname;
+								$total_deductions = $row->pagibig + $caamt + $row->sss + $row->philhealth + $row->late_amount + $row->unworked_amount + $row->undertime_amt + $row->tax + $row->sss_loans + $row->den_deduction + $row->warehouse_sale;
+							
+								$netpay = ($row->cutoff_salary + $row->allowance + $row->ot_pay + $row->night_differential + $row->special_holiday) - $total_deductions;
+								// Further processing or display logic here
+							
+							?>
+							
+							
 									<tr>
 										<td><?= $fullname ?></td>
 										<td><?= $row->employeeID ?></td>
@@ -118,6 +133,7 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
 					<button type="submit" class="btn btn-primary btn-sm btn-block" style="float: right">Save Changes</button>
+
 			</form>
 		</div>
 	</div>

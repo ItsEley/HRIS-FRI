@@ -17,6 +17,7 @@ body::-webkit-scrollbar {
 }
 
 
+
 /* Targeting scrollbar thumb (the draggable bar) */
 ::-webkit-scrollbar-thumb {
   background-color: #c1c1c1;

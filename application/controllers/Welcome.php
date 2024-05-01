@@ -284,6 +284,8 @@ class Welcome extends CI_Controller
 		echo json_encode($output);
 	}
 
+	
+
 	public function index()
 	{
 		if ($this->session->userdata('logged_in')) {

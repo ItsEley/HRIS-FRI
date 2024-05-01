@@ -18,6 +18,73 @@ class Employee extends CI_Controller
 		$this->load->view('templates/footer');
 	}
 
+	public function show_emp_payslip()
+	{
+		// Check if start_date and end_date are set in the GET request
+		if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
+			// Assign GET parameters to variables
+			$start_date = $_GET['start_date'];
+			$end_date = $_GET['end_date'];
+
+			// Initialize variables
+			$total_deductions = 0;
+			$session_id = $_SESSION['id2'];
+
+			// Prepare the SQL query with a placeholder for the session ID
+			$sql = "SELECT *, p.employee_id AS empID, e.employee_id AS employeeID 
+            FROM payroll p 
+            INNER JOIN employee e ON p.employee_id = e.id 
+            WHERE cutoff_start = ? AND e.employee_id = ?";
+
+			// Execute the query with the session ID
+			$payroll_list = $this->db->query($sql, array($start_date, $session_id))->result();
+
+			// Initialize $caamt
+			$caamt = '';
+
+			// Initialize an array to hold the data
+			$data = array();
+
+			// Loop through each result
+			foreach ($payroll_list as $row) {
+				// Prepare and execute query to get cash advance
+				$cashadvancesql = "SELECT * FROM cash_advance WHERE employee_id = ?";
+				$cashresult = $this->db->query($cashadvancesql, array($row->empID));
+
+				// Check if cash advance exists
+				if ($cashresult->num_rows() > 0) {
+					$ca = $cashresult->row();
+					$caamt = $ca->amount;
+				} else {
+					$caamt = 0;
+				}
+
+				// Calculate total deductions
+				$total_deductions = $row->pagibig + $caamt + $row->sss + $row->philhealth + $row->late_amount + $row->unworked_amount + $row->undertime_amt + $row->tax + $row->sss_loans + $row->den_deduction + $row->warehouse_sale;
+
+				// Calculate net pay
+				$netpay = ($row->cutoff_salary + $row->allowance + $row->ot_pay + $row->night_differential + $row->special_holiday) - $total_deductions;
+
+				// Prepare data for this row
+				$row_data = array(
+					'fullname' => $row->fname . ' ' . $row->lname,
+					'employeeID' => $row->employeeID,
+					'netpay' => number_format($netpay, 2),
+					'total_deductions' => number_format($total_deductions, 2),
+					'payroll_id' => $row->payroll_id
+				);
+
+				// Push row data to the main data array
+				$data[] = $row_data;
+			}
+
+			// Return data as JSON
+			echo json_encode($data);
+		} else {
+			// If start_date or end_date is not set, return an error message
+			echo json_encode(array('error' => 'start_date and end_date are required.'));
+		}
+	}
 	public function payroll()
 	{
 		if ($this->session->userdata('logged_in')) {

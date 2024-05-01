@@ -1,3 +1,5 @@
+
+
 <div class="main-wrapper">
 	<?php $this->load->view('templates/nav_bar'); ?>
 	<?php $this->load->view('templates/sidebar') ?>

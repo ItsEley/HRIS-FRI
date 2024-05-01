@@ -1,6 +1,3 @@
-    <script>
-      var base_url = '<?php echo base_url() ?>';
-    </script>
 
     <!-- Bootstrap Core JS -->
     <script src=<?= base_url("assets/js/bootstrap.bundle.min.js") ?>></script>
@@ -35,7 +32,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script> -->
     <script src="<?= base_url('assets/js/greedynav.js') ?>"></script>
-
 
 
 
