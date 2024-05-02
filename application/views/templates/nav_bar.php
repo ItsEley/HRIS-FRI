@@ -162,71 +162,83 @@
 
 
    function fetchLatestMessages() {
-      $.ajax({
-         url: base_url + "humanr/show_latest_messages",
-         type: "GET",
-         dataType: "json",
-         success: function(response) {
+    $.ajax({
+        url: base_url + "humanr/show_latest_messages",
+        type: "GET",
+        dataType: "json",
+        success: function(response) {
             if (response.success) {
-               // Clear previous messages
-               $("#message-list").empty();
+                // Clear previous messages
+                $("#message-list").empty();
 
-               // Handle the messages here
-               response.messages.forEach(function(message) {
-                  var unreadStyle =
-                     message.is_read === null ?
-                     'style="background-color: #f2f2f2;"' :
-                     "";
-                  var senderName = "";
-                  if (message.conversation_type === "group") {
-                     senderName = message.emp_name; // Sender name from 'from_' column in group conversation
-                  } else if (message.conversation_type === "individual") {
-                     senderName = message.emp_name;
-                  }
+                if (response.messages && response.messages.length > 0) {
+                    // Handle the messages here
+                    response.messages.forEach(function(message) {
+                        var unreadStyle = message.is_read === null ? 'style="background-color: #f2f2f2;"' : "";
+                        var senderName = message.emp_name;
+                        let last_sender_name = "";
 
-                  var html =
-                     '<li class="notification-message" ' +
-                     unreadStyle +
-                     ' data-message-id="' +
-                     message.message_id +
-                     '">';
-                  html += '<a href="chat.html">';
-                  html += '<div class="list-item">'; // Apply unread style if status is unread
-                  html += '<div class="list-leftm">';
-                  html += '<span class="avatar">';
-                  // html += '<img src="' + message.profile_picture.text() + '" alt="User Image">';
-                  html += "</span>";
-                  html += "</div>";
-                  html += '<div class="list-body">';
-                  html += '<span class="message-author">' + senderName + "</span>";
-                  html +=
-                     '<span class="message-time">' + message.last_timestamp + "</span>";
-                  html += '<div class="clearfix"></div>';
-                  html += '<span class="message-content">' + message.from_ + ": " + message.last_message + "</span>";
+                        if (message.last_message_sender_id == "<?= $this->session->userdata('id')?>") {
+                            last_sender_name = "You"
+                        } else {
+                            last_sender_name = message.last_message_sender_name.split(' ')[0]
+                        }
 
-                  html += "</div>";
-                  html += "</div>";
-                  html += "</a>";
-                  html += "</li>";
+                        var html =
+                            '<li class="notification-message" ' +
+                            unreadStyle +
+                            ' data-message-id="' +
+                            message.id +
+                            '">';
+                        html += '<a href="chat.html">';
+                        html += '<div class="list-item">'; // Apply unread style if status is unread
+                        // html += '<div class="list-leftm">';
+                        html += '<span class="avatar">';
+                        // html += '<img src="' + message.profile_picture.text() + '" alt="User Image">';
+                        html += "</span>";
+                        html += "</div>";
+                        html += '<div class="list-body">';
+                        html += '<span class="message-author">' + senderName + "</span>";
+                        html += '<span class="message-time">' + message.last_timestamp + "</span>";
+                        html += '<div class="clearfix"></div>';
+                        html += '<span class="message-content">' + last_sender_name + ": " + message.last_message + "</span>";
+                        html += "</div>"; // Removed the extra + sign from here
+                        html += "</div>";
+                        html += "</a>";
+                        html += "</li>";
 
-                  // Append the message to the message list
-                  $("#message-list").append(html);
-               });
+                        // Append the message to the message list
+                        $("#message-list").append(html);
+                    });
 
-               // Update the message count badge
-               $("#message-count").text(response.messages.length);
+                    // Update the message count badge
+                    $("#message-count").text(response.messages.length);
+                } else {
+                  $("#message-list").append("<li>No messages found</li>");
+
+                  //   console.log("No messages found");
+                    // Handle case where there are no messages
+                }
             } else {
-               console.error("Error fetching latest messages:", response.error);
+                console.error("Error fetching latest messages:", response.error);
             }
-         },
-         error: function(xhr, status, error) {
+        },
+        error: function(xhr, status, error) {
             console.error("Error fetching latest messages:", error);
-         },
-      });
-   }
+        },
+    });
+}
+
+
+
+
+
+
+
+
 
    fetchLatestMessages(); // Fetch chat data on page load
 
    // Fetch chat data every 2 seconds
-   setInterval(fetchLatestMessages, 2000);
+   setInterval(fetchLatestMessages, 10000);
 </script>

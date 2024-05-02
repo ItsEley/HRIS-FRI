@@ -166,18 +166,12 @@
                 <h1 class="text-center" style="display:none" id="report_header">Employee Attendance Report - March 2024</h1>
 
                 <div class="row legend timeline-panel" id="emp_att_legend">
-                    <div class="d-flex justify-content-between">
-                        <!-- <h3>Legend</h3> -->
-                        <p class="m-0"><span class="att-p"></span> - Present</p>
-                        <p class="m-0"><span class="att-o"></span> - On time</p>
-                        <p class="m-0"><span class="att-l"></span> - Late</p>
-                        <p class="m-0"><span class="att-a"></span> - Absent</p>
-                        <p class="m-0"><span class="att-d"></span> - Day-off</p>
-                        <p class="m-0"><span class="att-e"></span> - On Leave</p>
-                        <p class="m-0"><span class="att-h"></span> - Half-day</p>
-                        <p class="m-0"><span class="att-b"></span> - On Official Business</p>
-                        <p class="m-0"><span class="att-n"></span> - No Work Day</p>
-                    </div>
+                <div class="d-flex justify-content-center">
+    <!-- <h3>Legend</h3> -->
+    <p class="m-0 mx-5" style="font-size: 18px; line-height: 1;"><span class="fas fa-check text-success"></span> - Present</p>
+    <p class="m-0 mx-5" style="font-size: 18px; line-height: 1;"><span class="fas fa-times fa-fw text-danger"></span> - Absent</p>
+</div>
+
                     <div class="col-4"></div>
                 </div>
 
@@ -422,8 +416,20 @@
                         // Append attendance records
                         $.each(empRecord.attendance_records, function(index, attendance) {
                             var attClass = attendance.class;
-                            var attCell = $("<td id='att_" + attendance.attendance_id + "' data-att-date='" + attendance.date + "'>").html("<p class='att-record m-0 p-0 " + attClass + "'></p>");
+                            var attClass2 = attendance.class2;
+
+                            // Check if attClass2 contains 'text-danger' or 'bg-white' classes
+                            if (attClass2.includes('text-danger') || attClass2.includes('bg-white')) {
+                                var tooltipText = 'Late';
+                            } else {
+                                var tooltipText = 'Present';
+                            }
+
+                            var attCell = $("<td id='att_" + attendance.attendance_id + "' data-att-date='" + attendance.date + "'>")
+                                .html("<div><p class='att-record m-0 p-0 " + attClass + "' title='Present'></p></div><div><p class='att-record m-0 p-0 " + attClass2 + "' title='" + tooltipText + "'></p></div>");
                             row.append(attCell);
+
+
                         });
 
                         // Append the row to the table body

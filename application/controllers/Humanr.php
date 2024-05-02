@@ -439,7 +439,9 @@ class Humanr extends CI_Controller
 				CONCAT(e.fname, ' ', e.lname) AS emp_name,
 				'individual' AS conversation_type,
 				NULL AS group_id,
-				NULL AS group_name
+				NULL AS group_name,
+				cm.from_ AS last_message_sender_id, -- Add sender ID
+				CONCAT(sender.fname, ' ', sender.lname) AS last_message_sender_name -- Add sender name
 			FROM 
 				chat_messages AS cm
 			JOIN 
@@ -462,12 +464,13 @@ class Humanr extends CI_Controller
 				) AS last_msg ON cm.timestamp = last_msg.max_timestamp
 			JOIN 
 				employee AS e ON last_msg.other_employee_id = e.id
+			JOIN 
+				employee AS sender ON cm.from_ = sender.id -- Join to get sender's info
 		)
 		UNION
 		(
 			-- Query for group conversations
 			SELECT 
-			
 				cm.id,
 				cm.message AS last_message,
 				cm.timestamp AS last_timestamp,
@@ -476,7 +479,9 @@ class Humanr extends CI_Controller
 				CONCAT(e.fname, ' ', e.lname) AS emp_name,
 				'group' AS conversation_type,
 				cm.to_group AS group_id,
-				cg.group_name
+				cg.group_name,
+				cm.from_ AS last_message_sender_id, -- Add sender ID
+				CONCAT(sender.fname, ' ', sender.lname) AS last_message_sender_name -- Add sender name
 			FROM 
 				chat_messages AS cm
 			JOIN 
@@ -498,10 +503,11 @@ class Humanr extends CI_Controller
 			JOIN 
 				employee AS e ON cm.from_ = e.id
 			JOIN 
+				employee AS sender ON cm.from_ = sender.id -- Join to get sender's info
+			JOIN 
 				chat_group AS cg ON cm.to_group = cg.id
 		)
 		ORDER BY last_timestamp DESC;
-		
 		
 			");
 	

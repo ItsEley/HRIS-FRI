@@ -41,23 +41,6 @@ class Datatable_fetchers extends CI_Controller
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // chatss
 
     public function fetch_messages()
@@ -81,13 +64,6 @@ class Datatable_fetchers extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode($messages));
     }
-
-    
-
-
-
-
-
 
 
 
@@ -143,8 +119,20 @@ class Datatable_fetchers extends CI_Controller
     
                     // Loop through the result
                     foreach ($result1 as $row1) {
-                        $class = ($row1['status'] == '0') ? 'att-o' : 'att-l';
-    
+                        if ($row1['num_hr'] > 7) {
+                            $class = 'fas fa-check text-success';
+                            // If num_hr is greater than 7 hours, set class2 to check
+                            $class2 = 'fas fa-check text-success';
+                        } elseif ($row1['num_hr'] > 4) {
+                            // If num_hr is greater than 4 hours but not greater than 7 hours, set class to check and class2 to cross
+                            $class = 'fas fa-check text-success';
+                            $class2 = 'fas fa-times fa-fw text-danger';
+                        }
+                        else{
+                            $class = 'fas fa-times fa-fw text-danger';
+                            $class2 = 'fas fa-times fa-fw text-danger';
+                        }
+
                         $emp_record['attendance_records'][] = array(
                             'attendance_id' => $row1['attendance_id'],
                             'emp_id' => $row1['emp_id'],
@@ -153,7 +141,8 @@ class Datatable_fetchers extends CI_Controller
                             'status' => $row1['status'],
                             'time_out' => $row1['time_out'],
                             'num_hr' => $row1['num_hr'],
-                            'class' => $class
+                            'class' => $class,
+                            'class2' => $class2
                         );
                     }
                 }
@@ -190,54 +179,61 @@ class Datatable_fetchers extends CI_Controller
         echo json_encode($response);
     }
     
-
-
-
-
-
+    
 
 
     public function get_people_new_message()
     {
-
-
-        // Execute the query with proper parameter binding
-        $result = $this->db->query("SELECT 
-        e.id AS employee_id,
-        CONCAT(e.fname, ' ', e.lname) AS emp_name
-    FROM 
-        employee AS e
-    WHERE 
-        e.id != " . $this->session->userdata('id') . " -- Exclude yourself
-        AND NOT EXISTS (
-            SELECT " . $this->session->userdata('id') . " 
-            FROM chat_messages AS cm 
-            WHERE (cm.from_ = " . $this->session->userdata('id') . " AND cm.to_ = e.id) 
-                OR (cm.from_ = e.id AND cm.to_ = " . $this->session->userdata('id') . ")
-        )
+        // Get the current user's ID securely from the session
+        $current_user_id = $this->session->userdata('id');
     
-			");
-
-        // Check if the query executed successfully
-        if ($result) {
-            // Fetch the result set
-            $new_people = $result->result_array();
-
-            // Set the appropriate content type
-            $this->output->set_content_type('application/json');
-
-            // Return the JSON response
-            $this->output->set_output(json_encode(array('success' => true, 'search_people' => $new_people)));
+        // Check if the current user's ID is valid
+        if (!$current_user_id) {
+            // Return an error response if the user ID is not available
+            $response = array('success' => false, 'error' => 'User ID not found in session');
         } else {
-            // Log the database error
-            $error = $this->db->error();
-            log_message('error', 'Database error: ' . $error['message']);
-
-            // Set the appropriate content type
-            $this->output->set_content_type('application/json');
-
-            // Return an error response
-            $this->output->set_output(json_encode(array('success' => false, 'error' => 'Database error')));
+            // Execute the query with proper parameter binding to prevent SQL injection
+            $query = "SELECT 
+                        e.id AS employee_id,
+                        CONCAT(e.fname, ' ', e.lname) AS emp_name
+                    FROM 
+                        employee AS e
+                    WHERE 
+                        e.id != ?
+                        AND NOT EXISTS (
+                            SELECT 1
+                            FROM chat_messages AS cm 
+                            WHERE (cm.from_ = ? AND cm.to_ = e.id) 
+                                OR (cm.from_ = e.id AND cm.to_ = ?)
+                        )";
+    
+            $result = $this->db->query($query, array($current_user_id, $current_user_id, $current_user_id));
+    
+            // Check if the query executed successfully
+            if ($result) {
+                // Fetch the result set as an associative array
+                $new_people = $result->result_array();
+    
+                // Return the array directly as part of a JSON object
+                $response = array('success' => true, 'people' => $new_people);
+            } else {
+                // Log the database error
+                $error = $this->db->error();
+                log_message('error', 'Database error: ' . $error['message']);
+    
+                // Return an error response
+                $response = array('success' => false, 'error' => 'Database error');
+            }
         }
+    
+        // Set the appropriate content type
+        $this->output->set_content_type('application/json');
+    
+        // Return the JSON response
+        $this->output->set_output(json_encode($response));
     }
+    
+            
+    
+    
 }
