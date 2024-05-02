@@ -2,15 +2,10 @@
 	<div class="modal-dialog modal-fullscreen">
 		<div class="modal-content">
 			<div class="modal-header">
-			
+			substr(date("Ymd", strtotime($row->cutoff_start)), 2)
 			<h4 id="report_title" class="modal-title summary-p-1">
-    Payroll list ( <?= date("F j Y", strtotime($_GET['start_date'])) ?> - <?= date("F j Y", strtotime($_GET['end_date'])) ?> )
-
+    Payroll list (<?= date("F j Y", strtotime($_GET['start_date'])) ?> - <?= date("F j Y", strtotime($_GET['end_date'])) ?> - <?= substr(date("Ymd", strtotime($_GET['start_date'])), 2) ?>)
 </h4>
-<h5>
-	Payroll ID : 
-<?= substr(date("Ymd", strtotime($_GET['start_date'])), 2) ?>
-</h5>
 
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
 			</div>

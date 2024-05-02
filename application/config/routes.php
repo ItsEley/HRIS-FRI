@@ -140,6 +140,6 @@ $route['data/api/holiday/insert'] = 'dataapi/insert_holiday';
 
 
 
-
+$route['hr/payroll/hr'] = 'payroll_hr/index';
 // new route HR payroll
 $route['hr/payroll/hr'] = 'payroll_hr/index';

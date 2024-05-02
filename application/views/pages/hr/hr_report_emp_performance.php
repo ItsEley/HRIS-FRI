@@ -167,13 +167,9 @@
 
                                 <td>
                                 <a class="dropdown-item edit-employee" href="#" data-bs-toggle="modal" data-bs-target="#edit_employee" >
-                                                        <i class="fa-solid fa-pencil m-r-5"></i> Edit
+                                                        <i class="fa-solid fa-eye m-r-5"></i> View
                                                     </a>
-                                                    <a class="dropdown-item delete-employee" href="#" data-bs-toggle="modal" data-bs-target="#delete_approve">
-                                                        <i class="fa-regular fa-trash-can m-r-5"></i> Delete
-                                                    </a>
-
-
+                                            
                                                     
                                 </td>
 

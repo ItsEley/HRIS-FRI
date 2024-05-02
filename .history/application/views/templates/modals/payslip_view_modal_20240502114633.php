@@ -7,10 +7,9 @@
     Payroll list ( <?= date("F j Y", strtotime($_GET['start_date'])) ?> - <?= date("F j Y", strtotime($_GET['end_date'])) ?> )
 
 </h4>
-<h5>
-	Payroll ID : 
+<h2>
 <?= substr(date("Ymd", strtotime($_GET['start_date'])), 2) ?>
-</h5>
+</h2>
 
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
 			</div>

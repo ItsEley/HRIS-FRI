@@ -38,8 +38,7 @@ class Payroll_hr extends CI_Controller
 	public function view_payslip()
 	{
 		$response = array();
-		$empid = $_SESSION[('id2')];
-
+		$empid = $this->input->post('empid');
 		$output = '';
 
 		$sql = "SELECT *, e.employee_id as empID, d.department as deptname FROM payroll p inner join employee e on p.employee_id = e.id inner join department d on e.department = d.id inner join department_roles dr on e.role = dr.id WHERE p.payroll_id = '$empid' ";

@@ -21,7 +21,7 @@
       <div class="row timeline-panel">
          	<div class="col-md-12">
          		<div class="table-responsive">
-         			<table id="dt_announcements" class="datatable table-striped custom-table mb-0 datatable">
+         			<table id="dt_payslip_list" class="datatable table-striped custom-table mb-0 datatable">
          				<thead>
                   <tr>
                     <th>Employee Name</th>
@@ -120,6 +120,9 @@
 <script src="<?=base_url('assets/js/jquery-3.7.1.min.js')?>"></script>
 <script>
 	$(document).ready(function(){
+        $('#dt_payslip_list').DataTable({});
+
+
     $('.view').click(function(){
     	var empid = $(this).data('emp');
     	$.ajax({

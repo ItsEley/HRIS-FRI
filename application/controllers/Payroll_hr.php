@@ -164,7 +164,19 @@ class Payroll_hr extends CI_Controller
 				$warehousesale = "0.00";
 			}
 
-			$response['output'] = '<h3 class="text-center">FAMCO RETAIL INCORPORATED<center><small style="line-height: 0.5; font-size: 12px">Apacible Blvrd, Brgy Bucana Nasugbu Batangas</small></center></h3>
+			$response['output'] = '
+			<div class="row p-2">
+				<div class="col-2 text-center">
+			<img src= '.base_url('assets/img/famco_logo_clear.png').' alt="Famco Retail Incorporated" style="width: auto">
+				
+				</div>
+				<div class="col">
+				<h3 class="text-center">
+			FAMCO RETAIL INCORPORATED<center><small style="line-height: 0.5; font-size: 12px">Apacible Blvrd, Brgy Bucana Nasugbu Batangas</small></center></h3>
+				</div>
+				<div class="col-2"></div>
+			</div>
+			
     												<input type="hidden" value="' . $row->payroll_id . '" name="payroll_id">
     												<table class="table table-bordered table-sm table-responsive">
 															<thead>
@@ -172,7 +184,8 @@ class Payroll_hr extends CI_Controller
 																	<th style="background-color: #070e4c; color: white">Company Name:</th>
 																	<td>FAMCO RETAIL INCORPORATED</td>
 																	<th style="background-color: #070e4c; color: white">Payslip No: </th>
-																	<td>0.00</td>
+																	
+																	<td>'. substr(date("Ymd", strtotime($row->cutoff_start)), 2) .'-'. $row->payroll_id.'</td>
 																</tr>
 																<tr>
 																	<th style="background-color: #070e4c; color: white">Employee Name:</th>
@@ -260,6 +273,271 @@ class Payroll_hr extends CI_Controller
 																	<td class="text-center">' . $row->days_worked . '<br>' . $row->total_hrs . '<br>' . $row->rate_per_hour . '<br>' . number_format($row->rate_per_day, 2) . '</td>
 																	<td>Warehouse Sale:</td>
 																	<td class="text-center"><input type="number" class="form-control-sm" placeholder="0.00" value=' . $warehousesale . ' name="warehousesale"></td>
+																</tr>
+																<tr>
+																	<td></td>
+																	<td></td>
+																	<th>Total:</th>
+																	<td class="text-center">₱ ' . number_format($total_deduction, 2) . '</td>
+																</tr>
+															</tbody>
+															<thead>
+																<tr>
+																	<th style="background-color: #070e4c; color: white" colspan="12" class="text-center">SUMMARY</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td colspan="2" style="text-align:right">Total Gross</td>
+																	<td>PHP</td>
+																	<td colspan="2">₱ ' . number_format($gross_pay, 2) . '</td>
+																</tr>
+																<tr>
+																	<td colspan="2" style="text-align:right">Total Deductions</td>
+																	<td>PHP</td>
+																	<td>₱ ' . number_format($total_deduction, 2) . '</td>
+																</tr>
+																<tr>
+																	<td colspan="2"></td>
+																	<td style="text-align:right"><b>Net Pay:</b></td>
+																	<td><b>₱ ' . number_format($net_pay, 2) . '</b></td>
+																</tr>
+																<tr>
+																	<td colspan="12" class="text-center" style="letter-spacing: 3px;">
+																		<i>****** This is computer generated payslip ******</i>
+																	</td>
+																</tr>
+															</tbody>
+														</table>';
+
+			echo json_encode($response);
+		}
+	}
+	public function view_payslip_emp()
+	{
+		$response = array();
+		$empid = $this->input->post('empid');
+		$output = '';
+
+		$sql = "SELECT *, e.employee_id as empID, d.department as deptname FROM payroll p inner join employee e on p.employee_id = e.id inner join department d on e.department = d.id inner join department_roles dr on e.role = dr.id WHERE p.payroll_id = '$empid' ";
+		$payroll_list = $this->db->query($sql)->result();
+
+		$cashadvancesql = "SELECT * FROM cash_advance WHERE employee_id = '$empid'";
+		$cashresult = $this->db->query($cashadvancesql);
+
+		$caamt = '';
+
+		if ($cashresult->num_rows() > 0) {
+			$ca = $cashresult->row();
+			$caamt = $ca->amount;
+		} else {
+			$caamt = "0.00";
+		}
+
+		$total_deduction = 0;
+		$net_pay = 0;
+		$gross_pay = 0;
+		$take_home_pay = 0;
+		$holidaypay = '';
+		$otpay = '';
+		$nightdif = '';
+		$specialholiday = '';
+		$specialholidayot = '';
+		$legalholidayot = '';
+		$undertimeamount = '';
+		$tax = '';
+		$sss_loan = '';
+		$dendeduction = '';
+		$warehousesale = '';
+
+		foreach ($payroll_list as $row) {
+			$response['name'] = $row->fname;
+			$total_deduction = $row->pagibig + $row->sss + $row->philhealth + $row->late_amount + $row->unworked_amount + $row->undertime_amt + $caamt + $row->tax + $row->sss_loans + $row->den_deduction + $row->warehouse_sale;
+			$net_pay = ($row->cutoff_salary + $row->allowance + $row->ot_pay + $row->night_differential + $row->special_holiday) - $total_deduction;
+			$fullname = $row->fname . ' ' . $row->lname;
+			$gross_pay = $row->cutoff_salary + $row->allowance + $row->ot_pay + $row->night_differential + $row->special_holiday_ot + $row->legal_holiday_ot + $row->special_holiday + $row->holiday_pay;
+
+			// for holiday pay
+			if ($row->holiday_pay != 0.00) {
+				$holidaypay = $row->holiday_pay;
+			} else {
+				$holidaypay = "0.00";
+			}
+
+			// for allowance
+			if ($row->allowance != 0.00) {
+				$allowance = $row->allowance;
+			} else {
+				$allowance = "0.00";
+			}
+
+			// for holiday pay
+			if ($row->ot_pay != 0.00) {
+				$otpay = $row->ot_pay;
+			} else {
+				$otpay =  "0.00";
+			}
+
+			// for night differential
+			if ($row->night_differential != 0.00) {
+				$nightdif = $row->night_differential;
+			} else {
+				$nightdif = "0.00";
+			}
+
+			// for special holiday
+			if ($row->special_holiday != 0.00) {
+				$specialholiday = $row->special_holiday;
+			} else {
+				$specialholiday = "0.00";
+			}
+
+			// for special holiday ot
+			if ($row->special_holiday_ot != 0.00) {
+				$specialholidayot = $row->special_holiday_ot;
+			} else {
+				$specialholidayot = "0.00";
+			}
+
+
+			// for legal holiday
+			if ($row->legal_holiday_ot != 0.00) {
+				$legalholidayot = $row->legal_holiday_ot;
+			} else {
+				$legalholidayot = "0.00";
+			}
+
+			// for undertime amount
+			if ($row->undertime_amt != 0.00) {
+				$undertimeamount = $row->undertime_amt;
+			} else {
+				$undertimeamount = "0.00";
+			}
+
+			// for taxt amount
+			if ($row->tax != 0.00) {
+				$tax = $row->tax;
+			} else {
+				$tax = "0.00";
+			}
+
+			// for sss loan amount
+			if ($row->sss_loans != 0.00) {
+				$sss_loan = $row->sss_loans;
+			} else {
+				$sss_loan = "0.00";
+			}
+
+			// for den deductions amount
+			if ($row->den_deduction != 0.00) {
+				$dendeduction = $row->den_deduction;
+			} else {
+				$dendeduction = "0.00";
+			}
+
+			// for warehouse sale amount
+			if ($row->warehouse_sale != 0.00) {
+				$warehousesale = $row->warehouse_sale;
+			} else {
+				$warehousesale = "0.00";
+			}
+
+			$response['output'] = '<h3 class="text-center">FAMCO RETAIL INCORPORATED<center><small style="line-height: 0.5; font-size: 12px">Apacible Blvrd, Brgy Bucana Nasugbu Batangas</small></center></h3>
+    												<input type="hidden" value="' . $row->payroll_id . '" name="payroll_id">
+    												<table class="table table-bordered table-sm table-responsive">
+															<thead>
+																<tr>
+																	<th style="background-color: #070e4c; color: white">Company Name:</th>
+																	<td>FAMCO RETAIL INCORPORATED</td>
+																	<th style="background-color: #070e4c; color: white">Payslip No: </th>
+																	<td>'. date("F j Y", strtotime($row->cutoff_start))  . '-' . $row->payroll_id.'</td>
+																</tr>
+																<tr>
+																	<th style="background-color: #070e4c; color: white">Employee Name:</th>
+																	<td>' . $fullname . '</td>
+																	<th style="background-color: #070e4c; color: white">Payroll Period:</th>
+																	<td>
+																		' . date("F j Y", strtotime($row->cutoff_start)) . ' - ' . date("F j Y", strtotime($row->cutoff_end)) . '
+																	</td >
+																</tr>
+																<tr>
+																	<th style="background-color: #070e4c; color: white">Position:</th>
+																	<td>' . $row->roles . '</th>
+																	<th style="background-color: #070e4c; color: white">Department:</td>
+																	<td>' . $row->deptname . '</td>
+																</tr>
+																<tr class="text-center">
+																	<th style="background-color: #070e4c; color: white">EARNINGS AND ALLOWANCES</th>
+																	<th style="background-color: #070e4c; color: white">AMOUNT (PHP)</th>
+																	<th style="background-color: #070e4c; color: white">DEDUCTIONS</th>
+																	<th style="background-color: #070e4c; color: white">AMOUNT (PHP)</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td>Standard Pay:</td>
+																	<td class="text-center">' . number_format($row->cutoff_salary, 2) . '</td>
+																	<td>Unworked Amount:</td>
+																	<td class="text-center">' . number_format($row->unworked_amount, 2) . '</td>
+																</tr>
+																<tr>
+																	<td>Allowance:</td>
+																	<td class="text-center"><input type="number" class="form-control-sm" placeholder="0.00" value=' . $allowance . ' name="allowance" readonly></td>
+																	<td>Late Amount:</td>
+																	<td class="text-center">' . number_format($row->late_amount, 2) . '</td>
+																</tr>
+																<tr>
+																	<td>Overtime Pay:</td>
+																	<td class="text-center"><input type="number" class="form-control-sm" placeholder="0.00" value=' . $otpay . ' name="otpay" readonly></td>
+																	<td>Undertime Amount:</td>
+																	<td class="text-center"><input type="number" class="form-control-sm" placeholder="0.00" value=' . $undertimeamount . ' name="undertimeamout" readonly></td>
+																</tr>
+																<tr>
+																	<td>Night Differential:</td>
+																	<td class="text-center"><input type="number" class="form-control-sm" placeholder="0.00" value=' . $nightdif . ' name="nightdiff" readonly></td>
+																	<td>Cash Advanced:</td>
+																	<td class="text-center">' . $caamt . '</td>
+																</tr>
+																<tr>
+																	<td>Holiday Pay:</td>
+																	<td class="text-center"><input type="number" class="form-control-sm" placeholder="0.00" value=' . $row->holiday_pay . ' name="holiday_pay" readonly></td>
+																	<td>TAX:</td>
+																	<td class="text-center"><input type="number" class="form-control-sm" placeholder="0.00" value=' . $tax . ' name="tax" readonly></td>
+																</tr>
+																<tr>
+																	<th colspan="2" class="text-center" style="background-color: #070e4c; color: white">ADJUSTMENT</th>
+																	<td>SSS:</td>
+																	<td class="text-center">' . number_format($row->sss, 2) . '</td>
+																</tr>
+																<tr>
+																	<td>Special Holiday:</td>
+																	<td class="text-center"><input type="number" class="form-control-sm" placeholder="0.00" value=' . $specialholiday . ' name="specialholiday" readonly></td>
+																	<td>PhilHealth:</td>
+																	<td class="text-center">' . number_format($row->philhealth, 2) . '</td>
+																</tr>
+																<tr>
+																	<td>Special Holiday OT AMT:</td>
+																	<td class="text-center"><input type="number" class="form-control-sm" placeholder="0.00" value=' . $specialholidayot . ' name="specialholidayot" readonly></td>
+																	<td>PAG-IBIG:</td>
+																	<td class="text-center">' . number_format($row->pagibig, 2) . '</td>
+																</tr>
+																<tr>
+																	<td>Legal Holiday OT:</td>
+																	<td class="text-center"><input type="number" class="form-control-sm" placeholder="0.00" value=' . $legalholidayot . ' name="legalholidayot" readonly></td>
+																	<td>SSS Loans:</td>
+																	<td class="text-center"><input type="number" class="form-control-sm" placeholder="0.00" value=' . $sss_loan . ' name="sssloans" readonly></td>
+																</tr>
+																<tr>
+																	<td><b>Total</b>:</td>
+																	<td class="text-center">₱ ' . number_format($gross_pay, 2) . '</td>
+																	<td>DEN:</td>
+																	<td class="text-center"><input type="number" class="form-control-sm" placeholder="0.00" value=' . $dendeduction . ' name="den" readonly></td>
+																</tr>
+																<tr>
+																	<td>Days Worked:<br>Hours Worked:<br>Rate Per Hour<br>Rate Per day:</td>
+																	<td class="text-center">' . $row->days_worked . '<br>' . $row->total_hrs . '<br>' . $row->rate_per_hour . '<br>' . number_format($row->rate_per_day, 2) . '</td>
+																	<td>Warehouse Sale:</td>
+																	<td class="text-center"><input type="number" class="form-control-sm" placeholder="0.00" value=' . $warehousesale . ' name="warehousesale" readonly></td>
 																</tr>
 																<tr>
 																	<td></td>

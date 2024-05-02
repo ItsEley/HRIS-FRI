@@ -91,6 +91,7 @@
 		</div>
 	</div>
 </div>
+
 <style>
 	.table-sm {
 		padding: 0.3rem;

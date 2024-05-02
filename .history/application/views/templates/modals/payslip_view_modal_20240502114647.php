@@ -10,7 +10,7 @@
 <h5>
 	Payroll ID : 
 <?= substr(date("Ymd", strtotime($_GET['start_date'])), 2) ?>
-</h5>
+</h2>
 
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">x</button>
 			</div>

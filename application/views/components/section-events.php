@@ -113,7 +113,7 @@
 
                            <?php
                            if ($row->type == "birthday") {
-                              echo '<img src="../assets/img/birthday-GIF.gif" alt="User Image" loop="infinite">';
+                              echo '<img src="../assets/img/birthday-GIF.gif" class = "float-right" alt="User Image" loop="infinite" width = "100px">';
                            }
                            ?>
 

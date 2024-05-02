@@ -97,7 +97,6 @@ class Datatable_fetchers extends CI_Controller
         $month = $this->input->post('month');
         $year = $this->input->post('year');
     
-        // Ensure month is two digits
         $month = str_pad($month, 2, '0', STR_PAD_LEFT);
     
         // Prepare the SQL query with placeholders

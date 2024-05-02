@@ -9,7 +9,7 @@
             <p id = "modal_ann_author"></p>
             <p id = "modal_ann_departments"></p>
 
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
          </div>
 
          <div class="modal-body p-4" id = "modal_ann_content">
