@@ -428,111 +428,173 @@ class Humanr extends CI_Controller
 		$current_user_id = $this->session->userdata('id');
 	
 		// Execute the query with proper parameter binding
-		$result = $this->db->query("(
-			-- Query for individual conversations
-			SELECT 
-				cm.id,
-				cm.message AS last_message,
-				cm.timestamp AS last_timestamp,
-				cm.is_read,
-				e.id AS emp_id,
-				CONCAT(e.fname, ' ', e.lname) AS emp_name,
-				'individual' AS conversation_type,
-				NULL AS group_id,
-				NULL AS group_name,
-				cm.from_ AS last_message_sender_id, -- Add sender ID
-				CONCAT(sender.fname, ' ', sender.lname) AS last_message_sender_name -- Add sender name
-			FROM 
-				chat_messages AS cm
-			JOIN 
-				(
-					SELECT 
-						MAX(timestamp) AS max_timestamp,
-						CASE
-							WHEN from_ = ".$this->session->userdata('id')." THEN to_
-							ELSE from_
-						END AS other_employee_id
-					FROM 
-						chat_messages
-					WHERE 
-						from_ = ".$this->session->userdata('id')." OR to_ = ".$this->session->userdata('id')."
-					GROUP BY 
-						CASE
-							WHEN from_ = ".$this->session->userdata('id')." THEN to_
-							ELSE from_
-						END
-				) AS last_msg ON cm.timestamp = last_msg.max_timestamp
-			JOIN 
-				employee AS e ON last_msg.other_employee_id = e.id
-			JOIN 
-				employee AS sender ON cm.from_ = sender.id -- Join to get sender's info
-		)
-		UNION
-		(
-			-- Query for group conversations
-			SELECT 
-				cm.id,
-				cm.message AS last_message,
-				cm.timestamp AS last_timestamp,
-				cm.is_read,
-				e.id AS emp_id,
-				CONCAT(e.fname, ' ', e.lname) AS emp_name,
-				'group' AS conversation_type,
-				cm.to_group AS group_id,
-				cg.group_name,
-				cm.from_ AS last_message_sender_id, -- Add sender ID
-				CONCAT(sender.fname, ' ', sender.lname) AS last_message_sender_name -- Add sender name
-			FROM 
-				chat_messages AS cm
-			JOIN 
-				(
-					SELECT 
-						MAX(timestamp) AS max_timestamp,
-						to_group
-					FROM 
-						chat_messages
-					WHERE 
-						to_group IN (
-							SELECT group_id
-							FROM chat_group_members
-							WHERE member = ".$this->session->userdata('id')."
-						)
-					GROUP BY 
-						to_group
-				) AS last_group_msg ON cm.timestamp = last_group_msg.max_timestamp AND cm.to_group = last_group_msg.to_group
-			JOIN 
-				employee AS e ON cm.from_ = e.id
-			JOIN 
-				employee AS sender ON cm.from_ = sender.id -- Join to get sender's info
-			JOIN 
-				chat_group AS cg ON cm.to_group = cg.id
-		)
-		ORDER BY last_timestamp DESC;
-		
-			");
+		$result = $this->db->query("
+			(
+				-- Query for individual conversations
+				SELECT 
+					cm.id,
+					cm.message AS last_message,
+					cm.timestamp AS last_timestamp,
+					cm.is_read,
+					e.id AS emp_id,
+					CONCAT(e.fname, ' ', e.lname) AS emp_name,
+					'individual' AS conversation_type,
+					NULL AS group_id,
+					NULL AS group_name,
+					cm.from_ AS last_message_sender_id,
+					CONCAT(sender.fname, ' ', sender.lname) AS last_message_sender_name,
+					e.pfp AS profile_picture_base64
+				FROM 
+					chat_messages AS cm
+				JOIN 
+					(
+						SELECT 
+							MAX(timestamp) AS max_timestamp,
+							CASE
+								WHEN from_ = ? THEN to_
+								ELSE from_
+							END AS other_employee_id
+						FROM 
+							chat_messages
+						WHERE 
+							from_ = ? OR to_ = ?
+						GROUP BY 
+							CASE
+								WHEN from_ = ? THEN to_
+								ELSE from_
+							END
+					) AS last_msg ON cm.timestamp = last_msg.max_timestamp
+				JOIN 
+					employee AS e ON last_msg.other_employee_id = e.id
+				JOIN 
+					employee AS sender ON cm.from_ = sender.id
+			)
+			UNION
+			(
+				-- Query for group conversations
+				SELECT 
+					cm.id,
+					cm.message AS last_message,
+					cm.timestamp AS last_timestamp,
+					cm.is_read,
+					e.id AS emp_id,
+					cg.group_name AS emp_name,
+					'group' AS conversation_type,
+					cm.to_group AS group_id,
+					cg.group_name,
+					cm.from_ AS last_message_sender_id,
+					CONCAT(sender.fname, ' ', sender.lname) AS last_message_sender_name,
+					cg.group_cover_pic AS profile_picture_base64
+				FROM 
+					chat_messages AS cm
+				JOIN 
+					(
+						SELECT 
+							MAX(timestamp) AS max_timestamp,
+							to_group
+						FROM 
+							chat_messages
+						WHERE 
+							to_group IN (
+								SELECT group_id
+								FROM chat_group_members
+								WHERE member = ?
+							)
+						GROUP BY 
+							to_group
+					) AS last_group_msg ON cm.timestamp = last_group_msg.max_timestamp AND cm.to_group = last_group_msg.to_group
+				JOIN 
+					employee AS e ON cm.from_ = e.id
+				JOIN 
+					employee AS sender ON cm.from_ = sender.id
+				JOIN 
+					chat_group AS cg ON cm.to_group = cg.id
+			)
+			ORDER BY last_timestamp DESC;
+		", array($current_user_id, $current_user_id, $current_user_id, $current_user_id, $current_user_id));
 	
 		// Check if the query executed successfully
 		if ($result) {
 			// Fetch the result set
 			$messages = $result->result_array();
-		
-			$this->output->set_content_type('application/json');
 	
-			$this->output->set_output(json_encode(array('success' => true, 'messages' => $messages)));
+			// Array to hold HTML messages
+			$html_messages = array();
+			$conversation_type = array();
+
+	
+			// Loop through each message to generate HTML
+			foreach ($messages as $message) {
+				// Construct HTML for the message
+				$html = '<li class="notification-message" data-message-id="' . $message['id'] . '">';
+					$html .= '<a href="chat.html">';
+						$html .= '<div class="list-item">';
+						$html .= '<div class="row">';
+						$html .= '<div class="col-2 text-center my-auto">';
+
+
+							$html .= '<span class="avatar">';
+								if($message['profile_picture_base64'] != NULL){
+									$html .= '<img src="data:image/jpeg;base64,' .base64_encode($message['profile_picture_base64']) . '" alt="User Image">';
+
+								}else{
+								$html .= '<img src="'.base_url('assets/img/user.png').'" alt="User Image">';
+
+								}
+							$html .= '</span>';
+							$html .= '</div>';
+
+							$html .= '<div class="list-body col w-50" style = "padding-left:0">';
+						$html .= '<div class="row">';
+
+								$html .= '<span class="message-author col">' . $message['emp_name'] . '</span>';
+								$html .= '<span class="message-time col">' . $message['last_timestamp'] . '</span>';
+							$html .= '</div>';
+
+								$html .= '<div class="clearfix"></div>';
+								$html .= '<span class="message-content text-ellipsis w-100">' . $message['last_message_sender_name'] . ': ' . $message['last_message'] . '</span>';
+							$html .= '</div>';
+							$html .= '</div>';
+						$html .= '</div>';
+					$html .= '</a>';
+				$html .= '</li>';
+
+				// $html = "<li>". $message['last_message'] ."</li>";	
+				// Add the HTML message to the array
+				$html_messages[] = $html;
+				$conversation_type[] = $message['conversation_type'];
+			}
+	
+	
+			// Return the JSON response with HTML messages
+			$this->output->set_output(json_encode(array('success' => true, 'html_messages' => $html_messages, 'type' => $conversation_type)));
 		} else {
 			// Log the database error
 			$error = $this->db->error();
 			log_message('error', 'Database error: ' . $error['message']);
+
 	
-			// Set the appropriate content type
-			$this->output->set_content_type('application/json');
-	
-			// Return an error response
+			// Return the JSON error response
 			$this->output->set_output(json_encode(array('success' => false, 'error' => 'Database error')));
 		}
 
-
+		
+			// Set the appropriate content type
+			$this->output->set_content_type('application/json');
 	}
+	
+	
+
+
+
+
+
+
+
+
+
+
+
 	
 	public function C_hr_assets()
 	{

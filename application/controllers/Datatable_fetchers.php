@@ -181,58 +181,90 @@ class Datatable_fetchers extends CI_Controller
     
     
 
-
     public function get_people_new_message()
-    {
-        // Get the current user's ID securely from the session
-        $current_user_id = $this->session->userdata('id');
+{
+    // Get the current user's ID securely from the session
+    $current_user_id = $this->session->userdata('id');
     
-        // Check if the current user's ID is valid
-        if (!$current_user_id) {
-            // Return an error response if the user ID is not available
-            $response = array('success' => false, 'error' => 'User ID not found in session');
-        } else {
-            // Execute the query with proper parameter binding to prevent SQL injection
-            $query = "SELECT 
-                        e.id AS employee_id,
-                        CONCAT(e.fname, ' ', e.lname) AS emp_name
-                    FROM 
-                        employee AS e
-                    WHERE 
-                        e.id != ?
-                        AND NOT EXISTS (
-                            SELECT 1
-                            FROM chat_messages AS cm 
-                            WHERE (cm.from_ = ? AND cm.to_ = e.id) 
-                                OR (cm.from_ = e.id AND cm.to_ = ?)
-                        )";
+    // Check if the current user's ID is valid
+    if (!$current_user_id) {
+        // Return an error response if the user ID is not available
+        $response = array('success' => false, 'error' => 'User ID not found in session');
+    } else {
+        // Execute the query with proper parameter binding to prevent SQL injection
+        $query = "SELECT 
+                    e.id AS employee_id,
+                    CONCAT(e.fname, ' ', e.lname) AS emp_name,
+                    e.pfp AS profile_picture
+                FROM 
+                    employee AS e
+                WHERE 
+                    e.id != ?
+                    AND NOT EXISTS (
+                        SELECT 1
+                        FROM chat_messages AS cm 
+                        WHERE (cm.from_ = ? AND cm.to_ = e.id) 
+                            OR (cm.from_ = e.id AND cm.to_ = ?)
+                    )";
     
-            $result = $this->db->query($query, array($current_user_id, $current_user_id, $current_user_id));
+        $result = $this->db->query($query, array($current_user_id, $current_user_id, $current_user_id));
     
-            // Check if the query executed successfully
-            if ($result) {
-                // Fetch the result set as an associative array
-                $new_people = $result->result_array();
+        // Check if the query executed successfully
+        if ($result) {
+            // Fetch the result set as an associative array
+            $new_people = $result->result_array();
     
-                // Return the array directly as part of a JSON object
-                $response = array('success' => true, 'people' => $new_people);
-            } else {
-                // Log the database error
-                $error = $this->db->error();
-                log_message('error', 'Database error: ' . $error['message']);
+            // Initialize an empty array to store HTML elements
+            $html_elements = array();
     
-                // Return an error response
-                $response = array('success' => false, 'error' => 'Database error');
+            // Iterate through the retrieved people
+            foreach ($new_people as $person) {
+                // Encode profile picture to base64
+                $profile_picture = base64_encode($person['profile_picture']);
+                
+                // Construct HTML for each person
+                $html = "<li data-employee-id = ".$person['employee_id'].">". 
+                            "<a href='#'>" .
+                                "<div class='chat-block d-flex'>" .
+                                    "<span class='avatar align-self-center flex-shrink-0'>" .
+                                        "<img src='data:image/jpeg;base64," . $profile_picture . "' alt='User Image'>" .
+                                    "</span>" .
+                                    "<div class='media-body align-self-center text-nowrap flex-grow-1'>" .
+                                        "<div class='user-name'>" . $person['emp_name'] . "</div>" .
+                                        "<span class='designation'>Team Leader</span>" .
+                                    "</div>" .
+                                    "<div class='text-nowrap align-self-center'>" .
+                                        "<div class='online-date'>1 day ago</div>" .
+                                    "</div>" .
+                                "</div>" .
+                            "</a>" .
+                        "</li>";
+                
+                // Add the HTML to the array
+                $html_elements[] = $html;
             }
+    
+            // Return the HTML elements array along with success status
+            $response = array('success' => true, 'html_elements' => $html_elements);
+        } else {
+            // Log the database error
+            $error = $this->db->error();
+            log_message('error', 'Database error: ' . $error['message']);
+    
+            // Return an error response
+            $response = array('success' => false, 'error' => 'Database error');
         }
-    
-        // Set the appropriate content type
-        $this->output->set_content_type('application/json');
-    
-        // Return the JSON response
-        $this->output->set_output(json_encode($response));
     }
     
+    // Set the appropriate content type
+    $this->output->set_content_type('application/json');
+    
+    // Return the JSON response
+    $this->output->set_output(json_encode($response));
+}
+
+
+
             
     
     

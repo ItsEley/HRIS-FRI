@@ -160,64 +160,38 @@
    // Call fetchNotifications function every 2 seconds
    setInterval(fetchNotifications, 2000);
 
-
    function fetchLatestMessages() {
     $.ajax({
         url: base_url + "humanr/show_latest_messages",
         type: "GET",
         dataType: "json",
         success: function(response) {
+            console.log("latest message : ", response);
             if (response.success) {
                 // Clear previous messages
                 $("#message-list").empty();
 
-                if (response.messages && response.messages.length > 0) {
-                    // Handle the messages here
-                    response.messages.forEach(function(message) {
-                        var unreadStyle = message.is_read === null ? 'style="background-color: #f2f2f2;"' : "";
-                        var senderName = message.emp_name;
-                        let last_sender_name = "";
-
-                        if (message.last_message_sender_id == "<?= $this->session->userdata('id')?>") {
-                            last_sender_name = "You"
-                        } else {
-                            last_sender_name = message.last_message_sender_name.split(' ')[0]
-                        }
-
-                        var html =
-                            '<li class="notification-message" ' +
-                            unreadStyle +
-                            ' data-message-id="' +
-                            message.id +
-                            '">';
-                        html += '<a href="chat.html">';
-                        html += '<div class="list-item">'; // Apply unread style if status is unread
-                        // html += '<div class="list-leftm">';
-                        html += '<span class="avatar">';
-                        // html += '<img src="' + message.profile_picture.text() + '" alt="User Image">';
-                        html += "</span>";
-                        html += "</div>";
-                        html += '<div class="list-body">';
-                        html += '<span class="message-author">' + senderName + "</span>";
-                        html += '<span class="message-time">' + message.last_timestamp + "</span>";
-                        html += '<div class="clearfix"></div>';
-                        html += '<span class="message-content">' + last_sender_name + ": " + message.last_message + "</span>";
-                        html += "</div>"; // Removed the extra + sign from here
-                        html += "</div>";
-                        html += "</a>";
-                        html += "</li>";
-
-                        // Append the message to the message list
+                if (response.html_messages && response.html_messages.length > 0) {
+                    // Append each HTML message to the message list
+                    response.html_messages.forEach(function(html) {
                         $("#message-list").append(html);
+
+                        if(response.type == 'group'){
+                     $("#ul chat-group-list").append(html)
+                    }else if(response.type == 'individual'){
+                     $("ul #conversation-private").append(html)
+
+
+                    }
+
                     });
 
-                    // Update the message count badge
-                    $("#message-count").text(response.messages.length);
-                } else {
-                  $("#message-list").append("<li>No messages found</li>");
+                  
 
-                  //   console.log("No messages found");
-                    // Handle case where there are no messages
+                    // Update the message count badge
+                    $("#message-count").text(response.html_messages.length);
+                } else {
+                    $("#message-list").append("<li>No messages found</li>");
                 }
             } else {
                 console.error("Error fetching latest messages:", response.error);
@@ -237,8 +211,14 @@
 
 
 
+
    fetchLatestMessages(); // Fetch chat data on page load
 
    // Fetch chat data every 2 seconds
-   setInterval(fetchLatestMessages, 10000);
+   setInterval(fetchLatestMessages, 5000);
+
+   $(document).ready(function() {
+   //  console.log = function () {};
+   })
+
 </script>

@@ -44,38 +44,14 @@ function getNewPeople() {
         dataType: "json", // Specify JSON data type
         success: function(response) {
             if (response.success) {
-                // console.log(response);
-
                 // Clear previous users
                 $("#chat-user-list").empty();
 
-                if (response.people && response.people.length > 0) {
-                    // Iterate through the retrieved people
-                    response.people.forEach(function(person) {
-                        console.log(person);
-
-                        // Construct HTML for each person
-                        var html =  "<li>" +
-                                    "<a href='#'>" +
-                                    "<div class='chat-block d-flex'>"+
-                                            "<span class='avatar align-self-center flex-shrink-0'> " +
-                                                    // "<img src='" + + "' alt='User Image'>"+
-                                                "</span>"+
-                                                "<div class='media-body align-self-center text-nowrap flex-grow-1'>"+
-                                                    "<div class='user-name'>" + person.emp_name + "</div>"+
-                                                    "<span class='designation'>Team Leader</span>"+
-                                                "</div>"+
-                                                "<div class='text-nowrap align-self-center'>"+
-                                                    "<div class='online-date'>1 day ago</div>"+
-                                                "</div>"+
-                                            "</div>"+
-                                        "</a>"+
-                                    "</li>";
-
-                        // Append the HTML to the chat user list
+                if (response.html_elements && response.html_elements.length > 0) {
+                    // Append HTML elements to the chat user list
+                    response.html_elements.forEach(function(html) {
                         $("#chat-user-list").append(html);
                     });
-
                 } else {
                     // Display a message if no new people are found
                     $("#chat-user-list").append("<li>No new people found</li>");
@@ -89,6 +65,7 @@ function getNewPeople() {
         },
     });
 }
+
 
 
 </script>

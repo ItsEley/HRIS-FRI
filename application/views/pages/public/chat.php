@@ -327,7 +327,7 @@
 						'<p class="message-content">' + message.message + '</p>' +
 						'</div>';
 
-					let messageHTML = "<div class='chat chat-right'>" +
+					 messageHTML = "<div class='chat chat-right'>" +
 						"<div class='chat-body'>" +
 						"<div class='chat-bubble'>" +
 						"<div class='chat-content'>" +
@@ -437,7 +437,7 @@
 
 	$("#btn_new_direct_message").on('click',function(){
 
-
+		console.log("getting new people")
 		getNewPeople()
 	})
 
@@ -451,6 +451,3 @@
 	});
 </script>
 
-<script>
-
-</script>

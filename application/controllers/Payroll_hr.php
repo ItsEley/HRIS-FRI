@@ -167,7 +167,7 @@ class Payroll_hr extends CI_Controller
 			$response['output'] = '
 			<div class="row p-2">
 				<div class="col-2 text-center">
-			<img src= '.base_url('assets/img/famco_logo_clear.png').' alt="Famco Retail Incorporated" style="width: auto">
+			<img src= ' . base_url('assets/img/famco_logo_clear.png') . ' alt="Famco Retail Incorporated" style="width: auto">
 				
 				</div>
 				<div class="col">
@@ -185,7 +185,7 @@ class Payroll_hr extends CI_Controller
 																	<td>FAMCO RETAIL INCORPORATED</td>
 																	<th style="background-color: #070e4c; color: white">Payslip No: </th>
 																	
-																	<td>'. substr(date("Ymd", strtotime($row->cutoff_start)), 2) .'-'. $row->payroll_id.'</td>
+																	<td>' . substr(date("Ymd", strtotime($row->cutoff_start)), 2) . '-' . $row->payroll_id . '</td>
 																</tr>
 																<tr>
 																	<th style="background-color: #070e4c; color: white">Employee Name:</th>
@@ -450,7 +450,7 @@ class Payroll_hr extends CI_Controller
 																	<th style="background-color: #070e4c; color: white">Company Name:</th>
 																	<td>FAMCO RETAIL INCORPORATED</td>
 																	<th style="background-color: #070e4c; color: white">Payslip No: </th>
-																	<td>'. date("F j Y", strtotime($row->cutoff_start))  . '-' . $row->payroll_id.'</td>
+																	<td>' . substr(date("Ymd", strtotime($row->cutoff_start)), 2) . '-' . $row->payroll_id . '</td>
 																</tr>
 																<tr>
 																	<th style="background-color: #070e4c; color: white">Employee Name:</th>
