@@ -160,6 +160,7 @@
    // Call fetchNotifications function every 2 seconds
    setInterval(fetchNotifications, 2000);
 
+
    function fetchLatestMessages() {
     $.ajax({
         url: base_url + "humanr/show_latest_messages",
@@ -170,23 +171,30 @@
             if (response.success) {
                 // Clear previous messages
                 $("#message-list").empty();
+                $("#chat-group-list").empty(); // Clear group list
+                $("#conversation-private").empty(); // Clear individual list
 
                 if (response.html_messages && response.html_messages.length > 0) {
                     // Append each HTML message to the message list
-                    response.html_messages.forEach(function(html) {
-                        $("#message-list").append(html);
+                    response.html_messages.forEach(function(message) {
+                        $("#message-list").append(message.html);
+                        
+                        if (message.type == 'group') {
+                           $("#chat-group-list").append(message.html);
+                        } else if (message.type == 'individual') {
+                            $("#conversation-private").append(message.html);
+                        }
+                        // Select the element with data-message-id equal to 15
+var messageElement = $('#sidebar-menu li[data-emp-id="2"]');
 
-                        if(response.type == 'group'){
-                     $("#ul chat-group-list").append(html)
-                    }else if(response.type == 'individual'){
-                     $("ul #conversation-private").append(html)
+// Find the anchor tag within the selected element
+var anchorTag = messageElement.find('a');
 
+// Replace the anchor tag with its content
+anchorTag.replaceWith(anchorTag.contents());
 
-                    }
 
                     });
-
-                  
 
                     // Update the message count badge
                     $("#message-count").text(response.html_messages.length);
@@ -212,10 +220,12 @@
 
 
 
+
+
    fetchLatestMessages(); // Fetch chat data on page load
 
    // Fetch chat data every 2 seconds
-   setInterval(fetchLatestMessages, 5000);
+   // setInterval(fetchLatestMessages, 5000);
 
    $(document).ready(function() {
    //  console.log = function () {};

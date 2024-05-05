@@ -422,11 +422,52 @@ class Humanr extends CI_Controller
 			));
 		}
 	}
-	
-	public function show_latest_messages() {
+
+	public function timestamp_format($timestamp)
+	{
+		date_default_timezone_set('Asia/Singapore'); // Set the timezone to SGT
+
+		$new_timestamp = strtotime($timestamp); // Convert $timestamp to a Unix timestamp
+		$current_timestamp = time(); // Get current Unix timestamp
+
+		if ($current_timestamp < $new_timestamp) {
+			// If current time is less than provided time, return "Future time"
+			return 'Future time';
+		}
+
+		$time_diff = $current_timestamp - $new_timestamp;
+
+		// Define time intervals in seconds
+		$minute = 60;
+		$hour = 3600;
+		$day = 86400;
+
+		if ($time_diff < $minute) {
+			$time_ago = $time_diff . 's ago'; // Show time difference in seconds
+		} elseif ($time_diff < $hour) {
+			$minutes_ago = floor($time_diff / $minute);
+			$time_ago = $minutes_ago . ($minutes_ago > 1 ? 'm' : 'm') . ' ago'; // Minutes ago
+		} elseif ($time_diff < $day) {
+			$hours_ago = floor($time_diff / $hour);
+			$time_ago = $hours_ago . ($hours_ago > 1 ? 'hrs' : 'hr') . ' ago'; // Hours ago
+		} elseif ($time_diff < 30 * $day) {
+			$days_ago = floor($time_diff / $day);
+			$time_ago = $days_ago . ($days_ago > 1 ? 'd' : 'd') . ' ago'; // Days ago
+		} else {
+			$time_ago = date('M j, Y', $new_timestamp);
+			// Display notif_date instead
+		}
+
+		return $time_ago;
+	}
+
+
+
+	public function show_latest_messages()
+	{
 		// Get the current user's ID from the session
 		$current_user_id = $this->session->userdata('id');
-	
+
 		// Execute the query with proper parameter binding
 		$result = $this->db->query("
 			(
@@ -512,90 +553,94 @@ class Humanr extends CI_Controller
 			)
 			ORDER BY last_timestamp DESC;
 		", array($current_user_id, $current_user_id, $current_user_id, $current_user_id, $current_user_id));
-	
+
 		// Check if the query executed successfully
 		if ($result) {
 			// Fetch the result set
 			$messages = $result->result_array();
-	
+
 			// Array to hold HTML messages
 			$html_messages = array();
 			$conversation_type = array();
 
-	
+
 			// Loop through each message to generate HTML
 			foreach ($messages as $message) {
 				// Construct HTML for the message
-				$html = '<li class="notification-message" data-message-id="' . $message['id'] . '">';
-					$html .= '<a href="chat.html">';
-						$html .= '<div class="list-item">';
-						$html .= '<div class="row">';
-						$html .= '<div class="col-2 text-center my-auto">';
+				$html = '<li class="notification-message" data-emp-id="' . $message['emp_id'] . '" style="background-color:' . ($message['is_read'] === null ? '#f2f2f2' : '#ffffff') . ';">';
+				$html .= '<a href="chat.html">';
+				$html .= '<div class="list-item">';
+				$html .= '<div class="row">';
+				$html .= '<div class="col-2 text-center my-auto">';
 
+				$html .= '<span class="avatar">';
+				if ($message['profile_picture_base64'] != NULL) {
+					$html .= '<img src="data:image/jpeg;base64,' . base64_encode($message['profile_picture_base64']) . '" alt="User Image">';
+				} else {
+					$html .= '<img src="' . base_url('assets/img/user.png') . '" alt="User Image">';
+				}
+				$html .= '</span>';
+				$html .= '</div>';
 
-							$html .= '<span class="avatar">';
-								if($message['profile_picture_base64'] != NULL){
-									$html .= '<img src="data:image/jpeg;base64,' .base64_encode($message['profile_picture_base64']) . '" alt="User Image">';
+				$html .= '<div class="list-body col-10" style="padding-left:0;">'; // Adjusted column width to reduce space
+				$html .= '<div class="row p-0 m-0 w-100">';
 
-								}else{
-								$html .= '<img src="'.base_url('assets/img/user.png').'" alt="User Image">';
+				// Output the first word in a span element
+				if ($message['conversation_type'] == 'group') {
+					$html .= '<span class="message-author col p-0">' . $message['group_name'] . '</span>';
+				} else {
+					$html .= '<span class="message-author col p-0">' . $message['emp_name'] . '</span>';
+				}
 
-								}
-							$html .= '</span>';
-							$html .= '</div>';
+				$timestamp = $message['last_timestamp'];
+				// Use timestamp_format() function to get human-readable time
+				$time_ago = $this->timestamp_format($timestamp);
 
-							$html .= '<div class="list-body col w-50" style = "padding-left:0">';
-						$html .= '<div class="row">';
+				$html .= '<span class="message-time col-3">' . $time_ago . '</span>';
+				$html .= '</div>';
 
-								$html .= '<span class="message-author col">' . $message['emp_name'] . '</span>';
-								$html .= '<span class="message-time col">' . $message['last_timestamp'] . '</span>';
-							$html .= '</div>';
+				$html .= '<div class="clearfix"></div>';
 
-								$html .= '<div class="clearfix"></div>';
-								$html .= '<span class="message-content text-ellipsis w-100">' . $message['last_message_sender_name'] . ': ' . $message['last_message'] . '</span>';
-							$html .= '</div>';
-							$html .= '</div>';
-						$html .= '</div>';
-					$html .= '</a>';
+				if ($message['last_message_sender_id'] == $current_user_id) {
+					$html .= '<span class="message-content text-ellipsis col-12">You : ' . $message['last_message'] . '</span>'; // Adjusted column width to occupy full width
+				} else {
+					$sender_fname = explode(' ', $message['last_message_sender_name']);
+					$html .= '<span class="message-content text-ellipsis col-12">' . $sender_fname[0] . ': ' . $message['last_message'] . '</span>'; // Adjusted column width to occupy full width
+				}
+
+				$html .= '</div>';
+				$html .= '</div>';
+				$html .= '</div>';
+				$html .= '</a>';
 				$html .= '</li>';
 
 				// $html = "<li>". $message['last_message'] ."</li>";	
 				// Add the HTML message to the array
-				$html_messages[] = $html;
-				$conversation_type[] = $message['conversation_type'];
+				array_push($html_messages, array('html' => $html, 'type' => $message['conversation_type'], 'emp_id' => $message['emp_id']));
+				// $conversation_type[] = $message['conversation_type'];
 			}
-	
-	
+
+
 			// Return the JSON response with HTML messages
-			$this->output->set_output(json_encode(array('success' => true, 'html_messages' => $html_messages, 'type' => $conversation_type)));
+			// $this->output->set_output(json_encode(array('success' => true, 'response' => ['html_messages' => $html_messages, 'type' => $conversation_type])));
+			$this->output->set_output(json_encode(array('success' => true, 'html_messages' => $html_messages)));
 		} else {
 			// Log the database error
 			$error = $this->db->error();
 			log_message('error', 'Database error: ' . $error['message']);
 
-	
+
 			// Return the JSON error response
 			$this->output->set_output(json_encode(array('success' => false, 'error' => 'Database error')));
 		}
 
-		
-			// Set the appropriate content type
-			$this->output->set_content_type('application/json');
+
+		// Set the appropriate content type
+		$this->output->set_content_type('application/json');
 	}
-	
-	
 
 
 
-
-
-
-
-
-
-
-
-	
 	public function C_hr_assets()
 	{
 

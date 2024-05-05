@@ -1,3 +1,27 @@
+<style>
+#sidebar-menu .chat-content .message-author {
+    color:white !important;
+
+}
+
+#sidebar-menu .message-content{
+    color:white !important;
+    font-size: 0.8rem !important;
+
+
+}
+
+#sidebar-menu .chat-content a {
+    padding: 0 !important;
+}
+
+#sidebar-menu .notification-message{
+    background-color: unset !important;
+}
+
+    
+</style>
+
 <div class="sidebar" id="sidebar" style="overflow-y:scroll;scrollbar-width:none;">
     <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: 100%; height: 432px;">
         <div class="sidebar-inner slimscroll" style="overflow: hidden; width: 100%; height: 432px;">
@@ -16,16 +40,16 @@
                             <a href="<?= $redirect_home ?>"><i class="la la-home"></i> <span>Back to Home</span></a>
                         </li>
                         <li class="menu-title"><span>Chat Groups</span> <a href="#" data-bs-toggle="modal" data-bs-target="#add_group" class="subdrop"><i class="fa-solid fa-plus"></i></a></li>
-                        <div class="chat-content">
-                            <ul class="chat-group-list" id="chat-group-list">
+                        <div class="chat-content" id="chat-group-list">
+                            <!-- <ul class="chat-group-list" id="chat-group-list"> -->
                                 <!-- Group chat items will be dynamically added here -->
-                            </ul>
+                            <!-- </ul> -->
                         </div>
                         <li class="menu-title">Direct Chats <a href="#" data-bs-toggle="modal" data-bs-target="#add_chat_user" class="" id="btn_new_direct_message"><i class="fa-solid fa-plus"></i></a></li>
-                        <div class="direct-chat-content">
-                            <ul class="conversation-private" id="conversation-private">
+                        <div class="chat-content" id="conversation-private">
+                            <!-- <ul class="conversation-private" > -->
                                 <!-- Direct chat items will be dynamically added here -->
-                            </ul>
+                            <!-- </ul> -->
                         </div>
                     </ul>
                 </nav>

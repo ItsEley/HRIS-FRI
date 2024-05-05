@@ -55,8 +55,6 @@ $("#login-form").submit(function (e) {
 	}
 });
 
-
-
 $(document).ready(function () {
 	// Function to handle approve button clicks
 	function handleApproveButtonClick(buttonId, rowIdFieldId, empIdFieldId) {
@@ -93,7 +91,6 @@ $(document).ready(function () {
 		});
 	}
 
-	// Handle deny button clicks for different actions
 	handleDenyButtonClick("#og_denyButtonHr", "#og_id", "#employee_id");
 	handleDenyButtonClick(
 		"#leave_denyButtonHr",
@@ -104,7 +101,6 @@ $(document).ready(function () {
 	handleDenyButtonClick("#ut_denyButtonHr", "#ut_id", "#ut_employee_id");
 	handleDenyButtonClick("#ob_denyButtonHr", "#ob_id", "#ob_employee_id");
 
-	// Function to handle confirmation of approve or deny action
 	function handleConfirmationClick(confirmButtonId, modalId) {
 		$(confirmButtonId).click(function () {
 			var rowId;
