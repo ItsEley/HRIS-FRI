@@ -3,7 +3,7 @@
 		color: white;
 	}
 
-	.sidebar .sidebar-vertical .list-body>.message-content {
+	.sidebar .sidebar-vertical .list-body>.chat-content {
 		/* color: #333333; */
 		font-size: 13px;
 		display: block;
@@ -177,11 +177,11 @@
 		</div>
 		<!-- /Add Group Modal -->
 
-<!-- Add Chat User Modal -->
-<?php $this->load->view('templates\modals\chat_add_user.php'); ?>
+		<!-- Add Chat User Modal -->
+		<?php $this->load->view('templates\modals\chat_add_user.php'); ?>
 
-<!-- /Add Chat User Modal -->
-		
+		<!-- /Add Chat User Modal -->
+
 
 		<!-- Share Files Modal -->
 		<div id="share_files" class="modal custom-modal fade" role="dialog">
@@ -226,63 +226,64 @@
 
 
 <script>
-	var current_user_id;
+	var current_user_id = <?= $this->session->userdata('id'); ?>;
 	var current_conversation_id;
 	var conversation_type; // group or private
+	var conversation_selected = false;
 	var fetch_active = false;
 
 
-	function update_windows() {
-		//check if there is selected conversation
+	// function update_windows() {
+	// 	//check if there is selected conversation
 
-		if (current_conversation_id != null && conversation_type != null) {
-			$("#chat-window").removeAttr("hidden");
-			$("#dialog-no-message").attr("hidden", "true");
-
-
-			if (fetch_active == false) { // Poll for new messages every 5 seconds
-				setInterval(fetchMessages, 5000);
-				// Initial fetch when the page loads
-				fetchMessages();
-				fetch_active = true;
-			}
-			console.log("Message Loaded");
-
-			scrollToBottom();
+	// 	if (current_conversation_id != null && conversation_type != null) {
+	// 		$("#chat-window").removeAttr("hidden");
+	// 		$("#dialog-no-message").attr("hidden", "true");
 
 
-		} else {
-			$("#chat-window").attr("hidden", "true");
-			$("#dialog-no-message").removeAttr("hidden");
+	// 		if (fetch_active == false) { // Poll for new messages every 5 seconds
+	// 			setInterval(fetchMessages, 5000);
+	// 			// Initial fetch when the page loads
+	// 			fetchMessages();
+	// 			fetch_active = true;
+	// 		}
+	// 		console.log("Message Loaded");
+
+	// 		scrollToBottom();
 
 
-		}
-	}
+	// 	} else {
+	// 		$("#chat-window").attr("hidden", "true");
+	// 		$("#dialog-no-message").removeAttr("hidden");
+
+
+	// 	}
+	// }
 
 
 
-	$(".conversation-private").on('click', function() {
+	// $(".conversation-private").on('click', function() {
 
-		current_conversation_id = $(this).data('employee-id');
-		conversation_type = "private";
-		console.log($(this).find(".conversation-title").html())
-		$("#talking_to").html($(this).find(".conversation-title").html())
-		console.log(conversation_type, " : ", current_conversation_id)
+	// 	current_conversation_id = $(this).data('employee-id');
+	// 	conversation_type = "private";
+	// 	console.log($(this).find(".conversation-title").html())
+	// 	$("#talking_to").html($(this).find(".conversation-title").html())
+	// 	console.log(conversation_type, " : ", current_conversation_id)
 
-		update_windows();
-	});
+	// 	update_windows();
+	// });
 
 
-	$(".conversation-group").on('click', function() {
+	// $(".conversation-group").on('click', function() {
 
-		current_conversation_id = $(this).data('group-id');
-		conversation_type = "group";
-		console.log($(this).find(".conversation-title").html())
-		$("#talking_to").html($(this).find(".conversation-title").html())
-		console.log(conversation_type, " : ", current_conversation_id)
+	// 	current_conversation_id = $(this).data('group-id');
+	// 	conversation_type = "group";
+	// 	console.log($(this).find(".conversation-title").html())
+	// 	$("#talking_to").html($(this).find(".conversation-title").html())
+	// 	console.log(conversation_type, " : ", current_conversation_id)
 
-		update_windows();
-	});
+	// 	update_windows();
+	// });
 
 
 
@@ -296,7 +297,7 @@
 
 	// Function to scroll the chat container to the bottom
 	function scrollToBottom() {
-		var chatContainer = $('.chat-container')[0]; // Access the native DOM element
+		var chatContainer = $('.chat-wrap-inner')[0]; // Access the native DOM element
 		setTimeout(function() {
 			chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to the bottom
 		}, 100); // Adjust the delay as needed
@@ -305,52 +306,62 @@
 
 	// Call this function after appending new messages to scroll to the bottom
 	// Function to display messages in the chat container
-	function displayMessages(messages) {
+	function displayMessages(messages, message_container) {
 		// Loop through each message
+		console.log(message_container)
 		messages.forEach(function(message) {
 			// Check if message already exists in the chat container
-			var existingMessage = $('.message-container').find('[data-message-id="' + message.id + '"]');
+			var existingMessage = $('' + message_container).find('[data-message-id="' + message.id + '"]');
 			if (existingMessage.length > 0) {
 				// Message already exists, compare its content with fetched data
-				var existingContent = existingMessage.find('.message-content').text();
+				var existingContent = existingMessage.find('.chat-content p').text();
 				if (existingContent !== message.message) {
 					// Update the content of the existing message if there's a difference
-					existingMessage.find('.message-content').text(message.message);
+					existingMessage.find('.chat-content p').text(message.message);
+					console.log("displayMessages chat-time")
+					existingMessage.find('.chat-time').text(message.timestamp);
+
 				}
 			} else {
 				// Message does not exist, append it to the chat container
 				// Append my messages
 				if (message.from_ == current_user_id && message.to_ != current_user_id) {
-					var messageHTML = '<div class="message my-message" data-message-id="' + message.id + '"' +
+					var messageHTML = '<div class="chat chat-right" data-message-id="' + message.id + '" ' +
 						'data-sender-id="' + message.from_ + '" data-receiver-id="' + message.to_ + '">' +
-						'' +
-						'<p class="message-content">' + message.message + '</p>' +
+						'<div class="chat-body">' +
+						'<div class="chat-bubble">' +
+						'<div class="chat-content">' +
+						'<p>' + message.message + '</p>' +
+						'<span class="chat-time">' + message.timestamp + '</span>' +
+						'</div>' +
+						'</div>' +
+						'</div>' +
 						'</div>';
 
-					 messageHTML = "<div class='chat chat-right'>" +
-						"<div class='chat-body'>" +
-						"<div class='chat-bubble'>" +
-						"<div class='chat-content'>" +
-						"<p>Hello. What can I do for you?</p>" +
-						"<span class='chat-time'>8:30 am</span>" +
-						"</div>" +
-						"</div>" +	
-						"</div>" +
-						"</div>";
-					$('.message-container').append(messageHTML);
+
+
+
+					$('' + message_container).append(messageHTML);
 				} else {
 					// Append NOT my messages
-					var messageHTML = '<div class="message not-my-message" data-message-id="' + message.id + '"' +
+					var messageHTML = '<div class="chat chat-left" data-message-id="' + message.id + '" ' +
 						'data-sender-id="' + message.from_ + '" data-receiver-id="' + message.to_ + '">' +
-						'<p class="message-content">' + message.message + '</p>' +
+						'<div class="chat-body">' +
+						'<div class="chat-bubble">' +
+						'<div class="chat-content">' +
+						'<p>' + message.message + '</p>' +
+						'<span class="chat-time">' + message.timestamp + '</span>' +
+						'</div>' +
+						'</div>' +
+						'</div>' +
 						'</div>';
-					$('.message-container').append(messageHTML);
+					$('' + message_container).append(messageHTML);
 				}
 				// play_new_message();
 				scrollToBottom();
 				// update_window();
 
-
+				fetchLatestMessages();
 
 			}
 		});
@@ -361,7 +372,7 @@
 		// Iterate through each message in the chat container
 		$('.message-container .message').each(function() {
 			var messageId = $(this).data('message-id');
-			var messageContent = $(this).find('.message-content').text();
+			var messageContent = $(this).find('.chat-content').text();
 			var messageExists = false;
 
 			// Check if the message exists in the fetched data
@@ -371,7 +382,10 @@
 					// Check if the content has changed
 					if (message.message != messageContent) {
 						// Update the message content
-						$(this).find('.message-content').text(message.message);
+						$(this).find('.chat-content').text(message.message);
+					console.log("handleUpdates chat-time")
+
+						$(this).find('.chat-time').text(message.timestamp);
 
 					} else {
 						console.log("Doing nothing")
@@ -398,8 +412,9 @@
 			},
 			dataType: 'json',
 			success: function(data) {
+				console.log(data)
 				// Display fetched messages in the chat container
-				displayMessages(data);
+				displayMessages(data, ".chats.message-container");
 				// Handle updates and deletes in the chat container
 				handleUpdates(data);
 			},
@@ -435,13 +450,41 @@
 
 
 
-	$("#btn_new_direct_message").on('click',function(){
+	$("#btn_new_direct_message").on('click', function() {
 
 		console.log("getting new people")
 		getNewPeople()
 	})
 
 
+	$('#chatForm').submit(function(event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+    
+    // Get the message entered by the user
+    var formData = $('#chatForm').serializeArray(); // Serialize form data as an array
+    
+    // Add additional parameters to the serialized form data
+    formData.push({ name: 'to_', value: current_conversation_id });
+    formData.push({ name: 'from_', value: current_user_id });
+    
+    // Send the message to the server using Ajax
+    $.ajax({
+        url: '<?= base_url('datatable_fetchers/send_message') ?>', // Specify the URL of the server-side script
+        method: 'POST', // Use POST method to send data
+        data: formData, // Send serialized form data along with additional parameters
+        success: function(response) {
+            // Handle the success response from the server
+            console.log('Message sent successfully');
+            // Optionally, you can clear the input field after sending the message
+            $('#chat_message_input').val('');
+            fetchMessages();
+        },
+        error: function(xhr, status, error) {
+            // Handle any errors that occur during the Ajax request
+            console.error('Error sending message:', error);
+        }
+    });
+});
 
 
 	$(document).ready(function() {
@@ -450,4 +493,3 @@
 
 	});
 </script>
-

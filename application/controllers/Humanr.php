@@ -575,9 +575,9 @@ class Humanr extends CI_Controller
 
 				$html .= '<span class="avatar">';
 				if ($message['profile_picture_base64'] != NULL) {
-					$html .= '<img src="data:image/jpeg;base64,' . base64_encode($message['profile_picture_base64']) . '" alt="User Image">';
+					$html .= '<img src="data:image/jpeg;base64,' . base64_encode($message['profile_picture_base64']) . '" alt="User Image" class = "img-pfp">';
 				} else {
-					$html .= '<img src="' . base_url('assets/img/user.png') . '" alt="User Image">';
+					$html .= '<img src="' . base_url('assets/img/user.png') . '" alt="User Image" class = "img-pfp">';
 				}
 				$html .= '</span>';
 				$html .= '</div>';

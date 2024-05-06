@@ -4,13 +4,13 @@
 								<div class="user-details me-auto">
 									<div class="float-start user-img">
 										<a class="avatar" href="profile.html" title="Mike Litorus">
-											<img src="assets/img/profiles/avatar-05.jpg" alt="User Image" class="rounded-circle">
+											<img src="assets/img/profiles/avatar-05.jpg" alt="User Image" class="rounded-circle" id = "talking_to_pfp">
 											<span class="status online"></span>
 										</a>
 									</div>
 									<div class="user-info float-start">
-										<a href="profile.html" title="Mike Litorus"><span id = "talking_to">Mike Litorus</span> <i class="typing-text">Typing...</i></a>
-										<span class="last-seen">Last seen today at 7:50 AM</span>
+										<a href="profile.html" title="Mike Litorus"><span id = "talking_to">Mike Litorus</span> <i class="typing-text" hidden>Typing...</i></a>
+										<span class="last-seen" hidden>Last seen today at 7:50 AM</span>
 									</div>
 								</div>
 
@@ -47,7 +47,7 @@
 
 						<div class="chat-contents">
 							<div class="chat-content-wrap">
-								<div class="chat-wrap-inner">
+								<div class="chat-wrap-inner" >
 									<div class="chat-box">
 										<div class="chats message-container">
 
@@ -114,6 +114,9 @@
 								</div>
 							</div>
 						</div>
+					    <form id="chatForm" method="post" >
+
+
 						<div class="chat-footer">
 							<div class="message-bar">
 								<div class="message-inner">
@@ -121,13 +124,14 @@
 										<i class="fa-solid fa-paperclip"></i></a>
 									<div class="message-area">
 										<div class="input-group">
-											<textarea class="form-control" placeholder="Type message..." id = "input_chat"></textarea>
-											<button class="btn btn-custom" type="button"><i class="fa-solid fa-paper-plane"></i></button>
+											<textarea class="form-control" placeholder="Type message..." id="chat_message_input" name="chat_message_input"></textarea>
+											<button class="btn btn-custom" type="submit" id = "sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
+						</form>
 					</div>
 
 

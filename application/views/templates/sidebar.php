@@ -59,7 +59,6 @@
                             <ul>
                                 <li><a href='" . base_url('hr/payroll/hr') . "'>Payroll</a></li> 
                                 <li><a href='" . base_url('hr/payroll/salary_rate') . "'>Salary Rate </a></li> 
-                                <li><a href='" . base_url('hr/payroll/bonus') . "'>Bonuses & Commissions</a></li> 
                                 <li><a href='" . base_url('hr/payroll/deduction') . "'>Deductions</a></li> 
                             </ul> 
                         </li> 

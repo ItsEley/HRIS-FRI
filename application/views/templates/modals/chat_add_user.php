@@ -17,7 +17,7 @@
                     <button class="btn btn-primary">Search</button>
                 </div>
                 <div>
-                    <h5>Recent Conversations</h5>
+                    <h5>Create a conversation</h5>
                     <ul class="chat-user-list" id = "chat-user-list">
                         
                         
@@ -67,5 +67,9 @@ function getNewPeople() {
 }
 
 
+$(document).ready(function() {
 
+
+
+    })
 </script>

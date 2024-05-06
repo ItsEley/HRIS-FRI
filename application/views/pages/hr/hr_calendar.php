@@ -6,6 +6,11 @@
 <!-- FullCalendar Sandstone theme CSS -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/themes/sandstone.min.css" rel="stylesheet">
 
+<style>
+  .fc-daygrid-day-frame.fc-scrollgrid-sync-inner{
+      height: 0 !important;
+  }
+</style>
 
 <!-- Main Wrapper -->
 <div class="main-wrapper">
