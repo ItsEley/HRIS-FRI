@@ -179,11 +179,12 @@
                   response.html_messages.forEach(function(message) {
                      $("#message-list").append(message.html);
 
-                     if (message.type == 'group') {
-                        $("#chat-group-list").append(message.html);
-                     } else if (message.type == 'individual') {
-                        $("#conversation-private").append(message.html);
-                     }
+                     $("#my-conversations").append(message.html);
+                     // if (message.type == 'group') {
+                     //    $("#chat-group-list").append(message.html);
+                     // } else if (message.type == 'individual') {
+                     //    $("#conversation-private").append(message.html);
+                     // }
                      // Select the element with data-message-id equal to 15
                      var messageElement = $('#sidebar-menu li[data-emp-id]');
 

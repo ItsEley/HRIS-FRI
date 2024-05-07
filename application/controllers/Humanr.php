@@ -10,7 +10,7 @@ class Humanr extends CI_Controller
 		$this->load->model('Admin_model', 'hr');
 		// $this->zone = date_default_timezone_set('Asia/Manila');
 		// $this->load->library('session');
-		// $this->load->helper('url');
+		// $this->load->helper('my_gen_func_helper');
 	}
 
 	// public function hrapprove() {
@@ -567,7 +567,8 @@ class Humanr extends CI_Controller
 			// Loop through each message to generate HTML
 			foreach ($messages as $message) {
 				// Construct HTML for the message
-				$html = '<li class="notification-message" data-emp-id="' . $message['emp_id'] . '" style="background-color:' . ($message['is_read'] === null ? '#f2f2f2' : '#ffffff') . ';">';
+				$html = '<li class="notification-message" data-emp-id="' . $message['emp_id'] . '" data-type = "'.$message['conversation_type'].'"
+				style="background-color:' . ($message['is_read'] === null ? '#f2f2f2' : '#ffffff') . ';">';
 				$html .= '<a href="chat.html">';
 				$html .= '<div class="list-item">';
 				$html .= '<div class="row">';

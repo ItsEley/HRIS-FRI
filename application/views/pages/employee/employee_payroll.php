@@ -188,8 +188,7 @@
 <script>
   $(document).ready(function() {
     $('#dt_payslips').DataTable();
-  });
-  $(document).ready(function() {
+ 
     $('.view').click(function() {
       var empid = $(this).data('emp');
       $.ajax({

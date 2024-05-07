@@ -13,7 +13,6 @@
     <!-- Page Wrapper -->
     <div class="page-wrapper">
 
-        <!-- Page Content -->
         <div class="content container-fluid" data-select2-id="select2-data-23-5b7q">
 
             <!-- Page Header -->
@@ -36,15 +35,12 @@
                 </div>
             </div>
             <!-- /Page Header -->
-
-
-
             <!-- Search Filter -->
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
 
-                        <table id="" class="datatable table-striped custom-table mb-0 datatable">
+                        <table id="dt_form_request_history" class="datatable table-striped custom-table mb-0 datatable">
                             <thead>
                                 <tr>
                                     <th>Employee</th>
@@ -207,10 +203,17 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+        
+
         $("li > a[href='<?= base_url('forms/history') ?>']").parent().parent().css("display", "block") //get sidebar item with link
         $("li > a[href='<?= base_url('forms/history') ?>']").addClass("active"); // for items inside the sidebar
 
 
+
+        $(document).ready(function() {
+    $('#dt_form_request_history').DataTable();
+  });
 
 
     })

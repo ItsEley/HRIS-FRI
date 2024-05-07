@@ -1,3 +1,8 @@
+<?php
+
+$this->load->helper('my_gen_func_helper.php');
+?>
+
 <style>
 	.sidebar .sidebar-vertical .list-body>* {
 		color: white;
@@ -11,6 +16,10 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
+
+	#sidebar_menu .notification-message.active {
+		background-color: #2d393f !important;
 	}
 </style>
 <!-- Main Wrapper -->
@@ -308,7 +317,7 @@
 	// Function to display messages in the chat container
 	function displayMessages(messages, message_container) {
 		// Loop through each message
-		console.log(message_container)
+		console.log("display messages", messages)
 		messages.forEach(function(message) {
 			// Check if message already exists in the chat container
 			var existingMessage = $('' + message_container).find('[data-message-id="' + message.id + '"]');
@@ -317,22 +326,25 @@
 				var existingContent = existingMessage.find('.chat-content p').text();
 				if (existingContent !== message.message) {
 					// Update the content of the existing message if there's a difference
-					existingMessage.find('.chat-content p').text(message.message);
-					console.log("displayMessages chat-time")
-					existingMessage.find('.chat-time').text(message.timestamp);
+					// existingMessage.find('.chat-content p').text(message.message);
+					// console.log("displayMessages chat-time")
+					// existingMessage.find('.chat-time').text(message.timestamp);
+
+					// ! DISMISSED UPDATING MESSAGE UNTIL NEEDED
 
 				}
 			} else {
 				// Message does not exist, append it to the chat container
 				// Append my messages
-				if (message.from_ == current_user_id && message.to_ != current_user_id) {
+				// console.log(messages)
+				if (message.from_ == current_user_id) {
 					var messageHTML = '<div class="chat chat-right" data-message-id="' + message.id + '" ' +
 						'data-sender-id="' + message.from_ + '" data-receiver-id="' + message.to_ + '">' +
 						'<div class="chat-body">' +
 						'<div class="chat-bubble">' +
 						'<div class="chat-content">' +
-						'<p>' + message.message + '</p>' +
-						'<span class="chat-time">' + message.timestamp + '</span>' +
+						'<p style= "text-wrap: wrap; word-wrap: break-word;">' + message.message + '</p>' +
+						'<span class="chat-time">' + formatDateTime(message.timestamp) + '</span>' +
 						'</div>' +
 						'</div>' +
 						'</div>' +
@@ -349,8 +361,8 @@
 						'<div class="chat-body">' +
 						'<div class="chat-bubble">' +
 						'<div class="chat-content">' +
-						'<p>' + message.message + '</p>' +
-						'<span class="chat-time">' + message.timestamp + '</span>' +
+						'<p style= "text-wrap: wrap; word-wrap: break-word;">' + message.message + '</p>' +
+						'<span class="chat-time">' + formatDateTime(message.timestamp) + '</span>' +
 						'</div>' +
 						'</div>' +
 						'</div>' +
@@ -361,7 +373,7 @@
 				scrollToBottom();
 				// update_window();
 
-				fetchLatestMessages();
+				// fetchLatestMessages();
 
 			}
 		});
@@ -383,7 +395,7 @@
 					if (message.message != messageContent) {
 						// Update the message content
 						$(this).find('.chat-content').text(message.message);
-					console.log("handleUpdates chat-time")
+						console.log("handleUpdates chat-time")
 
 						$(this).find('.chat-time').text(message.timestamp);
 
@@ -403,16 +415,33 @@
 
 	// Function to fetch chat messages via AJAX
 	function fetchMessages() {
+		let formData = [];
+
+		// Add additional parameters to the serialized form data
+		formData.push({
+			name: 'from_',
+			value: current_user_id
+		});
+
+		if (conversation_type == 'group') {
+			formData.push({
+				name: 'to_group',
+				value: current_conversation_id
+			});
+		} else if (conversation_type == 'individual') {
+			formData.push({
+				name: 'to_',
+				value: current_conversation_id
+			});
+		}
+
 		$.ajax({
 			url: '<?= base_url('datatable_fetchers/fetch_messages') ?>',
 			type: 'POST',
-			data: {
-				from_: <?= $this->session->userdata('id'); ?>,
-				to_: current_conversation_id
-			},
+			data: formData,
 			dataType: 'json',
 			success: function(data) {
-				console.log(data)
+				console.log("fetchMessages", data);
 				// Display fetched messages in the chat container
 				displayMessages(data, ".chats.message-container");
 				// Handle updates and deletes in the chat container
@@ -425,15 +454,47 @@
 	}
 
 
+
+
+
+	$("#btn_new_direct_message").on('click', function() {
+
+		console.log("getting new people")
+		getNewPeople()
+	})
+
+
 	$('#chatForm').submit(function(event) {
 		event.preventDefault(); // Prevent the default form submission behavior
+
 		// Get the message entered by the user
-		var message = $('#chatForm').serialize();
+		var formData = $('#chatForm').serializeArray(); // Serialize form data as an array
+
+		// Add additional parameters to the serialized form data
+		formData.push({
+			name: 'from_',
+			value: current_user_id
+		});
+
+		if (conversation_type == 'group') {
+			formData.push({
+				name: 'to_group',
+				value: current_conversation_id
+			});
+
+		} else if (conversation_type == 'individual') {
+			formData.push({
+				name: 'to_',
+				value: current_conversation_id
+			});
+
+		}
+
 		// Send the message to the server using Ajax
 		$.ajax({
-			url: 'send_messages.php', // Specify the URL of the server-side script
+			url: '<?= base_url('datatable_fetchers/send_message') ?>', // Specify the URL of the server-side script
 			method: 'POST', // Use POST method to send data
-			data: message,
+			data: formData, // Send serialized form data along with additional parameters
 			success: function(response) {
 				// Handle the success response from the server
 				console.log('Message sent successfully');
@@ -449,45 +510,8 @@
 	});
 
 
-
-	$("#btn_new_direct_message").on('click', function() {
-
-		console.log("getting new people")
-		getNewPeople()
-	})
-
-
-	$('#chatForm').submit(function(event) {
-    event.preventDefault(); // Prevent the default form submission behavior
-    
-    // Get the message entered by the user
-    var formData = $('#chatForm').serializeArray(); // Serialize form data as an array
-    
-    // Add additional parameters to the serialized form data
-    formData.push({ name: 'to_', value: current_conversation_id });
-    formData.push({ name: 'from_', value: current_user_id });
-    
-    // Send the message to the server using Ajax
-    $.ajax({
-        url: '<?= base_url('datatable_fetchers/send_message') ?>', // Specify the URL of the server-side script
-        method: 'POST', // Use POST method to send data
-        data: formData, // Send serialized form data along with additional parameters
-        success: function(response) {
-            // Handle the success response from the server
-            console.log('Message sent successfully');
-            // Optionally, you can clear the input field after sending the message
-            $('#chat_message_input').val('');
-            fetchMessages();
-        },
-        error: function(xhr, status, error) {
-            // Handle any errors that occur during the Ajax request
-            console.error('Error sending message:', error);
-        }
-    });
-});
-
-
 	$(document).ready(function() {
+
 
 
 

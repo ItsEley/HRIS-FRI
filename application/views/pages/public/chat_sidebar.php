@@ -49,6 +49,12 @@
                             <!-- Direct chat items will be dynamically added here -->
                             <!-- </ul> -->
                         </div>
+
+                        <div class="chat-content" id="my-conversations">
+
+                        
+                        </div>
+                        
                     </ul>
                 </nav>
 
@@ -103,7 +109,8 @@
         $(".chats.message-container").empty();
         console.log("emp-id : ", $(element))
         current_conversation_id = $(element).data("emp-id");
-        conversation_type;
+
+        conversation_type = $(element).data("type");
         conversation_selected = true;
 
         $("#dialog-no-message").attr('hidden', 'hidden');
@@ -128,8 +135,16 @@
         $(".notification-message").on("click", function() {
             // Your click event functionality here
             // This function will be called when any element with class notification-message is clicked
+            $(this).addClass("active")
             set_conversation_window(this)
         });
+
+        
+		if(current_conversation_id == undefined || current_conversation_id == null){
+			$("#sidebar-menu .chat-content .notification-message")[0].click();
+		}
+
+
 
 
 

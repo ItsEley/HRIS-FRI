@@ -42,11 +42,10 @@ class Datatable_fetchers extends CI_Controller
     }
 
     // chatss
-
     public function fetch_messages()
     {
         // Check if the required POST data is set
-        if (!isset($_POST['from_'], $_POST['to_'])) {
+        if (!$this->input->post('from_') || (!$this->input->post('to_') && !$this->input->post('to_group'))) {
             // Return an error response if the required data is not set
             $this->output
                 ->set_content_type('application/json')
@@ -54,17 +53,41 @@ class Datatable_fetchers extends CI_Controller
             return;
         }
     
-        // Fetch messages based on sender and receiver IDs
-        $query = $this->db->query("
-            SELECT `id`, `message`, `file`, `from_`, `to_`, `to_group`, `timestamp`, `is_read`, `status`
+
+        // Get POST data
+        $from = $this->input->post('from_');
+        $to = $this->input->post('to_');
+        $to_group = $this->input->post('to_group');
+    
+        // Construct WHERE clause based on the provided parameters
+        $query = '';
+        if ($to) {
+            $query = $this->db->query("
+            SELECT `id`, `message`, `file`, `from_`, `to_`, `timestamp`, `is_read`, `status`
             FROM `chat_messages`
-            WHERE (`from_` = " . $_POST['from_'] . " AND `to_` = " . $_POST['to_'] . ")
-            OR (`from_` = " . $_POST['to_'] . " AND `to_` = " . $_POST['from_'] . ")
+            WHERE (`from_` = $from AND `to_` = $to) OR (`from_` = $to AND `to_` = $from)
             ORDER BY timestamp ASC LIMIT 200
         ");
+        } elseif ($to_group) {
+
+            $query = $this->db->query("
+            SELECT `id`, `message`, `file`, `from_`, `to_group`, `timestamp`, `is_read`, `status`
+            FROM `chat_messages`
+            WHERE (`to_group` = $to_group AND `from_` = $from)
+            ORDER BY timestamp ASC LIMIT 200
+        ");
+        } else {
+            // Return an error response if neither `to_` nor `to_group` is provided
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(array('error' => 'Missing receiver ID')));
+            return;
+        }
+    
+   
     
         // Check if the query was successful
-        if ($query === false) {
+        if (!$query) {
             // Return an error response if the query failed
             $this->output
                 ->set_content_type('application/json')
@@ -81,25 +104,27 @@ class Datatable_fetchers extends CI_Controller
             ->set_output(json_encode($messages));
     }
 
-
     
+
+
+
     public function send_message() {
+        $data = array();
+    
         // Check if the message data has been received via POST
         if ($this->input->server("REQUEST_METHOD") == "POST" && $this->input->post('chat_message_input') !== null) {
             // Sanitize and escape the message to prevent SQL injection
-            $message = $this->db->escape_str($this->input->post('chat_message_input'));
-            $sender = $this->db->escape_str($this->input->post('from_'));
-            $receiver = $this->db->escape_str($this->input->post('to_'));
-
-            // Insert the message into the database
-            $data = array(
-                'message' => $message,
-                'from_' => $sender,
-                'to_' => $receiver
-            );
-
+            $data['message'] = $this->db->escape_str($this->input->post('chat_message_input'));
+            $data['from_'] = $this->db->escape_str($this->input->post('from_'));
+    
+            if ($this->input->post('to_group') !== null) {
+                $data['to_group'] = $this->db->escape_str($this->input->post('to_group'));
+            } else {
+                $data['to_'] = $this->db->escape_str($this->input->post('to_'));
+            }
+    
             $this->db->insert('chat_messages', $data);
-
+    
             if ($this->db->affected_rows() > 0) {
                 // If the message was successfully inserted, return a success message
                 echo json_encode(array('status' => 'success', 'message' => 'Message sent successfully.'));
@@ -112,6 +137,7 @@ class Datatable_fetchers extends CI_Controller
             echo json_encode(array('status' => 'error', 'message' => 'Invalid request.'));
         }
     }
+    
     
 
 

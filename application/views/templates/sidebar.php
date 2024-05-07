@@ -37,7 +37,6 @@
                             <ul> 
                             <li><a href='" . base_url('hr/reports/employee_performance') . "'>Employee Performance</a></li> 
  
-                            <li><a href='" . base_url('hr/reports/salary') . "'>Salary Report</a></li> 
                             <li><a href='" . base_url('hr/reports/timesheet') . "'>Timesheet</a></li> 
  
                                 <li><a href='" . base_url('hr/employees/attendance') . "'>Attendance</a></li> 
@@ -48,7 +47,6 @@
                             <a href='#'><i class='la la-user'></i><span>Employees</span><span class='menu-arrow'></span></a> 
                             <ul> 
                                 <li><a href='" . base_url('hr/employees') . "'>Manage</a></li> 
-                                <li><a href='" . base_url('hr/employees/designation') . "'>Designations</a></li> 
                                 <li><a href='" . base_url('hr/employees/shifts') . "'>Shifts & Schedules</a></li> 
                                 <li><a href='" . base_url('hr/employees/evaluation') . "'>Performance Evaluation</a></li> 
  
@@ -74,7 +72,7 @@
                      <li class='submenu forms'>
                         <a href='#' class=''><i class='la la-object-group'></i><span>Personal </span><span class='menu-arrow'></span></a>
                         <ul> 
-                             <li><a href='" . base_url('forms') . "'>Request History</a></li> 
+                             <li><a href='" . base_url('forms/history') . "'>Request History</a></li> 
                              <li><a href='" . base_url('hr/pendingrequests') . "'>Attendance</a></li> 
                              <li><a href='" . base_url('hr/historyrequests') . "'>Payroll</a></li> 
                              <li><a href='" . base_url('hr/historyrequests') . "'>Leave Balance</a></li> 
@@ -82,7 +80,16 @@
                          </ul> 
                      </li>
                  "; 
+
+                            //  <li><a href='" . base_url('hr/reports/salary') . "'>Salary Report</a></li> 
+                            // <li><a href='" . base_url('hr/employees/designation') . "'>Designations</a></li> 
+
+                            
              } else if (strtolower($this->session->userdata('acro')) == 'sys-at') { 
+
+                    // ** SYSTEM ADMIN
+
+
              } else { 
 
                  echo " 

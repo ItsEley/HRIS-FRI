@@ -25,7 +25,7 @@
          <div class="row timeline-panel">
          	<div class="col-md-12">
          		<div class="table-responsive">
-         			<table id="dt_announcements" class="datatable table-striped custom-table mb-0 datatable table-sm">
+         			<table id="dt_payroll_overview" class="datatable table-striped custom-table mb-0 datatable table-sm">
          				<thead>
                   <tr>
                     <th>Payroll Cut-off</th>
@@ -54,3 +54,11 @@
 	</div>
 </div>
 
+
+<script>
+
+$(document).ready(function(){
+        $('#dt_payroll_overview').DataTable({});
+        
+        })
+</script>

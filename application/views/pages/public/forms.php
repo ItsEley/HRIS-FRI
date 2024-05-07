@@ -562,7 +562,7 @@
 									<!-- /Form content -->
 
 									<form method="post" id="ot_request" class="mb-2">
-									<input type="text" name="emp_id" id="emp_id" value="<?php echo $this->session->userdata('id'); ?>" readonly>
+									<input type="text" name="emp_id" id="emp_id" value="<?php echo $this->session->userdata('id'); ?>" readonly hidden>
 
 									
 										<div class="row ">
