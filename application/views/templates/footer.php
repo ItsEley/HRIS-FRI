@@ -33,6 +33,8 @@
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script> -->
     <script src="<?= base_url('assets/js/greedynav.js') ?>"></script>
     <script src="<?= base_url('assets/js/general_formatting.js') ?>"></script>
+    <script src="<?= base_url('assets/js/general_functions.js') ?>"></script>
+
 
 
 

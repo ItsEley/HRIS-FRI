@@ -1,34 +1,35 @@
-<div class="sidebar" id="sidebar"> 
-    <div class="sidebar-inner slimscroll"> 
-        <div id="sidebar-menu" class="sidebar-menu"> 
- 
- 
-            <!--//! change this to print if session department type is appropriate 
-   //! instead of hiding --> 
- 
-            <ul class="sidebar-vertical"> <!-- desktop size --> 
- 
-                <li class="menu-title"> 
-                    <?php 
-                    if (strtolower($this->session->userdata('role')) == 'head') { 
-                        echo "<span>Main | " . $this->session->userdata('acro') . " - <span class = 'badge bg-primary'>HEAD</span> " . "</span>"; 
-                    } else{
-                        echo "<span>Main | " . $this->session->userdata('acro') . " </span>"; 
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
 
+
+            <!--//! change this to print if session department type is appropriate 
+   //! instead of hiding -->
+
+            <ul class="sidebar-vertical"> <!-- desktop size -->
+
+                <li class="menu-title">
+                    <?php
+                    if (strtolower($this->session->userdata('role')) == 'head') {
+                        echo "<span>Main | " . $this->session->userdata('acro') . " - <span class = 'badge bg-primary'>HEAD</span> " . "</span>";
+                    } else {
+                        echo "<span>Main | " . $this->session->userdata('acro') . " </span>";
                     }
-                    ?> 
-                </li> 
- 
-                <?php 
- 
-                if (strtolower($this->session->userdata('acro')) == 'hr') { 
- 
+                    ?>
+                </li>
+
+                <?php
+
+                if (strtolower($this->session->userdata('acro')) == 'hr') {
+
                     echo " 
                         <li><a href='" . base_url('hr/dashboard') . "'><i class='la la-dashboard'></i><span>Dashboard</span></a></li> 
                         <li><a href='" . base_url('hr/calendar') . "'><i class='fa-regular fa-calendar'></i><span>Calendar</span></a></li> 
                         <li><a href='" . base_url('hr/announcement') . "'><i class='la la-bullhorn'></i><span>Announcements</span></a></li> 
                         <li><a href='" . base_url('hr/departments') . "'><img src = '" . base_url('assets/img/icons/department-2.png') . "' class = 'my-img-icon'> 
                                             <span>Departments</span></a></li> 
+                                            <li><a href='" . base_url('hr/department_roles') . "'><img src = '" . base_url('assets/img/icons/department-2.png') . "' class = 'my-img-icon'> 
+                                            <span>Roles</span></a></li> 
                         <li><a href='" . base_url('hr/shifts') . "'><i class='fa-regular fa-clock'></i><span>Shifts</span></a></li> 
                         <li><a href='" . base_url('hr/leaves') . "'><i class='la la-bullhorn'></i><span>Leaves</span></a></li> 
  
@@ -79,20 +80,20 @@
 
                          </ul> 
                      </li>
-                 "; 
+                 ";
 
-                            //  <li><a href='" . base_url('hr/reports/salary') . "'>Salary Report</a></li> 
-                            // <li><a href='" . base_url('hr/employees/designation') . "'>Designations</a></li> 
+                    //  <li><a href='" . base_url('hr/reports/salary') . "'>Salary Report</a></li> 
+                    // <li><a href='" . base_url('hr/employees/designation') . "'>Designations</a></li> 
 
-                            
-             } else if (strtolower($this->session->userdata('acro')) == 'sys-at') { 
+
+                } else if (strtolower($this->session->userdata('acro')) == 'sys-at') {
 
                     // ** SYSTEM ADMIN
 
 
-             } else { 
+                } else {
 
-                 echo " 
+                    echo " 
                  <li><a href='" . base_url('employee/dashboard') . "'><i class='la la-dashboard'></i><span>Dashboard (Employee)</span></a></li> 
                  <li><a href='" . base_url('employee/dashboard') . "'><i class='la la-dashboard'></i><span>My Leave Balance</span></a></li> 
                   
@@ -124,11 +125,11 @@
                   
                   
                   
-                 "; 
-                 if (strtolower($this->session->userdata('role')) == 'head') { 
-                    
-                     echo "<li><a href='" . base_url('hr/announcement') . "'><i class='la la-bullhorn'></i><span>Announcements</span></a></li>"; 
-                     echo " 
+                 ";
+                    if (strtolower($this->session->userdata('role')) == 'head') {
+
+                        echo "<li><a href='" . base_url('hr/announcement') . "'><i class='la la-bullhorn'></i><span>Announcements</span></a></li>";
+                        echo " 
                          <li class='submenu forms'> 
                          <a href='#' class=''><i class='la la-object-group'></i><span>Requests for Approval</span><span class='menu-arrow'></span></a> 
                          <ul> 
@@ -137,13 +138,13 @@
                              <li><a href='" . base_url('employee/history') . "'>History</a></li> 
                          </ul> 
                           
-                     </li> "; 
-                 } 
-             } 
+                     </li> ";
+                    }
+                }
 
-             ?> 
+                ?>
 
-         </ul> 
-     </div> 
- </div> 
+            </ul>
+        </div>
+    </div>
 </div>

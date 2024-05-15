@@ -7,8 +7,8 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/themes/sandstone.min.css" rel="stylesheet">
 
 <style>
-  .fc-daygrid-day-frame.fc-scrollgrid-sync-inner{
-      height: 0 !important;
+  .fc-daygrid-day-frame.fc-scrollgrid-sync-inner {
+    height: 0 !important;
   }
 </style>
 
@@ -86,11 +86,10 @@
             </div>
             <div class="mb-3">
               <label for="eventTitle" class="form-label input-required">Description</label>
-              <textarea type="text" class="form-control" id="event_description" 
-              name="event_description" cols="30" rows="2" placeholder="Event description"></textarea>
+              <textarea type="text" class="form-control" id="event_description" name="event_description" cols="30" rows="2" placeholder="Event description"></textarea>
             </div>
           </div>
-  
+
           <div class="row">
             <h3>Date</h3>
             <div class="mb-3 col">
@@ -103,12 +102,12 @@
             </div>
           </div>
 
-  
+
 
           <div class="row">
             <h3>Time <span>
-            <label for="toggle_all_day" style = "font-size:12px">All day</label>  
-            <input type="checkbox" name="toggle_all_day" id="toggle_all_day"></span></h3>
+                <label for="toggle_all_day" style="font-size:12px">All day</label>
+                <input type="checkbox" name="toggle_all_day" id="toggle_all_day"></span></h3>
             <div class="mb-3 col">
               <label for="eventTitle" class="form-label input-required">From</label>
               <input type="time" class="form-control" id="eventStartDate" name="event_time_start" required>
@@ -148,11 +147,11 @@
           </div>
           <div class="mb-3">
             <label for="editEventStart" class="form-label">Start Date</label>
-            <input type="text" class="form-control" id="editEventStart" name="start" readonly>
+            <input type="text" class="form-control" id="editEventStart" name="start">
           </div>
           <div class="mb-3">
             <label for="editEventEnd" class="form-label">End Date</label>
-            <input type="text" class="form-control" id="editEventEnd" name="end" readonly>
+            <input type="text" class="form-control" id="editEventEnd" name="end">
           </div>
           <!-- Add more fields for editing event details -->
           <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -166,49 +165,58 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    $("li > a[href='<?= base_url('hr/calendar') ?>']").parent().addClass("active");
+    $("li > a[href='<?php echo base_url('hr/calendar'); ?>']").parent().addClass("active");
 
-    function convertDateFormat(dateString) {
-      var date = new Date(dateString);
-      var year = date.getFullYear();
-      var month = ('0' + (date.getMonth() + 1)).slice(-2); // Add leading zero if needed
-      var day = ('0' + date.getDate()).slice(-2); // Add leading zero if needed
-      return year + '-' + month + '-' + day;
-    }
+      function convertDateFormat(dateString) {
+        var date = new Date(dateString);
+        var year = date.getFullYear();
+        var month = ('0' + (date.getMonth() + 1)).slice(-2);
+        var day = ('0' + date.getDate()).slice(-2);
+        return year + '-' + month + '-' + day;
+      }
+
+        function adjustEndDateForFullDay(endDate) {
+          if (endDate) {
+            var date = new Date(endDate);
+            date.setDate(date.getDate() + 1);
+            return date.toISOString().split('T')[0];
+          }else{
+
+          return null;
+          }
+        }
+
+
 
     var calendarEl = document.getElementById('calendar');
+
     var calendar = new FullCalendar.Calendar(calendarEl, {
       themeSystem: 'sandstone',
       initialView: 'dayGridMonth',
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay,listYear'
-      },
-      editable: true,
+      // editable: true,
       selectable: true,
       select: function(arg) {
         var title = prompt('Enter event title:');
         if (title) {
           calendar.addEvent({
             title: title,
-            start: convertDateFormat(arg.start),
-            end: convertDateFormat(arg.end),
+            start: arg.startStr,
+            end: arg.endStr,
             allDay: arg.allDay
           });
         }
         calendar.unselect();
       },
       eventAdd: function(info) {
-        console.log(info.event)
+        console.log("ADD EVENT");
         handleEventAction(info.event, 'add');
       },
       eventDrop: function(info) {
-        console.log(info.event)
+        console.log("DROP EVENT");
         handleEventAction(info.event, 'update');
       },
       eventResize: function(info) {
-        console.log(info.event)
+        console.log("RESIZE EVENT");
         handleEventAction(info.event, 'update');
       },
       events: [
@@ -220,41 +228,33 @@
         `date_start`, `date_end`, 
         `time_start`, `time_end`, 
         `is_workday`, `date_created` 
-    FROM 
+      FROM 
         `sys_events`
-    
-    UNION
-    
-    SELECT 
+      UNION
+      SELECT 
         'holiday' AS type,
         `id`, `holiday_name` AS name, 
         `holiday_description`, 
         `date_start`, `date_end`, 
         `time_start`, `time_end`, 
         `is_workday`, `date_created` 
-    FROM 
+      FROM 
         `sys_holidays`;
-    ");
+      ");
         foreach ($query->result() as $row) {
           echo '{';
-          echo "type: 'event',"; // Assuming 'event' is the type for all rowss
+          echo "id: '{$row->id}',";
           echo "title: \"" . str_replace('"', '\"', $row->name) . "\",";
-          echo "start: '$row->date_start $row->time_start',"; // Date start
-          echo "end: '$row->date_end $row->time_end',"; // Date start
-
+          echo "start: '{$row->date_start} {$row->time_start}',";
+          echo "end: '{$row->date_end} {$row->time_end}',";
           if ($row->type == "holiday") {
-            echo "allDay: 'true',";
-            echo "editable:'false',";
+            echo "allDay: true,";
+            echo "editable: false,";
             echo "description: \"" . str_replace('"', '\"', $row->description) . "\",";
-            echo "className:'calendar-event holiday'";
+            echo "className: 'calendar-event holiday'";
           }
-
-          // echo "end: '$row->date_end',"; // Date end
-          // echo "timeStart: '".formatTimeOnly($row->time_start)."',"; // Time start
-          // echo "timeEnd: '".formatTimeOnly($row->time_end)."'"; // Time end
           echo '},';
         }
-
         ?>
       ]
     });
@@ -263,14 +263,14 @@
       var eventData = {
         id: event.id,
         title: event.title,
-        start: convertDateFormat(event.start),
-        end: convertDateFormat(event.end),
+        start: event.start.toISOString().split('T')[0], // Use date only
+        end: event.end ? adjustEndDateForFullDay(event.end) : null, // Adjust end date
         allDay: event.allDay
       };
 
       $.ajax({
         type: 'POST',
-        url: base_url + 'calendar/event/' + action,
+        url: '<?php echo base_url('calendar/event/'); ?>' + action,
         data: eventData,
         success: function(response) {
           console.log('Event ' + action + 'd successfully:', response);
@@ -281,18 +281,12 @@
       });
     }
 
-
-
     // Show the modal when the user clicks on a day to add an event
     calendar.setOption('select', function(arg) {
-      console.log(arg);
       $('#addEventModal').modal('show');
-      $('#eventTitle').val(arg.title)
+      $('#eventTitle').val('');
       $('#eventStartDate').val(arg.startStr);
       $('#eventEndDate').val(arg.endStr);
-
-
-
     });
 
     // Handle form submission for adding events
@@ -302,34 +296,27 @@
         title: $('#eventTitle').val(),
         start: $('#eventStartDate').val(),
         end: $('#eventEndDate').val(),
-        // Add more fields as needed...
       };
 
-      // Add event to calendar
-      console.log(1)
-      // handleEventAction(eventData,'add');
-      console.log(2)
-
-      calendar.addEvent(eventData)
-      // Hide the modal after adding the event
+      calendar.addEvent(eventData);
       $('#addEventModal').modal('hide');
     });
 
-
-
     // Trigger Edit Event Modal when an event is clicked
     calendar.on('eventClick', function(info) {
-      $('#editEventModal').modal('show'); // Show the edit event modal
-      // Populate modal fields with event details
-      console.log(info.event.title)
-      console.log(info.event._def.publicId)
-      $('#edit_event_id').val(info.event._def.publicId);
-
-
+      console.log("eventClick : ", info.event.start.toISOString());
+      $('#editEventModal').modal('show');
+      $('#edit_event_id').val(info.event.id);
       $('#editEventTitle').val(info.event.title);
-      $('#editEventStart').val(info.event.start.toISOString().slice(0, 10)); // Format start date
-      $('#editEventEnd').val(info.event.end.toISOString().slice(0, 10)); // Format end date
-      // Add more fields for other event details if needed
+      // Get the start date from the event and parse it
+      var startDate = new Date(info.event.start);
+      // Add 1 day to the start date
+      startDate.setDate(startDate.getDate() + 1);
+      // Convert the adjusted start date to ISO string and split at 'T'
+      var adjustedStartDate = startDate.toISOString().split('T')[0];
+
+      $('#editEventStart').val(adjustedStartDate);
+      $('#editEventEnd').val(info.event.end ? info.event.end.toISOString().split('T')[0] : '');
     });
 
     // Handle form submission for editing events
@@ -340,42 +327,30 @@
         title: $('#editEventTitle').val(),
         start: $('#editEventStart').val(),
         end: $('#editEventEnd').val(),
-        // Extract other fields as needed...
       };
-      var eventToUpdate = calendar.getEventById(eventData.id); // Get the event to update
-      // // Update event properties
-      // eventToUpdate.setProp('title', eventData.title);
-      // eventToUpdate.setStart(eventData.start);
-      // eventToUpdate.setEnd(eventData.end);
-      // Update event in the FullCalendar
-
-      handleEventAction(eventData, 'update')
-      eventToUpdate.remove(); // Remove the old event
-      calendar.addEvent(eventData); // Add the updated event
-      $('#editEventModal').modal('hide'); // Close the edit event modal
+      var eventToUpdate = calendar.getEventById(eventData.id);
+      if (eventToUpdate) {
+        eventToUpdate.setProp('title', eventData.title);
+        eventToUpdate.setStart(eventData.start);
+        eventToUpdate.setEnd(eventData.end ? new Date(eventData.end + 'T23:59:59') : null); // Fix end date
+        handleEventAction(eventToUpdate, 'update');
+      }
+      $('#editEventModal').modal('hide');
     });
-
 
     calendar.render();
 
-
     $("#btn_holiday_update").on('click', function() {
-
       $.ajax({
         type: 'GET',
-        url: base_url + 'data/api/holiday/insert',
+        url: '<?php echo base_url('data/api/holiday/insert'); ?>',
         success: function(response) {
-          console.log("SUCCESS calendar insert")
+          console.log("Success calendar insert");
         },
         error: function(xhr, status, error) {
-          console.log("FAILED calendar insert")
-
+          console.log("Failed calendar insert");
         }
       });
-    })
-
-
-
-
+    });
   });
 </script>

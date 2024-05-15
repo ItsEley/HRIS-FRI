@@ -35,6 +35,7 @@ $route['hr/calendar'] = 'humanr/C_hr_calendar';
 $route['hr/shifts'] = 'humanr/C_hr_shifts';
 $route['hr/leaves'] = 'humanr/C_hr_leaves';
 $route['hr/departments'] = 'humanr/C_hr_departments';
+$route['hr/department_roles'] = 'humanr/C_hr_department_roles';
 $route['hr/settings'] = 'humanr/C_hr_settings';
 // $route['hr/assets'] = 'humanr/C_hr_assets';
 

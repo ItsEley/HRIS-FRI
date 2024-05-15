@@ -472,4 +472,161 @@ class Datatablec extends CI_Controller
             echo json_encode(array('status' => 'error', 'message' => 'Invalid request.'));
         }
     }
+
+
+    
+    public function timesheet_create()
+    {
+        $response = array();
+    
+        // Retrieve input data
+        $employee_id = $this->input->post('employee_id');
+        $att_date = $this->input->post('att_date');
+        $time_in = $this->input->post('create_time_in');
+        $time_out = $this->input->post('create_time_out');
+    
+        // Check if the date is received correctly
+        if (!$att_date) {
+            $response['status'] = "fail";
+            $response['message'] = 'Error: Date not provided.';
+            echo json_encode($response);
+            return;
+        }
+    
+        // Parse the date using DateTime class
+        $date = DateTime::createFromFormat('D M d Y H:i:s e+', $att_date);
+    
+        // Check if the date parsing was successful
+        if (!$date) {
+            $response['status'] = "fail";
+            $response['message'] = 'Error: Invalid date format.';
+            echo json_encode($response);
+            return;
+        }
+    
+        // Format the date to YYYY-mm-dd
+        $formatted_date = $date->format('Y-m-d');
+    
+        // Check if emp_id and date combination already exists
+        $this->db->where('emp_id', $employee_id);
+        $this->db->where('date', $formatted_date);
+        $existing_record = $this->db->get('attendance')->row();
+    
+        if ($existing_record) {
+            $response['status'] = "fail";
+            $response['message'] = 'Error: Record already exists for employee ' . $employee_id . ' on ' . $formatted_date;
+            echo json_encode($response);
+            return;
+        }
+    
+        $data = array(
+            /*column name*/
+            'emp_id' => $employee_id,
+            'date' => $formatted_date,
+            'time_in' =>  $time_in,
+            'time_out' => $time_out,
+        );
+    
+        // Insert data into the database
+        $sql = $this->db->insert('attendance', $data);
+    
+        if ($sql) {
+            $response['status'] = "success";
+            $response['message'] = 'Done';
+            $response['formatted_date'] = $formatted_date; // Include formatted date in the response
+        } else {
+            $response['status'] = "fail";
+            $response['message'] = 'Error date: ' . $att_date;
+        }
+    
+        echo json_encode($response);
+    }
+    
+    
+    public function department_role_insert() {
+        // Assuming the form data is posted via AJAX
+        if ($this->input->is_ajax_request()) {
+            $role_title = $this->input->post('create_role_title');
+            $description = $this->input->post('create_role_description');
+            $department_id = $this->input->post('create_role_department');
+            $salary = $this->input->post('create_role_salary');
+            $salary_type = $this->input->post('create_role_salary_type');
+    
+            $data = array(
+                /*column name*/
+                'roles' => $role_title,
+                'description' => $description,
+                'department' => $department_id,
+                'salary' =>  $salary,
+                'salary_type' => $salary_type,
+            );
+    
+            // Insert data into the database
+            $sql = $this->db->insert('department_roles', $data);
+    
+            if ($sql) {
+                $response['status'] = "success";
+                $response['message'] = 'Done';
+            } else {
+                $response['status'] = "fail";
+            }
+    
+            echo json_encode($response);
+        }
+    }
+    
+
+    public function department_role_update() {
+        // Assuming the form data is posted via AJAX
+        if ($this->input->is_ajax_request()) {
+            $role_id = $this->input->post('edit_role_id');
+            $role_title = $this->input->post('edit_role_title');
+            $description = $this->input->post('edit_role_description');
+            $department_id = $this->input->post('edit_role_department');
+            $salary = $this->input->post('edit_role_salary');
+            $salary_type = $this->input->post('edit_role_salary_type');
+    
+            $data = array(
+                /*column name*/
+                'roles' => $role_title,
+                'description' => $description,
+                'department' => $department_id,
+                'salary' => $salary,
+                'salary_type' => $salary_type,
+            );
+    
+            // Update data in the database
+            $this->db->where('id', $role_id);
+            $sql = $this->db->update('department_roles', $data);
+    
+            if ($sql) {
+                $response['success'] = true;
+                $response['message'] = 'Role updated successfully';
+            } else {
+                $response['success'] = false;
+                $response['message'] = 'Failed to update role';
+            }
+    
+            echo json_encode($response);
+        }
+    }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

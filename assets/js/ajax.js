@@ -245,7 +245,7 @@ $("#import_csv").submit(function (e) {
 		processData: false,
 		success: function (response) {
 			alert(response);
-			// window.location.reload(); // Reload the page after successful import
+			tarub
 		},
 		error: function (xhr, status, error) {
 			alert("An error occurred while processing the request.");
@@ -253,6 +253,36 @@ $("#import_csv").submit(function (e) {
 		},
 	});
 });
+
+$(document).ready(function () {
+    $("#import_attendance_csv").submit(function (e) {
+        e.preventDefault();
+
+		var form_data = new FormData($("#import_attendance_csv")[0]);
+
+
+        $.ajax({
+            type: "POST",
+            url: base_url + "humanr/import_attendance",
+            data: form_data,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                console.log("Success:", response);
+                if (response.trim() === "") {
+                    alert("Empty response received. Please check server-side code.");
+                } else {
+                    alert("Success!");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", xhr.responseText);
+                alert("An error occurred while processing the request. Please check the console for more details.");
+            },
+        });
+    });
+});
+
 
 $(document).ready(function () {
 	$("#exportBtn").click(function (e) {
@@ -697,3 +727,60 @@ $(document).ready(function () {
 		});
 	});
 });
+
+function previewFileCsv(inputElementId, modalPopupId, displayElementId) {
+
+    document.getElementById(inputElementId).addEventListener('change', function(e) {
+		console.log("Previewing CSV filezz");
+
+		console.log("File selected:", e.target.files[0].name);
+
+        var file = e.target.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+            var lines = e.target.result.split('\n');
+            var html = '<table id="preview_excel_table" class="table table-striped">';
+            lines.forEach(function(line, index) {
+                html += '<tr>';
+                var cells = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                cells = cells.map(function(cell) {
+                    // Remove surrounding quotes if present
+                    return cell.replace(/^"(.*)"$/, '$1');
+                });
+                cells.forEach(function(cell) {
+                    // Encode special characters
+                    cell = cell.replace(/ñ/g, "&ntilde;").replace(/Ñ/g, "&Ntilde;"); // Add more replacements as needed
+                    html += index === 0 ? '<th>' + cell + '</th>' : '<td>' + cell + '</td>';
+                });
+                html += '</tr>';
+            });
+            html += '</table>';
+
+            // Display Excel file columns in modal
+            var displayElement = document.getElementById(displayElementId);
+            if (displayElement) {
+                displayElement.innerHTML = html;
+                $('#' + modalPopupId).modal('show'); // Show Bootstrap Modal
+
+                // Update modal title with file name
+                var modalTitle = document.querySelector('#' + modalPopupId + ' .modal-title');
+                if (modalTitle && file) {
+                    modalTitle.innerText = "Previewing CSV file: " + file.name;
+                }
+
+                // // Initialize DataTables.js on the table with pagination
+                // if (lines.length > 25) {
+                //     $('#preview_excel_table').DataTable({
+                //         pagingType: 'full_numbers', // Display full pagination control
+                //         pageLength: 25 // Set maximum rows per page to 25
+                //     });
+                // }
+            } else {
+                console.error('Display element not found.');
+            }
+        };
+
+        reader.readAsText(file);
+    });
+}

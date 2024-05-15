@@ -7,8 +7,6 @@
     #sidebar-menu .message-content {
         color: white !important;
         font-size: 0.8rem !important;
-
-
     }
 
     #sidebar-menu .chat-content a {
@@ -52,9 +50,9 @@
 
                         <div class="chat-content" id="my-conversations">
 
-                        
+
                         </div>
-                        
+
                     </ul>
                 </nav>
 
@@ -107,23 +105,27 @@
 
 
         $(".chats.message-container").empty();
-        console.log("emp-id : ", $(element))
-        current_conversation_id = $(element).data("emp-id");
 
+
+        let element_id = $(element).data("emp-id");
+        current_conversation_id = $(element).data("emp-id").split("_")[1];
         conversation_type = $(element).data("type");
         conversation_selected = true;
 
+        
+
+        
         $("#dialog-no-message").attr('hidden', 'hidden');
         $("#chat-window").removeAttr('hidden');
         // console.log($('li[data-emp-id="' + current_conversation_id + '"] .message-author')[0].innerText)
-        $("#talking_to").text($('li[data-emp-id="' + current_conversation_id + '"] .message-author')[0].innerText);
-        $("#talking_to_pfp").attr("src", $('li[data-emp-id="' + current_conversation_id + '"] .img-pfp').attr('src'));
+        $("#talking_to").text($('li[data-emp-id="' + element_id + '"] .message-author')[0].innerText);
+        $("#talking_to_pfp").attr("src", $('li[data-emp-id="' + element_id + '"] .img-pfp').attr('src'));
 
         fetchMessages();
 
         if (fetch_active == false) {
             console.log("setting fetch to active")
-            setInterval(fetchMessages, 5000);
+            setInterval(fetchMessages, 1000);
             fetch_active = true;
         }
     }
@@ -139,10 +141,10 @@
             set_conversation_window(this)
         });
 
-        
-		if(current_conversation_id == undefined || current_conversation_id == null){
-			$("#sidebar-menu .chat-content .notification-message")[0].click();
-		}
+
+        if (current_conversation_id == undefined || current_conversation_id == null) {
+            $("#sidebar-menu .chat-content .notification-message")[0].click();
+        }
 
 
 

@@ -64,9 +64,7 @@
     <!-- Sidebar -->
     <?php $this->load->view('templates/sidebar') ?>
     <!-- /Sidebar -->
-    <!-- Two Col Sidebar -->
 
-    <!-- /Two Col Sidebar -->
     <!-- Page Wrapper -->
     <div class="page-wrapper" style="width:-webkit-fill-available;
                                     min-height: -webkit-fill-available;">
@@ -84,71 +82,7 @@
                             <li class="breadcrumb-item active">Employee Attendance</li>
                         </ul>
                     </div>
-                    <div class="col" id="attendance_filters">
 
-
-                        <label for="month">Month:</label>
-                        <select id="filter_month">
-                            <option value="1">January</option>
-                            <option value="2">February</option>
-                            <option value="3">March</option>
-                            <option value="4">April</option>
-                            <option value="5">May</option>
-                            <option value="6">June</option>
-                            <option value="7">July</option>
-                            <option value="8">August</option>
-                            <option value="9">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
-                        </select>
-
-
-                        <?php
-
-                        // Minimum year and month
-                        $query = $this->db->query("SELECT MIN(YEAR(`date`)) AS min_year, MIN(MONTH(`date`)) AS min_month FROM `attendance`");
-                        $min_result = $query->row();
-
-                        $min_year = $min_result->min_year;
-                        $min_month = $min_result->min_month;
-
-                        // Maximum year and month
-                        $query = $this->db->query("SELECT MAX(YEAR(`date`)) AS max_year, MAX(MONTH(`date`)) AS max_month FROM `attendance`");
-                        $max_result = $query->row();
-
-                        $max_year = $max_result->max_year;
-                        $max_month = $max_result->max_month;
-
-                        // Output the results
-                        // echo "Minimum Year: $min_year, Minimum Month: $min_month <br>";
-                        // echo "Maximum Year: $max_year, Maximum Month: $max_month";
-
-                        ?>
-
-
-                        <label for="year">Year:</label>
-                        <select id="filter_year">
-                            <!-- You can generate the options dynamically using JavaScript -->
-                            <!-- For example, from the current year to 10 years in the future -->
-                            <?php
-                            $current_year = date('Y');
-                            $current_month = date('Mm');
-
-
-
-                            // Generate options for the current year and 10 years in the future
-                            for ($i = $min_year; $i <= $max_year; $i++) {
-                                if ($i == $current_year) {
-                                    echo "<option value='$i' selected>$i</option>";
-                                } else {
-                                    echo "<option value='$i'>$i</option>";
-                                }
-                            }
-                            ?>
-
-                        </select>
-                    </div>
                     <div class="col-auto float-end ms-auto">
                         <button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print as PDF</button>
                         <!-- <div class="view-icons">
@@ -160,17 +94,86 @@
             </div>
             <!-- /Page Header -->
 
-            <div id="print-area">
+            <div class="row pb-3">
+                <div class="filter-container" id="attendance_filters">
 
+
+                    <label for="month" class="filter-label">Month:</label>
+                    <select id="filter_month" class="filter-input select">
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+
+
+                    <?php
+
+                    // Minimum year and month
+                    $query = $this->db->query("SELECT MIN(YEAR(`date`)) AS min_year, MIN(MONTH(`date`)) AS min_month FROM `attendance`");
+                    $min_result = $query->row();
+
+                    $min_year = $min_result->min_year;
+                    $min_month = $min_result->min_month;
+
+                    // Maximum year and month
+                    $query = $this->db->query("SELECT MAX(YEAR(`date`)) AS max_year, MAX(MONTH(`date`)) AS max_month FROM `attendance`");
+                    $max_result = $query->row();
+
+                    $max_year = $max_result->max_year;
+                    $max_month = $max_result->max_month;
+
+                    // Output the results
+                    // echo "Minimum Year: $min_year, Minimum Month: $min_month <br>";
+                    // echo "Maximum Year: $max_year, Maximum Month: $max_month";
+
+                    ?>
+
+
+                    <label for="year" class="filter-label">Year:</label>
+                    <select id="filter_year" class="filter-input select">
+                        <!-- You can generate the options dynamically using JavaScript -->
+                        <!-- For example, from the current year to 10 years in the future -->
+                        <?php
+                        $current_year = date('Y');
+                        $current_month = date('Mm');
+
+
+
+                        // Generate options for the current year and 10 years in the future
+                        for ($i = $min_year; $i <= $max_year; $i++) {
+                            if ($i == $current_year) {
+                                echo "<option value='$i' selected>$i</option>";
+                            } else {
+                                echo "<option value='$i'>$i</option>";
+                            }
+                        }
+                        ?>
+
+                    </select>
+                </div>
+            </div>
+
+
+
+            <div id="print-area" style="margin-left: 11px;">
 
                 <h1 class="text-center" style="display:none" id="report_header">Employee Attendance Report - March 2024</h1>
 
                 <div class="row legend timeline-panel" id="emp_att_legend">
-                <div class="d-flex justify-content-center">
-    <!-- <h3>Legend</h3> -->
-    <p class="m-0 mx-5" style="font-size: 18px; line-height: 1;"><span class="fas fa-check text-success"></span> - Present</p>
-    <p class="m-0 mx-5" style="font-size: 18px; line-height: 1;"><span class="fas fa-times fa-fw text-danger"></span> - Absent</p>
-</div>
+                    <div class="d-flex justify-content-center">
+                        <!-- <h3>Legend</h3> -->
+                        <p class="m-0 mx-5" style="font-size: 18px; line-height: 1;"><span class="fas fa-check text-success"></span> - Present</p>
+                        <p class="m-0 mx-5" style="font-size: 18px; line-height: 1;"><span class="fas fa-times fa-fw text-danger"></span> - Absent</p>
+                    </div>
 
                     <div class="col-4"></div>
                 </div>
@@ -234,111 +237,6 @@
 
 
 
-<!-- Attendance Modal -->
-<div class="modal custom-modal fade" id="attendance_info" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Attendance Info</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card punch-status">
-                            <div class="card-body">
-                                <h5 class="card-title">Timesheet <small class="text-muted">11 Mar 2019</small></h5>
-                                <div class="punch-det">
-                                    <h6>Punch In at</h6>
-                                    <p>Wed, 11th Mar 2019 10.00 AM</p>
-                                </div>
-                                <div class="punch-info">
-                                    <div class="punch-hours">
-                                        <span>3.45 hrs</span>
-                                    </div>
-                                </div>
-                                <div class="punch-det">
-                                    <h6>Punch Out at</h6>
-                                    <p>Wed, 20th Feb 2019 9.00 PM</p>
-                                </div>
-                                <div class="statistics">
-                                    <div class="row">
-                                        <div class="col-md-6 col-6 text-center">
-                                            <div class="stats-box">
-                                                <p>Break</p>
-                                                <h6>1.21 hrs</h6>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-6 text-center">
-                                            <div class="stats-box">
-                                                <p>Overtime</p>
-                                                <h6>3 hrs</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card recent-activity">
-                            <div class="card-body">
-                                <h5 class="card-title">Activity</h5>
-                                <ul class="res-activity-list">
-                                    <li>
-                                        <p class="mb-0">Punch In at</p>
-                                        <p class="res-activity-time">
-                                            <i class="fa-regular fa-clock"></i>
-                                            10.00 AM.
-                                        </p>
-                                    </li>
-                                    <li>
-                                        <p class="mb-0">Punch Out at</p>
-                                        <p class="res-activity-time">
-                                            <i class="fa-regular fa-clock"></i>
-                                            11.00 AM.
-                                        </p>
-                                    </li>
-                                    <li>
-                                        <p class="mb-0">Punch In at</p>
-                                        <p class="res-activity-time">
-                                            <i class="fa-regular fa-clock"></i>
-                                            11.15 AM.
-                                        </p>
-                                    </li>
-                                    <li>
-                                        <p class="mb-0">Punch Out at</p>
-                                        <p class="res-activity-time">
-                                            <i class="fa-regular fa-clock"></i>
-                                            1.30 PM.
-                                        </p>
-                                    </li>
-                                    <li>
-                                        <p class="mb-0">Punch In at</p>
-                                        <p class="res-activity-time">
-                                            <i class="fa-regular fa-clock"></i>
-                                            2.00 PM.
-                                        </p>
-                                    </li>
-                                    <li>
-                                        <p class="mb-0">Punch Out at</p>
-                                        <p class="res-activity-time">
-                                            <i class="fa-regular fa-clock"></i>
-                                            7.30 PM.
-                                        </p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- /Attendance Modal -->
 
 
 <script>

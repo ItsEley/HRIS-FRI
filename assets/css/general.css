@@ -40,11 +40,13 @@ body::-webkit-scrollbar {
   /* For example: */
   border-top: none;
   border-left: none;
-  border-right:none;
+  border-right: none;
   border-radius: 0;
-  cursor: not-allowed; /* Change cursor style */
+  cursor: not-allowed;
+  /* Change cursor style */
   /* Add more styles as needed */
 }
+
 /* handle text overflows */
 .text-overflow-ellipsis {
   /* white-space: nowrap; */
@@ -54,47 +56,56 @@ body::-webkit-scrollbar {
 
 /* for attendance markings */
 
-.att-p:before {  /* Present */
+.att-p:before {
+  /* Present */
   color: green;
   content: "P";
 }
 
-.att-o:before {/* Ontime */
+.att-o:before {
+  /* Ontime */
   color: rgb(61, 148, 61);
   content: "O";
 }
 
-.att-l:before {/* Late */
+.att-l:before {
+  /* Late */
   color: orange;
   content: "L";
 }
 
-.att-a:before {/* Absent */
+.att-a:before {
+  /* Absent */
   color: red;
   content: "A";
 }
 
-.att-d:before {/* Day-off  */
+.att-d:before {
+  /* Day-off  */
   color: #ff00ac;
   content: "D";
 }
 
-.att-e:before {/* On Leave */
+.att-e:before {
+  /* On Leave */
   color: #55b5bd;
   content: "E";
 }
 
-.att-b:before {/* On official Business */
+.att-b:before {
+  /* On official Business */
   color: blue;
   content: "B";
 }
 
-.att-h:before {/* Halfday */
+.att-h:before {
+  /* Halfday */
   color: black;
   content: "H";
 }
 
-.att-n:before {/* No workday */
+.att-n:before {
+  /* No workday */
   color: black;
   content: "X";
 }
@@ -121,28 +132,65 @@ li>a:hover>img.my-img-icon {
 }
 
 
-.my-hover:hover{
-  color:#ffbb5b !important;
- 
+.my-hover:hover {
+  color: #ffbb5b !important;
+
 }
 
 
-.page-wrapper{
-  top:0;
-  position:absolute !important;
-  width:-webkit-fill-available !important;
+.page-wrapper {
+  top: 0;
+  position: absolute !important;
+  width: -webkit-fill-available !important;
   /* min-height: -webkit-fill-available !important; */
 }
 
 
-.my-link{
-    color:black !important;
+.my-link {
+  color: black !important;
 
 }
 
 
-.input-required::after{
+.input-required::after {
   color: red;
   content: "*";
 
+}
+
+
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* Adjust the gap between elements as needed */
+}
+
+.filter-label {
+  font-weight: bold;
+}
+
+.filter-input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  height: 30px;
+}
+
+.filter-input.numeric {
+  width: 60px;
+  /* Adjust the width for numeric input */
+}
+
+.filter-input.select {
+  width: 150px;
+  /* Adjust the width for select dropdown */
+}
+
+/* Change the color of the toggle switch when checked */
+.form-check-input:checked {
+  color: #fff;
+  background-color: #28a745;
+  border-color: #28a745;
 }

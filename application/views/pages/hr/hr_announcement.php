@@ -67,8 +67,8 @@
                                        <th>Author</th>
                                        <th>Department</th>
                                        <th>Date Created</th>
-                                       <th>Action</th>
-
+                                       <th style = "width:150px;" class = "">Action</th>
+ 
                                    </tr>
                                </thead>
                                <tbody>
@@ -147,8 +147,6 @@
                                          
                                            </td>
                                        </tr>
-
-
                                    <?php
                                     }
                                     ?>
@@ -158,10 +156,6 @@
                    </div>
                </div>
                <!-- /data table -->
-
-
-
-
            </div>
            <!-- /Page Content -->
        </div>
@@ -176,10 +170,6 @@
    <!-- modal create -->
    <?php $this->load->view('templates\modals\announcement_create.php'); ?>
    <?php $this->load->view('templates\modals\announcement_edit.php'); ?>
-
-
-
-
    <?php $this->load->view('components\modal-announcement-details.php'); ?>
 
    <!-- Include Summernote JavaScript -->

@@ -157,9 +157,9 @@
 					// Do something with the message (e.g., send it to the server)
 					// For example, submit the form
 
-					console.log("current_user :", current_user_id)
-					console.log("current_conversation_id :", current_conversation_id)
-					console.log("conversation_type :", conversation_type)
+					// console.log("current_user :", current_user_id)
+					// console.log("current_conversation_id :", current_conversation_id)
+					// console.log("conversation_type :", conversation_type)
 
 					$('#chatForm').submit();
 

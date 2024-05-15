@@ -1,5 +1,36 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
 
+
+
+function lowercaseSpecialChars($str) {
+    // Split the string into individual characters
+    $chars = preg_split('//u', $str, -1, PREG_SPLIT_NO_EMPTY);
+
+    // Check if $chars is an array
+    if (!is_array($chars)) {
+        // If $chars is not an array, return the original string
+        return $str;
+    }
+
+    $result = '';
+
+    // Loop through each character
+    foreach ($chars as $char) {
+        // Check if the character is a special character like Ñ
+        if (preg_match('/[^\p{L}]/u', $char)) {
+            // Preserve the case of the special character
+            $result .= mb_strtolower($char, 'UTF-8');
+        } else {
+            // Preserve the case of other characters
+            $result .= $char;
+        }
+    }
+
+    return $result;
+}
+
+
+
 class Humanr extends CI_Controller
 {
 
@@ -28,6 +59,39 @@ class Humanr extends CI_Controller
 	// 	}
 	// }
 
+
+	public function edit_timesheet() {
+		if ($this->input->server('REQUEST_METHOD') == 'POST') {
+			// Get the POST data
+			$att_id = $this->input->post('att_id');
+			$time_in = $this->input->post('time_in');
+			$time_out = $this->input->post('time_out');
+	
+			// Validate and sanitize input data as needed
+			// ...
+	
+			// Data to update
+			$update_data = array(
+				'time_in' => $time_in,
+				'time_out' => $time_out
+			);
+	
+			// Load database library
+			$this->load->database();
+	
+			// Update the attendance record
+			$this->db->where('attendance_id', $att_id);
+			$success = $this->db->update('attendance', $update_data);
+	
+			// Prepare the response
+			if ($success) {
+				echo json_encode(['status' => 'success', 'message' => 'Timesheet updated successfully']);
+			} else {
+				echo json_encode(['status' => 'error', 'message' => 'Failed to update timesheet']);
+			}
+		}
+	}
+	
 	public function hrapprove()
 	{
 		$rowId = $this->input->post('row_id');
@@ -567,7 +631,7 @@ class Humanr extends CI_Controller
 			// Loop through each message to generate HTML
 			foreach ($messages as $message) {
 				// Construct HTML for the message
-				$html = '<li class="notification-message" data-emp-id="' . $message['emp_id'] . '" data-type = "'.$message['conversation_type'].'"
+				$html = '<li class="notification-message" data-emp-id=" ' .$message['conversation_type'].'_'. $message['emp_id'] . '" data-type = "'.$message['conversation_type'].'"
 				style="background-color:' . ($message['is_read'] === null ? '#f2f2f2' : '#ffffff') . ';">';
 				$html .= '<a href="chat.html">';
 				$html .= '<div class="list-item">';
@@ -696,7 +760,6 @@ class Humanr extends CI_Controller
 	}
 
 
-
 	public function C_hr_employees()
 	{
 
@@ -710,105 +773,19 @@ class Humanr extends CI_Controller
 
 	public function C_hr_departments()
 	{
-
-
 		$data['title'] = 'HR | Departments';
 		$this->load->view('templates/header', $data);
 		$this->load->view('pages/hr/hr_departments');
 		$this->load->view('templates/footer');
 	}
 
-
-	public function import()
+	public function C_hr_department_roles()
 	{
-		if (isset($_FILES["file"]["name"])) {
-			$path = $_FILES["file"]["tmp_name"];
-			if ($_FILES["file"]["size"] > 0) {
-				$file = fopen($path, "r");
-				$firstRowSkipped = false;
-				while (($getData = fgetcsv($file, 10000, ",")) !== FALSE) {
-					if (!$firstRowSkipped) {
-						$firstRowSkipped = true;
-						continue; // Skip the first row
-					}
-
-					// Modify the data mapping according to your CSV structure
-					$data = array(
-						'id' => generateEmployeeCode($getData[0] . ' ' . $getData[1] . ' ' . $getData[2]), // Assuming employee ID is in column index 0
-						'fname' => $getData[0], // First name
-						'mname' => $getData[1], // Middle name
-						'lname' => $getData[2], // Last name
-						'nickn' => $getData[3], // Nickname (assuming it's in column index 3)
-						'contact_no' => $getData[4], // Contact number (assuming it's in column index 4)
-						'current_add' => $getData[5], // Current address (assuming it's in column index 5)
-						'perm_add' => $getData[6], // Permanent address (assuming it's in column index 6)
-						'dob' => $getData[7], // Date of birth (assuming it's in column index 7)
-						'age' => $getData[8], // Age (assuming it's in column index 8)
-						'religion' => $getData[9], // Religion (assuming it's in column index 9)
-						'sex' => $getData[10], // Sex (assuming it's in column index 10)
-						'civil_status' => $getData[11], // Civil status (assuming it's in column index 11)
-						'pob' => $getData[12], // Place of birth (assuming it's in column index 12)
-						'email' => $getData[13]
-
-					);
-
-					// Insert data into the database
-					$this->db->insert('employee', $data);
-				}
-				fclose($file);
-				echo "CSV File has been successfully Imported.";
-			} else {
-				echo "Invalid File: Please Upload CSV File.";
-			}
-		}
+		$data['title'] = 'HR | Department Roles';
+		$this->load->view('templates/header', $data);
+		$this->load->view('pages/hr/hr_department_roles');
+		$this->load->view('templates/footer');
 	}
-
-
-	public function export_csv()
-	{
-		// Select all columns from the database
-		$employees = $this->db->get('employee')->result_array();
-
-		// Set CSV headers
-		header('Content-Type: text/csv; charset=utf-8');
-		header('Content-Disposition: attachment;filename="employee_data.csv"');
-		header('Cache-Control: max-age=0');
-
-		// Open output stream
-		$output = fopen('php://output', 'w');
-		fwrite($output, "\xEF\xBB\xBF"); // UTF-8 BOM
-
-		// Write CSV headers
-		fputcsv($output, array('ID', 'First Name', 'Middle Name', 'Last Name', 'Nickname', 'Contact No', 'Current Address', 'Permanent Address', 'Date of Birth', 'Age', 'Religion', 'Sex', 'Civil Status', 'Place of Birth', 'Email', 'Date Created'));
-
-		// Write employee data to CSV
-		foreach ($employees as $employee) {
-			// Map the database column names to CSV column order
-			$csvData = array(
-				$employee['id'],
-				$employee['fname'],
-				$employee['mname'],
-				$employee['lname'],
-				$employee['nickn'],
-				$employee['contact_no'],
-				$employee['current_add'],
-				$employee['perm_add'],
-				$employee['dob'],
-				$employee['age'],
-				$employee['religion'],
-				$employee['sex'],
-				$employee['civil_status'],
-				$employee['pob'],
-				$employee['email'],
-				$employee['date_created']
-			);
-			fputcsv($output, $csvData);
-		}
-
-		// Close output stream
-		fclose($output);
-	}
-
 
 
 
@@ -1015,6 +992,182 @@ class Humanr extends CI_Controller
 			redirect('');
 		}
 	}
+
+
+	public function import()
+	{
+		if (isset($_FILES["file"]["name"])) {
+			$path = $_FILES["file"]["tmp_name"];
+			if ($_FILES["file"]["size"] > 0) {
+				$file = fopen($path, "r");
+				$firstRowSkipped = false;
+				while (($getData = fgetcsv($file, 10000, ",")) !== FALSE) {
+					if (!$firstRowSkipped) {
+						$firstRowSkipped = true;
+						continue; // Skip the first row
+					}
+	
+					$famco_id = mb_convert_encoding($getData[15], 'UTF-8');
+	
+					// Check if the famco_id already exists in the database
+					$existing_record = $this->db->get_where('employee', array('famco_id' => $famco_id))->row();
+					if ($existing_record) {
+						echo "Record with famco_id $famco_id already exists. Skipping...<br>";
+						continue; // Skip insertion
+					}
+	
+					// Modify the data mapping according to your CSV structure
+					$data = array(
+						'id' => generateEmployeeCode($getData[0] . ' ' . $getData[1] . ' ' . $getData[2]), // Assuming employee ID is in column index 0
+						'fname' => mb_convert_encoding(ucwords(strtolower($getData[0])), 'UTF-8'), // First name
+						'mname' => mb_convert_encoding(ucwords(strtolower($getData[1])), 'UTF-8'), // Middle name
+						'lname' => mb_convert_encoding(ucwords(strtolower($getData[2])), 'UTF-8'), // Last name
+						'nickn' => mb_convert_encoding(ucwords(strtolower($getData[3])), 'UTF-8'), // Nickname (assuming it's in column index 3)
+						'contact_no' => mb_convert_encoding($getData[4], 'UTF-8'), // Contact number (assuming it's in column index 4)
+						'current_add' => mb_convert_encoding($getData[5], 'UTF-8'), // Current address (assuming it's in column index 5)
+						'perm_add' => mb_convert_encoding($getData[6], 'UTF-8'), // Permanent address (assuming it's in column index 6)
+						'dob' => mb_convert_encoding($getData[7], 'UTF-8'), // Date of birth (assuming it's in column index 7)
+						'age' => mb_convert_encoding($getData[8], 'UTF-8'), // Age (assuming it's in column index 8)
+						'religion' => mb_convert_encoding(ucwords(strtolower($getData[9])), 'UTF-8'), // Religion (assuming it's in column index 9)
+						'sex' => mb_convert_encoding($getData[10], 'UTF-8'), // Sex (assuming it's in column index 10)
+						'civil_status' => mb_convert_encoding($getData[11], 'UTF-8'), // Civil status (assuming it's in column index 11)
+						'pob' => mb_convert_encoding($getData[12], 'UTF-8'), // Place of birth (assuming it's in column index 12)
+						'email' => mb_convert_encoding($getData[13], 'UTF-8'),
+						'famco_id' => $famco_id
+					);
+	
+					// Insert data into the database
+					$this->db->insert('employee', $data);
+					echo "Record with famco_id $famco_id inserted successfully.<br>";
+				}
+				fclose($file);
+				echo "CSV File has been successfully Imported.";
+			} else {
+				echo "Invalid File: Please Upload CSV File.";
+			}
+		}
+	}
+
+
+
+	public function import_attendance()
+	{
+	
+		print_r($_FILES);
+		if (isset($_FILES["fileInput"]) && $_FILES["fileInput"]["error"] == 0) {
+			echo "TRUE BROTHA";
+			$path = $_FILES["fileInput"]["tmp_name"];
+			if ($_FILES["fileInput"]["size"] > 0) {
+				$file = fopen("".$path, "r");
+				if ($file) {
+					try {
+						$firstRowSkipped = false;
+						while (($getData = fgetcsv($file, 10000, ",")) !== FALSE) {
+							if (!$firstRowSkipped) {
+								$firstRowSkipped = true;
+								continue; // Skip the first row
+							}
+	
+							// Fetch famco_id from the first column
+							$famco_id = mb_convert_encoding($getData[0], 'UTF-8');
+							// Fetch date from the fourth column
+							$date = mb_convert_encoding($getData[4], 'UTF-8');
+	
+							// Query the employee table to get the id corresponding to the famco_id
+							$employee_record = $this->db->get_where('employee', array('famco_id' => $famco_id))->row();
+	
+							// Check if the employee record exists
+							if ($employee_record) {
+								// Data mapping according to your CSV structure
+								$data = array(
+									'emp_id' => $employee_record->id, // Use the id from the employee table
+									'date' => $date, // Date of attendance
+									'time_in' => mb_convert_encoding($getData[5], 'UTF-8'), // Time in (assuming it's in column index 5)
+									'time_out' => mb_convert_encoding($getData[6], 'UTF-8') // Time out (assuming it's in column index 6)
+								);
+	
+								// Check if a record with the same emp_id and date already exists in the database
+								$existing_record = $this->db->get_where('attendance', array('emp_id' => $data['emp_id'], 'date' => $date))->row();
+	
+								if ($existing_record) {
+									// If record exists, update the corresponding row
+									$this->db->where('id', $existing_record->id);
+									$this->db->update('attendance', $data);
+									// echo "Record with famco_id $famco_id and date $date updated successfully.<br>";
+								} else {
+									// If record doesn't exist, insert it into the database
+									$this->db->insert('attendance', $data);
+									// echo "Record with famco_id $famco_id and date $date inserted successfully.<br>";
+								}
+							} else {
+								// echo "Employee with famco_id $famco_id does not exist. Skipping...<br>";
+							}
+						}
+						fclose($file);
+
+						echo "CSV File has been successfully Imported.";
+					} catch (Exception $e) {
+						echo "An error occurred: " . $e->getMessage();
+					}
+				} else {
+					echo "Failed to open the file.";
+				}
+			} else {
+				echo "Invalid File: Please Upload CSV File.";
+			}
+		}
+		else{
+			echo "HALA WALA OMGGG";
+		}
+	}
+	
+
+	
+	public function export_csv()
+	{
+		// Select all columns from the database
+		$employees = $this->db->get('employee')->result_array();
+
+		// Set CSV headers
+		header('Content-Type: text/csv; charset=utf-8');
+		header('Content-Disposition: attachment;filename="employee_data.csv"');
+		header('Cache-Control: max-age=0');
+
+		// Open output stream
+		$output = fopen('php://output', 'w');
+		fwrite($output, "\xEF\xBB\xBF"); // UTF-8 BOM
+
+		// Write CSV headers
+		fputcsv($output, array('ID', 'First Name', 'Middle Name', 'Last Name', 'Nickname', 'Contact No', 'Current Address', 'Permanent Address', 'Date of Birth', 'Age', 'Religion', 'Sex', 'Civil Status', 'Place of Birth', 'Email', 'Date Created'));
+
+		// Write employee data to CSV
+		foreach ($employees as $employee) {
+			// Map the database column names to CSV column order
+			$csvData = array(
+				$employee['id'],
+				$employee['fname'],
+				$employee['mname'],
+				$employee['lname'],
+				$employee['nickn'],
+				$employee['contact_no'],
+				$employee['current_add'],
+				$employee['perm_add'],
+				$employee['dob'],
+				$employee['age'],
+				$employee['religion'],
+				$employee['sex'],
+				$employee['civil_status'],
+				$employee['pob'],
+				$employee['email'],
+				$employee['date_created']
+			);
+			fputcsv($output, $csvData);
+		}
+
+		// Close output stream
+		fclose($output);
+	}
+
 
 	public function adduser()
 	{
@@ -1440,4 +1593,19 @@ class Humanr extends CI_Controller
 			echo "No data found";
 		}
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 }

@@ -184,6 +184,7 @@ $this->load->helper('my_gen_func_helper.php');
 				</div>
 			</div>
 		</div>
+
 		<!-- /Add Group Modal -->
 
 		<!-- Add Chat User Modal -->
@@ -234,10 +235,19 @@ $this->load->helper('my_gen_func_helper.php');
 <!-- /Main Wrapper -->
 
 
+<audio controls id="audio_new_message">
+	<source src="<?= base_url('assets/audio/tink.mp3') ?>" type="audio/mp3" />
+	<source src="<?= base_url('assets/audio/tink.mp3') ?>" type="audio/mp3" />
+	<source src="<?= base_url('assets/audio/tink.mp3') ?>" type="audio/mp3" />
+
+</audio>
+
+
 <script>
 	var current_user_id = <?= $this->session->userdata('id'); ?>;
 	var current_conversation_id;
 	var conversation_type; // group or private
+	var message_limit = 200;
 	var conversation_selected = false;
 	var fetch_active = false;
 
@@ -300,8 +310,9 @@ $this->load->helper('my_gen_func_helper.php');
 	var audio = document.getElementById('audio_new_message');
 
 	function play_new_message() {
-		audio.play();
 		console.log("Playing audio")
+
+		audio.play();
 	}
 
 	// Function to scroll the chat container to the bottom
@@ -313,14 +324,18 @@ $this->load->helper('my_gen_func_helper.php');
 	}
 
 
-	// Call this function after appending new messages to scroll to the bottom
 	// Function to display messages in the chat container
 	function displayMessages(messages, message_container) {
 		// Loop through each message
-		console.log("display messages", messages)
+		console.log("display messages", messages);
+		let new_mess_counter = 0;
+
+
+
 		messages.forEach(function(message) {
 			// Check if message already exists in the chat container
 			var existingMessage = $('' + message_container).find('[data-message-id="' + message.id + '"]');
+
 			if (existingMessage.length > 0) {
 				// Message already exists, compare its content with fetched data
 				var existingContent = existingMessage.find('.chat-content p').text();
@@ -329,12 +344,15 @@ $this->load->helper('my_gen_func_helper.php');
 					// existingMessage.find('.chat-content p').text(message.message);
 					// console.log("displayMessages chat-time")
 					// existingMessage.find('.chat-time').text(message.timestamp);
-
 					// ! DISMISSED UPDATING MESSAGE UNTIL NEEDED
+
+
 
 				}
 			} else {
 				// Message does not exist, append it to the chat container
+				new_mess_counter++;
+
 				// Append my messages
 				// console.log(messages)
 				if (message.from_ == current_user_id) {
@@ -368,8 +386,15 @@ $this->load->helper('my_gen_func_helper.php');
 						'</div>' +
 						'</div>';
 					$('' + message_container).append(messageHTML);
+					console.log("new_mess_counter", new_mess_counter);
+
+					if (new_mess_counter < 3) {
+						// play audio if it's not too much
+						play_new_message();
+
+					}
+
 				}
-				// play_new_message();
 				scrollToBottom();
 				// update_window();
 
@@ -413,6 +438,8 @@ $this->load->helper('my_gen_func_helper.php');
 
 	}
 
+
+
 	// Function to fetch chat messages via AJAX
 	function fetchMessages() {
 		let formData = [];
@@ -421,6 +448,11 @@ $this->load->helper('my_gen_func_helper.php');
 		formData.push({
 			name: 'from_',
 			value: current_user_id
+		});
+
+		formData.push({
+			name: 'limit',
+			value: message_limit
 		});
 
 		if (conversation_type == 'group') {
@@ -441,7 +473,7 @@ $this->load->helper('my_gen_func_helper.php');
 			data: formData,
 			dataType: 'json',
 			success: function(data) {
-				console.log("fetchMessages", data);
+				// console.log("fetchMessages", data);
 				// Display fetched messages in the chat container
 				displayMessages(data, ".chats.message-container");
 				// Handle updates and deletes in the chat container
@@ -456,10 +488,9 @@ $this->load->helper('my_gen_func_helper.php');
 
 
 
-
+	// new conversation modal
 	$("#btn_new_direct_message").on('click', function() {
-
-		console.log("getting new people")
+		// console.log("getting new people")
 		getNewPeople()
 	})
 
@@ -501,6 +532,8 @@ $this->load->helper('my_gen_func_helper.php');
 				// Optionally, you can clear the input field after sending the message
 				$('#chat_message_input').val('');
 				fetchMessages();
+				// play_new_message();
+
 			},
 			error: function(xhr, status, error) {
 				// Handle any errors that occur during the Ajax request

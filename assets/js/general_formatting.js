@@ -52,3 +52,8 @@ function formatAddress(addressString) {
 function generateRandomNumber(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+
+function date_padding(number) {
+    return (number < 10 ? '0' : '') + number;
+}

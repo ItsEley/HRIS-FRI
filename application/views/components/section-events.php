@@ -93,7 +93,9 @@
                         <div class="timeline-panel type-<?= $row->type ?>" style="background-color: white; ">
                            <h3 class="event-name" style="font-size: 20px;">
 
-                              <?php if ($row->type == "birthday") {
+                              <?php 
+                              
+                              if ($row->type == "birthday") {
                                  echo "Happy Birthday $row->name !";
                               } else {
                                  echo $row->name;

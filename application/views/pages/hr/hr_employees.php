@@ -25,519 +25,174 @@
                             <li class="breadcrumb-item active">Employee</li>
                         </ul>
                     </div>
-                    <div class="col-auto float-end ms-auto">
+                    <div class="col-auto float-end ms-auto d-flex flex-row-reverse ">
+                        <!-- <a href="#" class="btn add-btn mx-1" data-bs-toggle="modal" data-bs-target="#add_employee"><i class="fa-solid fa-upload"></i> Import CSV</a> -->
+
+
+                        <label for="csvFileInput" style="border: 1px solid #ccc; display: inline-block; padding: 8px 16px; cursor: pointer;
+                         background-color: #f9f9f9; color: #333; border-radius: 4px;" class="mx-1">
+                            <i class="fa fa-cloud-upload"></i> Import Excel
+                        </label>
+
                         <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_employee"><i class="fa-solid fa-plus"></i> Add Employee</a>
-                        <div class="view-icons">
-                            <a href="<?= base_url('hr/employees') ?>" class="grid-view btn btn-link active"><i class="fa fa-th"></i></a>
-                            <a href="<?= base_url('hr/employees-list') ?>" class="list-view btn btn-link"><i class="fa-solid fa-bars"></i></a>
-                        </div>
+
+
                     </div>
                 </div>
             </div>
             <!-- /Page Header -->
 
-            <!-- Search Filter -->
-            <div class="row filter-row">
-
-                <div class="col-sm-6 col-md-3">
-                    <div class="input-block mb-3 form-focus">
-                        <input type="text" class="form-control floating">
-                        <label class="focus-label">Employee Name</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3">
-                    <div class="input-block mb-3 form-focus select-focus">
-                        <select class="form-select form-control">
-                            <option value="">All</option>
-                            <?php
-                            //get select-options
-                            $query =  $this->db->get('department');
-                            $data['query'] = $query;
-                            $this->load->view('components/select-options', $data);
-                            ?>
-                        </select>
-
-                        <label class="focus-label">Department</label>
-                    </div>
-                </div>
-
-                <div class="col-sm-6 col-md-3">
-                    <div class="input-block mb-3 form-focus select-focus">
-                        <select class="select floating form-select form-control">
 
 
-                        </select>
-                        <label class="focus-label">Role</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3">
-                    <div class="d-grid">
-                        <a href="#" class="btn btn-success w-100"> Search </a>
+            <!-- data table -->
+            <div class="row timeline-panel">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table id="dt_emp_list" class="datatable table-striped custom-table mb-0 datatable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Address</th>
+                                    <th>Contact No</th>
+                                    <th>Department</th>
+                                    <th>Role</th>
+                                    <th>action</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+
+                                $query = $this->db->query("
+                                SELECT 
+                                e.employee_id,
+                                e.id ,
+                                CONCAT(e.fname, ' ', e.mname, ' ', e.lname) AS full_name,
+                                e.pfp,e.current_add,e.contact_no,
+                                e.department AS department_id,
+                                d.department AS department,
+                                e.role AS role_id,
+                                dr.roles AS role,
+                                e.famco_id
+                            FROM 
+                                employee e
+                            LEFT JOIN 
+                                department d ON e.department = d.id
+                            LEFT JOIN 
+                                department_roles dr ON e.role = dr.id;
+                            
+                                ");
+
+                                foreach ($query->result() as $row) {
+
+
+
+                                ?>
+                                    <tr class="hoverable-row">
+                                        <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                            <?php echo $row->famco_id; ?>
+                                        </td>
+                                        <td style="max-width: 200px; max-height: 100px; overflow: hidden;">
+                                            <div class="ellipsis" style="max-height: 1.2em; overflow: hidden;">
+                                                <?php echo $row->full_name;; ?>
+                                            </div>
+                                        </td>
+
+                                        <td><?php echo $row->current_add; ?></td>
+
+                                        <td><?php echo $row->contact_no; ?></td>
+                                        <td><?php echo $row->department; ?></td>
+
+                                        <td><?php echo $row->role; ?></td>
+                                        <td>
+                                            <?php
+                                            echo '<button type="button" class="a-shift modal-trigger btn btn-rounded btn-primary p-1 px-2 create-timesheet"
+                     style="margin-right:10px; font-size:10px" data-bs-toggle="modal" data-bs-target="#modal_edit_dnr"
+                      data-emp-id="' . $row->famco_id . '" >
+                      <i class="fas fa-pencil m-r-5"></i>Edit Designation</button>';
+
+                                            ?>
+                                        </td>
+
+
+                                    </tr>
+                                <?php
+                                }
+                                ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-            <!-- Search Filter -->
-
-            <div class="row staff-grid-row">
-
-                <?php
-                //display employee cards
-                $query = $this->db->query("
-                SELECT 
-                e.employee_id,
-                e.id AS employee_id,
-                CONCAT(e.fname, ' ', e.mname, ' ', e.lname) AS full_name,
-                e.pfp,
-                e.department AS department_id,
-                d.department AS department,
-                e.role AS role_id,
-                dr.roles AS role
-            FROM 
-                employee e
-            LEFT JOIN 
-                department d ON e.department = d.id
-            LEFT JOIN 
-                department_roles dr ON e.role = dr.id;
-            
-                    ");
-
-                foreach ($query->result() as $row) {
-
-                    $data['emp_name'] = $row->full_name;
-                    $data['emp_id'] = $row->employee_id;
-
-                    if ($row->department == '' || $row->department == NULL) {
-                        $data['department'] = "Not assigned to a deparment.";
-                    } else {
-                        $data['department'] = $row->department;
-                    }
-
-                    if ($row->role == '' || $row->role == NULL) {
-                        $data['role'] = "Not assigned to any roles.";
-                    } else {
-                        $data['role'] = $row->role;
-                    }
-
-                    if ($row->pfp == '' || $row->pfp == NULL) {
-                        $data['pfp'] = base_url('assets\img\user.jpg');
-                    } else {
-
-                        $data['pfp'] = "data:image/jpeg;base64," . base64_encode($row->pfp) . "";
-                    }
+            <!-- /data table -->
 
 
-
-
-
-                    $this->load->view('components/card-employee-basic', $data);
-                }
-
-
-
-                ?>
-
-
-
-            </div>
-
-
-            <a href="<?php echo base_url('hr/departments#emp_no_roles') ?>">Click here to view employees without designated roles.</a>
+            <a href="<?php echo base_url('hr/departments/emp_no_roles') ?>">Click here to view employees without designated roles.</a>
 
         </div>
         <!-- /Page Content -->
 
+        <form class="form-horizontal" id="import_csv" method="post" name="upload_excel" accept-charset="UTF-8" enctype="multipart/form-data">
+
+
+            <input type="file" name="file" id="csvFileInput" class="input-large" style="display: none;">
+
+            <div class="row">
+                <div id="csv_preview" class="col-md-8 col-md-offset-2" hidden></div>
+            </div>
+
+            <!-- </fieldset> -->
+            <div class="modal fade" id="excelColumnsModal" tabindex="-1" role="dialog" aria-labelledby="excelColumnsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl" role="document"> <!-- Added modal-xl class for large size -->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="excelColumnsModalLabel">Excel File Columns</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="excelColumnsBody" style="overflow-x: auto;">
+                            <!-- Excel file columns will be displayed here -->
+                        </div>
+                        <div class="modal-footer">
+                            <!-- Move the Upload Excel button here -->
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <form id="import_csv" method="post" name="upload_excel" accept-charset="UTF-8" enctype="multipart/form-data" style="display: inline;">
+                                <div id="upload_btn" class="form-group" style="display: inline;">
+                                    <button type="submit" id="submit_import" name="Import" class="btn btn-primary">
+                                        <i class="fas fa-upload"></i> Upload Excel
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
 
 
         <!-- MODALS -->
 
 
-        <!-- Edit Employee Modal -->
-        <div id="edit_employee" class="modal custom-modal fade" role="dialog">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Employee</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-
-                    </div>
-                    <div class="modal-body">
-                        <form id="edit_employee" enctype="multipart/form-data" method="post">
-                            <input class="form-control" type="hidden" name="emp_id">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">First Name <span class="text-danger">*</span></label>
-                                        <input class="form-control" value="" type="text" name="fname">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Middle Name</label>
-                                        <input class="form-control" value="" type="text" name="mname">
-
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Last Name <span class="text-danger">*</span></label>
-                                        <input class="form-control" value="" type="text" name="lname">
-
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Nickname <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="nickn">
-
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Current Address</label>
-                                        <input class="form-control" type="text" name="current_add">
-
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Permanent Address</label>
-                                        <input class="form-control" type="text" name="perm_add">
-
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Date Of Birth <span class="text-danger">*</span></label>
-                                        <div class="cal-icon"><input class="form-control" name="dob" type="date"></div>
-
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Religion </label>
-                                        <input class="form-control" type="text" name="religion">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Sex</label>
-                                        <select class="select form-control" name="sex">
-                                            <option value="M">Male</option>
-                                            <option value="F">Female</option>
-
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Civil Status </label>
-                                        <select class="select form-control" name="civil_status">
-                                            <option value="N/A">N/A</option>
-                                            <option value="Single">Single</option>
-                                            <option value="Married">Married</option>
-                                            <option value="Live In">Live In</option>
-                                            <option value="Widowed">Widowed</option>
-
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Place of Birth <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="pob">
-                                    </div>
-                                </div>
+        <?php $this->load->view('templates\modals\employee_edit.php'); ?>
+        <?php $this->load->view('templates\modals\employee_add.php'); ?>
+        <?php $this->load->view('templates\modals\employee_delete.php'); ?>
 
 
 
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Email <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="email" name="email">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Contact Number <span class="text-danger">*</span></label>
-                                        <input class="form-control input-mask" type="text" name="contact_no">
-
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="submit-section">
-                                <button type="submit" class="btn btn-primary submit-btn">Save</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /Edit Employee Modal -->
-
-
-
-        <!-- Add Employee Modal -->
-        <div id="add_employee" class="modal custom-modal fade" role="dialog" data-bs-backdrop="static">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add Employee</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form accept-charset="UTF-8" method="post" id="adduser" enctype="multipart/form-data">
-
-
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">First Name <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="fname">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Middle Name</label>
-                                        <input class="form-control" type="text" name="mname">
-
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Last Name <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="lname">
-
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Nickname </label>
-                                        <input class="form-control" type="text" name="nickn">
-
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Current Address</label>
-                                        <input class="form-control" type="text" name="current_add">
-
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Permanent Address</label>
-                                        <input class="form-control" type="text" name="perm_add">
-
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Date of Birth <span class="text-danger">*</span></label>
-                                        <div class="cal-icon"><input class="form-control" type="date"></div>
-
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Place of Birth <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="pob">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Religion </label>
-                                        <input class="form-control" type="text" name="religion">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Sex <span class="text-danger">*</span></label>
-                                        <select class="form-select form-control" name="sex">
-                                            <option value="Male">Male</option>
-                                            <option value="Female">Female</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Civil Status <span class="text-danger">*</span></label>
-                                        <select class="form-select form-control" name="civil_status">
-
-                                            <option value="Single">Single</option>
-                                            <option value="Married">Married</option>
-                                            <option value="Live In">Live In</option>
-                                            <option value="Widowed">Widowed</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Contact No <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="contact">
-                                    </div>
-                                </div>
-
-
-
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Email <span class="text-danger">*</span></label>
-                                        <input class="form-control" type="email" name="email">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Department <span class="text-danger">*</span></label>
-                                        <select class="form-select form-control" name="department">
-
-                                            <?php
-                                            //get select-options
-                                            $this->db->order_by('department', 'ASC');
-                                            $query =  $this->db->get('department');
-                                            $data['query'] = $query;
-                                            $this->load->view('components/select-options', $data);
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Role <span class="text-danger">*</span></label>
-                                        <select class="form-select form-control" name="role" id="add_emp_role">
-                                            <option value="">Add role</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6" hidden>
-                                    <div class="input-block mb-3">
-                                        <label class="col-form-label">Add role on <span id="add_selected_dep">{DEPARTMENT}</span><span class="text-danger">*</span></label>
-                                        <input class="form-control" type="text" name="contact">
-                                    </div>
-                                </div>
-
-
-                                <div class="col-sm-6">
-                                    <div class="input-block mb-3">
-                                        <input type="file" name="capturedImage" id="capturedImageInput" style="display: none;">
-
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="submit-section">
-                                <button type="button" class="btn btn-primary submit-btn" id="openSecondModalBtn">Next</button>
-                            </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /Add Employee Modal -->
-
-        <!-- modal img capture -->
-        <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="exampleModalToggleLabel2">Image Capturing</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-
-                        <div id="cameraSection" style="display: none;">
-                            <h5>Employee Picture</h5>
-                            <video id="video" autoplay width="400" height="400"></video><br>
-                            <!-- Captured Image Container -->
-                            <div id="capturedImageContainer" style="display: none;">
-                                <h5>Employee Picture</h5>
-                                <img id="capturedImage" name="image" width="400" height="400" />
-                            </div>
-                            <!--/// Captured Image Container -->
-
-                            <input type="file" id="capt_img_file" name="capt_img_file">
-
-                            <button class="btn btn-primary w-100" id="captureButton">Capture</button>
-                            <button class="btn btn-danger w-100" id="retakeButton" style="display: none;">Retake</button><br>
-                            <canvas style="display: none;" id="canvas"></canvas>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" data-bs-target="#add_employee" data-bs-toggle="modal" data-bs-dismiss="modal">Return</button>
-                        <button class="btn btn-secondary" data-bs-target="#add_employee" data-bs-toggle="modal" data-bs-dismiss="modal">Skip</button>
-
-                        <button type="button" class="btn btn-primary" id="add_employee_submit">Submit</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <?php $this->load->view('templates\modals\employee_dnr_edit.php'); ?>
 
 
 
 
-        <div class="modal custom-modal fade" id="delete_employee" role="dialog">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="form-header">
-                            <h3>Delete Employee</h3>
-                            <p>Are you sure want to delete?</p>
-                        </div>
-                        <div class="modal-btn delete-action">
-                            <div class="row">
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" class="btn btn-primary continue-btn" id="confirmFirstDeleteBtn">Delete</a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Second Confirmation Modal -->
-        <div class="modal custom-modal fade" id="confirm_delete" role="dialog">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="form-header">
-                            <h3>Confirmation</h3>
-                            <p>Are you really sure?</p>
-                        </div>
-                        <div class="modal-btn delete-action">
-                            <div class="row">
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" class="btn btn-primary continue-btn" id="confirmFinalDeleteBtn">Yes, Delete</a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- /Delete Employee Modal -->
+
+
+
+
+
 
 
     </div>
@@ -552,6 +207,18 @@
     document.addEventListener('DOMContentLoaded', function() {
         $("li > a[href='<?= base_url('hr/employees') ?>']").addClass("active");
         $("li > a[href='<?= base_url('hr/employees') ?>']").parent().parent().css("display", "block")
+
+        previewFileCsv('csvFileInput', 'excelColumnsModal', 'excelColumnsBody');
+
+
+        $('#dt_emp_list').DataTable({
+            "paging": true, // Enable paging
+            "ordering": true, // Enable sorting
+            "info": true, // Enable table information display
+            "pageLength": 100
+            // You can add more options as needed
+        });
+
 
 
 
