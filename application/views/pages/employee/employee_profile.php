@@ -124,11 +124,11 @@
                                     </li>
                                     <li>
                                         <div class="title">Nationality</div>
-                                        <div class="text">Indian</div>
+                                        <div class="text">Filipino</div>
                                     </li>
                                     <li>
                                         <div class="title">Religion</div>
-                                        <div class="text">Christian</div>
+                                        <div class="text">Roman Catholic</div>
                                     </li>
                                     <li>
                                         <div class="title">Marital status</div>

@@ -16,7 +16,8 @@
                     <!-- <input type="text" id="edit_emp_id" name="edit_emp_id"> -->
 
                     <div class="mb-3">
-                        <p>Edit employee role for <b><span id="edit_for">NAME</span></b></p>
+                        <input type="text" name="edit_dnr_emp_id" id="edit_dnr_emp_id" readonly>
+                        <p>Edit employee role for <b><span id="edit_dnr_empname">NAME</span></b></p>
                     </div>
 
 
@@ -25,11 +26,18 @@
                         <select class="form-select form-control col" name="edit_role_department" id="edit_role_department">
 
                             <?php
-                            $query = $this->db->query('SELECT * FROM `department_roles` ORDER BY roles ASC');
+                            $query = $this->db->query(' SELECT dr.id, dr.roles, dr.description, dr.department,  d.department AS department_name,dr.salary, dr.salary_type
+                            FROM department_roles dr
+                            LEFT JOIN employee e ON dr.id = e.role
+                            LEFT JOIN department d ON dr.department = d.id
+                            WHERE e.role IS NULL
+                            ORDER BY dr.roles ASC');
                             $department_roles = $query->result();
                             foreach ($department_roles as $role) {
-                                echo "<option value = '$role->id'>$role->roles</option>";
+                                echo "<option value = '$role->id' data-department = '$role->department_name' data-department-id = '$role->department'>$role->roles</option>";
                             } ?>
+
+                            <option value="null" style = "color:red">Remove role</option>
 
                         </select>
                     </div>
@@ -40,8 +48,8 @@
 
             
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
-                        <button type="submit" class="btn btn-primary float-end"><i class="fa-solid fa-pencil"></i> edit</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close"> <i class="fa-solid fa-xmark"></i> Close</button>
+                        <button type="submit" class="btn btn-primary float-end"><i class="fa-solid fa-pencil"></i> Save</button>
 
                     </div>
                 </form>
@@ -52,27 +60,43 @@
 
 
 <script>
+
+
+function update_corr_dept(){
+    // Get the data-department attribute of the selected option
+    var department = $('#edit_role_department').find(':selected').data('department');
+    
+    // Update the span content
+    $("#modal_edit_dnr span#role_department").html(department);
+    
+    // Log the updated content
+
+    // console.log($("#modal_edit_dnr span#role_department").html());
+}
+
+
     $('button[data-bs-target="#modal_edit_dnr"]').on('click', function() {
         // Your code here
-        console.log("Button clicked:", this);
+        // console.log("Button clicked:", this);
+
+        update_corr_dept();
         // Example: Get data attributes
-        let role_id = $(this).data('role-id');
-        let role_title = $(this).data('role-title');
-        let description = $(this).data('role-desc');
-        let department_id = $(this).data('department-id');
-        let salary = $(this).data('role-salary');
-        let salary_type = $(this).data('role-salary-type');
+        let emp_name = $(this).data('emp-name');
+        let emp_id = $(this).data('emp-id');
 
 
-        $("#modal_edit_dnr input#edit_role_id").val(role_id);
-        $("#modal_edit_dnr input#edit_role_title").val(role_title);
-        $("#modal_edit_dnr input#edit_role_description").val(description);
-        $("#modal_edit_dnr input#edit_role_department").val(department_id);
-        $("#modal_edit_dnr input#edit_role_salary").val(salary);
-        $("#modal_edit_dnr input#edit_role_salary_type").val(salary_type);
+        $("#modal_edit_dnr input#edit_dnr_emp_id").val(emp_id);
+        $("#modal_edit_dnr span#edit_dnr_empname").html(emp_name);
+
+
 
 
     });
+
+    $("#edit_role_department").on('change',function(){
+        update_corr_dept();
+
+    })
 
 
 

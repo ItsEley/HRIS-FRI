@@ -28,7 +28,8 @@
                         <li><a href='" . base_url('hr/announcement') . "'><i class='la la-bullhorn'></i><span>Announcements</span></a></li> 
                         <li><a href='" . base_url('hr/departments') . "'><img src = '" . base_url('assets/img/icons/department-2.png') . "' class = 'my-img-icon'> 
                                             <span>Departments</span></a></li> 
-                                            <li><a href='" . base_url('hr/department_roles') . "'><img src = '" . base_url('assets/img/icons/department-2.png') . "' class = 'my-img-icon'> 
+                                            <li><a href='" . base_url('hr/department_roles') . "'>
+                                            <img width='30' height='30' class = 'my-img-icon' src='https://img.icons8.com/ios/50/collaborator-male.png' alt='collaborator-male'/>
                                             <span>Roles</span></a></li> 
                         <li><a href='" . base_url('hr/shifts') . "'><i class='fa-regular fa-clock'></i><span>Shifts</span></a></li> 
                         <li><a href='" . base_url('hr/leaves') . "'><i class='la la-bullhorn'></i><span>Leaves</span></a></li> 

@@ -2,6 +2,7 @@
 
 
 
+
 function lowercaseSpecialChars($str) {
     // Split the string into individual characters
     $chars = preg_split('//u', $str, -1, PREG_SPLIT_NO_EMPTY);
@@ -92,6 +93,25 @@ class Humanr extends CI_Controller
 		}
 	}
 	
+	public function get_roles_by_department() {
+        $department_id = $this->input->post('department_id');
+        log_message('debug', 'Department ID: ' . $department_id); // Debugging
+
+        $this->db->where('department', $department_id);
+        $query = $this->db->get('department_roles');
+
+        $roles = [];
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $roles[] = ['id' => $row->id, 'role' => $row->roles];
+            }
+        }
+
+        log_message('debug', 'Roles: ' . json_encode($roles)); // Debugging
+        header('Content-Type: application/json');
+        echo json_encode($roles);
+    }
+
 	public function hrapprove()
 	{
 		$rowId = $this->input->post('row_id');

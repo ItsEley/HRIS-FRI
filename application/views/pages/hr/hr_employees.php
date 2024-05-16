@@ -109,7 +109,7 @@
                                             <?php
                                             echo '<button type="button" class="a-shift modal-trigger btn btn-rounded btn-primary p-1 px-2 create-timesheet"
                      style="margin-right:10px; font-size:10px" data-bs-toggle="modal" data-bs-target="#modal_edit_dnr"
-                      data-emp-id="' . $row->famco_id . '" >
+                      data-emp-id="' . $row->famco_id . '" data-emp-name = "'.$row->full_name.'">
                       <i class="fas fa-pencil m-r-5"></i>Edit Designation</button>';
 
                                             ?>
