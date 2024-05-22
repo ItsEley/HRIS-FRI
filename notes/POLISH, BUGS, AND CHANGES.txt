@@ -1,0 +1,67 @@
+POLISH, BUGS, AND CHANGES
+
+DASHBOARD
+- Card Applicant | C
+- Leaves to Attendance Completion
+- Events Limit to 8
+
+
+CALENDAR
+- not working properly
+- duplicating
+
+ANNOUNCEMENT
+- edit not working
+- delete not working
+
+
+DEPARTMENT - check
+SHIFTS - check
+
+
+REPORTS
+	Employee Performance
+		- Summarized report
+		- Detailed report
+		- Printable
+		- 
+
+	Timesheet 
+		- Move date
+		- add reason
+		- SIL, day-off, OB
+
+	Attendance
+		- Replace icons
+
+EMPLOYEES
+	Manage
+		- change to list view
+	
+	Shifts & Schedules - check
+
+	Performance Evaluation
+		- Evaluation part 2
+		- Evaluation part 3
+		- Notify before, after evaluation 
+		- History
+		
+
+
+
+hr_timesheet query WRONG
+
+SELECT a.attendance_id, a.date, e.famco_id as emp_id, a.time_in, a.time_out, a.status, a.num_hr, e.pfp, e.fname, e.lname FROM employee e LEFT JOIN attendance a ON a.emp_id = e.id AND DATE(a.date) = "2024-05-14";
+
+
+
+CHARACTER REFERENCE
+
+Mr. Jason Magsino
++63 955 633 3709
+jason123.magsino@gmail.com
+
+
+Ms. Jashmin Tancailles
+
+

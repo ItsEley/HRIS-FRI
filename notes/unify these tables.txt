@@ -1,0 +1,18 @@
+unify these tables
+
+SELECT `id`, `date_filled`, `date_from`, `date_to`, `type_of_leave`, `reason`, `head_status`, `status`, `comment`, `date_ans`, `emp_id`, `head_id`, `hr_id`, `head_status_date`, `hr_status_date`, `department` FROM `f_leaves` WHERE 1
+
+SELECT `id`, `leave_type` FROM `f_leave_type` WHERE 1
+
+SELECT `id`, `emp_id`, `date_filled`, `date`, `destin_from`, `destin_to`, `time_from`, `time_to`, `reason`, `status`, `comment`, `date_ans`, `hr_id`, `head_id`, `head_status`, `department`, `head_status_date`, `hr_status_date` FROM `f_off_bussiness` WHERE 1
+
+SELECT `id`, `emp_id`, `date_filled`, `time_to`, `time_from`, `going_to`, `reason`, `status`, `hr_id`, `head_id`, `head_status`, `department`, `head_status_date`, `hr_status_date` FROM `f_outgoing` WHERE 1
+
+SELECT `id`, `emp_id`, `date_filled`, `date_ot`, `time_in`, `time_out`, `total_duty_hours`, `reason`, `status`, `hr_id`, `head_id`, `head_status`, `department`, `head_status_date`, `hr_status_date` FROM `f_overtime` WHERE 1
+
+SELECT `id`, `emp_id`, `date_filled`, `date_of_undertime`, `time_in`, `time_out`, `total_duty_hours`, `reason`, `status`, `hr_id`, `head_id`, `head_status`, `department`, `head_status_date`, `hr_status_date` FROM `f_undertime` WHERE 1
+
+
+SELECT `id`, `emp_id`, `change_time_from`, `change_time_to`, `change_time_effectivity`, `change_day_from`, `change_day_to`, `change_day_effectivity`, `reason`, `status`, `date_filled`, `hr_id`, `head_id`, `head_status`, `department`, `head_status_date`, `hr_status_date` FROM `f_worksched_adj` WHERE 1
+
+

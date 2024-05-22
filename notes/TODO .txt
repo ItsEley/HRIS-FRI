@@ -1,0 +1,7 @@
+TODO 
+
+CHAT
+	-1-1
+	-1-many / groups
+	-text
+	-files

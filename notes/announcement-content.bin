@@ -1,0 +1,133 @@
+you are doing cleanup on shifts delete
+
+you need to update the table content dynamically
+
+        dynamic_table("dt_shifts", "<?= base_url('datatable_fetchers/fetch_shifts')?>");
+
+
+                    if ($shift->description === NULL || $shift->description === "") {
+                        $shift = "No description";
+                    } else {
+                         $shift->description;
+                    }
+
+                    
+                    echo '<tr class="hoverable-row">
+                    <td hidden>'.$shift->id.'</td>
+
+                    <td>'.$shift->group_ .'</td>
+                    <td style="max-width: 200px; overflow: hidden;
+                     text-overflow: ellipsis; white-space: nowrap;">
+                        '.$shift.'
+                    </td>
+
+
+                    <td>'.formatTimeOnly($shift->time_from).'</td>
+
+                    <td>'.formatTimeOnly($shift->time_to).'</td>
+                    <td>
+                    <button type = "button" class="edit-shift modal-trigger btn btn-rounded btn-primary p-1 px-2"
+                         style = "margin-right:10px; font-size:10px" data-bs-toggle="modal" data-bs-target="#modal_edit_shift"
+                         data-shift-id = "'.$shift->id.'">
+                            <i class="fas fa-pencil m-r-5"></i>Edit
+                        </button>
+
+                        <button type = "button" class="delete-shift modal-trigger btn btn-rounded btn-danger p-1 px-2"
+                         style = "margin-right:10px; font-size:10px" data-bs-toggle="modal" data-bs-target="#modal_delete_shift"
+                         data-shift-id = "'.$shift->id.'" data-shift-label = "'.$shift->group_.'">
+                            <i class="fas fa-trash m-r-5"></i>Delete
+                        </button>
+
+                    </td>
+
+
+                </tr>';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
++++++++++++++++++++++++++++++++++++++++++++=
+ <?php
+
+                                $query = $this->db->query('SELECT * FROM `sys_shifts`');
+
+
+                                // Check if the query was successful
+                                if ($query) {
+                                    // Check if there are rows returned
+                                    if ($query->num_rows() > 0) {
+                                        // Fetch the result rows as an array of objects
+                                        $shifts = $query->result();
+
+                                        // Process the result rows
+                                        foreach ($shifts as $shift) {
+                                            // Access properties of each shift object as needed
+
+
+                                ?>
+
+
+                                            <tr class="hoverable-row">
+                                                <td hidden><?= $shift->id ?></td>
+
+                                                <td>
+                                                    <?= $shift->group_ ?>
+
+                                                </td>
+                                                <td style="max-width: 200px; overflow: hidden;
+                                                 text-overflow: ellipsis; white-space: nowrap;">
+
+                                                    <?php
+                                                    if ($shift->description === NULL || $shift->description === '') {
+                                                        echo "No description";
+                                                    } else {
+                                                        echo $shift->description;
+                                                    }
+                                                    ?>
+                                                </td>
+
+
+                                                <td><?= formatTimeOnly($shift->time_from) ?></td>
+
+                                                <td><?= formatTimeOnly($shift->time_to) ?></td>
+                                                <td>
+                                                <button type = "button" class="edit-shift modal-trigger btn btn-rounded btn-primary p-1 px-2"
+                                                     style = "margin-right:10px; font-size:10px" data-bs-toggle="modal" data-bs-target="#modal_edit_shift"
+                                                     data-shift-id = "<?= $shift->id ?>">
+                                                        <i class="fas fa-pencil m-r-5"></i>Edit
+                                                    </button>
+
+                                                    <button type = "button" class="delete-shift modal-trigger btn btn-rounded btn-danger p-1 px-2"
+                                                     style = "margin-right:10px; font-size:10px" data-bs-toggle="modal" data-bs-target="#modal_delete_shift"
+                                                     data-shift-id = "<?= $shift->id ?>" data-shift-label = "<?= $shift->group_ ?>">
+                                                        <i class="fas fa-trash m-r-5"></i>Delete
+                                                    </button>
+
+                                                </td>
+
+
+                                            </tr>
+
+
+                                <?php
+                                        }
+                                    } else {
+                                        // Handle case when no rows are returned
+                                        echo "No shifts found.";
+                                    }
+                                } else {
+                                    // Handle case when query fails
+                                    echo "Error executing query: " . $this->db->error()['message'];
+                                }
+                                ?>

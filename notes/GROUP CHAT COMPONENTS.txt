@@ -1,0 +1,98 @@
+** GROUP CHAT COMPONENTS
+- GROUP DETAILS
+	- id
+	- group name
+	- group photo
+	- group owner
+
+Q - get group you are a member of
+
+SELECT 
+    cg.id AS group_id,
+    cg.group_name,
+    cg.group_cover_pic,
+    cg.owner,
+    cg.date_created
+FROM 
+    chat_group_members AS cgm
+JOIN 
+    chat_group AS cg ON cgm.group_id = cg.id
+WHERE 
+    cgm.member = '1';
+
+
+
+- GROUP MEMBERS
+	- id
+	- full name
+	- last seen
+
+- CHATS
+	-id
+	- message/files
+	- timestamp
+	- sent files
+	
+
+
+** PRIVATE MESSAGE
+- employee id
+- emp name
+- emp last message
+
+Q - get emp you had conversation with
+
+SELECT 
+    CASE
+        WHEN cm.from_ = '1' THEN cm.to_
+        ELSE cm.from_
+    END AS employee_id,
+    CONCAT(e.fname, ' ', e.lname) AS emp_name,
+    MAX(cm.timestamp) AS last_timestamp,
+    MAX(cm.message) AS last_message
+FROM 
+    chat_messages AS cm
+JOIN 
+    employee AS e ON (cm.from_ = e.id OR cm.to_ = e.id) AND e.id != '1'
+WHERE 
+    '1' IN (cm.from_, cm.to_)
+GROUP BY 
+    employee_id, emp_name;
+
+
+
+
+payslip tables
+deductions 
+
+
+Name	Position	Department	Standard_Pay	Allowance	Total_Gross	Total_Deductions	Net_Pay 	Payroll_Period Days_Worked	
+
+OT_Pay	Night_Differential	Holiday_Pay	Special_Holiday	Special_Holiday_OT	Legal_Holiday	
+
+Unworked_Amount	Late_Amount	Undertime_Amount	Cash_Advance	TAX	SSS	PhilHealth	PAG-IBIG	SSS Loans	DEN	Warehouse_Sale	
+
+
+
+
+Attendance
+present/absent
+get workdays :
+	check distinct dates
+	check if it's a holiday,sunday,
+	check if the emp on leave, on off buss
+	CC,CX,XC,XX
+
+
+
+omad
+otab
+
+damo
+bato
+
+
+
+
+
+

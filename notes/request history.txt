@@ -1,0 +1,103 @@
+request history
+Request Editable until approved by the hr
+
+chat sir jason about additional module:
+department heads
+security department'
+
+TO DO 
+-- WORK SCHEDULE ADJUSTMENT REQ.
+-- OVERTIME REQUEST
+
+
+
+
+March 11, 2024
+
+
+forms
+	- pending
+	- history
+	- apply
+
+
+department crud
+--roles crud
+
+
+salary cut off or every 15 days
+6-20
+21-5
+
+
+
+Departments and roles assignment
+
+
+
+asset_id
+asset_name
+asset_user
+department
+assetCondition'
+model
+serial_number
+
+
+
+
+
+
+Manage -> Add employee
+
+Create employee
+	- leave balance
+	- day shift/day off
+	- 
+
+
+
+
+
+
+
+Employee schedule
+TIME
+
+	8:00 - 17:00
+
+7:30 - 17:04
+ontime - goods
+
+total 8 
+
+
+
+	
+	
+
+DAY-OFF
+	
+
+
+
+can be deleted : 
+ANNOUNCEMENTS
+
+
+ANNOUNCEMENT : 
+card and modal
+
+
+
+
+
+
+GRAPHS
+
+applicant
+resignee
+
+department counts
+
+
