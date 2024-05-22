@@ -12,7 +12,6 @@
                 <li class="breadcrumb-item active">Payslip List</li>
             </ul>
       		</div>
-
       		<div class="col-auto float-end ms-auto">
       			<a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#viewpayroll" ><i class="fa-solid fa-eye"></i> View Payroll</a>
       		</div>
@@ -36,7 +35,7 @@
                   	$start_date = $_GET['start_date'];
                   	$end_date = $_GET['end_date'];
                   	$total_deductions = 0;
-                    $sql = "SELECT *, p.employee_id as empID, e.employee_id as employeeID FROM payroll p inner join employee e on p.employee_id = e.id WHERE cutoff_start = '$start_date'";
+                    $sql = "SELECT *, p.employee_id as empID, e.id as employeeID FROM payroll p inner join employee e on p.employee_id = e.id WHERE cutoff_start = '$start_date'";
                     $payroll_list = $this->db->query($sql)->result();
                     $caamt = '';
                     

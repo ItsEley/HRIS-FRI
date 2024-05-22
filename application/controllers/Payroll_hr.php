@@ -622,160 +622,173 @@ class Payroll_hr extends CI_Controller
 
 
 	public function generatePayroll()
-	{
-		$response = array();
-		// $start_date = '2024-03-20';
-		// $end_date = '2024-04-06';
+{
+    $response = array();
+    
+    $start_date = $this->input->post('startdate');
+    $end_date = $this->input->post('enddate');
+    $mandatories = $this->input->post('mandatory');
 
-		$start_date = $this->input->post('startdate');
-		$end_date = $this->input->post('enddate');
-		$mandatories = $this->input->post('mandatory');
+    // Input validation
+    if (!$start_date || !$end_date || !$mandatories || count($mandatories) < 1) {
+        $response['error'] = "Start date, end date, and at least one mandatory deduction are required.";
+        echo json_encode($response);
+        return;
+    }
 
-		// calculate SSS deductions
-		function calculateDeduction($tableName, $employeeSalary)
-		{
-			$ci = &get_instance();
-			$sql = $ci->db->query("SELECT * FROM sss_metrics")->result();
-			$deduction = 0; // Default deduction
-			foreach ($sql as $row) {
-				$pattern = '/\s*-\s*/';
-				$salary_rate = preg_split($pattern, $row->rate_range);
-				$ded = $row->deduct_amt;
-				if ($employeeSalary >= $salary_rate[0] && $employeeSalary <= $salary_rate[1]) {
-					$deduction = $ded;
-					break; // Exit the loop once we find the correct range
-				}
-			}
+    // calculate SSS deductions
+    function calculateDeduction($tableName, $employeeSalary)
+    {
+        $ci = &get_instance();
+        $sql = $ci->db->query("SELECT * FROM sss_metrics")->result();
+        $deduction = 0; // Default deduction
+        foreach ($sql as $row) {
+            $pattern = '/\s*-\s*/';
+            $salary_rate = preg_split($pattern, $row->rate_range);
+            $ded = $row->deduct_amt;
+            if ($employeeSalary >= $salary_rate[0] && $employeeSalary <= $salary_rate[1]) {
+                $deduction = $ded;
+                break; // Exit the loop once we find the correct range
+            }
+        }
+        return $deduction;
+    }
 
-			return $deduction;
-		}
+    $sql = "SELECT *, e.id as empID, SUM(at.num_hr) as total_hours_rendered, COUNT(at.date) as total_working_days 
+            FROM employee e 
+            INNER JOIN attendance at ON e.id = at.emp_id 
+            INNER JOIN department d ON e.department = d.id 
+            INNER JOIN department_roles dr ON e.role = dr.id 
+            INNER JOIN sys_shifts sf ON e.shift = sf.id 
+            INNER JOIN deductions dd ON e.deduction = dd.deduction_id 
+            WHERE at.date BETWEEN '$start_date' and '$end_date' 
+            GROUP BY e.id";
+    $query = $this->db->query($sql);
 
-		$sql = "SELECT *,e.id as empID, SUM(at.num_hr) as total_hours_rendered, COUNT(at.date) as total_working_days FROM employee e inner join attendance at on e.employee_id = at.emp_id inner join department d on e.department = d.id inner join department_roles dr on e.role = dr.id inner join sys_shifts sf on e.shift = sf.id inner join deductions dd on e.deduction = dd.deduction_id WHERE at.date BETWEEN '$start_date' and '$end_date' GROUP BY e.employee_id";
-		$query = $this->db->query($sql)->result();
+    if (!$query) {
+        $response['error'] = "Failed to execute query: " . $this->db->error();
+        echo json_encode($response);
+        return;
+    }
 
-		$empsalary = 0;
-		$working_days = 13;
-		$rate = 0;
-		$rate_per_hr = 0;
-		$salary_wout_deduction = 0;
-		$philhealthded = 0;
-		$philhealth = 0;
-		$total_deduction = 0;
-		$late_fee_rate = 0.50;
-		$late_fee = 0;
-		$actual_unworked_amt = 0;
-		$pagibig = 0;
+    $result = $query->result();
+    if (empty($result)) {
+        $response['error'] = "No records found for the given date range.";
+        echo json_encode($response);
+        return;
+    }
 
-		foreach ($query as $row) {
-			$expectedArrival = $row->time_from;
-			// actual time 
-			$actualArrival = $row->time_in;
-			$expectedTimestamp = strtotime($expectedArrival);
-			$actualTimestamp = strtotime($actualArrival);
-			// Calculate the difference in seconds
-			$lateSeconds = $actualTimestamp - $expectedTimestamp;
-			$lateMinutes = round($lateSeconds / 60);
+    $empsalary = 0;
+    $working_days = 13;
+    $rate = 0;
+    $rate_per_hr = 0;
+    $salary_wout_deduction = 0;
+    $philhealthded = 0;
+    $philhealth = 0;
+    $total_deduction = 0;
+    $late_fee_rate = 0.50;
+    $late_fee = 0;
+    $actual_unworked_amt = 0;
+    $pagibig = 0;
 
-			$hours = floor($lateMinutes / 60);
-			$minutes = $lateMinutes % 60;
-			$late_time_format = sprintf("%02d:%02d", $hours, $minutes);
+    foreach ($result as $row) {
+        $expectedArrival = $row->time_from;
+        $actualArrival = $row->time_in;
+        $expectedTimestamp = strtotime($expectedArrival);
+        $actualTimestamp = strtotime($actualArrival);
+        $lateSeconds = $actualTimestamp - $expectedTimestamp;
+        $lateMinutes = round($lateSeconds / 60);
 
-			// for late fees
-			if ($row->salary === "13300") {
-				$late_fee = $lateMinutes * 1.07;
-			} else if ($row->salary === "15000") {
-				$late_fee = $lateMinutes * 1.20;
-			} else if ($row->salary === "12454") {
-				$late_fee = $lateMinutes * 1.00;
-			} else if ($row->salary === "16300") {
-				$late_fee = $lateMinutes * 1.31;
-			} else if ($row->salary === "18000") {
-				$late_fee = $lateMinutes * 1.44;
-			} else if ($row->salary === "22500") {
-				$late_fee = $lateMinutes * 1.80;
-			} else if ($row->salary === "25000") {
-				$late_fee = $lateMinutes * 2.00;
-			} else if ($row->salary === "30000") {
-				$late_fee = $lateMinutes * 2.40;
-			} else if ($row->salary === "35000") {
-				$late_fee = $lateMinutes * 2.80;
-			}
+        $hours = floor($lateMinutes / 60);
+        $minutes = $lateMinutes % 60;
+        $late_time_format = sprintf("%02d:%02d", $hours, $minutes);
 
-			$employeeSalary = $row->salary;
-			if (isset($mandatories) && count($mandatories) >= 1) {
-				// Loop through the checked checkboxes
-				foreach ($mandatories as $mandatory) {
-					// Check the value of each checkbox
-					if ($mandatory == "sss") {
-						$sssDeduction = calculateDeduction('sss_ranges', $employeeSalary);
-					} else {
-						$sssDeduction = 0;
-					}
-					if ($mandatory === 'pagibig') {
-						$pagibig = $row->amount;
-					} elseif ($mandatory === 'philhealth') {
-						$philhealth = (5 / 100) * (int)$employeeSalary / 2;
-					}
-				}
-			} else {
-				// If less than two checkboxes are checked, display a message
-				echo "Please select at least two checkboxes.";
-			}
+        $late_fee_rate = array(
+            13300 => 1.07,
+            15000 => 1.20,
+            12454 => 1.00,
+            16300 => 1.31,
+            18000 => 1.44,
+            22500 => 1.80,
+            25000 => 2.00,
+            30000 => 2.40,
+            35000 => 2.80
+        );
 
+        $late_fee = isset($late_fee_rate[$row->salary]) ? $lateMinutes * $late_fee_rate[$row->salary] : 0;
 
-			$empsalary = $row->salary / 2;
-			$rate = $empsalary / 13;
-			$rate_per_hr = $rate / 8;
-			$salary_wout_deduction = $rate_per_hr * $row->total_hours_rendered;
+        $employeeSalary = $row->salary;
+        $sssDeduction = 0;
+        $pagibig = 0;
+        $philhealth = 0;
 
-			$total_deduction = $row->amount + $sssDeduction + $philhealth;
-			$total_salary = $salary_wout_deduction - $total_deduction;
-			$actual_unworked_amt = ($working_days - $row->total_working_days) * $rate;
+        foreach ($mandatories as $mandatory) {
+            if ($mandatory == "sss") {
+                $sssDeduction = calculateDeduction('sss_ranges', $employeeSalary);
+            } else if ($mandatory == 'pagibig') {
+                $pagibig = $row->amount;
+            } else if ($mandatory == 'philhealth') {
+                $philhealth = (5 / 100) * (int)$employeeSalary / 2;
+            }
+        }
 
-			// count work days base on timein-timeout
-			$worked_days = 0;
-			$worked_days = $row->total_hours_rendered / 8;
+        $empsalary = $row->salary / 2;
+        $rate = $empsalary / 13;
+        $rate_per_hr = $rate / 8;
+        $salary_wout_deduction = $rate_per_hr * $row->total_hours_rendered;
 
+        $total_deduction = $row->amount + $sssDeduction + $philhealth;
+        $total_salary = $salary_wout_deduction - $total_deduction;
+        $actual_unworked_amt = ($working_days - $row->total_working_days) * $rate;
 
+        $worked_days = $row->total_hours_rendered / 8;
 
+        echo "<br>";
+        echo "<center>" . $row->fname . "<br>";
+        echo "Total salary per Cutoff: " . number_format($empsalary, 2) . "<br>";
+        echo "Hours Rendered: " . $row->total_hours_rendered . "<br>";
+        echo "Working Days: " . $worked_days . "<br>";
+        echo "Rate Per Day: " . round($rate, 2) . "<br>";
+        echo "Rate Per Hr: " . number_format($rate_per_hr, 2) . "<br>";
+        echo "Cut off Salary: " . number_format($salary_wout_deduction, 2) . "<br>";
+        echo "PAGIBIG Deduction: " . number_format($pagibig, 2) . "<br>";
+        echo "SSS Deduction: " . number_format($sssDeduction, 2) . "<br>";
+        echo "PhilHealth Deduction: " . number_format($philhealth, 2) . "<br>";
+        echo "Total Mandatory Deduction: " . number_format($total_deduction, 2) . "<br>";
+        echo "Net Pay: " . number_format($total_salary, 2) . "<br>";
+        echo "Late Minutes: " . $late_time_format . "<br>";
+        echo "Late Amount: " . $late_fee . "<br>";
+        echo "<br>";
+        echo "-----------------------------------------------------------------<br>";
+        echo "</center>";
 
-			echo "<br>";
-			echo "<center>" . $row->fname . "<br>";
-			echo "Total salary per Cutoff: " . number_format($empsalary, 2) . "<br>";
-			echo "Hours Rendered: " . $row->total_hours_rendered . "<br>";
-			echo "Working Days: " . $worked_days . "<br>";
-			echo "Rate Per Day: " . round($rate, 2) . "<br>";
-			echo "Rate Per Hr: " . number_format($rate_per_hr, 2) . "<br>";
-			echo "Cut off Salary: " . number_format($salary_wout_deduction, 2) . "<br>";
-			echo "PAGIBIG Deduction: " . number_format($pagibig, 2) . "<br>";
-			echo "SSS Deduction: " . number_format($sssDeduction, 2) . "<br>";
-			echo "PhilHealth Deduction: " . number_format($philhealth, 2) . "<br>";
-			echo "Total Mandatory Deduction: " . number_format($total_deduction, 2) . "<br>";
-			echo "Net Pay: " . number_format($total_salary, 2) . "<br>";
-			echo "Late Minutes: " . $late_time_format . "<br>";
-			echo "Late Amount: " . $late_fee . "<br>";
-			echo "<br>";
-			echo "-----------------------------------------------------------------<br>";
-			echo "</center>";
+        $data = array(
+            'employee_id' => $row->empID,
+            'cutoff_salary' => $empsalary,
+            'days_worked' => $worked_days,
+            'rate_per_day' => $rate,
+            'rate_per_hour' => $rate_per_hr,
+            'late_amount' => $late_fee,
+            'pagibig' => $pagibig,
+            'sss' => $sssDeduction,
+            'philhealth' => $philhealth,
+            'cutoff_start' => $start_date,
+            'cutoff_end' => $end_date,
+            'net_pay' => $total_salary,
+            'total_hrs' => $row->total_hours_rendered,
+            'unworked_amount' => $actual_unworked_amt,
+            'date_created' => date('Y-m-d')
+        );
+        $insert = $this->db->insert('payroll', $data);
 
-			$data = array(
-				'employee_id' => $row->empID,
-				'cutoff_salary' => $empsalary,
-				'days_worked' => $worked_days,
-				'rate_per_day' => $rate,
-				'rate_per_hour' => $rate_per_hr,
-				'late_amount' => $late_fee,
-				'pagibig' => $pagibig,
-				'sss' => $sssDeduction,
-				'philhealth' => $philhealth,
-				'cutoff_start' => $start_date,
-				'cutoff_end' => $end_date,
-				'net_pay' => $total_salary,
-				'total_hrs' => $row->total_hours_rendered,
-				'unworked_amount' => $actual_unworked_amt,
-				'date_created' => date('Y-m-d')
-			);
-			$insert = $this->db->insert('payroll', $data);
-		}
-	}
+        if (!$insert) {
+            $response['error'][] = "Failed to insert payroll for employee ID: " . $row->empID . ". Error: " . $this->db->error();
+        } else {
+            $response['success'][] = "Payroll for " . $row->fname . " successfully created.";
+        }
+    }
+
+    echo json_encode($response);
+}
+
 }

@@ -4,7 +4,7 @@
    <div class="modal-dialog modal-lg">
       <div class="modal-content">
          <div class="modal-header">
-            <h4 class="modal-title">Title : <span id = "modal_ann_title"></span> Announcement Title</h4>
+            <h4 class="modal-title"><span id = "modal_ann_title">{Announcement Title}</span> </h4>
             <p id = "modal_ann_date"></p>
             <p id = "modal_ann_author"></p>
             <p id = "modal_ann_departments"></p>
